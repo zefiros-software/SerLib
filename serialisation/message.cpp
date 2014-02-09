@@ -171,14 +171,15 @@ void Message::ReadFromStream( std::istream &stream )
 
     while ( stream.tellg() < end )
     {
-        VarInt< U64 > header;
-        header.ReadFromStream( stream );
-        U64 vHeader = header.GetValue();
+        U64 vHeader;
 
-        U32 index = Util::GetHeaderIndex( vHeader );
-        Type type = Util::GetHeaderType( vHeader );
+        {
+            VarInt< U64 > header;
+            header.ReadFromStream( stream );
+            vHeader = header.GetValue();
+        }
 
-        ISerialiseData *data = GetSerialisable( index, type );
+        ISerialiseData *data = GetSerialisable( Util::GetHeaderIndex( vHeader ), Util::GetHeaderType( vHeader ) );
 
         data->ReadFromStream( stream );
     }
