@@ -2,7 +2,6 @@
 #include <iostream>
 #include "message.h"
 #include <vector>
-#include "repeatedSerialiseData.h"
 #include "numSerialiseData.h"
 
 class A
@@ -113,25 +112,6 @@ void main( int, const char *[] )
     a.OnSerialise( message2 );
 
     a.Print();
-
-    RepeatedCharData rep1;
-    RepeatedCharData rep2;
-
-    RepeatedMessage rep3;
-    A b;
-    rep3.SetNextValue( &b );
-    b.Reset();
-    b.Print();
-    rep3.GetNextValue( &b );
-    b.Print();
-
-    rep1.SetNextValue( 20 );
-    rep2.SetNextValue( 30 );
-    rep2.SetNextValue( 40 );
-
-    rep1.WriteToStream( ss );
-    rep2.ClearFields();
-    rep2.ReadFromStream( ss );
 
 
     system( "Pause" );
