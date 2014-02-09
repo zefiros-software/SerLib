@@ -62,7 +62,7 @@ private:
 
         case Mode::Deserialise:
             {
-                ISerialiseData *const data = GetDeserialisable( index );
+                ISerialiseData *const data = GetDeserialisable< T >( index );
 
                 if ( !data )
                 {

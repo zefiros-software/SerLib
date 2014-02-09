@@ -3,3 +3,6 @@ serialisation/Serialisation.sln
 serialisation/Serialisation.v11.suo
 serialisation/Serialisation.vcxproj.filters
 serialisation/Serialisation.vcxproj.user
+bin/*
+build/*
+serialisation/Serialisation.opensdf
