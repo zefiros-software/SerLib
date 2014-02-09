@@ -6,3 +6,7 @@ serialisation/Serialisation.vcxproj.user
 bin/
 build/
 *.opensdf
+*.vcxproj
+*.filters
+*.user
+test/lib/

@@ -11,7 +11,7 @@ solution "Serialisation"
 	
 	configurations { "Debug", "Release" }
 
-	platforms "x32"
+	platforms { "x64", "x32" }
 
 	vectorextensions "SSE2"
 
@@ -24,6 +24,9 @@ solution "Serialisation"
     configuration "x32"
 		architecture "x32"
 
+    configuration "x64"
+		architecture "x64"		
+		
 	configuration "Debug"
 		targetsuffix ( "d" )
 		defines "DEBUG"
@@ -37,20 +40,38 @@ solution "Serialisation"
 	configuration {}
 
 	project "Serialisation"
-		targetname ( "serialisation" )	 
-		kind "ConsoleApp"
-		flags "WinMain"
-		
-		defines "_SCL_SECURE_NO_WARNINGS"
+		targetname "serialisation"	 
+		kind "StaticLib"
 
 		includedirs {
-			"serialisation/"
+			"serialisation/include/"
 			}	
 			
 		files { 
-			"serialisation/**.cpp", 
-			"serialisation/**.cc",
-			"serialisation/**.h"
+			"serialisation/include/**.h",
+			"serialisation/src/**.cpp"
 			}
 			
+	project "Serialisation Test"
+		targetdir( "test/lib" )
+		location ( "test/" )
 		
+		links "Serialisation"
+		
+		kind "ConsoleApp"
+		flags "WinMain"
+		defines "GTEST_HAS_TR1_TUPLE=0"
+		
+		includedirs {
+			"extern/gtest/include/",
+			"extern/gtest/",
+			
+			"serialisation/include/",
+			"test/"
+			}	
+		
+		files { 
+			"extern/gtest/src/gtest-all.cc",
+			"test/**.h",
+			"test/*.cpp"
+			}

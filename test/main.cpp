@@ -4,6 +4,8 @@
 #include <vector>
 #include "numSerialiseData.h"
 
+#include "gtest/gtest.h"
+
 class A
     : public ISerialisable
 {
@@ -94,7 +96,12 @@ private:
     A mA, mAA;
 };
 
-void main( int, const char *[] )
+TEST( SanityTestOne, EqualsOne)
+{
+    EXPECT_EQ(1, 1);
+}
+
+int main( int argc, char **argv )
 {
     B a;
     std::stringstream ss;
@@ -113,6 +120,9 @@ void main( int, const char *[] )
 
     a.Print();
 
+    testing::InitGoogleTest(&argc, argv); 
 
-    system( "Pause" );
+    RUN_ALL_TESTS(); 
+
+    std::getchar();
 }
