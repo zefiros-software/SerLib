@@ -108,8 +108,8 @@
     <ClInclude Include="stringSerialiseData.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="util.h" />
-    <ClInclude Include="varint.h" />
     <ClInclude Include="varIntSerialiseData.h" />
+    <ClInclude Include="varint.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
