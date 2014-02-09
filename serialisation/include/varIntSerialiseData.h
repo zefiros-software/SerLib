@@ -19,10 +19,10 @@ public:
     template< typename U >
     U GetValue() const
     {
-        return ( U )mValue;
+        return static_cast< U >( mValue );
     }
 
-    virtual Type GetType() const;
+    virtual Type::Type GetType() const;
 
     virtual size_t Size() const;
 
@@ -32,7 +32,7 @@ public:
 
 private:
 
-    U64 mValue;
+    uint64_t mValue;
 };
 
 #endif

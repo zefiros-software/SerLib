@@ -4,7 +4,7 @@
 
 #include "serialiseData.h"
 
-template< typename U, Type T >
+template< typename U, Type::Type T >
 class NumSerialiseData
     : public ISerialiseData
 {
@@ -20,7 +20,7 @@ public:
         return mValue;
     }
 
-    virtual Type GetType() const
+    virtual Type::Type GetType() const
     {
         return T;
     }
@@ -45,9 +45,9 @@ protected:
     U mValue;
 };
 
-typedef NumSerialiseData< U8, Type::Char > CharSerialiseData;
-typedef NumSerialiseData< U16, Type::WORD > WORDSerialiseData;
-typedef NumSerialiseData< U32, Type::DWORD > DWORDSerialiseData;
-typedef NumSerialiseData< U64, Type::DWORDLONG > DWORDLONGSerialiseData;
+typedef NumSerialiseData< uint8_t, Type::Char > CharSerialiseData;
+typedef NumSerialiseData< uint16_t, Type::WORD > WORDSerialiseData;
+typedef NumSerialiseData< uint32_t, Type::DWORD > DWORDSerialiseData;
+typedef NumSerialiseData< uint64_t, Type::QWORD > DWORDLONGSerialiseData;
 
 #endif

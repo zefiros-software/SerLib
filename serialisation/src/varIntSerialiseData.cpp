@@ -3,7 +3,7 @@
 
 
 
-Type VarIntSerialiseData::GetType() const
+Type::Type VarIntSerialiseData::GetType() const
 {
     return Type::VarInt;
 }
@@ -15,13 +15,13 @@ size_t VarIntSerialiseData::Size() const
 
 void VarIntSerialiseData::ReadFromStream( std::istream &stream )
 {
-    VarInt< U64 > val;
+    VarInt< uint64_t > val;
     val.ReadFromStream( stream );
     mValue = val.GetValue();
 }
 
 void VarIntSerialiseData::WriteToStream( std::ostream &stream ) const
 {
-    VarInt< U64 > val( mValue );
+    VarInt< uint64_t > val( mValue );
     val.WriteToStream( stream );
 }

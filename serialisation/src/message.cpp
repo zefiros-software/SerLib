@@ -13,12 +13,12 @@ void Message::SetMode( Mode mode )
     mMode = mode;
 }
 
-Mode Message::GetMode() const
+Message::Mode Message::GetMode() const
 {
     return mMode;
 }
 
-Type Message::GetType() const
+Type::Type Message::GetType() const
 {
     return Type::Message;
 }
@@ -31,61 +31,84 @@ size_t Message::Size() const
     {
         const ISerialiseData *data = it->second;
         size += data->Size();
-        size += Util::CalculateVarIntSize( Util::CreateHeader( ( U64 )it->first, data->GetType() ) );
+        size += Util::CalculateVarIntSize( Util::CreateHeader( ( uint64_t )it->first, data->GetType() ) );
     }
 
     return size;
 }
 
-void Message::Store( S8 *const val, const U32 index /* = 0 */, const U32 /* = 0 */ )
+void Message::Store( int8_t &value, const uint32_t index /* = 0 */, const uint32_t /* = 0 */ )
 {
-    StoreNum< S8, CharSerialiseData, Type::Char >( val, index );
+    StoreNum< int8_t, CharSerialiseData, Type::Char >( &value, index );
 }
 
-void Message::Store( U8 *const val, const U32 index /*= 0*/, const U32 /*= 0*/ )
+void Message::Store( uint8_t &value, const uint32_t index /*= 0*/, const uint32_t /*= 0*/ )
 {
-    StoreNum< U8, CharSerialiseData, Type::Char >( val, index );
+    StoreNum< uint8_t, CharSerialiseData, Type::Char >( &value, index );
 }
 
-void Message::Store( S16 *const val, const U32 index /*= 0*/, const U32 flags /*= 0*/ )
+void Message::Store( int16_t &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0*/ )
 {
-    StoreSNum< S16, U16, WORDSerialiseData, Type::WORD >( val, index, flags );
+    StoreSNum< int16_t, uint16_t, WORDSerialiseData, Type::WORD >( &value, index, flags );
 }
 
-void Message::Store( U16 *const val, const U32 index /*= 0*/, const U32 flags /*= 0*/ )
+void Message::Store( uint16_t &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0*/ )
 {
-    StoreUNum< U16, WORDSerialiseData, Type::WORD >( val, index, flags );
+    StoreUNum< uint16_t, WORDSerialiseData, Type::WORD >( &value, index, flags );
 }
 
-void Message::Store( S32 *const val, const U32 index /*= 0*/, const U32 flags /*= 0*/ )
+void Message::Store( int32_t &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0*/ )
 {
-    StoreSNum< S32, U32, DWORDSerialiseData, Type::DWORD >( val, index, flags );
+    StoreSNum< int32_t, uint32_t, DWORDSerialiseData, Type::DWORD >( &value, index, flags );
 }
 
-void Message::Store( U32 *const val, const U32 index /*= 0*/, const U32 flags /*= 0*/ )
+void Message::Store( uint32_t &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0*/ )
 {
-    StoreUNum< U32, DWORDSerialiseData, Type::DWORD >( val, index, flags );
+    StoreUNum< uint32_t, DWORDSerialiseData, Type::DWORD >( &value, index, flags );
 }
 
-void Message::Store( S64 *const val, const U32 index /*= 0*/, const U32 flags /*= 0*/ )
+void Message::Store( int64_t &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0*/ )
 {
-    StoreSNum< S64, U64, DWORDLONGSerialiseData, Type::DWORDLONG >( val, index, flags );
+    StoreSNum< int64_t, uint64_t, DWORDLONGSerialiseData, Type::QWORD >( &value, index, flags );
 }
 
-void Message::Store( U64 *const val, const U32 index /*= 0*/, const U32 flags /*= 0*/ )
+void Message::Store( uint64_t &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0*/ )
 {
-    StoreUNum< U64, DWORDLONGSerialiseData, Type::DWORDLONG >( val, index, flags );
+    StoreUNum< uint64_t, DWORDLONGSerialiseData, Type::QWORD >( &value, index, flags );
 }
 
 
-void Message::Store( std::string *const string, const U32 index /* = 0 */, const U32 /* = 0 */ )
+void Message::Store( float &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0*/ )
+{
+    uint32_t flexman = Util::FloatToUInt32( value );
+    Store( flexman, index, flags );
+
+    if ( mMode == Mode::Deserialise )
+    {
+        value = Util::UInt32ToFloat( flexman );
+    }
+}
+
+void Message::Store( double &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0*/ )
+{
+    uint64_t flexman = Util::DoubleToUInt64( value );
+    Store( flexman, index, flags );
+
+    if ( mMode == Mode::Deserialise )
+    {
+        value = Util::UInt64ToDouble( flexman );
+    }
+}
+
+
+void Message::Store( std::string &string, const uint32_t index /* = 0 */, const uint32_t /* = 0 */ )
 {
     switch ( mMode )
     {
     case Mode::Serialise:
         {
             StringSerialiseData *const data = GetSerialisable< StringSerialiseData, Type::String >( index );
-            data->SetValue( *string );
+            data->SetValue( string );
         }
         break;
 
@@ -98,13 +121,13 @@ void Message::Store( std::string *const string, const U32 index /* = 0 */, const
 
             assert( iData->GetType() == Type::String );
 
-            *string = static_cast< StringSerialiseData *const >( iData )->GetValue();
+            string = static_cast< StringSerialiseData *const >( iData )->GetValue();
         }
         break;
     }
 }
 
-void Message::StoreObject( ISerialisable *const serialisable, U32 index )
+void Message::StoreObject( ISerialisable *const serialisable, uint32_t index )
 {
     switch ( mMode )
     {
@@ -150,14 +173,14 @@ void Message::WriteToFile( const std::string &fileName ) const
 
 void Message::WriteToStream( std::ostream &stream ) const
 {
-    VarInt< U64 > size( Size() );
+    ::VarInt< uint64_t > size( Size() );
     size.WriteToStream( stream );
 
     for ( auto it = mSerialisables.begin(), end = mSerialisables.end(); it != end; ++it )
     {
         const ISerialiseData *data = it->second;
 
-        VarInt< U64 > header( Util::CreateHeader( ( U64 )it->first, data->GetType() ) );
+        ::VarInt< uint64_t > header( Util::CreateHeader( ( uint64_t )it->first, data->GetType() ) );
         header.WriteToStream( stream );
         data->WriteToStream( stream );
     }
@@ -165,16 +188,16 @@ void Message::WriteToStream( std::ostream &stream ) const
 
 void Message::ReadFromStream( std::istream &stream )
 {
-    VarInt< U64 > size;
+    ::VarInt< uint64_t > size;
     size.ReadFromStream( stream );
-    S64 end = ( S64 )stream.tellg() + size.GetValue();
+    int64_t end = ( int64_t )stream.tellg() + size.GetValue();
 
     while ( stream.tellg() < end )
     {
-        U64 vHeader;
+        uint64_t vHeader;
 
         {
-            VarInt< U64 > header;
+            ::VarInt< uint64_t > header;
             header.ReadFromStream( stream );
             vHeader = header.GetValue();
         }
@@ -185,7 +208,7 @@ void Message::ReadFromStream( std::istream &stream )
     }
 }
 
-ISerialiseData *const Message::GetSerialisable( const U32 index, Type type )
+ISerialiseData *const Message::GetSerialisable( const uint32_t index, Type::Type type )
 {
 
     switch ( type )
@@ -210,8 +233,8 @@ ISerialiseData *const Message::GetSerialisable( const U32 index, Type type )
         return GetSerialisable< DWORDSerialiseData, Type::DWORD >( index );
         break;
 
-    case Type::DWORDLONG:
-        return GetSerialisable< DWORDLONGSerialiseData, Type::DWORDLONG >( index );
+    case Type::QWORD:
+        return GetSerialisable< DWORDLONGSerialiseData, Type::QWORD >( index );
         break;
 
     case Type::VarInt:

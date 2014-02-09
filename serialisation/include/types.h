@@ -2,42 +2,38 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
 
+#include "macro.h"
+
 #include <stdint.h>
 
-typedef uint8_t  U8;
-typedef uint16_t U16;
-typedef uint32_t U32;
-typedef uint64_t U64;
+#ifndef CPP11
 
-typedef int8_t  S8;
-typedef int16_t S16;
-typedef int32_t S32;
-typedef int64_t S64;
+typedef unsigned char uint8_t;
+typedef unsigned short uint16_t;
+typedef unsigned int uint32_t;
+typedef unsigned long long uint64_t;
 
-typedef float F32;
-typedef double F64;
+typedef signed char int8_t;
+typedef short int16_t;
+typedef int int32_t;
+typedef long long int64_t;
 
-enum class Type : U8
+#endif
+
+namespace Type
 {
-    Message = 0x00,
-    String = 0x01,
-    Char = 0x02,
-    WORD = 0x03,
-    DWORD = 0x04,
-    DWORDLONG = 0x05,
-    VarInt = 0x06,
-    Repeated = 0x07
-};
-
-enum class Flags : U32
-{
-    VarInt = 0x01
-};
-
-enum class Mode : U8
-{
-    Serialise = 0x00,
-    Deserialise = 0x01
-};
+    // underlying type is uint8_t
+    enum Type
+    {
+        Message   = 0x00,
+        String    = 0x01,
+        Char      = 0x02,
+        WORD      = 0x03,
+        DWORD     = 0x04,
+        QWORD = 0x05,
+        VarInt    = 0x06,
+        Repeated  = 0x07
+    };
+}
 
 #endif

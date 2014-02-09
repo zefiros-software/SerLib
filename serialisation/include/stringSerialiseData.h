@@ -13,7 +13,7 @@ public:
 
     const std::string &GetValue() const;
 
-    virtual Type GetType() const;
+    virtual Type::Type GetType() const;
 
     virtual size_t Size() const;
 

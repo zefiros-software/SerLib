@@ -2,9 +2,16 @@
 #ifndef __MESSAGE_H__
 #define __MESSAGE_H__
 
-#include <unordered_map>
 #include "ISerialisable.h"
 #include "serialiseData.h"
+#include "macro.h"
+
+#ifdef CPP11
+#include <unordered_map>
+#else
+#include <map>
+#endif
+
 #include <assert.h>
 #include <iostream>
 
@@ -13,6 +20,17 @@ class Message
 {
 public:
 
+    enum Flags
+    {
+        Packed = 0x01
+    };
+
+    enum Mode
+    {
+        Serialise = 0x00,
+        Deserialise = 0x01
+    };
+
     Message( Mode mode = Mode::Serialise );
 
     void SetMode( Mode mode );
@@ -20,21 +38,25 @@ public:
 
     virtual size_t Size() const;
 
-    virtual Type GetType() const;
+    virtual Type::Type GetType() const;
 
-    void Store( S8 *const val, const U32 index = 0, const U32 flags = 0 );
-    void Store( U8 *const val, const U32 index = 0, const U32 flags = 0 );
-    void Store( S16 *const val, const U32 index = 0, const U32 flags = 0 );
-    void Store( U16 *const val, const U32 index = 0, const U32 flags = 0 );
-    void Store( S32 *const val, const U32 index = 0, const U32 flags = 0 );
-    void Store( U32 *const val, const U32 index = 0, const U32 flags = 0 );
-    void Store( S64 *const val, const U32 index = 0, const U32 flags = 0 );
-    void Store( U64 *const val, const U32 index = 0, const U32 flags = 0 );
-    void Store( std::string *const string, const U32 index = 0, const U32 flags = 0 );
+    void Store( int8_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+    void Store( uint8_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+    void Store( int16_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+    void Store( uint16_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+    void Store( int32_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+    void Store( uint32_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+    void Store( int64_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+    void Store( uint64_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
 
-    void StoreObject( ISerialisable *const serialisable, U32 index = 0 );
+    void Store( float &value, const uint32_t index = 0, const uint32_t flags = 0 );
+    void Store( double &value, const uint32_t index = 0, const uint32_t flags = 0 );
 
-    void CreateRepeated( Type type, U32 size, const U32 index = 0, const U32 flags = 0 );
+    void Store( std::string &string, const uint32_t index = 0, const uint32_t flags = 0 );
+
+    void StoreObject( ISerialisable *const serialisable, uint32_t index = 0 );
+
+    void CreateRepeated( Type::Type type, uint32_t size, const uint32_t index = 0, const uint32_t flags = 0 );
 
     void WriteToFile( const std::string &fileName ) const;
     virtual void WriteToStream( std::ostream &stream ) const;
@@ -44,11 +66,18 @@ public:
 
 private:
 
-    std::unordered_map< size_t, ISerialiseData * > mSerialisables;
+#ifdef CPP11
+    typedef std::unordered_map< size_t, ISerialiseData * > Map;
+#else
+    typedef std::map< size_t, ISerialiseData * > Map;
+#endif
+
+
+    Map mSerialisables;
     Mode mMode;
 
-    template< typename ValueType, typename DataType, Type T >
-    void StoreNum( ValueType *const val, const U32 index )
+    template< typename ValueType, typename DataType, Type::Type T >
+    void StoreNum( ValueType *const val, const uint32_t index )
     {
         switch ( mMode )
         {
@@ -76,10 +105,10 @@ private:
         }
     }
 
-    template< typename U, typename DataType, Type T >
-    void StoreUNum( U *const val, const U32 index, const U32 flags )
+    template< typename U, typename DataType, Type::Type T >
+    void StoreUNum( U *const val, const uint32_t index, const uint32_t flags )
     {
-        if ( flags & ( U32 )Flags::VarInt )
+        if ( flags & ( uint32_t )Flags::Packed )
         {
             StoreUPacked< U >( val, index );
         }
@@ -89,10 +118,10 @@ private:
         }
     }
 
-    template< typename S, typename U, typename DataType, Type T >
-    void StoreSNum( S *const val, const U32 index, const U32 flags )
+    template< typename S, typename U, typename DataType, Type::Type T >
+    void StoreSNum( S *const val, const uint32_t index, const uint32_t flags )
     {
-        if ( flags & ( U32 )Flags::VarInt )
+        if ( flags & ( uint32_t )Flags::Packed )
         {
             StoreSPacked< S, U >( val, index );
         }
@@ -103,7 +132,7 @@ private:
     }
 
     template< typename U >
-    void StoreUPacked( U *const val, const U32 index )
+    void StoreUPacked( U *const val, const uint32_t index )
     {
         switch ( mMode )
         {
@@ -132,7 +161,7 @@ private:
     }
 
     template< typename S, typename U >
-    void StoreSPacked( S *const val, const U32 index )
+    void StoreSPacked( S *const val, const uint32_t index )
     {
         switch ( mMode )
         {
@@ -159,8 +188,8 @@ private:
         }
     }
 
-    template< typename DataType, Type T >
-    DataType *const GetSerialisable( const U32 index )
+    template< typename DataType, Type::Type T >
+    DataType *const GetSerialisable( const uint32_t index )
     {
         DataType *data = NULL;
 
@@ -192,8 +221,8 @@ private:
         return data;
     }
 
-    template< Type T >
-    ISerialiseData *const GetDeserialisable( const U32 index )
+    template< Type::Type T >
+    ISerialiseData *const GetDeserialisable( const uint32_t index )
     {
         ISerialiseData *data = NULL;
         auto it = mSerialisables.find( index );
@@ -208,8 +237,7 @@ private:
         return data;
     }
 
-    ISerialiseData *const GetSerialisable( const U32 index, Type type );
-
+    ISerialiseData *const GetSerialisable( const uint32_t index, Type::Type type );
 };
 
 #endif

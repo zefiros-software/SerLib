@@ -1,14 +1,12 @@
 
 solution "Serialisation"
 
-	location "./serialisation/"
+	location "serialisation/"
 		
-	debugdir "./bin/"
+	debugdir "bin/"
 	
-	objdir "./build/"
-	
-	targetdir "./bin/"
-	
+	objdir "build/"
+
 	configurations { "Debug", "Release" }
 
 	platforms { "x64", "x32" }
@@ -23,9 +21,11 @@ solution "Serialisation"
 
     configuration "x32"
 		architecture "x32"
+		targetdir "bin/x32/"
 
     configuration "x64"
 		architecture "x64"		
+		targetdir "bin/x64/"
 		
 	configuration "Debug"
 		targetsuffix ( "d" )
@@ -38,22 +38,8 @@ solution "Serialisation"
 		optimize "Speed"
 
 	configuration {}
-
-	project "Serialisation"
-		targetname "serialisation"	 
-		kind "StaticLib"
-
-		includedirs {
-			"serialisation/include/"
-			}	
-			
-		files { 
-			"serialisation/include/**.h",
-			"serialisation/src/**.cpp"
-			}
 			
 	project "Serialisation Test"
-		targetdir( "test/lib" )
 		location ( "test/" )
 		
 		links "Serialisation"
@@ -74,4 +60,18 @@ solution "Serialisation"
 			"extern/gtest/src/gtest-all.cc",
 			"test/**.h",
 			"test/*.cpp"
+			}
+			
+			
+	project "Serialisation"
+		targetname "serialisation"	 
+		kind "StaticLib"
+
+		includedirs {
+			"serialisation/include/"
+			}	
+			
+		files { 
+			"serialisation/include/**.h",
+			"serialisation/src/**.cpp"
 			}

@@ -12,7 +12,7 @@ class RepeatedData
 {
 public:
 
-    RepeatedData( Type subType )
+    RepeatedData( Type::Type subType )
         : mFieldCount( 0 ), mSubType( subType )
     {
 
@@ -20,7 +20,7 @@ public:
 
     virtual void WriteToStream( std::ostream &stream ) const
     {
-        VarInt< U64 > header( Util::CreateHeader( mFieldCount, mSubType ) );
+        VarInt< uint64_t > header( Util::CreateHeader( mFieldCount, mSubType ) );
         header.WriteToStream( stream );
 
         for ( auto it = mFields.begin(), end = mFields.begin() + mFieldCount; it != end; ++it )
@@ -37,13 +37,13 @@ public:
 
     virtual void ReadFromStream( std::istream &stream )
     {
-        VarInt< U64 > header;
+        VarInt< uint64_t > header;
         header.ReadFromStream( stream );
-        U64 vHeader = header.GetValue();
+        uint64_t vHeader = header.GetValue();
 
         assert( Util::GetHeaderType( vHeader ) == mSubType );
 
-        U32 size = mFieldCount + Util::GetHeaderIndex( vHeader );
+        uint32_t size = mFieldCount + Util::GetHeaderIndex( vHeader );
         mSubType = Util::GetHeaderType( vHeader );
         mFields.resize( size );
 
@@ -65,19 +65,19 @@ public:
         mFieldCount = size;
     }
 
-    virtual Type GetType() const
+    virtual Type::Type GetType() const
     {
         return Type::Repeated;
     }
 
-    virtual Type GetSubType() const
+    virtual Type::Type GetSubType() const
     {
         return mSubType;
     };
 
-    virtual U32 Size() const
+    virtual uint32_t Size() const
     {
-        U32 size = Util::CalculateVarIntSize( Util::CreateHeader( mFieldCount, mSubType ) );
+        uint32_t size = Util::CalculateVarIntSize( Util::CreateHeader( mFieldCount, mSubType ) );
 
         for ( auto it = mFields.begin(), end = mFields.end(); it != end; ++it )
         {
@@ -87,23 +87,21 @@ public:
         return size;
     }
 
-    ISerialiseData *const GetSerialiseData( U32 index )
+    ISerialiseData *const GetSerialiseData( uint32_t index )
     {
         assert( index < mFieldCount );
-        return mFields[ index ];
+        return mFields.at( index );
     }
 
-    const ISerialiseData *const GetSerialiseData( U32 index ) const
+    const ISerialiseData *const GetSerialiseData( uint32_t index ) const
     {
         assert( index < mFieldCount );
-        return mFields[ index ];
+        return mFields.at( index );
     }
 
-    void Resize( const U32 size )
+    void Resize( const uint32_t size )
     {
-        U32 oldSize = mFields.size();
-
-        if ( size > oldSize )
+        if ( size > mFields.size() )
         {
             mFields.resize( size );
 
@@ -124,10 +122,10 @@ public:
 protected:
 
     std::vector< ISerialiseData * > mFields;
-    Type mSubType;
-    U32 mFieldCount;
+    Type::Type mSubType;
+    uint32_t mFieldCount;
 
-    ISerialiseData *const NewSerialisable( const Type subType )
+    ISerialiseData *const NewSerialisable( const Type::Type subType )
     {
         switch ( subType )
         {
@@ -139,7 +137,7 @@ protected:
             return new DWORDSerialiseData();
             break;
 
-        case Type::DWORDLONG:
+        case Type::QWORD:
             return new DWORDLONGSerialiseData();
             break;
 

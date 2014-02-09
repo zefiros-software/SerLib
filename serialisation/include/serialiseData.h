@@ -12,7 +12,7 @@ public:
     virtual void ReadFromStream( std::istream &stream ) = 0;
     virtual void WriteToStream( std::ostream &stream ) const = 0;
 
-    virtual Type GetType() const = 0;
+    virtual Type::Type GetType() const = 0;
 
     virtual size_t Size() const = 0;
 };
