@@ -156,10 +156,6 @@ void Message::StoreObject( ISerialisable *const serialisable, uint32_t index )
     }
 }
 
-
-
-
-
 void Message::WriteToFile( const std::string &fileName ) const
 {
     std::ofstream stream( fileName, std::ios::binary );
