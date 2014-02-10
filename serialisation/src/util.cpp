@@ -23,7 +23,7 @@ float Util::UInt32ToFloat( const uint32_t i )
 
     exp = ( negative == 1 ) ? -exp : exp; 
 
-    double fi = ldexp(  ldexp( static_cast< float >( ZagZig< uint32_t, int32_t >( i >> 9 ) ), -22 ), exp );
+    float fi = ldexp(  ldexp( static_cast< float >( ZagZig< uint32_t, int32_t >( i >> 9 ) ), -22 ), exp );
 
     return fi;
 }

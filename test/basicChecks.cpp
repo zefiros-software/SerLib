@@ -114,7 +114,6 @@ namespace
     TestSingleDPrimitive( ZebraInv, double, ( double )GenerateInvZebraValue<int64_t>(), 1.0 );
 
 
-    /*
     TestSinglePrimitivePacked( Max, uint8_t, std::numeric_limits<uint8_t>::max(), 1 );
     TestSinglePrimitivePacked( Max, uint16_t, std::numeric_limits<uint16_t>::max(), 1 );
     TestSinglePrimitivePacked( Max, uint32_t, std::numeric_limits<uint32_t>::max(), 1 );
@@ -166,5 +165,4 @@ namespace
 
     TestSingleFPrimitivePacked( ZebraInv, float, ( float )GenerateInvZebraValue<int32_t>(), 1.0f );
     TestSingleDPrimitivePacked( ZebraInv, double, ( double )GenerateInvZebraValue<int64_t>(), 1.0 );
-    */
 }
