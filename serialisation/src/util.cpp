@@ -36,7 +36,7 @@ uint64_t Util::DoubleToUInt64( const double f )
     int32_t negative = exp < 0 ? 1 : 0;
 
     uint64_t result = ( abs( exp ) & 0x7FF ) << 1;
-    result |= ZigZag< uint64_t, uint64_t >( static_cast< uint64_t >( ldexp( fi, 51 ) ) ) << 12;
+    result |= ZigZag< int64_t, uint64_t >( static_cast< int64_t >( ldexp( fi, 51 ) ) ) << 12;
     result |= negative;
 
     return result;
@@ -50,7 +50,7 @@ double Util::UInt64ToDouble( const uint64_t i )
 
     exp = ( negative == 1 ) ? -exp : exp; 
 
-    double fi = ldexp( ldexp( static_cast< double >( ZagZig< uint64_t, uint64_t >( i >> 12 ) ), -51 ), exp );
+    double fi = ldexp( ldexp( static_cast< double >( ZagZig< uint64_t, int64_t >( i >> 12 ) ), -51 ), exp );
 
     return fi;
 }
