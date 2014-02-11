@@ -25,12 +25,12 @@ void SimpleSerialiseDeserialiseStream( T &c1, T &c2 )
 template< typename T >
 T GenerateZebraValue()
 {
-    const uint16_t bits = sizeof( T ) * 8;
+    const uint16_t bits = sizeof( T ) << 3;
     T result = 0;
 
     for ( uint16_t i = 0; i < bits; ++++i )
     {
-        result |= ( uint64_t )( 1 << i );
+        result |= (T)( 1ull << i );
     }
 
     return result;

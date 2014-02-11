@@ -60,7 +60,7 @@ namespace
 
         T mMember;
     };
-
+  
     TestSinglePrimitive( Max, uint8_t, std::numeric_limits<uint8_t>::max(), 1 );
     TestSinglePrimitive( Max, uint16_t, std::numeric_limits<uint16_t>::max(), 1 );
     TestSinglePrimitive( Max, uint32_t, std::numeric_limits<uint32_t>::max(), 1 );

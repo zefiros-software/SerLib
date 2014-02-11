@@ -42,7 +42,7 @@ public:
     {
         mSize = 0;
 
-        auto it = mBytes.begin();
+        std::vector< char >::iterator it = mBytes.begin();
         char c = 0;
 
         for ( bool next = true; next; next = ( c & 128 ) > 0, ++it, ++mSize )
@@ -64,9 +64,9 @@ private:
     {
         mSize = 0;
 
-        auto it = mBytes.begin();
+        std::vector< char >::iterator it = mBytes.begin();
 
-        for ( U val = mValue; val > 0; val >>= 7, ++it, ++mSize )
+        for ( U val = mValue; ( val > 0 || mSize == 0 ); val >>= 7, ++it, ++mSize )
         {
             char &c = *it;
             c = val & 127;
@@ -83,9 +83,11 @@ private:
         mValue = 0;
         size_t shift = 0;
 
-        for ( auto it = mBytes.begin(), end = mBytes.begin() + mSize; it != end; ++it, shift += 7 )
+        for ( std::vector< char >::const_iterator it = mBytes.begin(), end = mBytes.begin() + mSize; it != end; ++it, shift += 7 )
         {
-            mValue |= ( ( *it ) & 127 ) << shift;
+            char byteVal = *it;
+            U result = byteVal & 0x7F;
+            mValue |= (U)( result ) << shift;
         }
     }
 };
