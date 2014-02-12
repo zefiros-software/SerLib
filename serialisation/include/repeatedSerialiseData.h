@@ -6,6 +6,7 @@
 #include "varIntSerialiseData.h"
 #include "stringSerialiseData.h"
 #include "util.h"
+#include <assert.h>
 
 class RepeatedData
     : public ISerialiseData

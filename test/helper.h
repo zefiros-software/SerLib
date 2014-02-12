@@ -10,13 +10,13 @@ void SimpleSerialiseDeserialiseStream( T &c1, T &c2 )
 {
     std::stringstream ss;
     {
-        Message message( Message::Serialise );
+        Message message( Mode::Serialise );
         c1.OnSerialise( message );
         message.WriteToStream( ss );
     }
 
     {
-        Message message( Message::Deserialise );
+        Message message( Mode::Deserialise );
         message.ReadFromStream( ss );
         c2.OnSerialise( message );
     }

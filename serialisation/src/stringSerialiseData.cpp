@@ -4,14 +4,18 @@
 
 
 
-void StringSerialiseData::SetValue( const std::string &str )
+void StringSerialiseData::Store( std::string &str, Mode::Mode mode )
 {
-    mString = str;;
-}
+    switch ( mode )
+    {
+    case Mode::Serialise:
+        mString = str;
+        break;
 
-const std::string & StringSerialiseData::GetValue() const
-{
-    return mString;
+    case Mode::Deserialise:
+        str = mString;
+        break;
+    }
 }
 
 Type::Type StringSerialiseData::GetType() const

@@ -25,16 +25,10 @@ public:
         Packed = 0x01
     };
 
-    enum Mode
-    {
-        Serialise = 0x00,
-        Deserialise = 0x01
-    };
+    Message( Mode::Mode mode = Mode::Serialise );
 
-    Message( Mode mode = Mode::Serialise );
-
-    void SetMode( Mode mode );
-    Mode GetMode() const;
+    void SetMode( Mode::Mode mode );
+    Mode::Mode GetMode() const;
 
     virtual size_t Size() const;
 
@@ -74,157 +68,67 @@ private:
 
 
     Map mSerialisables;
-    Mode mMode;
-
-    template< typename ValueType, typename DataType, Type::Type T >
-    void StoreNum( ValueType *const val, const uint32_t index )
-    {
-        switch ( mMode )
-        {
-        case Mode::Serialise:
-            {
-                DataType *data = GetSerialisable< DataType, T >( index );
-
-                data->SetValue( *val );
-            }
-            break;
-
-        case Mode::Deserialise:
-            {
-                ISerialiseData *const data = GetDeserialisable< T >( index );
-
-                if ( !data )
-                {
-                    assert( false );
-                    return;
-                }
-
-                *val = static_cast< DataType *const >( data )->GetValue();
-            }
-            break;
-        }
-    }
+    Mode::Mode mMode;
 
     template< typename U, typename DataType, Type::Type T >
-    void StoreUNum( U *const val, const uint32_t index, const uint32_t flags )
+    void StoreUNum( U &val, const uint32_t index, const uint32_t flags )
     {
         if ( flags & ( uint32_t )Flags::Packed )
         {
-            StoreUPacked< U >( val, index );
+            VarIntSerialiseData *const data = GetSerialisable< VarIntSerialiseData, Type::VarInt >( index );
+
+            if ( data )
+            {
+                data->Store( val, mMode );
+            }
         }
         else
         {
-            StoreNum< U, DataType, T >( val, index );
+            DataType *const data = GetSerialisable< DataType, T >( index );
+
+            if ( data )
+            {
+                data->Store( val, mMode );
+            }
         }
     }
 
     template< typename S, typename U, typename DataType, Type::Type T >
-    void StoreSNum( S *const val, const uint32_t index, const uint32_t flags )
+    void StoreSNum( S &val, const uint32_t index, const uint32_t flags )
     {
         if ( flags & ( uint32_t )Flags::Packed )
         {
-            StoreSPacked< S, U >( val, index );
+            VarIntSerialiseData *const data = GetSerialisable< VarIntSerialiseData, Type::VarInt >( index );
+
+            if ( data )
+            {
+                bool isSerialising = mMode == Mode::Serialise;
+
+                U uVal = isSerialising ? Util::ZigZag< S, U >( val ) : 0;
+                data->Store( uVal, mMode );
+
+                if ( !isSerialising )
+                {
+                    val = Util::ZagZig< U, S >( uVal );
+                }
+            }
         }
         else
         {
-            StoreNum< S, DataType, T >( val, index );
-        }
-    }
+            DataType *const data = GetSerialisable< DataType, T >( index );
 
-    template< typename U >
-    void StoreUPacked( U *const val, const uint32_t index )
-    {
-        switch ( mMode )
-        {
-        case Mode::Serialise:
+            if ( data )
             {
-                VarIntSerialiseData *data = GetSerialisable< VarIntSerialiseData, Type::VarInt >( index );
-
-                data->SetValue< U >( *val );
+                data->Store( val, mMode );
             }
-            break;
-
-        case Mode::Deserialise:
-            {
-                ISerialiseData *const data = GetDeserialisable< Type::VarInt >( index );
-
-                if ( !data )
-                {
-                    assert( false );
-                    return;
-                }
-
-                *val = static_cast< VarIntSerialiseData *const >( data )->GetValue< U >();
-            }
-            break;
-        }
-    }
-
-    template< typename S, typename U >
-    void StoreSPacked( S *const val, const uint32_t index )
-    {
-        switch ( mMode )
-        {
-        case Mode::Serialise:
-            {
-                U uVal = Util::ZigZag< S, U >( *val );
-                StoreUPacked< U >( &uVal, index );
-            }
-            break;
-
-        case Mode::Deserialise:
-            {
-                ISerialiseData *const data = GetDeserialisable< Type::VarInt >( index );
-
-                if ( !data )
-                {
-                    assert( false );
-                    return;
-                }
-
-                *val = Util::ZagZig< U, S >( static_cast< VarIntSerialiseData *const >( data )->GetValue< U >() );
-            }
-            break;
         }
     }
 
     template< typename DataType, Type::Type T >
     DataType *const GetSerialisable( const uint32_t index )
     {
-        DataType *data = NULL;
-
-        auto it = mSerialisables.find( index );
-
-        if ( it != mSerialisables.end() )
-        {
-            ISerialiseData *const sData = it->second;
-
-            if ( sData->GetType() == T )
-            {
-                data = static_cast< DataType *const >( sData );
-            }
-            else
-            {
-                assert( false );
-                delete sData;
-                data = new DataType();
-                mSerialisables.erase( it );
-                mSerialisables[ index ] = data;
-            }
-        }
-        else
-        {
-            data = new DataType();
-            mSerialisables[ index ] = data;
-        }
-
-        return data;
-    }
-
-    template< Type::Type T >
-    ISerialiseData *const GetDeserialisable( const uint32_t index )
-    {
         ISerialiseData *data = NULL;
+
         auto it = mSerialisables.find( index );
 
         if ( it != mSerialisables.end() )
@@ -234,7 +138,30 @@ private:
             assert( data->GetType() == T );
         }
 
-        return data;
+        switch ( mMode )
+        {
+        case Mode::Serialise:
+            {
+                if ( data && data->GetType() != T )
+                {
+                    delete data;
+                    data = new DataType();
+                    mSerialisables.erase( it );
+                    mSerialisables[ index ] = data;
+                }
+                else if ( !data )
+                {
+                    data = new DataType();
+                    mSerialisables[ index ] = data;
+                }
+            }
+            break;
+
+        case Mode::Deserialise:
+            assert( data );
+        }
+
+        return static_cast< DataType *const >( data );
     }
 
     ISerialiseData *const GetSerialisable( const uint32_t index, Type::Type type );

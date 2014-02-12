@@ -10,14 +10,19 @@ class NumSerialiseData
 {
 public:
 
-    void SetValue( U val )
+    template< typename U >
+    void Store( U &val, Mode::Mode mode )
     {
-        mValue = val;
-    }
+        switch ( mode )
+        {
+        case Mode::Serialise:
+            mValue = val;
+            break;
 
-    U GetValue() const
-    {
-        return mValue;
+        case Mode::Deserialise:
+            val = ( U )mValue;
+            break;
+        }
     }
 
     virtual Type::Type GetType() const

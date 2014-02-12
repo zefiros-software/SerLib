@@ -11,15 +11,18 @@ class VarIntSerialiseData
 public:
 
     template< typename U >
-    void SetValue( U val )
+    void Store( U &val, Mode::Mode mode )
     {
-        mValue = val;
-    }
+        switch ( mode )
+        {
+        case Mode::Serialise:
+            mValue = val;
+            break;
 
-    template< typename U >
-    U GetValue() const
-    {
-        return static_cast< U >( mValue );
+        case Mode::Deserialise:
+            val = ( U )mValue;
+            break;
+        }
     }
 
     virtual Type::Type GetType() const;

@@ -36,4 +36,15 @@ namespace Type
     };
 }
 
+namespace Mode
+{
+
+
+    enum Mode
+    {
+        Serialise = 0x00,
+        Deserialise = 0x01
+    };
+}
+
 #endif

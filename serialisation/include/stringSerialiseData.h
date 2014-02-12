@@ -9,9 +9,7 @@ class StringSerialiseData
 {
 public:
 
-    void SetValue( const std::string &str );
-
-    const std::string &GetValue() const;
+    void Store( std::string &str, Mode::Mode mode );
 
     virtual Type::Type GetType() const;
 

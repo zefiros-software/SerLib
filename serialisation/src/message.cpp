@@ -3,17 +3,17 @@
 #include "util.h"
 #include <fstream>
 
-Message::Message( Mode mode /*= Mode::Serialise */ )
+Message::Message( Mode::Mode mode /*= Mode::Serialise */ )
     : mMode( mode )
 {
 }
 
-void Message::SetMode( Mode mode )
+void Message::SetMode( Mode::Mode mode )
 {
     mMode = mode;
 }
 
-Message::Mode Message::GetMode() const
+Mode::Mode Message::GetMode() const
 {
     return mMode;
 }
@@ -39,51 +39,53 @@ size_t Message::Size() const
 
 void Message::Store( int8_t &value, const uint32_t index /* = 0 */, const uint32_t /* = 0 */ )
 {
-    StoreNum< int8_t, CharSerialiseData, Type::Char >( &value, index );
+    StoreSNum< int8_t, uint8_t, CharSerialiseData, Type::Char >( value, index, 0 );
 }
 
 void Message::Store( uint8_t &value, const uint32_t index /*= 0*/, const uint32_t /*= 0*/ )
 {
-    StoreNum< uint8_t, CharSerialiseData, Type::Char >( &value, index );
+    StoreUNum< uint8_t, CharSerialiseData, Type::Char >( value, index, 0 );
 }
 
 void Message::Store( int16_t &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0*/ )
 {
-    StoreSNum< int16_t, uint16_t, WORDSerialiseData, Type::WORD >( &value, index, flags );
+    StoreSNum< int16_t, uint16_t, WORDSerialiseData, Type::WORD >( value, index, flags );
 }
 
 void Message::Store( uint16_t &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0*/ )
 {
-    StoreUNum< uint16_t, WORDSerialiseData, Type::WORD >( &value, index, flags );
+    StoreUNum< uint16_t, WORDSerialiseData, Type::WORD >( value, index, flags );
 }
 
 void Message::Store( int32_t &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0*/ )
 {
-    StoreSNum< int32_t, uint32_t, DWORDSerialiseData, Type::DWORD >( &value, index, flags );
+    StoreSNum< int32_t, uint32_t, DWORDSerialiseData, Type::DWORD >( value, index, flags );
 }
 
 void Message::Store( uint32_t &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0*/ )
 {
-    StoreUNum< uint32_t, DWORDSerialiseData, Type::DWORD >( &value, index, flags );
+    StoreUNum< uint32_t, DWORDSerialiseData, Type::DWORD >( value, index, flags );
 }
 
 void Message::Store( int64_t &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0*/ )
 {
-    StoreSNum< int64_t, uint64_t, DWORDLONGSerialiseData, Type::QWORD >( &value, index, flags );
+    StoreSNum< int64_t, uint64_t, DWORDLONGSerialiseData, Type::QWORD >( value, index, flags );
 }
 
 void Message::Store( uint64_t &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0*/ )
 {
-    StoreUNum< uint64_t, DWORDLONGSerialiseData, Type::QWORD >( &value, index, flags );
+    StoreUNum< uint64_t, DWORDLONGSerialiseData, Type::QWORD >( value, index, flags );
 }
 
 
 void Message::Store( float &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0*/ )
 {
-    uint32_t flexman = Util::FloatToUInt32( value );
+    bool isSerialising = mMode == Mode::Serialise;
+
+    uint32_t flexman = isSerialising ? Util::FloatToUInt32( value ) : 0;
     Store( flexman, index, flags );
 
-    if ( mMode == Mode::Deserialise )
+    if ( !isSerialising )
     {
         value = Util::UInt32ToFloat( flexman );
     }
@@ -91,10 +93,12 @@ void Message::Store( float &value, const uint32_t index /*= 0*/, const uint32_t 
 
 void Message::Store( double &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0*/ )
 {
-    uint64_t flexman = Util::DoubleToUInt64( value );
+    bool isSerialising = mMode == Mode::Serialise;
+
+    uint64_t flexman = isSerialising ? Util::DoubleToUInt64( value ) : 0;
     Store( flexman, index, flags );
 
-    if ( mMode == Mode::Deserialise )
+    if ( !isSerialising )
     {
         value = Util::UInt64ToDouble( flexman );
     }
@@ -103,56 +107,22 @@ void Message::Store( double &value, const uint32_t index /*= 0*/, const uint32_t
 
 void Message::Store( std::string &string, const uint32_t index /* = 0 */, const uint32_t /* = 0 */ )
 {
-    switch ( mMode )
+    StringSerialiseData *const data = GetSerialisable< StringSerialiseData, Type::String >( index );
+
+    if ( data )
     {
-    case Mode::Serialise:
-        {
-            StringSerialiseData *const data = GetSerialisable< StringSerialiseData, Type::String >( index );
-            data->SetValue( string );
-        }
-        break;
-
-    case Mode::Deserialise:
-        {
-            auto it = mSerialisables.find( index );
-            assert( it != mSerialisables.end() );
-
-            ISerialiseData *const iData = it->second;
-
-            assert( iData->GetType() == Type::String );
-
-            string = static_cast< StringSerialiseData *const >( iData )->GetValue();
-        }
-        break;
+        data->Store( string, mMode );
     }
 }
 
 void Message::StoreObject( ISerialisable *const serialisable, uint32_t index )
 {
-    switch ( mMode )
+    Message *const message = GetSerialisable< Message, Type::Message >( index );
+
+    if ( message )
     {
-    case Mode::Serialise:
-        {
-            Message *const message = GetSerialisable< Message, Type::Message >( index );
-            message->SetMode( mMode );
-            serialisable->OnSerialise( *message );
-            break;
-        }
-
-    case Mode::Deserialise:
-        {
-            auto it = mSerialisables.find( index );
-            assert( it != mSerialisables.end() );
-
-            ISerialiseData *const iData = it->second;
-
-            assert( iData->GetType() == Type::Message );
-            Message *const message = static_cast< Message *const >( iData );
-            message->SetMode( mMode );
-
-            serialisable->OnSerialise( *message );
-        }
-        break;
+        message->SetMode( mMode );
+        serialisable->OnSerialise( *message );
     }
 }
 
@@ -184,6 +154,9 @@ void Message::WriteToStream( std::ostream &stream ) const
 
 void Message::ReadFromStream( std::istream &stream )
 {
+    Mode::Mode tempMode = mMode;
+    mMode = Mode::Serialise;
+
     ::VarInt< uint64_t > size;
     size.ReadFromStream( stream );
     int64_t end = ( int64_t )stream.tellg() + size.GetValue();
@@ -202,6 +175,8 @@ void Message::ReadFromStream( std::istream &stream )
 
         data->ReadFromStream( stream );
     }
+
+    mMode = tempMode;
 }
 
 ISerialiseData *const Message::GetSerialisable( const uint32_t index, Type::Type type )
