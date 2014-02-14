@@ -27,7 +27,7 @@ size_t Message::Size() const
 {
     size_t size = 0;
 
-    for ( auto it = mSerialisables.begin(), end = mSerialisables.end(); it != end; ++it )
+    for ( Map::const_iterator it = mSerialisables.begin(), end = mSerialisables.end(); it != end; ++it )
     {
         const ISerialiseData *data = it->second;
         size += data->Size();
@@ -69,12 +69,12 @@ void Message::Store( uint32_t &value, const uint32_t index /*= 0*/, const uint32
 
 void Message::Store( int64_t &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0*/ )
 {
-    StoreSNum< int64_t, uint64_t, DWORDLONGSerialiseData, Type::QWORD >( value, index, flags );
+    StoreSNum< int64_t, uint64_t, QWORDSerialiseData, Type::QWORD >( value, index, flags );
 }
 
 void Message::Store( uint64_t &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0*/ )
 {
-    StoreUNum< uint64_t, DWORDLONGSerialiseData, Type::QWORD >( value, index, flags );
+    StoreUNum< uint64_t, QWORDSerialiseData, Type::QWORD >( value, index, flags );
 }
 
 
@@ -142,12 +142,24 @@ void Message::WriteToStream( std::ostream &stream ) const
     ::VarInt< uint64_t > size( Size() );
     size.WriteToStream( stream );
 
-    for ( auto it = mSerialisables.begin(), end = mSerialisables.end(); it != end; ++it )
+    for ( Map::const_iterator it = mSerialisables.begin(), end = mSerialisables.end(); it != end; ++it )
     {
         const ISerialiseData *data = it->second;
 
-        ::VarInt< uint64_t > header( Util::CreateHeader( ( uint64_t )it->first, data->GetType() ) );
-        header.WriteToStream( stream );
+        Type::Type type = data->GetType();
+
+        {
+            ::VarInt< uint64_t > header( Util::CreateHeader( ( uint64_t )it->first, type ) );
+            header.WriteToStream( stream );
+
+            if ( type == Type::Repeated )
+            {
+                const AbstractRepeatedData *const repeatedData = static_cast< const AbstractRepeatedData *const >( data );
+                header.SetValue( Util::CreateHeader( repeatedData->GetFieldCount(), repeatedData->GetSubType() ) );
+                header.WriteToStream( stream );
+            }
+        }
+
         data->WriteToStream( stream );
     }
 }
@@ -164,14 +176,32 @@ void Message::ReadFromStream( std::istream &stream )
     while ( stream.tellg() < end )
     {
         uint64_t vHeader;
+        ISerialiseData *data = NULL;
+        Type::Type type;
 
         {
             ::VarInt< uint64_t > header;
             header.ReadFromStream( stream );
             vHeader = header.GetValue();
-        }
 
-        ISerialiseData *data = GetSerialisable( Util::GetHeaderIndex( vHeader ), Util::GetHeaderType( vHeader ) );
+            type = Util::GetHeaderType( vHeader );
+
+
+            if ( type == Type::Repeated )
+            {
+                uint32_t index = Util::GetHeaderIndex( vHeader );
+
+                header.ReadFromStream( stream );
+                vHeader = header.GetValue();
+
+                data = GetRepeated( index, Util::GetHeaderType( vHeader ) );
+                static_cast< AbstractRepeatedData *const >( data )->Resize( Util::GetHeaderIndex( vHeader ) );
+            }
+            else
+            {
+                data = GetSerialisable( Util::GetHeaderIndex( vHeader ), type );
+            }
+        }
 
         data->ReadFromStream( stream );
     }
@@ -205,7 +235,7 @@ ISerialiseData *const Message::GetSerialisable( const uint32_t index, Type::Type
         break;
 
     case Type::QWORD:
-        return GetSerialisable< DWORDLONGSerialiseData, Type::QWORD >( index );
+        return GetSerialisable< QWORDSerialiseData, Type::QWORD >( index );
         break;
 
     case Type::VarInt:
@@ -214,4 +244,150 @@ ISerialiseData *const Message::GetSerialisable( const uint32_t index, Type::Type
     }
 
     return NULL;
+}
+
+AbstractRepeatedData *const Message::GetRepeated( const uint32_t index, Type::Type subType, uint32_t flags )
+{
+    AbstractRepeatedData *repeated = NULL;
+
+    switch ( subType )
+    {
+    case Type::Message:
+        repeated = GetSerialisable< RepeatedMessage, Type::Repeated >( index );
+        break;
+
+    case Type::String:
+        repeated = GetSerialisable< RepeatedStringData, Type::Repeated >( index );
+        break;
+
+    case Type::Char:
+        repeated = GetSerialisable< RepeatedCharData, Type::Repeated >( index );
+        break;
+
+    case Type::WORD:
+        if ( flags & ( uint32_t )Flags::Packed )
+        {
+            repeated = GetSerialisable< RepeatedVarIntData, Type::Repeated >( index );
+        }
+        else
+        {
+            repeated = GetSerialisable< RepeatedWORDData, Type::WORD >( index );
+        }
+
+        break;
+
+    case Type::DWORD:
+        if ( flags & ( uint32_t )Flags::Packed )
+        {
+            repeated = GetSerialisable< RepeatedVarIntData, Type::Repeated >( index );
+        }
+        else
+        {
+            repeated = GetSerialisable< RepeatedDWORDData, Type::DWORD >( index );
+        }
+
+        break;
+
+    case Type::QWORD:
+        if ( flags & ( uint32_t )Flags::Packed )
+        {
+            repeated = GetSerialisable< RepeatedVarIntData, Type::Repeated >( index );
+        }
+        else
+        {
+            repeated = GetSerialisable< RepeatedQWORDData, Type::QWORD >( index );
+        }
+
+        break;
+
+    case Type::VarInt:
+        repeated = GetSerialisable< RepeatedVarIntData, Type::Repeated >( index );
+        break;
+    }
+
+    assert( repeated );
+    assert( repeated->GetSubType() == subType || ( ( flags & ( uint32_t ) Message::Packed ) && ( subType >= Type::WORD ||
+            subType <= Type::QWORD ) && repeated->GetSubType() == Type::VarInt ) );
+
+    return repeated;
+}
+
+void Message::CreateRepeated( Type::Type type, uint32_t size, const uint32_t index /*= 0*/,
+                              const uint32_t flags /*= 0 */ )
+{
+    if ( mMode == Mode::Serialise )
+    {
+        GetRepeated( index, type, flags )->Resize( size );
+    }
+}
+
+void Message::StoreRepeated( uint8_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t )
+{
+    StoreRepeated< uint8_t, CharSerialiseData, Type::Char >( value, index, repeatedIndex );
+}
+
+void Message::StoreRepeated( int8_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t )
+{
+    StoreRepeated< int8_t, CharSerialiseData, Type::Char >( value, index, repeatedIndex );
+}
+
+void Message::StoreRepeated( uint16_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags /*= 0 */ )
+{
+    StoreRepeatedUNum< uint16_t, WORDSerialiseData, Type::WORD >( value, index, repeatedIndex, flags );
+}
+
+void Message::StoreRepeated( int16_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags /*= 0 */ )
+{
+    StoreRepeatedSNum< int16_t, uint16_t, WORDSerialiseData, Type::WORD >( value, index, repeatedIndex, flags );
+}
+
+void Message::StoreRepeated( uint32_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags /*= 0 */ )
+{
+    StoreRepeatedUNum< uint32_t, DWORDSerialiseData, Type::DWORD >( value, index, repeatedIndex, flags );
+}
+
+void Message::StoreRepeated( int32_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags /*= 0 */ )
+{
+    StoreRepeatedSNum< int32_t, uint32_t, DWORDSerialiseData, Type::DWORD >( value, index, repeatedIndex, flags );
+}
+
+void Message::StoreRepeated( uint64_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags /*= 0 */ )
+{
+    StoreRepeatedUNum< uint64_t, QWORDSerialiseData, Type::QWORD >( value, index, repeatedIndex, flags );
+}
+
+void Message::StoreRepeated( int64_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags /*= 0 */ )
+{
+    StoreRepeatedSNum< int64_t, uint64_t, QWORDSerialiseData, Type::QWORD >( value, index, repeatedIndex, flags );
+}
+
+void Message::StoreRepeated( float &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags /*= 0 */ )
+{
+    bool isSerialising = mMode == Mode::Serialise;
+
+    uint32_t flexman = isSerialising ? Util::FloatToUInt32( value ) : 0;
+    StoreRepeatedUNum< uint32_t, DWORDSerialiseData, Type::DWORD >( flexman, index, repeatedIndex, flags );
+
+    if ( !isSerialising )
+    {
+        value = Util::UInt32ToFloat( flexman );
+    }
+}
+
+void Message::StoreRepeated( double &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags /*= 0 */ )
+{
+    bool isSerialising = mMode == Mode::Serialise;
+
+    uint64_t flexman = isSerialising ? Util::DoubleToUInt64( value ) : 0;
+    StoreRepeatedUNum< uint64_t, QWORDSerialiseData, Type::QWORD >( flexman, index, repeatedIndex, flags );
+
+    if ( !isSerialising )
+    {
+        value = Util::UInt64ToDouble( flexman );
+    }
+}
+
+void Message::StoreRepeated( std::string &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t )
+{
+    StoreRepeated< std::string, StringSerialiseData, Type::String >( value, index, repeatedIndex );
 }

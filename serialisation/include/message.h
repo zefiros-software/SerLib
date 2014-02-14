@@ -4,6 +4,7 @@
 
 #include "ISerialisable.h"
 #include "serialiseData.h"
+#include "abstractRepeatedData.h"
 #include "macro.h"
 
 #ifdef CPP11
@@ -50,7 +51,37 @@ public:
 
     void StoreObject( ISerialisable *const serialisable, uint32_t index = 0 );
 
+    uint32_t Count( const uint32_t index ) const
+    {
+        Map::const_iterator it = mSerialisables.find( index );
+
+        assert( it != mSerialisables.end() );
+
+        ISerialiseData *const data = it->second;
+
+        if ( data->GetType() == Type::Repeated )
+        {
+            return static_cast< AbstractRepeatedData *const >( data )->GetFieldCount();
+        }
+
+        return 1;
+    }
+
     void CreateRepeated( Type::Type type, uint32_t size, const uint32_t index = 0, const uint32_t flags = 0 );
+
+    void StoreRepeated( uint8_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
+    void StoreRepeated( int8_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
+    void StoreRepeated( uint16_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
+    void StoreRepeated( int16_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
+    void StoreRepeated( uint32_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
+    void StoreRepeated( int32_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
+    void StoreRepeated( uint64_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
+    void StoreRepeated( int64_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
+
+    void StoreRepeated( float &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
+    void StoreRepeated( double &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
+
+    void StoreRepeated( std::string &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
 
     void WriteToFile( const std::string &fileName ) const;
     virtual void WriteToStream( std::ostream &stream ) const;
@@ -61,9 +92,9 @@ public:
 private:
 
 #ifdef CPP11
-    typedef std::unordered_map< size_t, ISerialiseData * > Map;
+    typedef std::unordered_map< uint32_t, ISerialiseData * > Map;
 #else
-    typedef std::map< size_t, ISerialiseData * > Map;
+    typedef std::map< uint32_t, ISerialiseData * > Map;
 #endif
 
 
@@ -129,7 +160,7 @@ private:
     {
         ISerialiseData *data = NULL;
 
-        auto it = mSerialisables.find( index );
+        Map::iterator it = mSerialisables.find( index );
 
         if ( it != mSerialisables.end() )
         {
@@ -142,14 +173,7 @@ private:
         {
         case Mode::Serialise:
             {
-                if ( data && data->GetType() != T )
-                {
-                    delete data;
-                    data = new DataType();
-                    mSerialisables.erase( it );
-                    mSerialisables[ index ] = data;
-                }
-                else if ( !data )
+                if ( !data )
                 {
                     data = new DataType();
                     mSerialisables[ index ] = data;
@@ -164,7 +188,60 @@ private:
         return static_cast< DataType *const >( data );
     }
 
+    template< typename V, typename DataType, Type::Type T >
+    void StoreRepeated( V &value, const uint32_t index, const uint32_t repeatedIndex )
+    {
+        Map::iterator it = mSerialisables.find( index );
+        assert( it != mSerialisables.end() );
+
+        ISerialiseData *const data = it->second;
+
+        assert( data->GetType() == Type::Repeated );
+
+        AbstractRepeatedData *const repeated = static_cast< AbstractRepeatedData *const >( data );
+
+        assert( repeated->GetSubType() == T );
+
+
+        static_cast< DataType *const >( repeated->GetSerialisable( repeatedIndex ) )->Store( value, mMode );
+    }
+
+    template< typename V, typename DataType, Type::Type T >
+    void StoreRepeatedUNum( V &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags )
+    {
+        if ( flags & ( uint32_t )Flags::Packed )
+        {
+            StoreRepeated< V, VarIntSerialiseData, Type::VarInt >( value, index, repeatedIndex );
+        }
+        else
+        {
+            StoreRepeated< V, DataType, T >( value, index, repeatedIndex );
+        }
+    }
+
+    template< typename S, typename U, typename DataType, Type::Type T >
+    void StoreRepeatedSNum( S &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags )
+    {
+        if ( flags & ( uint32_t )Flags::Packed )
+        {
+            bool isSerialising = mMode == Mode::Serialise;
+
+            U uVal = isSerialising ? Util::ZigZag< S, U >( value ) : 0;
+            StoreRepeated< U, VarIntSerialiseData, Type::VarInt >( uVal, index, repeatedIndex );
+
+            if ( !isSerialising )
+            {
+                value = Util::ZagZig< U, S >( uVal );
+            }
+        }
+        else
+        {
+            StoreRepeated< S, DataType, T >( value, index, repeatedIndex );
+        }
+    }
+
     ISerialiseData *const GetSerialisable( const uint32_t index, Type::Type type );
+    AbstractRepeatedData *const GetRepeated( const uint32_t index, Type::Type subType, uint32_t flags = 0 );
 };
 
 #endif

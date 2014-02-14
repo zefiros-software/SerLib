@@ -18,7 +18,7 @@ namespace Util
     double UInt64ToDouble( const uint64_t i );
 
     template< typename T >
-    uint32_t CalculateVarIntSize( T val )
+    uint8_t CalculateVarIntSize( T val )
     {
         uint8_t size = 1;
 

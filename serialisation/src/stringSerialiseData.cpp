@@ -30,7 +30,7 @@ size_t StringSerialiseData::Size() const
 
 void StringSerialiseData::ReadFromStream( std::istream &stream )
 {
-    VarInt< uint32_t > length;
+    VarInt< size_t > length;
     length.ReadFromStream( stream );
     mString.resize( length.GetValue() );
     stream.read( &mString.front(), length.GetValue() );
@@ -38,7 +38,7 @@ void StringSerialiseData::ReadFromStream( std::istream &stream )
 
 void StringSerialiseData::WriteToStream( std::ostream &stream ) const
 {
-    VarInt< uint32_t > length( mString.length() );
+    VarInt< size_t > length( mString.length() );
     length.WriteToStream( stream );
     stream.write( &mString.front(), mString.size() );
 }

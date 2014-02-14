@@ -2,163 +2,81 @@
 #ifndef __REPEATEDSERIALISEDATA_H__
 #define __REPEATEDSERIALISEDATA_H__
 
+#include "abstractRepeatedData.h"
 #include "numSerialiseData.h"
 #include "varIntSerialiseData.h"
 #include "stringSerialiseData.h"
 #include "util.h"
 #include <assert.h>
+#include "types.h"
 
+template< typename DataType, Type::Type SubType >
 class RepeatedData
-    : public ISerialiseData
+    : public AbstractRepeatedData
 {
 public:
 
-    RepeatedData( Type::Type subType )
-        : mFieldCount( 0 ), mSubType( subType )
+    virtual ISerialiseData *const GetSerialisable( const size_t index )
     {
-
+        return &mFields.at( index );
     }
 
     virtual void WriteToStream( std::ostream &stream ) const
     {
-        VarInt< uint64_t > header( Util::CreateHeader( mFieldCount, mSubType ) );
-        header.WriteToStream( stream );
-
-        for ( auto it = mFields.begin(), end = mFields.begin() + mFieldCount; it != end; ++it )
+        for ( std::vector< DataType >::const_iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
         {
-            ISerialiseData *const data = *it;
-            assert( data->GetType() == mSubType );
-
-            if ( data->GetType() == mSubType )
-            {
-                data->WriteToStream( stream );
-            }
+            it->WriteToStream( stream );
         }
     }
 
     virtual void ReadFromStream( std::istream &stream )
     {
-        VarInt< uint64_t > header;
-        header.ReadFromStream( stream );
-        uint64_t vHeader = header.GetValue();
-
-        assert( Util::GetHeaderType( vHeader ) == mSubType );
-
-        uint32_t size = mFieldCount + Util::GetHeaderIndex( vHeader );
-        mSubType = Util::GetHeaderType( vHeader );
-        mFields.resize( size );
-
-        for ( auto it = mFields.begin() + mFieldCount, end = mFields.begin() + size; it != end; ++it )
+        for ( std::vector< DataType >::iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
         {
-            ISerialiseData *data = *it;
-            assert( data->GetType() == mSubType );
-
-            if ( data->GetType() != mSubType )
-            {
-                delete data;
-                data = NewSerialisable( mSubType );
-                *it = data;
-            }
-
-            data->ReadFromStream( stream );
+            it->ReadFromStream( stream );
         }
-
-        mFieldCount = size;
-    }
-
-    virtual Type::Type GetType() const
-    {
-        return Type::Repeated;
     }
 
     virtual Type::Type GetSubType() const
     {
-        return mSubType;
-    };
+        return SubType;
+    }
 
-    virtual uint32_t Size() const
+    virtual size_t Size() const
     {
-        uint32_t size = Util::CalculateVarIntSize( Util::CreateHeader( mFieldCount, mSubType ) );
+        size_t size = Util::CalculateVarIntSize( Util::CreateHeader( ( uint32_t )mFields.size(), SubType ) );
 
         for ( auto it = mFields.begin(), end = mFields.end(); it != end; ++it )
         {
-            size += ( *it )->Size();
+            size += it->Size();
         }
 
         return size;
     }
 
-    ISerialiseData *const GetSerialiseData( uint32_t index )
+    virtual void Resize( const size_t size )
     {
-        assert( index < mFieldCount );
-        return mFields.at( index );
+        assert( size >= mFields.size() );
+        mFields.resize( size );
     }
 
-    const ISerialiseData *const GetSerialiseData( uint32_t index ) const
+    virtual uint32_t GetFieldCount() const
     {
-        assert( index < mFieldCount );
-        return mFields.at( index );
-    }
-
-    void Resize( const uint32_t size )
-    {
-        if ( size > mFields.size() )
-        {
-            mFields.resize( size );
-
-            for ( auto it = mFields.begin(), end = mFields.end(); it != end; ++it )
-            {
-                *it = NewSerialisable( mSubType );
-            }
-        }
-
-        mFieldCount = size;
-    }
-
-    size_t GetFieldCount() const
-    {
-        return mFieldCount;
+        return ( uint32_t )mFields.size();
     }
 
 protected:
 
-    std::vector< ISerialiseData * > mFields;
-    Type::Type mSubType;
-    uint32_t mFieldCount;
-
-    ISerialiseData *const NewSerialisable( const Type::Type subType )
-    {
-        switch ( subType )
-        {
-        case Type::Char:
-            return new CharSerialiseData();
-            break;
-
-        case Type::DWORD:
-            return new DWORDSerialiseData();
-            break;
-
-        case Type::QWORD:
-            return new DWORDLONGSerialiseData();
-            break;
-
-        case Type::Message:
-            return new Message();
-            break;
-
-        case Type::String:
-            return new StringSerialiseData();
-            break;
-
-        case Type::VarInt:
-            return new VarIntSerialiseData();
-            break;
-
-        case Type::WORD:
-            return new WORDSerialiseData();
-            break;
-        }
-    }
+    std::vector< DataType > mFields;
 };
+
+typedef RepeatedData< Message, Type::Message > RepeatedMessage;
+typedef RepeatedData< StringSerialiseData, Type::String > RepeatedStringData;
+typedef RepeatedData< CharSerialiseData, Type::Char > RepeatedCharData;
+typedef RepeatedData< WORDSerialiseData, Type::WORD > RepeatedWORDData;
+typedef RepeatedData< DWORDSerialiseData, Type::DWORD > RepeatedDWORDData;
+typedef RepeatedData< QWORDSerialiseData, Type::QWORD > RepeatedQWORDData;
+typedef RepeatedData< VarIntSerialiseData, Type::VarInt > RepeatedVarIntData;
+
 
 #endif

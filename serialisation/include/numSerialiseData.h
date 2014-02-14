@@ -10,17 +10,17 @@ class NumSerialiseData
 {
 public:
 
-    template< typename U >
-    void Store( U &val, Mode::Mode mode )
+    template< typename T >
+    void Store( T &val, Mode::Mode mode )
     {
         switch ( mode )
         {
         case Mode::Serialise:
-            mValue = val;
+            mValue = ( U )val;
             break;
 
         case Mode::Deserialise:
-            val = ( U )mValue;
+            val = ( T )mValue;
             break;
         }
     }
@@ -53,6 +53,6 @@ protected:
 typedef NumSerialiseData< uint8_t, Type::Char > CharSerialiseData;
 typedef NumSerialiseData< uint16_t, Type::WORD > WORDSerialiseData;
 typedef NumSerialiseData< uint32_t, Type::DWORD > DWORDSerialiseData;
-typedef NumSerialiseData< uint64_t, Type::QWORD > DWORDLONGSerialiseData;
+typedef NumSerialiseData< uint64_t, Type::QWORD > QWORDSerialiseData;
 
 #endif
