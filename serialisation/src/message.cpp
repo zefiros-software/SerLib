@@ -250,64 +250,47 @@ AbstractRepeatedData *const Message::GetRepeated( const uint32_t index, Type::Ty
 {
     AbstractRepeatedData *repeated = NULL;
 
-    switch ( subType )
+    bool isVarint = ( ( flags & ( uint32_t ) Message::Packed ) && subType >= Type::WORD && subType <= Type::QWORD );
+
+    if ( isVarint )
     {
-    case Type::Message:
-        repeated = GetSerialisable< RepeatedMessage, Type::Repeated >( index );
-        break;
-
-    case Type::String:
-        repeated = GetSerialisable< RepeatedStringData, Type::Repeated >( index );
-        break;
-
-    case Type::Char:
-        repeated = GetSerialisable< RepeatedCharData, Type::Repeated >( index );
-        break;
-
-    case Type::WORD:
-        if ( flags & ( uint32_t )Flags::Packed )
-        {
-            repeated = GetSerialisable< RepeatedVarIntData, Type::Repeated >( index );
-        }
-        else
-        {
-            repeated = GetSerialisable< RepeatedWORDData, Type::WORD >( index );
-        }
-
-        break;
-
-    case Type::DWORD:
-        if ( flags & ( uint32_t )Flags::Packed )
-        {
-            repeated = GetSerialisable< RepeatedVarIntData, Type::Repeated >( index );
-        }
-        else
-        {
-            repeated = GetSerialisable< RepeatedDWORDData, Type::DWORD >( index );
-        }
-
-        break;
-
-    case Type::QWORD:
-        if ( flags & ( uint32_t )Flags::Packed )
-        {
-            repeated = GetSerialisable< RepeatedVarIntData, Type::Repeated >( index );
-        }
-        else
-        {
-            repeated = GetSerialisable< RepeatedQWORDData, Type::QWORD >( index );
-        }
-
-        break;
-
-    case Type::VarInt:
         repeated = GetSerialisable< RepeatedVarIntData, Type::Repeated >( index );
-        break;
+    }
+    else
+    {
+        switch ( subType )
+        {
+        case Type::Message:
+            repeated = GetSerialisable< RepeatedMessage, Type::Repeated >( index );
+            break;
+
+        case Type::String:
+            repeated = GetSerialisable< RepeatedStringData, Type::Repeated >( index );
+            break;
+
+        case Type::Char:
+            repeated = GetSerialisable< RepeatedCharData, Type::Repeated >( index );
+            break;
+
+        case Type::WORD:
+            repeated = GetSerialisable< RepeatedWORDData, Type::Repeated >( index );
+            break;
+
+        case Type::DWORD:
+            repeated = GetSerialisable< RepeatedDWORDData, Type::Repeated >( index );
+            break;
+
+        case Type::QWORD:
+            repeated = GetSerialisable< RepeatedQWORDData, Type::Repeated >( index );
+            break;
+
+        case Type::VarInt:
+            repeated = GetSerialisable< RepeatedVarIntData, Type::Repeated >( index );
+            break;
+        }
     }
 
-    assert( repeated );
-    assert( repeated->GetSubType() == subType || ( ( flags & ( uint32_t ) Message::Packed ) && ( subType >= Type::WORD ||
-            subType <= Type::QWORD ) && repeated->GetSubType() == Type::VarInt ) );
+    assert( repeated && repeated->GetSubType() == subType || ( isVarint && repeated->GetSubType() == Type::VarInt ) );
 
     return repeated;
 }
