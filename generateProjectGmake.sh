@@ -1,3 +1,2 @@
-@echo off
-cd extern/bin
+cd ./extern/project
 premake5 gmake
