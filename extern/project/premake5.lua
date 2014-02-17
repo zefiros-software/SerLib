@@ -1,9 +1,9 @@
 local root      = "../../"
-local getcppflags = premake.tools.gcc.getcppflags;
-function premake.tools.gcc.getcppflags(cfg)
-    local cppflags = { pthread = "-pthread" }
-    local r = getcppflags(cfg);
-    local r2 = table.translate(cfg.flags, cppflags);
+local getldflags = premake.tools.gcc.getldflags;
+function premake.tools.gcc.getldflags(cfg)
+    local ldflags = { pthread = "-pthread" }
+    local r = getldflags(cfg);
+    local r2 = table.translate(cfg.flags, ldflags);
     for _,v in ipairs(r2) do table.insert(r, v) end
     return r;
 end
