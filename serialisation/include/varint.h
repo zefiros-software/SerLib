@@ -3,8 +3,10 @@
 #define __VARINT_H__
 
 #include "types.h"
-#include <vector>
+
 #include <iostream>
+#include <tgmath.h>
+#include <vector>
 
 template< typename U >
 class VarInt

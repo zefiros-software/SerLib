@@ -5,6 +5,8 @@
 #include "ISerialisable.h"
 #include "serialiseData.h"
 #include "abstractRepeatedData.h"
+#include "varIntSerialiseData.h"
+#include "util.h"
 #include "macro.h"
 
 #ifdef CPP11
@@ -209,7 +211,7 @@ private:
     template< typename V, typename DataType, Type::Type T >
     void StoreRepeatedUNum( V &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags )
     {
-        if ( flags & ( uint32_t )Flags::Packed )
+        if ( flags & ( uint32_t )Packed )
         {
             StoreRepeated< V, VarIntSerialiseData, Type::VarInt >( value, index, repeatedIndex );
         }
@@ -222,7 +224,7 @@ private:
     template< typename S, typename U, typename DataType, Type::Type T >
     void StoreRepeatedSNum( S &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags )
     {
-        if ( flags & ( uint32_t )Flags::Packed )
+        if ( flags & ( uint32_t )Packed )
         {
             bool isSerialising = mMode == Mode::Serialise;
 
