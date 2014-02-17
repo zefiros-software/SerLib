@@ -2,7 +2,7 @@
 #ifndef __STRINGSERIALISEDATA_H__
 #define __STRINGSERIALISEDATA_H__
 
-#include "serialiseData.h"
+#include "ISerialiseData.h"
 
 class StringSerialiseData
     : public ISerialiseData

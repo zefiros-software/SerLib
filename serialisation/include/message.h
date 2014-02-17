@@ -3,7 +3,7 @@
 #define __MESSAGE_H__
 
 #include "ISerialisable.h"
-#include "serialiseData.h"
+#include "ISerialiseData.h"
 #include "abstractRepeatedData.h"
 #include "varIntSerialiseData.h"
 #include "util.h"

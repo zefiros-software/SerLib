@@ -2,7 +2,7 @@
 #ifndef __NUMSERIALISEDATA_H__
 #define __NUMSERIALISEDATA_H__
 
-#include "serialiseData.h"
+#include "ISerialiseData.h"
 
 template< typename U, Type::Type T >
 class NumSerialiseData

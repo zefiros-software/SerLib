@@ -2,7 +2,7 @@
 #ifndef __VARINTSERIALISEDATA_H__
 #define __VARINTSERIALISEDATA_H__
 
-#include "serialiseData.h"
+#include "ISerialiseData.h"
 #include "varint.h"
 
 class VarIntSerialiseData

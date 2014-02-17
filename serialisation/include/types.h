@@ -30,7 +30,7 @@ namespace Type
         Char      = 0x02,
         WORD      = 0x03,
         DWORD     = 0x04,
-        QWORD = 0x05,
+        QWORD     = 0x05,
         VarInt    = 0x06,
         Repeated  = 0x07
     };
