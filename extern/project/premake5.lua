@@ -1,13 +1,19 @@
 local root      = "../../"
+local getldflags = premake.tools.gcc.getldflags;
+function premake.tools.gcc.getldflags(cfg)
+    local ldflags = { pthread = "-pthread" }
+    local r = getldflags(cfg);
+    local r2 = table.translate(cfg.flags, ldflags);
+    for _,v in ipairs(r2) do table.insert(r, v) end
+    return r;
+end
+table.insert(premake.fields.flags.allowed, "pthread");
 
-solution "Serialisation"
+solution "serialisation"
 
 	location( root .. "serialisation/" )
-		
 	debugdir( root .. "bin/" )
 	
-	objdir( root .. "bin/obj/" )
-
 	configurations { "Debug", "Release" }
 
 	platforms { "x64", "x32" }
@@ -22,25 +28,40 @@ solution "Serialisation"
 
     configuration "x32"
 		architecture "x32"
-		targetdir( root .. "bin/x32/" )
 
     configuration "x64"
-		architecture "x64"		
-		targetdir( root .. "bin/x64/" )
+		architecture "x64"
 		
 	configuration "Debug"
-		targetsuffix ( "d" )
+		
+		objdir( root .. "bin/obj/" )
+		
+		targetsuffix "d"
 		defines "DEBUG"
 		flags "Symbols"
 		optimize "Off"
+		
+		configuration "x64"
+			targetdir( root .. "bin/debug/x64/" )
+			
+		configuration "x32"
+			targetdir( root .. "bin/debug/x32/" )
 
 	configuration "Release"
+		objdir( root .. "bin/obj/" )
+		
 		flags "LinkTimeOptimization"
 		optimize "Speed"
-
+		
+		configuration "x64"
+			targetdir( root .. "bin/release/x64/" )
+			
+		configuration "x32"
+			targetdir( root .. "bin/release/x32/" )
+				
 	configuration {}
 			
-	project "Serialisation Test"
+	project "serialisation-test"
 		location(  root .. "test/" )
 		
 		links "Serialisation"
@@ -63,8 +84,10 @@ solution "Serialisation"
 			root .. "test/*.cpp"
 			}
 			
+		configuration "gmake"
+			flags "pthread"
 			
-	project "Serialisation"
+	project "serialisation"
 		targetname "serialisation"	 
 		kind "StaticLib"
 

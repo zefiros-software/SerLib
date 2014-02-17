@@ -7,7 +7,6 @@
 #include "abstractRepeatedData.h"
 #include "varIntSerialiseData.h"
 #include "util.h"
-#include "macro.h"
 
 #include <iostream>
 #include <assert.h>

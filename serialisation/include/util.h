@@ -3,9 +3,10 @@
 #define __UTIL_H__
 
 #include "types.h"
-#include <cmath>
-#include <vector>
+
 #include <iostream>
+#include <vector>
+#include <cmath>
 
 namespace Util
 {
