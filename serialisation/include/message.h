@@ -64,6 +64,13 @@ public:
         return 1;
     }
 
+    uint32_t GetMemberCount() const
+    {
+        return ( uint32_t )mSerialisables.size();
+    }
+
+
+
     void CreateRepeated( Type::Type type, uint32_t size, const uint32_t index = 0, const uint32_t flags = 0 );
 
     void StoreRepeated( uint8_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
