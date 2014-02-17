@@ -10,8 +10,8 @@ class NumSerialiseData
 {
 public:
 
-    template< typename T >
-    void Store( T &val, Mode::Mode mode )
+    template< typename D >
+    void Store( D &val, Mode::Mode mode )
     {
         switch ( mode )
         {
@@ -20,7 +20,7 @@ public:
             break;
 
         case Mode::Deserialise:
-            val = ( T )mValue;
+            val = ( D )mValue;
             break;
         }
     }

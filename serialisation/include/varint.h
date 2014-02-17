@@ -5,8 +5,8 @@
 #include "types.h"
 
 #include <iostream>
-#include <tgmath.h>
 #include <vector>
+#include <math.h>
 
 template< typename U >
 class VarInt
@@ -85,11 +85,12 @@ private:
         mValue = 0;
         size_t shift = 0;
 
-        for ( std::vector< char >::const_iterator it = mBytes.begin(), end = mBytes.begin() + mSize; it != end; ++it, shift += 7 )
+        for ( std::vector< char >::const_iterator it = mBytes.begin(), end = mBytes.begin() + mSize; it != end;
+                ++it, shift += 7 )
         {
             char byteVal = *it;
             U result = byteVal & 0x7F;
-            mValue |= (U)( result ) << shift;
+            mValue |= ( U )( result ) << shift;
         }
     }
 };
