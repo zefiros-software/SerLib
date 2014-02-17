@@ -129,7 +129,7 @@ void Message::StoreObject( ISerialisable *const serialisable, uint32_t index )
 
 void Message::WriteToFile( const std::string &fileName ) const
 {
-    std::ofstream stream( fileName, std::ios::binary );
+    std::ofstream stream( fileName.c_str(), std::ios::binary );
 
     if ( stream.is_open() )
     {
@@ -216,6 +216,7 @@ ISerialiseData *Message::GetSerialisable( const uint32_t index, Type::Type type 
 
     switch ( type )
     {
+    case Type::Repeated:
     case Type::Message:
         return GetSerialisable< Message, Type::Message >( index );
         break;
@@ -262,6 +263,7 @@ AbstractRepeatedData *Message::GetRepeated( const uint32_t index, Type::Type sub
     {
         switch ( subType )
         {
+        case Type::Repeated:
         case Type::Message:
             repeated = GetSerialisable< RepeatedMessage, Type::Repeated >( index );
             break;
@@ -292,7 +294,7 @@ AbstractRepeatedData *Message::GetRepeated( const uint32_t index, Type::Type sub
         }
     }
 
-    assert( repeated && repeated->GetSubType() == subType || ( isVarint && repeated->GetSubType() == Type::VarInt ) );
+    assert( ( repeated && repeated->GetSubType() == subType ) || ( isVarint && repeated->GetSubType() == Type::VarInt ) );
 
     return repeated;
 }
