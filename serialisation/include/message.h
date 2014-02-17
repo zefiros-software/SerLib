@@ -104,7 +104,7 @@ private:
     template< typename U, typename DataType, Type::Type T >
     void StoreUNum( U &val, const uint32_t index, const uint32_t flags )
     {
-        if ( flags & ( uint32_t )Flags::Packed )
+        if ( flags & ( uint32_t )Packed )
         {
             VarIntSerialiseData *const data = GetSerialisable< VarIntSerialiseData, Type::VarInt >( index );
 
@@ -127,7 +127,7 @@ private:
     template< typename S, typename U, typename DataType, Type::Type T >
     void StoreSNum( S &val, const uint32_t index, const uint32_t flags )
     {
-        if ( flags & ( uint32_t )Flags::Packed )
+        if ( flags & ( uint32_t )Packed )
         {
             VarIntSerialiseData *const data = GetSerialisable< VarIntSerialiseData, Type::VarInt >( index );
 
@@ -156,7 +156,7 @@ private:
     }
 
     template< typename DataType, Type::Type T >
-    DataType *const GetSerialisable( const uint32_t index )
+    DataType *GetSerialisable( const uint32_t index )
     {
         ISerialiseData *data = NULL;
 
