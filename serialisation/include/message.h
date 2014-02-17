@@ -5,6 +5,8 @@
 #include "ISerialisable.h"
 #include "ISerialiseData.h"
 #include "abstractRepeatedData.h"
+#include "varIntSerialiseData.h"
+#include "util.h"
 #include "macro.h"
 
 #ifdef CPP11
@@ -104,7 +106,7 @@ private:
     template< typename U, typename DataType, Type::Type T >
     void StoreUNum( U &val, const uint32_t index, const uint32_t flags )
     {
-        if ( flags & ( uint32_t )Flags::Packed )
+        if ( flags & ( uint32_t )Packed )
         {
             VarIntSerialiseData *const data = GetSerialisable< VarIntSerialiseData, Type::VarInt >( index );
 
@@ -127,7 +129,7 @@ private:
     template< typename S, typename U, typename DataType, Type::Type T >
     void StoreSNum( S &val, const uint32_t index, const uint32_t flags )
     {
-        if ( flags & ( uint32_t )Flags::Packed )
+        if ( flags & ( uint32_t )Packed )
         {
             VarIntSerialiseData *const data = GetSerialisable< VarIntSerialiseData, Type::VarInt >( index );
 
@@ -156,7 +158,7 @@ private:
     }
 
     template< typename DataType, Type::Type T >
-    DataType *const GetSerialisable( const uint32_t index )
+    DataType *GetSerialisable( const uint32_t index )
     {
         ISerialiseData *data = NULL;
 
@@ -209,7 +211,7 @@ private:
     template< typename V, typename DataType, Type::Type T >
     void StoreRepeatedUNum( V &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags )
     {
-        if ( flags & ( uint32_t )Flags::Packed )
+        if ( flags & ( uint32_t )Packed )
         {
             StoreRepeated< V, VarIntSerialiseData, Type::VarInt >( value, index, repeatedIndex );
         }
@@ -222,7 +224,7 @@ private:
     template< typename S, typename U, typename DataType, Type::Type T >
     void StoreRepeatedSNum( S &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags )
     {
-        if ( flags & ( uint32_t )Flags::Packed )
+        if ( flags & ( uint32_t )Packed )
         {
             bool isSerialising = mMode == Mode::Serialise;
 
@@ -240,8 +242,8 @@ private:
         }
     }
 
-    ISerialiseData *const GetSerialisable( const uint32_t index, Type::Type type );
-    AbstractRepeatedData *const GetRepeated( const uint32_t index, Type::Type subType, uint32_t flags = 0 );
+    ISerialiseData *GetSerialisable( const uint32_t index, Type::Type type );
+    AbstractRepeatedData *GetRepeated( const uint32_t index, Type::Type subType, uint32_t flags = 0 );
 };
 
 #endif

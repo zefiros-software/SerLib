@@ -4,9 +4,9 @@
 
 #include "macro.h"
 
-#include <stdint.h>
-
-#ifndef CPP11
+#ifdef CPP11
+#   include <stdint.h>
+#else
 
 typedef unsigned char uint8_t;
 typedef unsigned short uint16_t;

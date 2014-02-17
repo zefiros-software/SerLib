@@ -2,8 +2,10 @@
 #ifndef __HELPER_H__
 #define __HELPER_H__
 
-#include <climits>
+#include "message.h"
+
 #include <sstream>
+#include <limits>
 
 template< typename T >
 void SimpleSerialiseDeserialiseStream( T &c1, T &c2 )
