@@ -1,9 +1,10 @@
 local root      = "../../"
 
-solution "Serialisation"
+solution "serialisation"
 
 	location( root .. "serialisation/" )
-		
+	debugdir( root .. "bin/" )
+	
 	configurations { "Debug", "Release" }
 
 	platforms { "x64", "x32" }
@@ -23,9 +24,10 @@ solution "Serialisation"
 		architecture "x64"
 		
 	configuration "Debug"
-		debugdir( root .. "bin/debug/" )
-		objdir( root .. "bin/obj/debug/" )
-		targetsuffix ( "d" )
+		
+		objdir( root .. "bin/obj/" )
+		
+		targetsuffix "d"
 		defines "DEBUG"
 		flags "Symbols"
 		optimize "Off"
@@ -37,8 +39,8 @@ solution "Serialisation"
 			targetdir( root .. "bin/debug/x32/" )
 
 	configuration "Release"
-		debugdir( root .. "bin/release/" )
-		objdir( root .. "bin/obj/release/" )
+		objdir( root .. "bin/obj/" )
+		
 		flags "LinkTimeOptimization"
 		optimize "Speed"
 		
@@ -50,7 +52,7 @@ solution "Serialisation"
 			
 	configuration {}
 			
-	project "Serialisation Test"
+	project "serialisation-test"
 		location(  root .. "test/" )
 		
 		links "Serialisation"
@@ -74,7 +76,7 @@ solution "Serialisation"
 			}
 			
 			
-	project "Serialisation"
+	project "serialisation"
 		targetname "serialisation"	 
 		kind "StaticLib"
 
