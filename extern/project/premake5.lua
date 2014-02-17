@@ -1,4 +1,13 @@
 local root      = "../../"
+local getcxxflags = premake.tools.gcc.getcxxflags;
+function premake.tools.gcc.getcxxflags(cfg)
+    local cxxflags = { pthread = "-pthread" }
+    local r = getcxxflags(cfg);
+    local r2 = table.translate(cfg.flags, cxxflags);
+    for _,v in ipairs(r2) do table.insert(r, v) end
+    return r;
+end
+table.insert(premake.fields.flags.allowed, "pthread");
 
 solution "serialisation"
 
@@ -50,6 +59,9 @@ solution "serialisation"
 		configuration "x32"
 			targetdir( root .. "bin/release/x32/" )
 			
+	configuration "gmake"
+		flags "pthread"
+	
 	configuration {}
 			
 	project "serialisation-test"
