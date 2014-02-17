@@ -4,10 +4,6 @@ solution "Serialisation"
 
 	location( root .. "serialisation/" )
 		
-	debugdir( root .. "bin/" )
-	
-	objdir( root .. "bin/obj/" )
-
 	configurations { "Debug", "Release" }
 
 	platforms { "x64", "x32" }
@@ -22,22 +18,36 @@ solution "Serialisation"
 
     configuration "x32"
 		architecture "x32"
-		targetdir( root .. "bin/x32/" )
 
     configuration "x64"
-		architecture "x64"		
-		targetdir( root .. "bin/x64/" )
+		architecture "x64"
 		
 	configuration "Debug"
+		debugdir( root .. "bin/debug/" )
+		objdir( root .. "bin/obj/debug/" )
 		targetsuffix ( "d" )
 		defines "DEBUG"
 		flags "Symbols"
 		optimize "Off"
+		
+		configuration "x64"
+			targetdir( root .. "bin/debug/x64/" )
+			
+		configuration "x32"
+			targetdir( root .. "bin/debug/x32/" )
 
 	configuration "Release"
+		debugdir( root .. "bin/release/" )
+		objdir( root .. "bin/obj/release/" )
 		flags "LinkTimeOptimization"
 		optimize "Speed"
-
+		
+		configuration "x64"
+			targetdir( root .. "bin/release/x64/" )
+			
+		configuration "x32"
+			targetdir( root .. "bin/release/x32/" )
+			
 	configuration {}
 			
 	project "Serialisation Test"
