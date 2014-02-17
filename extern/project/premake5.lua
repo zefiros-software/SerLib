@@ -87,6 +87,18 @@ solution "serialisation"
 		configuration "gmake"
 			flags "pthread"
 			
+		configuration { "Debug", "x32" }
+			defines "PREFIX=X32D_"
+		
+		configuration { "Debug", "x64" }
+			defines "PREFIX=X64D_"
+		
+		configuration { "Release", "x32" }
+			defines "PREFIX=X32R_"
+		
+		configuration { "Release", "x64" }
+			defines "PREFIX=X64R_"
+			
 	project "serialisation"
 		targetname "serialisation"	 
 		kind "StaticLib"
