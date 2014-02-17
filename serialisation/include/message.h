@@ -9,14 +9,9 @@
 #include "util.h"
 #include "macro.h"
 
-#ifdef CPP11
-#include <unordered_map>
-#else
-#include <map>
-#endif
-
-#include <assert.h>
 #include <iostream>
+#include <assert.h>
+#include <map>
 
 class Message
     : public ISerialiseData
@@ -55,7 +50,7 @@ public:
 
     uint32_t Count( const uint32_t index ) const
     {
-        Map::const_iterator it = mSerialisables.find( index );
+        std::map< uint32_t, ISerialiseData * >::const_iterator it = mSerialisables.find( index );
 
         assert( it != mSerialisables.end() );
 
@@ -93,14 +88,7 @@ public:
 
 private:
 
-#ifdef CPP11
-    typedef std::unordered_map< uint32_t, ISerialiseData * > Map;
-#else
-    typedef std::map< uint32_t, ISerialiseData * > Map;
-#endif
-
-
-    Map mSerialisables;
+    std::map< uint32_t, ISerialiseData * > mSerialisables;
     Mode::Mode mMode;
 
     template< typename U, typename DataType, Type::Type T >
@@ -162,7 +150,7 @@ private:
     {
         ISerialiseData *data = NULL;
 
-        Map::iterator it = mSerialisables.find( index );
+        std::map< uint32_t, ISerialiseData * >::iterator it = mSerialisables.find( index );
 
         if ( it != mSerialisables.end() )
         {
@@ -193,7 +181,7 @@ private:
     template< typename V, typename DataType, Type::Type T >
     void StoreRepeated( V &value, const uint32_t index, const uint32_t repeatedIndex )
     {
-        Map::iterator it = mSerialisables.find( index );
+        std::map< uint32_t, ISerialiseData * >::iterator it = mSerialisables.find( index );
         assert( it != mSerialisables.end() );
 
         ISerialiseData *const data = it->second;

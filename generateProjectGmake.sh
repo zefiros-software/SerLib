@@ -1,2 +1,2 @@
 cd ./extern/project
-premake5 gmake
+./premake5 gmake

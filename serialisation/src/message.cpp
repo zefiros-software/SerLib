@@ -27,7 +27,7 @@ size_t Message::Size() const
 {
     size_t size = 0;
 
-    for ( Map::const_iterator it = mSerialisables.begin(), end = mSerialisables.end(); it != end; ++it )
+    for ( std::map< uint32_t, ISerialiseData * >::const_iterator it = mSerialisables.begin(), end = mSerialisables.end(); it != end; ++it )
     {
         const ISerialiseData *data = it->second;
         size += data->Size();
@@ -142,7 +142,7 @@ void Message::WriteToStream( std::ostream &stream ) const
     ::VarInt< uint64_t > size( Size() );
     size.WriteToStream( stream );
 
-    for ( Map::const_iterator it = mSerialisables.begin(), end = mSerialisables.end(); it != end; ++it )
+    for ( std::map< uint32_t, ISerialiseData * >::const_iterator it = mSerialisables.begin(), end = mSerialisables.end(); it != end; ++it )
     {
         const ISerialiseData *data = it->second;
 
