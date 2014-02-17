@@ -58,10 +58,7 @@ solution "serialisation"
 			
 		configuration "x32"
 			targetdir( root .. "bin/release/x32/" )
-			
-	configuration "gmake"
-		flags "pthread"
-	
+				
 	configuration {}
 			
 	project "serialisation-test"
@@ -87,6 +84,8 @@ solution "serialisation"
 			root .. "test/*.cpp"
 			}
 			
+		configuration "gmake"
+			flags "pthread"
 			
 	project "serialisation"
 		targetname "serialisation"	 
