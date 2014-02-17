@@ -250,7 +250,7 @@ AbstractRepeatedData *const Message::GetRepeated( const uint32_t index, Type::Ty
 {
     AbstractRepeatedData *repeated = NULL;
 
-    bool isVarint = ( ( flags & ( uint32_t ) Message::Packed ) && subType >= Type::WORD && subType <= Type::QWORD );
+    bool isVarint = ( ( flags & ( uint32_t )Message::Packed ) && subType >= Type::WORD && subType <= Type::QWORD );
 
     if ( isVarint )
     {

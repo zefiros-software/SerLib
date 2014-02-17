@@ -2,7 +2,7 @@
 #ifndef __ABSTRACTSERIALISEDATA_H__
 #define __ABSTRACTSERIALISEDATA_H__
 
-#include "serialiseData.h"
+#include "ISerialiseData.h"
 #include "types.h"
 
 class AbstractRepeatedData
