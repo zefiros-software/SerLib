@@ -16,7 +16,7 @@ class RepeatedData
 {
 public:
 
-    virtual ISerialiseData *const GetSerialisable( const size_t index )
+    virtual ISerialiseData *GetSerialisable( const size_t index )
     {
         return &mFields.at( index );
     }

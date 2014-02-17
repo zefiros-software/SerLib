@@ -240,8 +240,8 @@ private:
         }
     }
 
-    ISerialiseData *const GetSerialisable( const uint32_t index, Type::Type type );
-    AbstractRepeatedData *const GetRepeated( const uint32_t index, Type::Type subType, uint32_t flags = 0 );
+    ISerialiseData *GetSerialisable( const uint32_t index, Type::Type type );
+    AbstractRepeatedData *GetRepeated( const uint32_t index, Type::Type subType, uint32_t flags = 0 );
 };
 
 #endif

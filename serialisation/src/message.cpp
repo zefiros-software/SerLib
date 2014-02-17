@@ -209,7 +209,7 @@ void Message::ReadFromStream( std::istream &stream )
     mMode = tempMode;
 }
 
-ISerialiseData *const Message::GetSerialisable( const uint32_t index, Type::Type type )
+ISerialiseData *Message::GetSerialisable( const uint32_t index, Type::Type type )
 {
 
     switch ( type )
@@ -246,7 +246,7 @@ ISerialiseData *const Message::GetSerialisable( const uint32_t index, Type::Type
     return NULL;
 }
 
-AbstractRepeatedData *const Message::GetRepeated( const uint32_t index, Type::Type subType, uint32_t flags )
+AbstractRepeatedData *Message::GetRepeated( const uint32_t index, Type::Type subType, uint32_t flags )
 {
     AbstractRepeatedData *repeated = NULL;
 
