@@ -46,7 +46,7 @@ public:
     {
         size_t size = Util::CalculateVarIntSize( Util::CreateHeader( ( uint32_t )mFields.size(), SubType ) );
 
-        for ( auto it = mFields.begin(), end = mFields.end(); it != end; ++it )
+        for ( typename std::vector< DataType >::const_iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
         {
             size += it->Size();
         }
