@@ -27,7 +27,8 @@ size_t Message::Size() const
 {
     size_t size = 0;
 
-    for ( std::map< uint32_t, ISerialiseData * >::const_iterator it = mSerialisables.begin(), end = mSerialisables.end(); it != end; ++it )
+    for ( std::map< uint32_t, ISerialiseData * >::const_iterator it = mSerialisables.begin(), end = mSerialisables.end();
+            it != end; ++it )
     {
         const ISerialiseData *data = it->second;
         size += data->Size();
@@ -142,7 +143,8 @@ void Message::WriteToStream( std::ostream &stream ) const
     ::VarInt< uint64_t > size( Size() );
     size.WriteToStream( stream );
 
-    for ( std::map< uint32_t, ISerialiseData * >::const_iterator it = mSerialisables.begin(), end = mSerialisables.end(); it != end; ++it )
+    for ( std::map< uint32_t, ISerialiseData * >::const_iterator it = mSerialisables.begin(), end = mSerialisables.end();
+            it != end; ++it )
     {
         const ISerialiseData *data = it->second;
 
@@ -314,37 +316,44 @@ void Message::StoreRepeated( int8_t &value, const uint32_t index, const uint32_t
     StoreRepeated< int8_t, CharSerialiseData, Type::Char >( value, index, repeatedIndex );
 }
 
-void Message::StoreRepeated( uint16_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags /*= 0 */ )
+void Message::StoreRepeated( uint16_t &value, const uint32_t index, const uint32_t repeatedIndex,
+                             const uint32_t flags /*= 0 */ )
 {
     StoreRepeatedUNum< uint16_t, WORDSerialiseData, Type::WORD >( value, index, repeatedIndex, flags );
 }
 
-void Message::StoreRepeated( int16_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags /*= 0 */ )
+void Message::StoreRepeated( int16_t &value, const uint32_t index, const uint32_t repeatedIndex,
+                             const uint32_t flags /*= 0 */ )
 {
     StoreRepeatedSNum< int16_t, uint16_t, WORDSerialiseData, Type::WORD >( value, index, repeatedIndex, flags );
 }
 
-void Message::StoreRepeated( uint32_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags /*= 0 */ )
+void Message::StoreRepeated( uint32_t &value, const uint32_t index, const uint32_t repeatedIndex,
+                             const uint32_t flags /*= 0 */ )
 {
     StoreRepeatedUNum< uint32_t, DWORDSerialiseData, Type::DWORD >( value, index, repeatedIndex, flags );
 }
 
-void Message::StoreRepeated( int32_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags /*= 0 */ )
+void Message::StoreRepeated( int32_t &value, const uint32_t index, const uint32_t repeatedIndex,
+                             const uint32_t flags /*= 0 */ )
 {
     StoreRepeatedSNum< int32_t, uint32_t, DWORDSerialiseData, Type::DWORD >( value, index, repeatedIndex, flags );
 }
 
-void Message::StoreRepeated( uint64_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags /*= 0 */ )
+void Message::StoreRepeated( uint64_t &value, const uint32_t index, const uint32_t repeatedIndex,
+                             const uint32_t flags /*= 0 */ )
 {
     StoreRepeatedUNum< uint64_t, QWORDSerialiseData, Type::QWORD >( value, index, repeatedIndex, flags );
 }
 
-void Message::StoreRepeated( int64_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags /*= 0 */ )
+void Message::StoreRepeated( int64_t &value, const uint32_t index, const uint32_t repeatedIndex,
+                             const uint32_t flags /*= 0 */ )
 {
     StoreRepeatedSNum< int64_t, uint64_t, QWORDSerialiseData, Type::QWORD >( value, index, repeatedIndex, flags );
 }
 
-void Message::StoreRepeated( float &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags /*= 0 */ )
+void Message::StoreRepeated( float &value, const uint32_t index, const uint32_t repeatedIndex,
+                             const uint32_t flags /*= 0 */ )
 {
     bool isSerialising = mMode == Mode::Serialise;
 
@@ -357,7 +366,8 @@ void Message::StoreRepeated( float &value, const uint32_t index, const uint32_t 
     }
 }
 
-void Message::StoreRepeated( double &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags /*= 0 */ )
+void Message::StoreRepeated( double &value, const uint32_t index, const uint32_t repeatedIndex,
+                             const uint32_t flags /*= 0 */ )
 {
     bool isSerialising = mMode == Mode::Serialise;
 

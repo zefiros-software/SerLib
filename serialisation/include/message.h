@@ -150,7 +150,7 @@ private:
     {
         ISerialiseData *data = NULL;
 
-        std::map< uint32_t, ISerialiseData * >::iterator it = mSerialisables.find( index );
+        typename std::map< uint32_t, ISerialiseData * >::iterator it = mSerialisables.find( index );
 
         if ( it != mSerialisables.end() )
         {
@@ -181,7 +181,7 @@ private:
     template< typename V, typename DataType, Type::Type T >
     void StoreRepeated( V &value, const uint32_t index, const uint32_t repeatedIndex )
     {
-        std::map< uint32_t, ISerialiseData * >::iterator it = mSerialisables.find( index );
+        typename std::map< uint32_t, ISerialiseData * >::iterator it = mSerialisables.find( index );
         assert( it != mSerialisables.end() );
 
         ISerialiseData *const data = it->second;

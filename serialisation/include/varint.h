@@ -44,7 +44,7 @@ public:
     {
         mSize = 0;
 
-        std::vector< char >::iterator it = mBytes.begin();
+        typename std::vector< char >::iterator it = mBytes.begin();
         char c = 0;
 
         for ( bool next = true; next; next = ( c & 128 ) > 0, ++it, ++mSize )
@@ -66,7 +66,7 @@ private:
     {
         mSize = 0;
 
-        std::vector< char >::iterator it = mBytes.begin();
+        typename std::vector< char >::iterator it = mBytes.begin();
 
         for ( U val = mValue; ( val > 0 || mSize == 0 ); val >>= 7, ++it, ++mSize )
         {
@@ -85,7 +85,7 @@ private:
         mValue = 0;
         size_t shift = 0;
 
-        for ( std::vector< char >::const_iterator it = mBytes.begin(), end = mBytes.begin() + mSize; it != end;
+        for ( typename std::vector< char >::const_iterator it = mBytes.begin(), end = mBytes.begin() + mSize; it != end;
                 ++it, shift += 7 )
         {
             char byteVal = *it;

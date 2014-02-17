@@ -23,7 +23,7 @@ public:
 
     virtual void WriteToStream( std::ostream &stream ) const
     {
-        for ( std::vector< DataType >::const_iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
+        for ( typename std::vector< DataType >::const_iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
         {
             it->WriteToStream( stream );
         }
@@ -31,7 +31,7 @@ public:
 
     virtual void ReadFromStream( std::istream &stream )
     {
-        for ( std::vector< DataType >::iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
+        for ( typename std::vector< DataType >::iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
         {
             it->ReadFromStream( stream );
         }
