@@ -23,7 +23,7 @@ public:
 
     virtual void WriteToStream( std::ostream &stream ) const
     {
-        for ( Fields::const_iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
+        for ( std::vector< DataType >::const_iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
         {
             it->WriteToStream( stream );
         }
@@ -31,7 +31,7 @@ public:
 
     virtual void ReadFromStream( std::istream &stream )
     {
-        for ( Fields::iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
+        for ( std::vector< DataType >::iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
         {
             it->ReadFromStream( stream );
         }
@@ -67,9 +67,7 @@ public:
 
 protected:
 
-    typedef std::vector< DataType > Fields;
-
-    Fields mFields;
+    std::vector< DataType > mFields;
 };
 
 typedef RepeatedData< Message, Type::Message > RepeatedMessage;
