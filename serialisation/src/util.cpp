@@ -1,6 +1,6 @@
 #include "util.h"
 
-#include <cmath>
+#include <cstdlib>
 
 uint32_t Util::FloatToUInt32( const float f )
 {
@@ -9,7 +9,7 @@ uint32_t Util::FloatToUInt32( const float f )
 
     int32_t negative = exp < 0 ? 1 : 0;
 
-    uint32_t result = ( std::abs( exp ) & 0xFF ) << 1;
+    uint32_t result = ( abs( exp ) & 0xFF ) << 1;
     result |= ZigZag< int32_t, uint32_t >( static_cast< int32_t >( ldexp( fi, 22 ) ) ) << 9;
     result |= negative;
 
@@ -36,7 +36,7 @@ uint64_t Util::DoubleToUInt64( const double f )
 
     int32_t negative = exp < 0 ? 1 : 0;
 
-    uint64_t result = ( uint64_t )( std::abs( exp ) & 0x7FF ) << 1;
+    uint64_t result = ( uint64_t )( abs( exp ) & 0x7FF ) << 1;
     result |= ZigZag< int64_t, uint64_t >( static_cast< int64_t >( ldexp( fi, 51 ) ) ) << 12;
     result |= negative;
 
