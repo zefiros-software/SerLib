@@ -5,6 +5,7 @@
 #include "types.h"
 
 #include <assert.h>
+#include <string>
 
 #ifdef CPP11
 #include <unordered_map>
