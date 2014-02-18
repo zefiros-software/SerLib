@@ -82,7 +82,6 @@ private:
         size_t shift = 0;
 
         for ( int16_t i=0; i < mSize; i++, shift += 7 )
-                ++it, shift += 7 )
         {
             char byteVal = mBytes[ i ];
             U result = byteVal & 0x7F;
