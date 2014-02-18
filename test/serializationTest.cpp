@@ -96,7 +96,7 @@ namespace
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                mMember[i] = ( T )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< T >::max() );
+                mMember[i] = ( T )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< T >::max() );
             }
         }
 
@@ -123,9 +123,9 @@ namespace
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                mMemberT[i] = ( T )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< T >::max() );
-                mMemberS[i] = ( S )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< S >::max() );
-                mMemberR[i] = ( R )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< R >::max() );
+                mMemberT[i] = ( T )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< T >::max() );
+                mMemberS[i] = ( S )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< S >::max() );
+                mMemberR[i] = ( R )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< R >::max() );
             }
         }
 
