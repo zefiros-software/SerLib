@@ -4,7 +4,7 @@
 const std::string &Reflect::Get( const uint32_t index ) const
 {
     Map::const_iterator it = mNames.find( index );
-    assert( it != mNames.cend() );
+    assert( it != mNames.end() );
     return it->second;
 }
 
@@ -15,5 +15,5 @@ void Reflect::Set( const uint32_t index, const std::string &name )
 
 bool Reflect::Exists( const uint32_t index ) const
 {
-    return mNames.find( index ) != mNames.cend();
+    return mNames.find( index ) != mNames.end();
 }
