@@ -10,6 +10,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <assert.h>
 
 #define VarIntTest( test, name, type, init1, init2 )     \
     TEST( test, type ## name )                           \
@@ -23,7 +24,7 @@
     rstream.close(); \
     EXPECT_EQ( wVar.GetValue(), rVar.GetValue() );       \
     EXPECT_EQ( wVar.GetByteSize(), rVar.GetByteSize() ); \
-    EXPECT_EQ( init1, wVar.GetValue() );                    \
+    EXPECT_EQ( init1, wVar.GetValue() );                   \
     }
 
 namespace
