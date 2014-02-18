@@ -10,7 +10,7 @@
 
 
 #define TestSerialClass( test, name, type, seed1, seed2, flag, its )      \
-    TEST( test, type ## name )                                            \
+    TEST( P( test ), type ## name )                                            \
     {                                                                     \
         TestClass1< type, its, flag > c1( seed1 ), c2( seed2 );               \
         SimpleSerialiseDeserialiseStream( c1, c2 );                           \
@@ -21,7 +21,7 @@
     }
 
 #define TestFSerialClass( test, name, type, seed1, seed2, flag, its )     \
-    TEST( test, type ## name )                                            \
+    TEST( P( test ), type ## name )                                            \
     {                                                                     \
         TestClass1< type, its, flag > c1( seed1 ), c2( seed2 );               \
         SimpleSerialiseDeserialiseStream( c1, c2 );                           \
@@ -32,7 +32,7 @@
     }
 
 #define TestDSerialClass( test, name, type, seed1, seed2, flag, its )     \
-    TEST( test, type ## name )                                            \
+    TEST( P( test ), type ## name )                                            \
     {                                                                     \
         TestClass1< type, its, flag > c1( seed1 ), c2( seed2 );               \
         SimpleSerialiseDeserialiseStream( c1, c2 );                           \
@@ -43,7 +43,7 @@
     }
 
 #define TestIFDMixedSerialClass( test, name, typeI, seed1, seed2, flag, its )  \
-    TEST( test, typeI ## name )                                            \
+    TEST( P( test ), typeI ## name )                                            \
     {                                                                     \
         TestClass2< typeI, float, double, its, flag > c1( seed1 ), c2( seed2 );  \
         SimpleSerialiseDeserialiseStream( c1, c2 );                           \
@@ -56,7 +56,7 @@
     }
 
 #define TestFIDMixedSerialClass( test, name, typeI, seed1, seed2, flag, its ) \
-    TEST( test, typeI ## name )                                            \
+    TEST( P( test ), typeI ## name )                                            \
     {                                                                     \
         TestClass2< float, typeI, double, its, flag > c1( seed1 ), c2( seed2 );  \
         SimpleSerialiseDeserialiseStream( c1, c2 );                           \
@@ -69,7 +69,7 @@
     }
 
 #define TestIDIMixedSerialClass( test, name, typeI1, typeI2, seed1, seed2, flag, its ) \
-    TEST( test, typeI1 ## typeI2 ## name )                                            \
+    TEST( P( test ), typeI1 ## typeI2 ## name )                                            \
     {                                                                     \
         TestClass2< typeI1, double, typeI2, its, flag > c1( seed1 ), c2( seed2 );  \
         SimpleSerialiseDeserialiseStream( c1, c2 );                           \
