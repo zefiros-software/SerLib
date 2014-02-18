@@ -14,7 +14,7 @@
 #define TestSingleDPrimitivePacked( name, type, init1, init2 ) TestDPrimitive( SinglePrimitivePacked, name, type, 1, init1, init2, Message::Packed )
 
 #define TestPrimitive( test, name, type, index, init1, init2, flag )    \
-    TEST( test, type ## name )                                          \
+    TEST( P(test), type ## name )                                       \
     {                                                                   \
         Primitive< type, flag > c1( init1 ), c2( init2 );               \
         SimpleSerialiseDeserialiseStream( c1, c2 );                     \
@@ -23,7 +23,7 @@
     }
 
 #define TestFPrimitive( test, name, type, index, init1, init2, flag )   \
-    TEST( test, type ## name )                                          \
+    TEST( P(test), type ## name )                                       \
     {                                                                   \
         Primitive< type, flag > c1( init1 ), c2( init2 );               \
         SimpleSerialiseDeserialiseStream( c1, c2 );                     \
@@ -32,7 +32,7 @@
     }
 
 #define TestDPrimitive( test, name, type, index, init1, init2, flag )   \
-    TEST( test, type ## name )                                          \
+    TEST( P(test), type ## name )                                       \
     {                                                                   \
         Primitive< type, flag > c1( init1 ), c2( init2 );               \
         SimpleSerialiseDeserialiseStream( c1, c2 );                     \
@@ -60,7 +60,7 @@ namespace
 
         T mMember;
     };
-  
+
     TestSinglePrimitive( Max, uint8_t, std::numeric_limits<uint8_t>::max(), 1 );
     TestSinglePrimitive( Max, uint16_t, std::numeric_limits<uint16_t>::max(), 1 );
     TestSinglePrimitive( Max, uint32_t, std::numeric_limits<uint32_t>::max(), 1 );

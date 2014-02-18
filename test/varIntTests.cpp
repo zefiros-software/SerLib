@@ -11,19 +11,19 @@
 #include <fstream>
 #include <sstream>
 
-#define VarIntTest( test, name, type, init1, init2 )     \
-    TEST( test, type ## name )                           \
-    {                                                    \
-    std::ofstream wstream( "test", std::ios::binary );   \
-    VarInt< type > wVar( init1 ), rVar( init2 );         \
-    wVar.WriteToStream( wstream );                       \
-    wstream.close(); \
-    std::ifstream rstream( "test", std::ios::binary );   \
-    rVar.ReadFromStream( rstream );                      \
-    rstream.close(); \
-    EXPECT_EQ( wVar.GetValue(), rVar.GetValue() );       \
-    EXPECT_EQ( wVar.GetByteSize(), rVar.GetByteSize() ); \
-    EXPECT_EQ( init1, wVar.GetValue() );                    \
+#define VarIntTest( test, name, type, init1, init2 )         \
+    TEST( P(test), type ## name )                     \
+    {                                                        \
+        std::ofstream wstream( "test", std::ios::binary );   \
+        VarInt< type > wVar( init1 ), rVar( init2 );         \
+        wVar.WriteToStream( wstream );                       \
+        wstream.close();                                     \
+        std::ifstream rstream( "test", std::ios::binary );   \
+        rVar.ReadFromStream( rstream );                      \
+        rstream.close();                                     \
+        EXPECT_EQ( wVar.GetValue(), rVar.GetValue() );       \
+        EXPECT_EQ( wVar.GetByteSize(), rVar.GetByteSize() ); \
+        EXPECT_EQ( init1, wVar.GetValue() );                 \
     }
 
 namespace
@@ -33,14 +33,14 @@ namespace
     {
         T rVal = 0;
 
-        for ( size_t i=0; i < numBits; i++ )
+        for ( size_t i = 0; i < numBits; i++ )
         {
             rVal |= ( 1ull << i );
         }
 
         return rVal;
     }
-  
+
     VarIntTest( VarIntTestModule, 0, uint8_t, GenNum<uint8_t>( 0 ), 1 );
     VarIntTest( VarIntTestModule, 1, uint8_t, GenNum<uint8_t>( 1 ), 1 );
     VarIntTest( VarIntTestModule, 7, uint8_t, GenNum<uint8_t>( 7 ), 1 );
@@ -103,7 +103,7 @@ namespace
     VarIntTest( VarIntTestModule, zebraInv, uint16_t, GenerateInvZebraValue<uint16_t>(), 1 );
     VarIntTest( VarIntTestModule, zebraInv, uint32_t, GenerateInvZebraValue<uint32_t>(), 1 );
     VarIntTest( VarIntTestModule, zebraInv, uint64_t, GenerateInvZebraValue<uint64_t>(), 1 );
-    
+
 }
 
 

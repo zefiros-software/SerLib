@@ -12,6 +12,7 @@ table.insert(premake.fields.flags.allowed, "pthread");
 solution "serialisation"
 
 	location( root .. "serialisation/" )
+	objdir( root .. "bin/obj/" )
 	debugdir( root .. "bin/" )
 	
 	configurations { "Debug", "Release" }
@@ -24,40 +25,25 @@ solution "serialisation"
 
 	warnings "Extra"
 
-	flags "Unicode"
+	flags "Unicode"	
 
     configuration "x32"
+		targetdir( root .. "bin/x32/" )
 		architecture "x32"
 
     configuration "x64"
+		targetdir( root .. "bin/x64/" )
 		architecture "x64"
 		
 	configuration "Debug"
-		
-		objdir( root .. "bin/obj/" )
-		
 		targetsuffix "d"
 		defines "DEBUG"
 		flags "Symbols"
 		optimize "Off"
-		
-		configuration "x64"
-			targetdir( root .. "bin/debug/x64/" )
-			
-		configuration "x32"
-			targetdir( root .. "bin/debug/x32/" )
 
-	configuration "Release"
-		objdir( root .. "bin/obj/" )
-		
+	configuration "Release"		
 		flags "LinkTimeOptimization"
 		optimize "Speed"
-		
-		configuration "x64"
-			targetdir( root .. "bin/release/x64/" )
-			
-		configuration "x32"
-			targetdir( root .. "bin/release/x32/" )
 				
 	configuration {}
 			
@@ -86,6 +72,18 @@ solution "serialisation"
 			
 		configuration "gmake"
 			flags "pthread"
+			
+		configuration { "Debug", "x32" }
+			defines "PREFIX=X32D_"
+		
+		configuration { "Debug", "x64" }
+			defines "PREFIX=X64D_"
+		
+		configuration { "Release", "x32" }
+			defines "PREFIX=X32R_"
+		
+		configuration { "Release", "x64" }
+			defines "PREFIX=X64R_"
 			
 	project "serialisation"
 		targetname "serialisation"	 
