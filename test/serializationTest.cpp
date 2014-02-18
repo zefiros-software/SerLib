@@ -179,4 +179,24 @@ namespace
     TestFIDMixedSerialClass( MixedFIDSerialization, randomVals, int16_t, 343422, 21331, 0x00, 100 );
     TestFIDMixedSerialClass( MixedFIDSerialization, randomVals, int32_t, 343422, 21331, 0x00, 100 );
     TestFIDMixedSerialClass( MixedFIDSerialization, randomVals, int64_t, 343422, 21331, 0x00, 100 );
+
+    TestIFDMixedSerialClass( PackedMixedIFDSerialization, randomVals, uint8_t, 343422, 21331, 0x01, 100 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialization, randomVals, uint16_t, 343422, 21331, 0x01, 100 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialization, randomVals, uint32_t, 343422, 21331, 0x01, 100 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialization, randomVals, uint64_t, 343422, 21331, 0x01, 100 );
+
+    TestIFDMixedSerialClass( PackedMixedIFDSerialization, randomVals, int8_t, 343422, 21331, 0x01, 100 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialization, randomVals, int16_t, 343422, 21331, 0x01, 100 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialization, randomVals, int32_t, 343422, 21331, 0x01, 100 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialization, randomVals, int64_t, 343422, 21331, 0x01, 100 );
+
+    TestFIDMixedSerialClass( PackedMixedFIDSerialization, randomVals, uint8_t, 343422, 21331, 0x01, 100 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialization, randomVals, uint16_t, 343422, 21331, 0x01, 100 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialization, randomVals, uint32_t, 343422, 21331, 0x01, 100 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialization, randomVals, uint64_t, 343422, 21331, 0x01, 100 );
+
+    TestFIDMixedSerialClass( PackedMixedFIDSerialization, randomVals, int8_t, 343422, 21331, 0x01, 100 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialization, randomVals, int16_t, 343422, 21331, 0x01, 100 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialization, randomVals, int32_t, 343422, 21331, 0x01, 100 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialization, randomVals, int64_t, 343422, 21331, 0x01, 100 );
 }
