@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __SERIALISEDATA_H__
-#define __SERIALISEDATA_H__
+#ifndef __ISERIALISEDATA_H__
+#define __ISERIALISEDATA_H__
 
 #include <iostream>
 #include "types.h"

@@ -1,5 +1,6 @@
 #include "util.h"
 
+#include <cstdlib>
 
 uint32_t Util::FloatToUInt32( const float f )
 {

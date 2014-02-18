@@ -2,7 +2,7 @@
 #ifndef __ABSTRACTSERIALISEDATA_H__
 #define __ABSTRACTSERIALISEDATA_H__
 
-#include "serialiseData.h"
+#include "ISerialiseData.h"
 #include "types.h"
 
 class AbstractRepeatedData
@@ -10,7 +10,7 @@ class AbstractRepeatedData
 {
 public:
 
-    virtual ISerialiseData *const GetSerialisable( const size_t index ) = 0;
+    virtual ISerialiseData *GetSerialisable( const size_t index ) = 0;
 
     virtual Type::Type GetType() const
     {

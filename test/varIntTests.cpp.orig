@@ -12,6 +12,21 @@
 #include <sstream>
 #include <assert.h>
 
+<<<<<<< HEAD
+#define VarIntTest( test, name, type, init1, init2 )     \
+    TEST( test, type ## name )                           \
+    {                                                    \
+    std::ofstream wstream( "test", std::ios::binary );   \
+    VarInt< type > wVar( init1 ), rVar( init2 );         \
+    wVar.WriteToStream( wstream );                       \
+    wstream.close(); \
+    std::ifstream rstream( "test", std::ios::binary );   \
+    rVar.ReadFromStream( rstream );                      \
+    rstream.close(); \
+    EXPECT_EQ( wVar.GetValue(), rVar.GetValue() );       \
+    EXPECT_EQ( wVar.GetByteSize(), rVar.GetByteSize() ); \
+    EXPECT_EQ( init1, wVar.GetValue() );                   \
+=======
 #define VarIntTest( test, name, type, init1, init2 )         \
     TEST( P(test), type ## name )                     \
     {                                                        \
@@ -25,6 +40,7 @@
         EXPECT_EQ( wVar.GetValue(), rVar.GetValue() );       \
         EXPECT_EQ( wVar.GetByteSize(), rVar.GetByteSize() ); \
         EXPECT_EQ( init1, wVar.GetValue() );                 \
+>>>>>>> d51cb28430e0897591bdd3ad5ba140c43a0165ca
     }
 
 namespace

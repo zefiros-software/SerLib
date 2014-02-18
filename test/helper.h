@@ -2,8 +2,14 @@
 #ifndef __HELPER_H__
 #define __HELPER_H__
 
-#include <climits>
+#define CONCATEXT( a, b ) a##b
+#define CONCAT( a, b ) CONCATEXT( a, b )
+#define P( prefix ) CONCAT( PREFIX, prefix )
+
+#include "message.h"
+
 #include <sstream>
+#include <limits>
 
 template< typename T >
 void SimpleSerialiseDeserialiseStream( T &c1, T &c2 )
@@ -30,7 +36,7 @@ T GenerateZebraValue()
 
     for ( uint16_t i = 0; i < bits; ++++i )
     {
-        result |= (T)( 1ull << i );
+        result |= ( T )( 1ull << i );
     }
 
     return result;

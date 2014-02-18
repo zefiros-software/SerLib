@@ -42,6 +42,11 @@ public:
     void ReadFromStream( std::istream &stream )
     {
         mSize = 0;
+<<<<<<< HEAD
+=======
+
+        typename std::vector< char >::iterator it = mBytes.begin();
+>>>>>>> d51cb28430e0897591bdd3ad5ba140c43a0165ca
         char c = 0;
 
         for ( bool next = true; next; next = ( c & 128 ) > 0, ++mSize )
@@ -63,7 +68,13 @@ private:
     {
         mSize = 0;
 
+<<<<<<< HEAD
         for ( U val = mValue; ( val > 0 || mSize == 0 ); val >>= 7, ++mSize )
+=======
+        typename std::vector< char >::iterator it = mBytes.begin();
+
+        for ( U val = mValue; ( val > 0 || mSize == 0 ); val >>= 7, ++it, ++mSize )
+>>>>>>> d51cb28430e0897591bdd3ad5ba140c43a0165ca
         {
             char c = val & 127;
 
@@ -81,8 +92,12 @@ private:
         mValue = 0;
         size_t shift = 0;
 
+<<<<<<< HEAD
         for ( int16_t i=0; i < mSize; i++, shift += 7 )
+=======
+        for ( typename std::vector< char >::const_iterator it = mBytes.begin(), end = mBytes.begin() + mSize; it != end;
                 ++it, shift += 7 )
+>>>>>>> d51cb28430e0897591bdd3ad5ba140c43a0165ca
         {
             char byteVal = mBytes[ i ];
             U result = byteVal & 0x7F;
