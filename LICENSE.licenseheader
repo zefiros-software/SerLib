@@ -1,6 +1,7 @@
+extensions: .h .cpp .cc .hpp
 #pragma region copyright
 /**
- * Copyright (c) 2014 Mick van Duijn, Koen Visscher and Paul Visscher
+ * Copyright (c) %CurrentYear% Mick van Duijn, Koen Visscher and Paul Visscher
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,23 +22,3 @@
  * THE SOFTWARE.
  */
 #pragma endregion
-
-#include "reflect.h"
-
-
-const std::string &Reflect::Get( const uint32_t index ) const
-{
-    Map::const_iterator it = mNames.find( index );
-    assert( it != mNames.end() );
-    return it->second;
-}
-
-void Reflect::Set( const uint32_t index, const std::string &name )
-{
-    mNames.insert( std::pair< uint32_t, std::string >( index, name ) );
-}
-
-bool Reflect::Exists( const uint32_t index ) const
-{
-    return mNames.find( index ) != mNames.end();
-}
