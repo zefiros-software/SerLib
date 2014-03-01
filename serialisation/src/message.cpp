@@ -1,4 +1,3 @@
-#pragma region copyright
 /**
  * Copyright (c) 2014 Mick van Duijn, Koen Visscher and Paul Visscher
  *
@@ -20,15 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#pragma endregion
 
 #include "interface/ISerialisable.h"
 #include "defines.h"
 #include "message.h"
 #include "varint.h"
-#include "util.h"
-
-
 
 Message::Message( Mode::Mode mode /*= Mode::Serialise */ )
     : mMode( mode )

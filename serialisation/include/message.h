@@ -1,4 +1,3 @@
-#pragma region copyright
 /**
  * Copyright (c) 2014 Mick van Duijn, Koen Visscher and Paul Visscher
  *
@@ -20,7 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#pragma endregion
 
 #pragma once
 #ifndef __MESSAGE_H__
@@ -30,6 +28,7 @@
 #include "repeatedData.h"
 #include "stringData.h"
 #include "numData.h"
+#include "util.h"
 
 #include <stdint.h>
 #include <assert.h>

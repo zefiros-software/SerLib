@@ -1,5 +1,4 @@
 extensions: .h .cpp .cc .hpp
-#pragma region copyright
 /**
  * Copyright (c) %CurrentYear% Mick van Duijn, Koen Visscher and Paul Visscher
  * 
@@ -21,4 +20,3 @@ extensions: .h .cpp .cc .hpp
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#pragma endregion
