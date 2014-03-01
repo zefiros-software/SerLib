@@ -23,16 +23,16 @@
 #pragma endregion
 
 #pragma once
-#ifndef __REPEATEDSERIALISEDATA_H__
-#define __REPEATEDSERIALISEDATA_H__
+#ifndef __REPEATEDDATA_H__
+#define __REPEATEDDATA_H__
 
-#include "abstractRepeatedData.h"
-#include "numSerialiseData.h"
-#include "varIntSerialiseData.h"
-#include "stringSerialiseData.h"
-#include "util.h"
-#include <assert.h>
+#include "interface/abstractRepeatedData.h"
+#include "interface/ISerialiseData.h"
 #include "types.h"
+
+#include <assert.h>
+#include <stdint.h>
+#include <vector>
 
 template< typename DataType, Type::Type SubType >
 class RepeatedData
@@ -93,14 +93,5 @@ protected:
 
     std::vector< DataType > mFields;
 };
-
-typedef RepeatedData< Message, Type::Message > RepeatedMessage;
-typedef RepeatedData< StringSerialiseData, Type::String > RepeatedStringData;
-typedef RepeatedData< CharSerialiseData, Type::Char > RepeatedCharData;
-typedef RepeatedData< WORDSerialiseData, Type::WORD > RepeatedWORDData;
-typedef RepeatedData< DWORDSerialiseData, Type::DWORD > RepeatedDWORDData;
-typedef RepeatedData< QWORDSerialiseData, Type::QWORD > RepeatedQWORDData;
-typedef RepeatedData< VarIntSerialiseData, Type::VarInt > RepeatedVarIntData;
-
 
 #endif

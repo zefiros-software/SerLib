@@ -26,8 +26,9 @@
 #ifndef __VARINTSERIALISEDATA_H__
 #define __VARINTSERIALISEDATA_H__
 
-#include "ISerialiseData.h"
-#include "varint.h"
+#include "interface/ISerialiseData.h"
+
+#include <stdint.h>
 
 class VarIntSerialiseData
     : public ISerialiseData

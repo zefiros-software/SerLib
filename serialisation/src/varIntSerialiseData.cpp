@@ -23,9 +23,8 @@
 #pragma endregion
 
 #include "varIntSerialiseData.h"
+#include "varint.h"
 #include "util.h"
-
-
 
 Type::Type VarIntSerialiseData::GetType() const
 {

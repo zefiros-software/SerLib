@@ -23,29 +23,29 @@
 #pragma endregion
 
 #pragma once
-#ifndef __REFLECT_H__
-#define __REFLECT_H__
+#ifndef __STRINGDATA_H__
+#define __STRINGDATA_H__
 
-#include <stdint.h>
+#include "interface/ISerialiseData.h"
 
-#include <string>
-#include <map>
-
-class Reflect
+class StringData
+    : public ISerialiseData
 {
 public:
 
-    void Set( const uint32_t index, const std::string &name );
+    void Store( std::string &str, Mode::Mode mode );
 
-    const std::string &Get( const uint32_t index ) const;
+    virtual Type::Type GetType() const;
 
-    bool Exists( const uint32_t index ) const;
+    virtual size_t Size() const;
+
+    virtual void ReadFromStream( std::istream &stream );
+
+    virtual void WriteToStream( std::ostream &stream ) const;
 
 private:
 
-    typedef std::map< uint32_t, std::string > Map;
-
-    Map mNames;
+    std::string mString;
 };
 
 #endif

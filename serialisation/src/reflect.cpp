@@ -24,6 +24,7 @@
 
 #include "reflect.h"
 
+#include <assert.h>
 
 const std::string &Reflect::Get( const uint32_t index ) const
 {

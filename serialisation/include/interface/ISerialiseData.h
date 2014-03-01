@@ -23,29 +23,23 @@
 #pragma endregion
 
 #pragma once
-#ifndef __STRINGSERIALISEDATA_H__
-#define __STRINGSERIALISEDATA_H__
+#ifndef __ISERIALISEDATA_H__
+#define __ISERIALISEDATA_H__
 
-#include "ISerialiseData.h"
+#include "types.h"
 
-class StringSerialiseData
-    : public ISerialiseData
+#include <iostream>
+
+class ISerialiseData
 {
 public:
 
-    void Store( std::string &str, Mode::Mode mode );
+    virtual void ReadFromStream( std::istream &stream ) = 0;
+    virtual void WriteToStream( std::ostream &stream ) const = 0;
 
-    virtual Type::Type GetType() const;
+    virtual Type::Type GetType() const = 0;
 
-    virtual size_t Size() const;
-
-    virtual void ReadFromStream( std::istream &stream );
-
-    virtual void WriteToStream( std::ostream &stream ) const;
-
-private:
-
-    std::string mString;
+    virtual size_t Size() const = 0;
 };
 
 #endif

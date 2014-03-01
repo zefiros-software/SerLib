@@ -29,6 +29,8 @@
 #include "ISerialiseData.h"
 #include "types.h"
 
+#include <stdint.h>
+
 class AbstractRepeatedData
     : public ISerialiseData
 {
@@ -36,18 +38,18 @@ public:
 
     virtual ISerialiseData *GetSerialisable( const size_t index ) = 0;
 
-    virtual Type::Type GetType() const
-    {
-        return Type::Repeated;
-    }
-
     virtual Type::Type GetSubType() const = 0;
 
-    virtual size_t Size() const = 0;
+    virtual uint32_t GetFieldCount() const = 0;
 
     virtual void Resize( const size_t size ) = 0;
 
-    virtual uint32_t GetFieldCount() const = 0;
+    virtual size_t Size() const = 0;    
+
+    virtual Type::Type GetType() const
+    {
+        return Type::Repeated;
+    }    
 };
 
 #endif

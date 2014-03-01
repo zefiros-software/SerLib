@@ -1,17 +1,17 @@
 #pragma region copyright
 /**
  * Copyright (c) 2014 Mick van Duijn, Koen Visscher and Paul Visscher
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,15 +26,17 @@
 #ifndef __MESSAGE_H__
 #define __MESSAGE_H__
 
-#include "ISerialisable.h"
-#include "ISerialiseData.h"
-#include "abstractRepeatedData.h"
 #include "varIntSerialiseData.h"
-#include "util.h"
+#include "repeatedData.h"
+#include "stringData.h"
+#include "numData.h"
 
-#include <iostream>
+#include <stdint.h>
 #include <assert.h>
+#include <fstream>
 #include <map>
+
+class ISerialisable;
 
 class Message
     : public ISerialiseData
@@ -49,6 +51,7 @@ public:
     Message( Mode::Mode mode = Mode::Serialise );
 
     void SetMode( Mode::Mode mode );
+
     Mode::Mode GetMode() const;
 
     virtual size_t Size() const;
@@ -56,67 +59,91 @@ public:
     virtual Type::Type GetType() const;
 
     void Store( int8_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+
     void Store( uint8_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+
     void Store( int16_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+
     void Store( uint16_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+
     void Store( int32_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+
     void Store( uint32_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+
     void Store( int64_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+
     void Store( uint64_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
 
     void Store( float &value, const uint32_t index = 0, const uint32_t flags = 0 );
+
     void Store( double &value, const uint32_t index = 0, const uint32_t flags = 0 );
 
-    void Store( std::string &string, const uint32_t index = 0, const uint32_t flags = 0 );
+    void Store( std::string &string, const uint32_t index = 0, const uint32_t = 0 );
 
-    void StoreObject( ISerialisable *const serialisable, uint32_t index = 0 );
+    void Store( ISerialisable *const serialisable, uint32_t index = 0 );
 
-    uint32_t Count( const uint32_t index ) const
-    {
-        std::map< uint32_t, ISerialiseData * >::const_iterator it = mSerialisables.find( index );
+    uint32_t Count( const uint32_t index ) const;
 
-        assert( it != mSerialisables.end() );
-
-        ISerialiseData *const data = it->second;
-
-        if ( data->GetType() == Type::Repeated )
-        {
-            return static_cast< AbstractRepeatedData *const >( data )->GetFieldCount();
-        }
-
-        return 1;
-    }
-
-    uint32_t GetMemberCount() const
-    {
-        return ( uint32_t )mSerialisables.size();
-    }
-
-
+    uint32_t GetMemberCount() const;
 
     void CreateRepeated( Type::Type type, uint32_t size, const uint32_t index = 0, const uint32_t flags = 0 );
 
-    void StoreRepeated( uint8_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
-    void StoreRepeated( int8_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
+    void StoreRepeated( uint8_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t = 0 );
+
+    void StoreRepeated( int8_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t = 0 );
+
     void StoreRepeated( uint16_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
+
     void StoreRepeated( int16_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
+
     void StoreRepeated( uint32_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
+
     void StoreRepeated( int32_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
+
     void StoreRepeated( uint64_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
+
     void StoreRepeated( int64_t &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
 
     void StoreRepeated( float &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
+
     void StoreRepeated( double &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
 
-    void StoreRepeated( std::string &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags = 0 );
+    void StoreRepeated( std::string &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t = 0 );
+
+    void StoreRepeated( ISerialisable *const serialisable, uint32_t index = 0 );
 
     void WriteToFile( const std::string &fileName ) const;
+
     virtual void WriteToStream( std::ostream &stream ) const;
 
     void ReadFromFile( const std::string &fileName );
+
     virtual void ReadFromStream( std::istream &stream );
 
+protected:
+
+    template< typename T >
+    T *CreateDataType()
+    {
+        return new T;
+    }
+
+    virtual Message *CreateMessage();
+
 private:
+
+    typedef NumData< uint8_t, Type::Char >      CharSerialiseData;
+    typedef NumData< uint16_t, Type::WORD >     WORDSerialiseData;
+    typedef NumData< uint32_t, Type::DWORD >    DWORDSerialiseData;
+    typedef NumData< uint64_t, Type::QWORD >    QWORDSerialiseData;
+
+    typedef RepeatedData< Message, Type::Message >              RepeatedMessage;
+    typedef RepeatedData< StringData, Type::String >            RepeatedStringData;
+    typedef RepeatedData< CharSerialiseData, Type::Char >       RepeatedCharData;
+    typedef RepeatedData< WORDSerialiseData, Type::WORD >       RepeatedWORDData;
+    typedef RepeatedData< DWORDSerialiseData, Type::DWORD >     RepeatedDWORDData;
+    typedef RepeatedData< QWORDSerialiseData, Type::QWORD >     RepeatedQWORDData;
+    typedef RepeatedData< VarIntSerialiseData, Type::VarInt >   RepeatedVarIntData;
 
     std::map< uint32_t, ISerialiseData * > mSerialisables;
     Mode::Mode mMode;
@@ -176,7 +203,8 @@ private:
     }
 
     template< typename DataType, Type::Type T >
-    DataType *GetSerialisable( const uint32_t index )
+    DataType *GetSerialisable( const uint32_t index,
+                               DataType * ( Message::*creator )() = &Message::CreateDataType< DataType > )
     {
         ISerialiseData *data = NULL;
 
@@ -195,7 +223,7 @@ private:
             {
                 if ( !data )
                 {
-                    data = new DataType();
+                    data = ( *this.*creator )();
                     mSerialisables[ index ] = data;
                 }
             }
@@ -261,6 +289,7 @@ private:
     }
 
     ISerialiseData *GetSerialisable( const uint32_t index, Type::Type type );
+
     AbstractRepeatedData *GetRepeated( const uint32_t index, Type::Type subType, uint32_t flags = 0 );
 };
 

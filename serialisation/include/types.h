@@ -26,8 +26,6 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
 
-#include <stdint.h>
-
 namespace Type
 {
     // underlying type is uint8_t

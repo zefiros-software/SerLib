@@ -23,13 +23,13 @@
 #pragma endregion
 
 #pragma once
-#ifndef __NUMSERIALISEDATA_H__
-#define __NUMSERIALISEDATA_H__
+#ifndef __NUMDATA_H__
+#define __NUDATA_H__
 
-#include "ISerialiseData.h"
+#include "interface/ISerialiseData.h"
 
 template< typename U, Type::Type T >
-class NumSerialiseData
+class NumData
     : public ISerialiseData
 {
 public:
@@ -73,10 +73,5 @@ protected:
 
     U mValue;
 };
-
-typedef NumSerialiseData< uint8_t, Type::Char > CharSerialiseData;
-typedef NumSerialiseData< uint16_t, Type::WORD > WORDSerialiseData;
-typedef NumSerialiseData< uint32_t, Type::DWORD > DWORDSerialiseData;
-typedef NumSerialiseData< uint64_t, Type::QWORD > QWORDSerialiseData;
 
 #endif

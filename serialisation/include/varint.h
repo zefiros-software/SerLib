@@ -26,11 +26,8 @@
 #ifndef __VARINT_H__
 #define __VARINT_H__
 
-#include "types.h"
-
 #include <iostream>
-#include <vector>
-#include <math.h>
+#include <stdint.h>
 
 template< typename U >
 class VarInt

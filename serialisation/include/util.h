@@ -28,9 +28,7 @@
 
 #include "types.h"
 
-#include <iostream>
-#include <vector>
-#include <cmath>
+#include <stdint.h>
 
 namespace Util
 {

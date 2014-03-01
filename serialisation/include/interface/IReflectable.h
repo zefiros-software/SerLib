@@ -22,45 +22,17 @@
  */
 #pragma endregion
 
-#include "stringSerialiseData.h"
-#include "varint.h"
-#include "util.h"
+#pragma once
+#ifndef __IREFLECTABLE_H__
+#define __IREFLECTABLE_H__
 
-void StringSerialiseData::Store( std::string &str, Mode::Mode mode )
+class Reflect;
+
+class IReflectable
 {
-    switch ( mode )
-    {
-    case Mode::Serialise:
-        mString = str;
-        break;
+public:
 
-    case Mode::Deserialise:
-        str = mString;
-        break;
-    }
-}
+    virtual void OnReflect( Reflect &reflect ) = 0;
+};
 
-Type::Type StringSerialiseData::GetType() const
-{
-    return Type::String;
-}
-
-size_t StringSerialiseData::Size() const
-{
-    return mString.size() + Util::CalculateVarIntSize( mString.size() );
-}
-
-void StringSerialiseData::ReadFromStream( std::istream &stream )
-{
-    VarInt< size_t > length;
-    length.ReadFromStream( stream );
-    mString.resize( length.GetValue() );
-    stream.read( &*mString.begin(), length.GetValue() );
-}
-
-void StringSerialiseData::WriteToStream( std::ostream &stream ) const
-{
-    VarInt< size_t > length( mString.length() );
-    length.WriteToStream( stream );
-    stream.write( &*mString.begin(), mString.size() );
-}
+#endif

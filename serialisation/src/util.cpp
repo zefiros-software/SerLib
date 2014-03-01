@@ -25,6 +25,7 @@
 #include "util.h"
 
 #include <cstdlib>
+#include <math.h>
 
 uint32_t Util::FloatToUInt32( const float f )
 {
