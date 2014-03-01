@@ -62,12 +62,12 @@ Type::Type Message::GetType() const
 
 void Message::Store( int8_t &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0 */ )
 {
-    StoreSNum< int8_t, uint8_t, CharSerialiseData, Type::Char >( value, index, flags & ~Flags::Packed );
+    StoreSNum< int8_t, uint8_t, CharSerialiseData, Type::Char >( value, index, flags & ~Packed );
 }
 
 void Message::Store( uint8_t &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0 */ )
 {
-    StoreUNum< uint8_t, CharSerialiseData, Type::Char >( value, index, flags & ~Flags::Packed );
+    StoreUNum< uint8_t, CharSerialiseData, Type::Char >( value, index, flags & ~Packed );
 }
 
 void Message::Store( int16_t &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0 */ )
