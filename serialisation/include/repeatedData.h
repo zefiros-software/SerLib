@@ -27,6 +27,7 @@
 #include "interface/abstractRepeatedData.h"
 #include "interface/ISerialiseData.h"
 #include "types.h"
+#include "util.h"
 
 #include <assert.h>
 #include <stdint.h>
