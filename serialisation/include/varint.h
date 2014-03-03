@@ -32,7 +32,7 @@ class VarInt
 {
 public:
 
-    VarInt( U val = 0 )
+    VarInt( U val = 0 ) : mSize(0)
     {
         SetValue( val );
     }

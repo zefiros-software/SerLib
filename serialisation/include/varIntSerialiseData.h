@@ -33,6 +33,11 @@ class VarIntSerialiseData
 {
 public:
 
+    VarIntSerialiseData() : mValue(0)
+    {
+
+    }
+
     template< typename U >
     void Store( U &val, Mode::Mode mode )
     {

@@ -23,7 +23,7 @@
 #include "gtest/gtest.h"
 
 #include <cstdio>
-
+#include <iostream>
 int main( int argc, char **argv )
 {
     testing::InitGoogleTest( &argc, argv );

@@ -29,7 +29,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <climits>
-
+#include <vector>
 
 #define TestSerialClass( test, name, type, seed1, seed2, flag, its )      \
     TEST( P( test ), type ## name )                                            \
@@ -103,6 +103,27 @@
         }                                                                     \
     }
 
+#define TestEasyRepeatedClass( test, name, seed1, seed2, flag, its ) \
+    TEST( P( test ), name )              \
+     {                                                                     \
+        TestClass3< its, flag > c1( seed1 ), c2( seed2 );  \
+        SimpleSerialiseDeserialiseStream( c1, c2 );                           \
+        for ( uint32_t i=0; i < its; i++ )                                    \
+        {                                                                     \
+             EXPECT_EQ( c1.mMemberT[i], c2.mMemberT[i]  );                   \
+             EXPECT_EQ( c1.mMemberTs[i], c2.mMemberTs[i]  );  \
+             EXPECT_EQ( c1.mMemberR[i], c2.mMemberR[i]  ); \
+             EXPECT_EQ( c1.mMemberRs[i], c2.mMemberRs[i]  ); \
+             EXPECT_EQ( c1.mMemberG[i], c2.mMemberG[i]  ); \
+             EXPECT_EQ( c1.mMemberGs[i], c2.mMemberGs[i]  ); \
+             EXPECT_EQ( c1.mMemberS[i], c2.mMemberS[i]  ); \
+             EXPECT_EQ( c1.mMemberSs[i], c2.mMemberSs[i]  ); \
+             EXPECT_FLOAT_EQ( c1.mMemberF[i], c2.mMemberF[i]  ); \
+             EXPECT_DOUBLE_EQ( c1.mMemberD[i], c2.mMemberD[i]  ); \
+             EXPECT_EQ( c1.name1.compare( c2.name1 ), 0 ); \
+             EXPECT_EQ( c1.name2.compare( c2.name2 ), 0 ); \
+        }                                                                     \
+     }
 
 namespace
 {
@@ -167,6 +188,106 @@ namespace
         R mMemberR[its];
     };
 
+    template< uint32_t its = 100, uint32_t Flag = 0x00 >
+    class TestClass3
+        : public ISerialisable
+    {
+    public:
+
+        TestClass3( uint32_t seed = 233232 )
+        {
+            srand( seed );
+
+            for ( uint32_t i = 0; i < its; ++i )
+            {
+                mMemberT.push_back( ( uint8_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< uint8_t >::max() ) );
+                mMemberS.push_back( ( uint16_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< uint16_t >::max() ) );
+                mMemberR.push_back( ( uint32_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< uint32_t >::max() ) );
+                mMemberG.push_back( ( uint64_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< uint64_t >::max() ) );
+
+                mMemberTs.push_back( ( int8_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< int8_t >::max() ) );
+                mMemberSs.push_back( ( int16_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< int16_t >::max() ) );
+                mMemberRs.push_back( ( int32_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< int32_t >::max() ) );
+                mMemberGs.push_back( ( int64_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< int64_t >::max() ) );
+
+                mMemberF.push_back( ( float )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< float >::max() ) );
+                mMemberD.push_back( ( double )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< double >::max() ) );
+
+            }
+
+            name1 = "TestClassTres";
+            name2 = "CouldBeUsedToStoreNames";
+        }
+
+        void OnSerialise( Message &message )
+        {
+            message.CreateRepeated( Type::Char, its, 0, Flag );
+            message.CreateRepeated( Type::Char, its, 1, Flag );
+            for ( size_t i = 0; i < its; ++i )
+            {
+                message.StoreRepeated( mMemberT[i], 0, i, Flag );
+                message.StoreRepeated( mMemberTs[i], 1, i, Flag );
+            }
+            
+            message.CreateRepeated( Type::WORD, its, 2, Flag );
+            message.CreateRepeated( Type::WORD, its, 3, Flag );
+            for ( size_t i = 0; i < its; ++i )
+            {
+                message.StoreRepeated( mMemberS[i], 2, i, Flag );
+                message.StoreRepeated( mMemberSs[i], 3, i, Flag );
+            }
+            
+            message.CreateRepeated( Type::DWORD, its, 4, Flag );
+            message.CreateRepeated( Type::DWORD, its, 5, Flag );
+            for ( size_t i = 0; i < its; ++i )
+            {
+                message.StoreRepeated( mMemberR[i], 4, i, Flag );
+                message.StoreRepeated( mMemberRs[i], 5, i, Flag );
+            }
+            
+            message.CreateRepeated( Type::QWORD, its, 6, Flag );
+            message.CreateRepeated( Type::QWORD, its, 7, Flag );
+            for ( size_t i = 0; i < its; ++i )
+            {
+                message.StoreRepeated( mMemberG[i], 6, i, Flag );
+                message.StoreRepeated( mMemberGs[i], 7, i, Flag );
+            }
+            
+            message.Store( name1, 8, Flag );
+            message.Store( name2, 9, Flag );
+
+            message.CreateRepeated( Type::DWORD, its, 10, Flag );
+            for ( size_t i = 0; i < its; ++i )
+            {
+                message.StoreRepeated( mMemberF[i], 10, i, Flag );
+            }
+
+            message.CreateRepeated( Type::QWORD, its, 11, Flag );
+            for ( size_t i = 0; i < its; ++i )
+            {
+                message.StoreRepeated( mMemberD[i], 11, i, Flag );
+            }
+           
+        }
+
+        std::vector< uint8_t > mMemberT;
+        std::vector< uint16_t > mMemberS;
+        std::vector< uint32_t > mMemberR;
+        std::vector< uint64_t > mMemberG;
+
+        std::vector< int8_t > mMemberTs;
+        std::vector< int16_t > mMemberSs;
+        std::vector< int32_t > mMemberRs;
+        std::vector< int64_t > mMemberGs;
+
+        std::string name1;
+        std::string name2;
+
+        std::vector< float > mMemberF;
+        std::vector< double > mMemberD;
+    };
+
+
 
     TestSerialClass( MultiSerialization, randomVals, uint8_t, 343422, 21331, 0x00, 100 );
     TestSerialClass( MultiSerialization, randomVals, uint16_t, 343422, 21331, 0x00, 100 );
@@ -221,4 +342,7 @@ namespace
     TestFIDMixedSerialClass( PackedMixedFIDSerialization, randomVals, int16_t, 343422, 21331, 0x01, 100 );
     TestFIDMixedSerialClass( PackedMixedFIDSerialization, randomVals, int32_t, 343422, 21331, 0x01, 100 );
     TestFIDMixedSerialClass( PackedMixedFIDSerialization, randomVals, int64_t, 343422, 21331, 0x01, 100 );
+
+    TestEasyRepeatedClass( EasyRepeated, randomVals, 343422, 21331, 0x00, 100 );
+    TestEasyRepeatedClass( EasyRepeatedPacked, randomVals, 343422, 21331, 0x01, 100 );
 }

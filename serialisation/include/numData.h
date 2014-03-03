@@ -32,6 +32,9 @@ class NumData
 {
 public:
 
+    NumData() : mValue(0)
+    {}
+
     template< typename D >
     void Store( D &val, Mode::Mode mode )
     {
