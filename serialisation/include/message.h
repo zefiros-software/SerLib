@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#ifndef __MESSAGE_H__
-#define __MESSAGE_H__
+#ifndef __SERIALIZATION_MESSAGE_H__
+#define __SERIALIZATION_MESSAGE_H__
 
 #include "varIntSerialiseData.h"
 #include "repeatedData.h"

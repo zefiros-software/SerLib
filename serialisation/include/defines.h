@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#ifndef __DEFINES_H__
-#define __DEFINES_H__
+#ifndef __SERIALIZATION_DEFINES_H__
+#define __SERIALIZATION_DEFINES_H__
 
 #ifndef SERIALISATION_CUSTOM_INTERFACE
 #   define SERIALISATION_CUSTOM_INTERFACE OnSerialise

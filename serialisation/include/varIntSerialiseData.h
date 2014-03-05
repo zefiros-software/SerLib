@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#ifndef __VARINTSERIALISEDATA_H__
-#define __VARINTSERIALISEDATA_H__
+#ifndef __SERIALIZATION_VARINTSERIALISEDATA_H__
+#define __SERIALIZATION_VARINTSERIALISEDATA_H__
 
 #include "interface/ISerialiseData.h"
 

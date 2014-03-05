@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#ifndef __ABSTRACTSERIALISEDATA_H__
-#define __ABSTRACTSERIALISEDATA_H__
+#ifndef __SERIALIZATION_ABSTRACTSERIALISEDATA_H__
+#define __SERIALIZATION_ABSTRACTSERIALISEDATA_H__
 
 #include "ISerialiseData.h"
 #include "types.h"

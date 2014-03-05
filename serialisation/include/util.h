@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#ifndef __UTIL_H__
-#define __UTIL_H__
+#ifndef __SERIALIZATION_UTIL_H__
+#define __SERIALIZATION_UTIL_H__
 
 #include "types.h"
 

@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#ifndef __STRINGDATA_H__
-#define __STRINGDATA_H__
+#ifndef __SERIALIZATION_STRINGDATA_H__
+#define __SERIALIZATION_STRINGDATA_H__
 
 #include "interface/ISerialiseData.h"
 

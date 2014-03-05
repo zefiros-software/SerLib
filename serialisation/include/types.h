@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#ifndef __TYPES_H__
-#define __TYPES_H__
+#ifndef __SERIALIZATION_TYPES_H__
+#define __SERIALIZATION_TYPES_H__
 
 namespace Type
 {

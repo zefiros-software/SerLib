@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#ifndef __NUMDATA_H__
-#define __NUDATA_H__
+#ifndef __SERIALIZATION_NUMDATA_H__
+#define __SERIALIZATION_NUMDATA_H__
 
 #include "interface/ISerialiseData.h"
 

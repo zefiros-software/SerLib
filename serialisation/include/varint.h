@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#ifndef __VARINT_H__
-#define __VARINT_H__
+#ifndef __SERIALIZATION_VARINT_H__
+#define __SERIALIZATION_VARINT_H__
 
 #include <iostream>
 #include <stdint.h>
