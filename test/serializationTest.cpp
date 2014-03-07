@@ -253,7 +253,7 @@ namespace
             message.CreateRepeated( Type::DWORD, its, 4, Flag );
             message.CreateRepeated( Type::DWORD, its, 5, Flag );
 
-            for ( size_t i = 0; i < its; ++i )
+            for ( uint32_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberR[i], 4, i, Flag );
                 message.StoreRepeated( mMemberRs[i], 5, i, Flag );
