@@ -132,7 +132,7 @@
 		SimpleSerialiseDeserialiseStream( c1, c2 );                           \
 		for ( uint32_t i=0; i < its; i++ )                                    \
 		{                                                                     \
-			EXPECT_EQ( c1.mMemberT[i], c2.mMemberT[i]  );                   \
+			EXPECT_EQ( c1.mMemberTs[i], c2.mMemberTs[i]  );                   \
 		}                                                                     \
 	 }
 
@@ -329,7 +329,7 @@ namespace
 
 			for ( uint32_t i = 0; i < its; ++i )
 			{
-				mMemberT.push_back( ( uint8_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< T >::max() ) );
+				mMemberTs.push_back( ( uint8_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< T >::max() ) );
 			}
 		}
 
@@ -339,13 +339,13 @@ namespace
 
 			for (uint32_t i = 0; i < its; ++i )
 			{
-				Primitive< T, Flag > val( mMemberT[ i ] );
+				Primitive< T, Flag > val( mMemberTs[ i ] );
 				message.StoreRepeated( &val, 0, i, Flag );
-				mMemberT[ i ] = val.mMember;
+				mMemberTs[ i ] = val.mMember;
 			}
 		}
 
-		std::vector< T > mMemberT;
+		std::vector< T > mMemberTs;
 	};
 
 
