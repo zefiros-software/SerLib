@@ -235,7 +235,7 @@ namespace
             message.CreateRepeated( Type::Char, its, 0, Flag );
             message.CreateRepeated( Type::Char, its, 1, Flag );
 
-            for ( uint8_t i = 0; i < its; ++i )
+            for ( uint32_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberT[i], 0, i, Flag );
                 message.StoreRepeated( mMemberTs[i], 1, i, Flag );
@@ -244,7 +244,7 @@ namespace
             message.CreateRepeated( Type::WORD, its, 2, Flag );
             message.CreateRepeated( Type::WORD, its, 3, Flag );
 
-            for ( uint16_t i = 0; i < its; ++i )
+            for ( uint32_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberS[i], 2, i, Flag );
                 message.StoreRepeated( mMemberSs[i], 3, i, Flag );
@@ -262,7 +262,7 @@ namespace
             message.CreateRepeated( Type::QWORD, its, 6, Flag );
             message.CreateRepeated( Type::QWORD, its, 7, Flag );
 
-            for ( size_t i = 0; i < its; ++i )
+            for ( uint64_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberG[i], 6, i, Flag );
                 message.StoreRepeated( mMemberGs[i], 7, i, Flag );
