@@ -126,7 +126,7 @@
      }
 
 #define TestEasyRepeatedMessage( test, name, seed1, seed2, flag, its, type ) \
-	TEST( P( test ), name )              \
+	TEST( P( test ), type ## name )              \
 	 {                                                                     \
 		TestClass4< type, its, flag > c1( seed1 ), c2( seed2 );  \
 		SimpleSerialiseDeserialiseStream( c1, c2 );                           \
@@ -406,5 +406,7 @@ namespace
 
     TestEasyRepeatedClass( EasyRepeated, randomVals, 343422, 21331, 0x00, 100 );
     TestEasyRepeatedClass( EasyRepeatedPacked, randomVals, 343422, 21331, 0x01, 100 );
-	TestEasyRepeatedMessage( EasyRepeatedUInt32Message, randomVals, 343422, 21331, 0x00, 100, uint32_t );
+
+	TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, uint32_t );
+	TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, int32_t );
 }
