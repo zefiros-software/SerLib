@@ -262,7 +262,7 @@ namespace
             message.CreateRepeated( Type::QWORD, its, 6, Flag );
             message.CreateRepeated( Type::QWORD, its, 7, Flag );
 
-            for ( uint64_t i = 0; i < its; ++i )
+            for ( uint32_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberG[i], 6, i, Flag );
                 message.StoreRepeated( mMemberGs[i], 7, i, Flag );
@@ -273,14 +273,14 @@ namespace
 
             message.CreateRepeated( Type::DWORD, its, 10, Flag );
 
-            for ( size_t i = 0; i < its; ++i )
+            for ( uint32_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberF[i], 10, i, Flag );
             }
 
             message.CreateRepeated( Type::QWORD, its, 11, Flag );
 
-            for ( size_t i = 0; i < its; ++i )
+            for ( uint32_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberD[i], 11, i, Flag );
             }
