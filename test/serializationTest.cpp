@@ -154,7 +154,7 @@ namespace
             }
         }
 
-        void OnSerialise( Message &message )
+        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
         {
             for ( uint32_t i = 0; i < its; ++i )
             {
@@ -183,7 +183,7 @@ namespace
             }
         }
 
-        void OnSerialise( Message &message )
+        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
         {
             for ( uint32_t i = 0; i < its; ++i )
             {
@@ -230,7 +230,7 @@ namespace
             name2 = "CouldBeUsedToStoreNames";
         }
 
-        void OnSerialise( Message &message )
+        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
         {
             message.CreateRepeated( Type::Char, its, 0, Flag );
             message.CreateRepeated( Type::Char, its, 1, Flag );
@@ -315,7 +315,7 @@ namespace
         {
         }
 
-        void OnSerialise( Message &message )
+        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
         {
             message.Store( mMember, 1, Flag );
         }
@@ -339,7 +339,7 @@ namespace
             }
         }
 
-        void OnSerialise( Message &message )
+        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
         {
             message.CreateRepeated( Type::Message, its, 0, Flag );
 
