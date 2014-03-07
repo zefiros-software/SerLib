@@ -409,4 +409,6 @@ namespace
 
 	TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, uint32_t );
 	TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, int32_t );
+	TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, uint64_t );
+	TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, int64_t );
 }
