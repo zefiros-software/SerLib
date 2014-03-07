@@ -1,16 +1,16 @@
 /**
  * Copyright (c) 2014 Mick van Duijn, Koen Visscher and Paul Visscher
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -105,36 +105,36 @@
 
 #define TestEasyRepeatedClass( test, name, seed1, seed2, flag, its ) \
     TEST( P( test ), name )              \
-     {                                                                     \
+    {                                                                     \
         TestClass3< its, flag > c1( seed1 ), c2( seed2 );  \
         SimpleSerialiseDeserialiseStream( c1, c2 );                           \
         for ( uint32_t i=0; i < its; i++ )                                    \
         {                                                                     \
-             EXPECT_EQ( c1.mMemberT[i], c2.mMemberT[i]  );                   \
-             EXPECT_EQ( c1.mMemberTs[i], c2.mMemberTs[i]  );  \
-             EXPECT_EQ( c1.mMemberR[i], c2.mMemberR[i]  ); \
-             EXPECT_EQ( c1.mMemberRs[i], c2.mMemberRs[i]  ); \
-             EXPECT_EQ( c1.mMemberG[i], c2.mMemberG[i]  ); \
-             EXPECT_EQ( c1.mMemberGs[i], c2.mMemberGs[i]  ); \
-             EXPECT_EQ( c1.mMemberS[i], c2.mMemberS[i]  ); \
-             EXPECT_EQ( c1.mMemberSs[i], c2.mMemberSs[i]  ); \
-             EXPECT_FLOAT_EQ( c1.mMemberF[i], c2.mMemberF[i]  ); \
-             EXPECT_DOUBLE_EQ( c1.mMemberD[i], c2.mMemberD[i]  ); \
-             EXPECT_EQ( c1.name1.compare( c2.name1 ), 0 ); \
-             EXPECT_EQ( c1.name2.compare( c2.name2 ), 0 ); \
+            EXPECT_EQ( c1.mMemberT[i], c2.mMemberT[i]  );                   \
+            EXPECT_EQ( c1.mMemberTs[i], c2.mMemberTs[i]  );  \
+            EXPECT_EQ( c1.mMemberR[i], c2.mMemberR[i]  ); \
+            EXPECT_EQ( c1.mMemberRs[i], c2.mMemberRs[i]  ); \
+            EXPECT_EQ( c1.mMemberG[i], c2.mMemberG[i]  ); \
+            EXPECT_EQ( c1.mMemberGs[i], c2.mMemberGs[i]  ); \
+            EXPECT_EQ( c1.mMemberS[i], c2.mMemberS[i]  ); \
+            EXPECT_EQ( c1.mMemberSs[i], c2.mMemberSs[i]  ); \
+            EXPECT_FLOAT_EQ( c1.mMemberF[i], c2.mMemberF[i]  ); \
+            EXPECT_DOUBLE_EQ( c1.mMemberD[i], c2.mMemberD[i]  ); \
+            EXPECT_EQ( c1.name1.compare( c2.name1 ), 0 ); \
+            EXPECT_EQ( c1.name2.compare( c2.name2 ), 0 ); \
         }                                                                     \
-     }
+    }
 
 #define TestEasyRepeatedMessage( test, name, seed1, seed2, flag, its, type ) \
-	TEST( P( test ), type ## name )              \
-	 {                                                                     \
-		TestClass4< type, its, flag > c1( seed1 ), c2( seed2 );  \
-		SimpleSerialiseDeserialiseStream( c1, c2 );                           \
-		for ( uint32_t i=0; i < its; i++ )                                    \
-		{                                                                     \
-			EXPECT_EQ( c1.mMemberTs[i], c2.mMemberTs[i]  );                   \
-		}                                                                     \
-	 }
+    TEST( P( test ), type ## name )              \
+    {                                                                     \
+        TestClass4< type, its, flag > c1( seed1 ), c2( seed2 );  \
+        SimpleSerialiseDeserialiseStream( c1, c2 );                           \
+        for ( uint32_t i=0; i < its; i++ )                                    \
+        {                                                                     \
+            EXPECT_EQ( c1.mMemberTs[i], c2.mMemberTs[i]  );                   \
+        }                                                                     \
+    }
 
 namespace
 {
@@ -234,51 +234,57 @@ namespace
         {
             message.CreateRepeated( Type::Char, its, 0, Flag );
             message.CreateRepeated( Type::Char, its, 1, Flag );
-            for ( size_t i = 0; i < its; ++i )
+
+            for ( uint8_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberT[i], 0, i, Flag );
                 message.StoreRepeated( mMemberTs[i], 1, i, Flag );
             }
-            
+
             message.CreateRepeated( Type::WORD, its, 2, Flag );
             message.CreateRepeated( Type::WORD, its, 3, Flag );
-            for ( size_t i = 0; i < its; ++i )
+
+            for ( uint16_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberS[i], 2, i, Flag );
                 message.StoreRepeated( mMemberSs[i], 3, i, Flag );
             }
-            
+
             message.CreateRepeated( Type::DWORD, its, 4, Flag );
             message.CreateRepeated( Type::DWORD, its, 5, Flag );
+
             for ( size_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberR[i], 4, i, Flag );
                 message.StoreRepeated( mMemberRs[i], 5, i, Flag );
             }
-            
+
             message.CreateRepeated( Type::QWORD, its, 6, Flag );
             message.CreateRepeated( Type::QWORD, its, 7, Flag );
+
             for ( size_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberG[i], 6, i, Flag );
                 message.StoreRepeated( mMemberGs[i], 7, i, Flag );
             }
-            
+
             message.Store( name1, 8, Flag );
             message.Store( name2, 9, Flag );
 
             message.CreateRepeated( Type::DWORD, its, 10, Flag );
+
             for ( size_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberF[i], 10, i, Flag );
             }
 
             message.CreateRepeated( Type::QWORD, its, 11, Flag );
+
             for ( size_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberD[i], 11, i, Flag );
             }
-           
+
         }
 
         std::vector< uint8_t > mMemberT;
@@ -298,55 +304,55 @@ namespace
         std::vector< double > mMemberD;
     };
 
-	template< typename T, uint32_t Flag = 0x00 >
-	class Primitive
-		: public ISerialisable
-	{
-	public:
+    template< typename T, uint32_t Flag = 0x00 >
+    class Primitive
+        : public ISerialisable
+    {
+    public:
 
-		Primitive( const T &value )
-			: mMember( value )
-		{
-		}
+        Primitive( const T &value )
+            : mMember( value )
+        {
+        }
 
-		void OnSerialise( Message &message )
-		{
-			message.Store( mMember, 1, Flag );
-		}
+        void OnSerialise( Message &message )
+        {
+            message.Store( mMember, 1, Flag );
+        }
 
-		T mMember;
-	};
+        T mMember;
+    };
 
-	template< typename T, uint32_t its = 100, uint32_t Flag = 0x00 >
-	class TestClass4
-		: public ISerialisable
-	{
-	public:
+    template< typename T, uint32_t its = 100, uint32_t Flag = 0x00 >
+    class TestClass4
+        : public ISerialisable
+    {
+    public:
 
-		TestClass4( uint32_t seed = 233232 )
-		{
-			srand( seed );
+        TestClass4( uint32_t seed = 233232 )
+        {
+            srand( seed );
 
-			for ( uint32_t i = 0; i < its; ++i )
-			{
-				mMemberTs.push_back( ( uint8_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< T >::max() ) );
-			}
-		}
+            for ( uint32_t i = 0; i < its; ++i )
+            {
+                mMemberTs.push_back( ( uint8_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< T >::max() ) );
+            }
+        }
 
-		void OnSerialise( Message &message )
-		{
-			message.CreateRepeated( Type::Message, its, 0, Flag );
+        void OnSerialise( Message &message )
+        {
+            message.CreateRepeated( Type::Message, its, 0, Flag );
 
-			for (uint32_t i = 0; i < its; ++i )
-			{
-				Primitive< T, Flag > val( mMemberTs[ i ] );
-				message.StoreRepeated( &val, 0, i, Flag );
-				mMemberTs[ i ] = val.mMember;
-			}
-		}
+            for ( uint32_t i = 0; i < its; ++i )
+            {
+                Primitive< T, Flag > val( mMemberTs[ i ] );
+                message.StoreRepeated( &val, 0, i, Flag );
+                mMemberTs[ i ] = val.mMember;
+            }
+        }
 
-		std::vector< T > mMemberTs;
-	};
+        std::vector< T > mMemberTs;
+    };
 
 
 
@@ -407,14 +413,14 @@ namespace
     TestEasyRepeatedClass( EasyRepeated, randomVals, 343422, 21331, 0x00, 100 );
     TestEasyRepeatedClass( EasyRepeatedPacked, randomVals, 343422, 21331, 0x01, 100 );
 
-	TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, uint8_t );
-	TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, uint16_t );
-	TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, uint32_t );
-	TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, uint64_t );
+    TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, uint8_t );
+    TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, uint16_t );
+    TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, uint32_t );
+    TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, uint64_t );
 
-	TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, int8_t );
-	TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, int16_t );
-	TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, int32_t );
-	TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, int64_t );
+    TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, int8_t );
+    TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, int16_t );
+    TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, int32_t );
+    TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, int64_t );
 
 }
