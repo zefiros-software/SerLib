@@ -412,9 +412,4 @@ namespace
 
 	TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, int32_t );
 	TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, int64_t );
-
-	TEST( P( Fail ), Fail )
-	{
-		EXPECT_EQ( 1, 2 );
-	};
 }
