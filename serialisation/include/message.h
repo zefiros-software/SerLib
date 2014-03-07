@@ -109,7 +109,7 @@ public:
 
     void StoreRepeated( std::string &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t = 0 );
 
-    void StoreRepeated( ISerialisable *const serialisable, uint32_t index = 0 );
+    void StoreRepeated( ISerialisable *const serialisable, const uint32_t index, const uint32_t repeatedIndex, const uint32_t = 0 );
 
     void WriteToFile( const std::string &fileName ) const;
 

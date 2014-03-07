@@ -259,9 +259,20 @@ void Message::StoreRepeated( std::string &value, const uint32_t index, const uin
     StoreRepeated< std::string, StringData, Type::String >( value, index, repeatedIndex );
 }
 
-void Message::StoreRepeated( ISerialisable *const serialisable, uint32_t index /*= 0 */ )
+void Message::StoreRepeated( ISerialisable *const serialisable, const uint32_t index, const uint32_t repeatedIndex, const uint32_t /* = 0 */ )
 {
-    assert( false );
+	std::map< uint32_t, ISerialiseData * >::iterator it = mSerialisables.find( index );
+	assert( it != mSerialisables.end() );
+
+	ISerialiseData *const data = it->second;
+
+	assert( data->GetType() == Type::Repeated );
+
+	AbstractRepeatedData *const repeated = static_cast< AbstractRepeatedData *const >( data );
+
+	assert( repeated->GetSubType() == Type::Message );
+
+	serialisable->SERIALISATION_CUSTOM_INTERFACE( *static_cast< Message * >( static_cast< RepeatedMessage *const >( repeated )->GetSerialisable( repeatedIndex ) ) );
 }
 
 void Message::WriteToFile( const std::string &fileName ) const

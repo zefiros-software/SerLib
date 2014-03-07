@@ -125,6 +125,17 @@
         }                                                                     \
      }
 
+#define TestEasyRepeatedMessage( test, name, seed1, seed2, flag, its, type ) \
+	TEST( P( test ), name )              \
+	 {                                                                     \
+		TestClass4< type, its, flag > c1( seed1 ), c2( seed2 );  \
+		SimpleSerialiseDeserialiseStream( c1, c2 );                           \
+		for ( uint32_t i=0; i < its; i++ )                                    \
+		{                                                                     \
+			EXPECT_EQ( c1.mMemberT[i], c2.mMemberT[i]  );                   \
+		}                                                                     \
+	 }
+
 namespace
 {
     template< typename T, uint32_t its = 100, uint32_t Flag = 0x00 >
@@ -287,6 +298,56 @@ namespace
         std::vector< double > mMemberD;
     };
 
+	template< typename T, uint32_t Flag = 0x00 >
+	class Primitive
+		: public ISerialisable
+	{
+	public:
+
+		Primitive( const T &value )
+			: mMember( value )
+		{
+		}
+
+		void OnSerialise( Message &message )
+		{
+			message.Store( mMember, 1, Flag );
+		}
+
+		T mMember;
+	};
+
+	template< typename T, uint32_t its = 100, uint32_t Flag = 0x00 >
+	class TestClass4
+		: public ISerialisable
+	{
+	public:
+
+		TestClass4( uint32_t seed = 233232 )
+		{
+			srand( seed );
+
+			for ( uint32_t i = 0; i < its; ++i )
+			{
+				mMemberT.push_back( ( uint8_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< T >::max() ) );
+			}
+		}
+
+		void OnSerialise( Message &message )
+		{
+			message.CreateRepeated( Type::Message, its, 0, Flag );
+
+			for (uint32_t i = 0; i < its; ++i )
+			{
+				Primitive< T, Flag > val( mMemberT[ i ] );
+				message.StoreRepeated( &val, 0, i, Flag );
+				mMemberT[ i ] = val.mMember;
+			}
+		}
+
+		std::vector< T > mMemberT;
+	};
+
 
 
     TestSerialClass( MultiSerialization, randomVals, uint8_t, 343422, 21331, 0x00, 100 );
@@ -345,4 +406,5 @@ namespace
 
     TestEasyRepeatedClass( EasyRepeated, randomVals, 343422, 21331, 0x00, 100 );
     TestEasyRepeatedClass( EasyRepeatedPacked, randomVals, 343422, 21331, 0x01, 100 );
+	TestEasyRepeatedMessage( EasyRepeatedUInt32Message, randomVals, 343422, 21331, 0x00, 100, uint32_t );
 }
