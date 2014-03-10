@@ -134,7 +134,7 @@ namespace
 
     template< uint32_t its = 100, uint32_t Flag = 0x00 >
     class TestClass1F
-        : public TestClass1 < float, its, Flag >
+        : public TestClass1< float, its, Flag >
     {
     public:
 
@@ -154,7 +154,7 @@ namespace
 
     template< uint32_t its = 100, uint32_t Flag = 0x00 >
     class TestClass1D
-        : public TestClass1 < double, its, Flag >
+        : public TestClass1< double, its, Flag >
     {
     public:
 
