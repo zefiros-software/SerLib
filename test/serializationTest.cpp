@@ -95,7 +95,7 @@
         c1.TestEqual( c2 );                                                                 \
     }
 
-namespace
+namespace TestClasses
 {
     template< typename T, uint32_t its = 100, uint32_t Flag = 0x00 >
     class TestClass1
