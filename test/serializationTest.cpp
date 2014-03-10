@@ -32,108 +32,67 @@
 #include <vector>
 
 #define TestSerialClass( test, name, type, seed1, seed2, flag, its )      \
-    TEST( P( test ), type ## name )                                            \
+    TEST( P( test ), type ## name )                                       \
     {                                                                     \
-        TestClass1< type, its, flag > c1( seed1 ), c2( seed2 );               \
-        SimpleSerialiseDeserialiseStream( c1, c2 );                           \
-        for ( uint32_t i=0; i < its; i++ )                                    \
-        {                                                                     \
-            EXPECT_EQ( c1.mMember[i], c2.mMember[i]  );                           \
-        }                                                                     \
+        TestClass1< type, its, flag > c1( seed1 ), c2( seed2 );           \
+        SimpleSerialiseDeserialiseStream( c1, c2 );                       \
+        c1.TestEqual( c2 );                                               \
     }
 
 #define TestFSerialClass( test, name, type, seed1, seed2, flag, its )     \
-    TEST( P( test ), type ## name )                                            \
+    TEST( P( test ), type ## name )                                       \
     {                                                                     \
-        TestClass1< type, its, flag > c1( seed1 ), c2( seed2 );               \
-        SimpleSerialiseDeserialiseStream( c1, c2 );                           \
-        for ( uint32_t i=0; i < its; i++ )                                    \
-        {                                                                     \
-            EXPECT_FLOAT_EQ( c1.mMember[i], c2.mMember[i]  );                     \
-        }                                                                     \
+        TestClass1< type, its, flag > c1( seed1 ), c2( seed2 );           \
+        SimpleSerialiseDeserialiseStream( c1, c2 );                       \
+        c1.TestEqual( c2 );                                               \
     }
 
-#define TestDSerialClass( test, name, type, seed1, seed2, flag, its )     \
-    TEST( P( test ), type ## name )                                            \
-    {                                                                     \
-        TestClass1< type, its, flag > c1( seed1 ), c2( seed2 );               \
-        SimpleSerialiseDeserialiseStream( c1, c2 );                           \
-        for ( uint32_t i=0; i < its; i++ )                                    \
-        {                                                                     \
-            EXPECT_DOUBLE_EQ( c1.mMember[i], c2.mMember[i]  );                    \
-        }                                                                     \
+#define TestDSerialClass( test, name, type, seed1, seed2, flag, its ) \
+    TEST( P( test ), type ## name )                                   \
+    {                                                                 \
+        TestClass1< type, its, flag > c1( seed1 ), c2( seed2 );       \
+        SimpleSerialiseDeserialiseStream( c1, c2 );                   \
+        c1.TestEqual( c2 );                                           \
     }
 
 #define TestIFDMixedSerialClass( test, name, typeI, seed1, seed2, flag, its )  \
-    TEST( P( test ), typeI ## name )                                            \
-    {                                                                     \
-        TestClass2< typeI, float, double, its, flag > c1( seed1 ), c2( seed2 );  \
-        SimpleSerialiseDeserialiseStream( c1, c2 );                           \
-        for ( uint32_t i=0; i < its; i++ )                                    \
-        {                                                                     \
-            EXPECT_EQ( c1.mMemberT[i], c2.mMemberT[i]  );                         \
-            EXPECT_FLOAT_EQ( c1.mMemberS[i], c2.mMemberS[i]  );                   \
-            EXPECT_DOUBLE_EQ( c1.mMemberR[i], c2.mMemberR[i]  );                  \
-        }                                                                     \
+    TEST( P( test ), typeI ## name )                                           \
+    {                                                                          \
+        TestClass2< typeI, float, double, its, flag > c1( seed1 ), c2( seed2 );\
+        SimpleSerialiseDeserialiseStream( c1, c2 );                            \
+        c1.TestEqual( c2 );                                                    \
     }
 
-#define TestFIDMixedSerialClass( test, name, typeI, seed1, seed2, flag, its ) \
-    TEST( P( test ), typeI ## name )                                            \
-    {                                                                     \
-        TestClass2< float, typeI, double, its, flag > c1( seed1 ), c2( seed2 );  \
-        SimpleSerialiseDeserialiseStream( c1, c2 );                           \
-        for ( uint32_t i=0; i < its; i++ )                                    \
-        {                                                                     \
-            EXPECT_EQ( c1.mMemberS[i], c2.mMemberS[i]  );                         \
-            EXPECT_FLOAT_EQ( c1.mMemberT[i], c2.mMemberT[i]  );                   \
-            EXPECT_DOUBLE_EQ( c1.mMemberR[i], c2.mMemberR[i]  );                  \
-        }                                                                     \
+#define TestFIDMixedSerialClass( test, name, typeI, seed1, seed2, flag, its )  \
+    TEST( P( test ), typeI ## name )                                           \
+    {                                                                          \
+        TestClass2< float, typeI, double, its, flag > c1( seed1 ), c2( seed2 );\
+        SimpleSerialiseDeserialiseStream( c1, c2 );                            \
+        c1.TestEqual( c2 );                                                    \
     }
 
 #define TestIDIMixedSerialClass( test, name, typeI1, typeI2, seed1, seed2, flag, its ) \
-    TEST( P( test ), typeI1 ## typeI2 ## name )                                            \
-    {                                                                     \
-        TestClass2< typeI1, double, typeI2, its, flag > c1( seed1 ), c2( seed2 );  \
-        SimpleSerialiseDeserialiseStream( c1, c2 );                           \
-        for ( uint32_t i=0; i < its; i++ )                                    \
-        {                                                                     \
-            EXPECT_EQ( c1.mMemberT[i], c2.mMemberT[i]  );                         \
-            EXPECT_DOUBLE_EQ( c1.mMemberS[i], c2.mMemberS[i]  );                  \
-            EXPECT_EQ( c1.mMemberR[i], c2.mMemberR[i]  );                         \
-        }                                                                     \
+    TEST( P( test ), typeI1 ## typeI2 ## name )                                        \
+    {                                                                                  \
+        TestClass2< typeI1, double, typeI2, its, flag > c1( seed1 ), c2( seed2 );      \
+        SimpleSerialiseDeserialiseStream( c1, c2 );                                    \
+        c1.TestEqual( c2 )                                                             \
     }
 
 #define TestEasyRepeatedClass( test, name, seed1, seed2, flag, its ) \
-    TEST( P( test ), name )              \
-    {                                                                     \
-        TestClass3< its, flag > c1( seed1 ), c2( seed2 );  \
-        SimpleSerialiseDeserialiseStream( c1, c2 );                           \
-        for ( uint32_t i=0; i < its; i++ )                                    \
-        {                                                                     \
-            EXPECT_EQ( c1.mMemberT[i], c2.mMemberT[i]  );                   \
-            EXPECT_EQ( c1.mMemberTs[i], c2.mMemberTs[i]  );  \
-            EXPECT_EQ( c1.mMemberR[i], c2.mMemberR[i]  ); \
-            EXPECT_EQ( c1.mMemberRs[i], c2.mMemberRs[i]  ); \
-            EXPECT_EQ( c1.mMemberG[i], c2.mMemberG[i]  ); \
-            EXPECT_EQ( c1.mMemberGs[i], c2.mMemberGs[i]  ); \
-            EXPECT_EQ( c1.mMemberS[i], c2.mMemberS[i]  ); \
-            EXPECT_EQ( c1.mMemberSs[i], c2.mMemberSs[i]  ); \
-            EXPECT_FLOAT_EQ( c1.mMemberF[i], c2.mMemberF[i]  ); \
-            EXPECT_DOUBLE_EQ( c1.mMemberD[i], c2.mMemberD[i]  ); \
-            EXPECT_EQ( c1.name1.compare( c2.name1 ), 0 ); \
-            EXPECT_EQ( c1.name2.compare( c2.name2 ), 0 ); \
-        }                                                                     \
+    TEST( P( test ), name )                                          \
+    {                                                                \
+        TestClass3< its, flag > c1( seed1 ), c2( seed2 );            \
+        SimpleSerialiseDeserialiseStream( c1, c2 );                  \
+        c1.TestEqual( c2 );                                          \
     }
 
-#define TestEasyRepeatedMessage( test, name, seed1, seed2, flag, its, type ) \
-    TEST( P( test ), type ## name )              \
-    {                                                                     \
-        TestClass4< type, its, flag > c1( seed1 ), c2( seed2 );  \
-        SimpleSerialiseDeserialiseStream( c1, c2 );                           \
-        for ( uint32_t i=0; i < its; i++ )                                    \
-        {                                                                     \
-            EXPECT_EQ( c1.mMemberTs[i], c2.mMemberTs[i]  );                   \
-        }                                                                     \
+#define TestRepeatedPrimitiveMessageClass( test, name, seed1, seed2, flag, its, type ) \
+    TEST( P( test ), type ## name )                                               \
+    {                                                                                  \
+        TestClass4< Primitive< type, 0x00 >, its, flag, type > c1( seed1 ), c2( seed2 );     \
+        SimpleSerialiseDeserialiseStream( c1, c2 );                                    \
+        c1.TestEqual( c2 );                                                            \
     }
 
 namespace
@@ -150,15 +109,23 @@ namespace
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                mMember[i] = ( T )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< T >::max() );
+                mMember[i] = ( T )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< T >::max() );
             }
         }
 
-        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        void OnSerialise( Message &message )
         {
             for ( uint32_t i = 0; i < its; ++i )
             {
                 message.Store( mMember[i], i, Flag );
+            }
+        }
+
+        void TestEqual( TestClass1 &c2 )
+        {
+            for ( uint32_t i = 0; i < its; i++ )
+            {
+                EXPECT_DOUBLE_EQ( mMember[i], c2.mMember[i] );
             }
         }
 
@@ -177,13 +144,13 @@ namespace
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                mMemberT[i] = ( T )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< T >::max() );
-                mMemberS[i] = ( S )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< S >::max() );
-                mMemberR[i] = ( R )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< R >::max() );
+                mMemberT[i] = ( T )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< T >::max() );
+                mMemberS[i] = ( S )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< S >::max() );
+                mMemberR[i] = ( R )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< R >::max() );
             }
         }
 
-        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        void OnSerialise( Message &message )
         {
             for ( uint32_t i = 0; i < its; ++i )
             {
@@ -191,6 +158,16 @@ namespace
                 message.Store( mMemberT[i], j, Flag );
                 message.Store( mMemberS[i], j + 1, Flag );
                 message.Store( mMemberR[i], j + 2, Flag );
+            }
+        }
+
+        void TestEqual( TestClass2 &c2 )
+        {
+            for ( uint32_t i = 0; i < its; i++ )
+            {
+                EXPECT_EQ( mMemberT[i], c2.mMemberT[i] );
+                EXPECT_FLOAT_EQ( mMemberS[i], c2.mMemberS[i] );
+                EXPECT_DOUBLE_EQ( mMemberR[i], c2.mMemberR[i] );
             }
         }
 
@@ -211,18 +188,18 @@ namespace
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                mMemberT.push_back( ( uint8_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< uint8_t >::max() ) );
-                mMemberS.push_back( ( uint16_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< uint16_t >::max() ) );
-                mMemberR.push_back( ( uint32_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< uint32_t >::max() ) );
-                mMemberG.push_back( ( uint64_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< uint64_t >::max() ) );
+                mMemberT.push_back( ( uint8_t )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< uint8_t >::max() ) );
+                mMemberS.push_back( ( uint16_t )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< uint16_t >::max() ) );
+                mMemberR.push_back( ( uint32_t )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< uint32_t >::max() ) );
+                mMemberG.push_back( ( uint64_t )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< uint64_t >::max() ) );
 
-                mMemberTs.push_back( ( int8_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< int8_t >::max() ) );
-                mMemberSs.push_back( ( int16_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< int16_t >::max() ) );
-                mMemberRs.push_back( ( int32_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< int32_t >::max() ) );
-                mMemberGs.push_back( ( int64_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< int64_t >::max() ) );
+                mMemberTs.push_back( ( int8_t )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< int8_t >::max() ) );
+                mMemberSs.push_back( ( int16_t )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< int16_t >::max() ) );
+                mMemberRs.push_back( ( int32_t )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< int32_t >::max() ) );
+                mMemberGs.push_back( ( int64_t )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< int64_t >::max() ) );
 
-                mMemberF.push_back( ( float )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< float >::max() ) );
-                mMemberD.push_back( ( double )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< double >::max() ) );
+                mMemberF.push_back( ( float )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< float >::max() ) );
+                mMemberD.push_back( ( double )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< double >::max() ) );
 
             }
 
@@ -230,12 +207,12 @@ namespace
             name2 = "CouldBeUsedToStoreNames";
         }
 
-        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        void OnSerialise( Message &message )
         {
             message.CreateRepeated( Type::Char, its, 0, Flag );
             message.CreateRepeated( Type::Char, its, 1, Flag );
 
-            for ( uint32_t i = 0; i < its; ++i )
+            for ( size_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberT[i], 0, i, Flag );
                 message.StoreRepeated( mMemberTs[i], 1, i, Flag );
@@ -244,7 +221,7 @@ namespace
             message.CreateRepeated( Type::WORD, its, 2, Flag );
             message.CreateRepeated( Type::WORD, its, 3, Flag );
 
-            for ( uint32_t i = 0; i < its; ++i )
+            for ( size_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberS[i], 2, i, Flag );
                 message.StoreRepeated( mMemberSs[i], 3, i, Flag );
@@ -253,7 +230,7 @@ namespace
             message.CreateRepeated( Type::DWORD, its, 4, Flag );
             message.CreateRepeated( Type::DWORD, its, 5, Flag );
 
-            for ( uint32_t i = 0; i < its; ++i )
+            for ( size_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberR[i], 4, i, Flag );
                 message.StoreRepeated( mMemberRs[i], 5, i, Flag );
@@ -262,7 +239,7 @@ namespace
             message.CreateRepeated( Type::QWORD, its, 6, Flag );
             message.CreateRepeated( Type::QWORD, its, 7, Flag );
 
-            for ( uint32_t i = 0; i < its; ++i )
+            for ( size_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberG[i], 6, i, Flag );
                 message.StoreRepeated( mMemberGs[i], 7, i, Flag );
@@ -273,18 +250,37 @@ namespace
 
             message.CreateRepeated( Type::DWORD, its, 10, Flag );
 
-            for ( uint32_t i = 0; i < its; ++i )
+            for ( size_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberF[i], 10, i, Flag );
             }
 
             message.CreateRepeated( Type::QWORD, its, 11, Flag );
 
-            for ( uint32_t i = 0; i < its; ++i )
+            for ( size_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberD[i], 11, i, Flag );
             }
 
+        }
+
+        void TestEqual( TestClass3 &c2 )
+        {
+            for ( uint32_t i = 0; i < its; i++ )
+            {
+                EXPECT_EQ( mMemberT[i], c2.mMemberT[i] );
+                EXPECT_EQ( mMemberTs[i], c2.mMemberTs[i] );
+                EXPECT_EQ( mMemberR[i], c2.mMemberR[i] );
+                EXPECT_EQ( mMemberRs[i], c2.mMemberRs[i] );
+                EXPECT_EQ( mMemberG[i], c2.mMemberG[i] );
+                EXPECT_EQ( mMemberGs[i], c2.mMemberGs[i] );
+                EXPECT_EQ( mMemberS[i], c2.mMemberS[i] );
+                EXPECT_EQ( mMemberSs[i], c2.mMemberSs[i] );
+                EXPECT_FLOAT_EQ( mMemberF[i], c2.mMemberF[i] );
+                EXPECT_DOUBLE_EQ( mMemberD[i], c2.mMemberD[i] );
+                EXPECT_EQ( name1.compare( c2.name1 ), 0 );
+                EXPECT_EQ( name2.compare( c2.name2 ), 0 );
+            }
         }
 
         std::vector< uint8_t > mMemberT;
@@ -315,15 +311,20 @@ namespace
         {
         }
 
-        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        void OnSerialise( Message &message )
         {
             message.Store( mMember, 1, Flag );
+        }
+
+        void TestEqual( Primitive &c2 )
+        {
+            EXPECT_EQ( mMember, c2.mMember );
         }
 
         T mMember;
     };
 
-    template< typename T, uint32_t its = 100, uint32_t Flag = 0x00 >
+    template< typename TestClass, uint32_t its = 100, uint32_t Flag = 0x00, typename T = uint32_t >
     class TestClass4
         : public ISerialisable
     {
@@ -335,23 +336,29 @@ namespace
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                mMemberTs.push_back( ( uint8_t )( ( ( double )( rand() / RAND_MAX ) ) * std::numeric_limits< T >::max() ) );
+                mMemberTestClasses.push_back( TestClass( ( T )( ( double )rand() / RAND_MAX )*std::numeric_limits< T >::max() ) );
             }
         }
 
-        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        void OnSerialise( Message &message )
         {
             message.CreateRepeated( Type::Message, its, 0, Flag );
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                Primitive< T, Flag > val( mMemberTs[ i ] );
-                message.StoreRepeated( &val, 0, i, Flag );
-                mMemberTs[ i ] = val.mMember;
+                message.StoreRepeated( &mMemberTestClasses[ i ], 0, i, 0 );
             }
         }
 
-        std::vector< T > mMemberTs;
+        void TestEqual( TestClass4 &c2 )
+        {
+            for ( uint32_t i = 0; i < its; ++i )
+            {
+                mMemberTestClasses[ i ].TestEqual( c2.mMemberTestClasses[ i ] );
+            }
+        }
+
+        std::vector< TestClass > mMemberTestClasses;
     };
 
 
@@ -413,14 +420,14 @@ namespace
     TestEasyRepeatedClass( EasyRepeated, randomVals, 343422, 21331, 0x00, 100 );
     TestEasyRepeatedClass( EasyRepeatedPacked, randomVals, 343422, 21331, 0x01, 100 );
 
-    TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, uint8_t );
-    TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, uint16_t );
-    TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, uint32_t );
-    TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, uint64_t );
+    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 0x00, 100, uint8_t );
+    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 0x00, 100, uint16_t );
+    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 0x00, 100, uint32_t );
+    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 0x00, 100, uint64_t );
 
-    TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, int8_t );
-    TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, int16_t );
-    TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, int32_t );
-    TestEasyRepeatedMessage( EasyRepeatedMessage, randomVals, 343422, 21331, 0x00, 100, int64_t );
+    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 0x00, 100, int8_t );
+    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 0x00, 100, int16_t );
+    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 0x00, 100, int32_t );
+    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 0x00, 100, int64_t );
 
 }
