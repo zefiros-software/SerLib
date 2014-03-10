@@ -272,7 +272,10 @@ void Message::StoreRepeated( ISerialisable *const serialisable, const uint32_t i
 
 	assert( repeated->GetSubType() == Type::Message );
 
-	serialisable->SERIALISATION_CUSTOM_INTERFACE( *static_cast< Message * >( static_cast< RepeatedMessage *const >( repeated )->GetSerialisable( repeatedIndex ) ) );
+	Message &message = *static_cast< Message * >( static_cast< RepeatedMessage *const >( repeated )->GetSerialisable( repeatedIndex ) );
+	message.SetMode( mMode );
+
+	serialisable->SERIALISATION_CUSTOM_INTERFACE( message );
 }
 
 void Message::WriteToFile( const std::string &fileName ) const
