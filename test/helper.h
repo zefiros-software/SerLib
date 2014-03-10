@@ -70,4 +70,19 @@ T GenerateInvZebraValue()
     return GenerateZebraValue< T >() ^ std::numeric_limits<T>::max();
 }
 
+
+template< typename T >
+T GetRandom()
+{
+    return static_cast< T >( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< T >::max() );
+}
+
+template<>
+float GetRandom< float >();
+
+
+template<>
+double GetRandom< double >();
+
+
 #endif

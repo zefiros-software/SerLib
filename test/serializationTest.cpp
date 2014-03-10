@@ -109,7 +109,7 @@ namespace TestClasses
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                mMember[i] = ( T )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< T >::max() );
+                mMember[i] = GetRandom< T >();
             }
         }
 
@@ -185,9 +185,9 @@ namespace TestClasses
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                mMemberT[i] = ( T )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< T >::max() );
-                mMemberS[i] = ( S )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< S >::max() );
-                mMemberR[i] = ( R )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< R >::max() );
+                mMemberT[i] = GetRandom< T >();
+                mMemberS[i] = GetRandom< S >();
+                mMemberR[i] = GetRandom< R >();
             }
         }
 
@@ -293,18 +293,18 @@ namespace TestClasses
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                mMemberT.push_back( ( uint8_t )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< uint8_t >::max() ) );
-                mMemberS.push_back( ( uint16_t )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< uint16_t >::max() ) );
-                mMemberR.push_back( ( uint32_t )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< uint32_t >::max() ) );
-                mMemberG.push_back( ( uint64_t )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< uint64_t >::max() ) );
+                mMemberT.push_back( GetRandom<uint8_t>() );
+                mMemberS.push_back( GetRandom<uint16_t >() );
+                mMemberR.push_back( GetRandom<uint32_t>() );
+                mMemberG.push_back( GetRandom<uint64_t >() );
 
-                mMemberTs.push_back( ( int8_t )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< int8_t >::max() ) );
-                mMemberSs.push_back( ( int16_t )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< int16_t >::max() ) );
-                mMemberRs.push_back( ( int32_t )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< int32_t >::max() ) );
-                mMemberGs.push_back( ( int64_t )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< int64_t >::max() ) );
+                mMemberTs.push_back( GetRandom<int8_t>() );
+                mMemberSs.push_back( GetRandom<int16_t >() );
+                mMemberRs.push_back( GetRandom<int32_t>() );
+                mMemberGs.push_back( GetRandom<int64_t >() );
 
-                mMemberF.push_back( ( float )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< float >::max() ) );
-                mMemberD.push_back( ( double )( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< double >::max() ) );
+                mMemberF.push_back( GetRandom< float > () );
+                mMemberD.push_back( GetRandom< double > () );
 
             }
 
@@ -441,7 +441,7 @@ namespace TestClasses
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                mMemberTestClasses.push_back( TestClass( ( T )( ( double )rand() / RAND_MAX )*std::numeric_limits< T >::max() ) );
+                mMemberTestClasses.push_back( TestClass( GetRandom< T >() ) );
             }
         }
 
