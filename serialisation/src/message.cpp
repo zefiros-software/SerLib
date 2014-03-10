@@ -147,6 +147,20 @@ void Message::Store( ISerialisable *const serialisable, uint32_t index /*= 0 */ 
     }
 }
 
+void Message::Store( ISerialisable *const serialisable, const std::string &fileName )
+{
+    Store( serialisable, 0 );
+
+    if ( mMode == Mode::Serialise )
+    {
+        WriteToFile( fileName );
+    }
+    else
+    {
+        ReadFromFile( fileName );
+    }
+}
+
 uint32_t Message::Count( const uint32_t index ) const
 {
     std::map< uint32_t, ISerialiseData * >::const_iterator it = mSerialisables.find( index );
