@@ -83,20 +83,9 @@ public:
 
     void Store( ISerialisable *const serialisable, const std::string &fileName );
 
-    template< typename S >
-    void Store( ISerialisable *const serialisable, S &stream )
-    {
-        Store( serialisable, 0 );
+    void Store( ISerialisable *const serialisable, std::ostream &stream );
 
-        if ( mMode == Mode::Serialise )
-        {
-            WriteToStream( stream );
-        }
-        else
-        {
-            ReadFromStream( stream );
-        }
-    }
+    void Store( ISerialisable *const serialisable, std::istream &stream );
 
     uint32_t Count( const uint32_t index ) const;
 

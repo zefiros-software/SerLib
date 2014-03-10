@@ -161,6 +161,20 @@ void Message::Store( ISerialisable *const serialisable, const std::string &fileN
     }
 }
 
+void Message::Store( ISerialisable *const serialisable, std::ostream &stream )
+{
+    assert( mMode == Mode::Serialise );
+    Store( serialisable, 0 );
+    WriteToStream( stream );
+}
+
+void Message::Store( ISerialisable *const serialisable, std::istream &stream )
+{
+    assert( mMode == Mode::Deserialise );
+    Store( serialisable, 0 );
+    ReadFromStream( stream );
+}
+
 uint32_t Message::Count( const uint32_t index ) const
 {
     std::map< uint32_t, ISerialiseData * >::const_iterator it = mSerialisables.find( index );
