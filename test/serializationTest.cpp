@@ -25,10 +25,8 @@
 
 #include "gtest/gtest.h"
 
-#include <climits>
 #include <stdlib.h>
 #include <stdio.h>
-#include <climits>
 #include <vector>
 
 #define TestSerialClass( test, name, type, seed1, seed2, flag, its )      \

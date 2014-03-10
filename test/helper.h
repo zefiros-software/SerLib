@@ -31,6 +31,7 @@
 #include "message.h"
 
 #include <sstream>
+#include <cstdlib>
 #include <limits>
 
 template< typename T >
