@@ -143,7 +143,7 @@ namespace TestClasses
         {
         }
 
-        virtual void TestEqual( TestClass1 &c2 )
+        virtual void TestEqual( TestClass1< float, its, Flag > &c2 )
         {
             for ( uint32_t i = 0; i < its; i++ )
             {
@@ -163,7 +163,7 @@ namespace TestClasses
         {
         }
 
-        virtual void TestEqual( TestClass1 &c2 )
+        virtual void TestEqual( TestClass1< double, its, Flag > &c2 )
         {
             for ( uint32_t i = 0; i < its; i++ )
             {
