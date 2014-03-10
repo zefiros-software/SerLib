@@ -81,29 +81,17 @@
 
 #define TestEasyRepeatedClass( test, name, seed1, seed2, flag, its ) \
     TEST( P( test ), name )                                          \
-     {                                                                     \
+    {                                                                \
         TestClass3< its, flag > c1( seed1 ), c2( seed2 );            \
         SimpleSerialiseDeserialiseStream( c1, c2 );                  \
         c1.TestEqual( c2 );                                          \
-             EXPECT_EQ( c1.mMemberT[i], c2.mMemberT[i]  );                   \
-             EXPECT_EQ( c1.mMemberTs[i], c2.mMemberTs[i]  );  \
-             EXPECT_EQ( c1.mMemberR[i], c2.mMemberR[i]  ); \
-             EXPECT_EQ( c1.mMemberRs[i], c2.mMemberRs[i]  ); \
-             EXPECT_EQ( c1.mMemberG[i], c2.mMemberG[i]  ); \
-             EXPECT_EQ( c1.mMemberGs[i], c2.mMemberGs[i]  ); \
-             EXPECT_EQ( c1.mMemberS[i], c2.mMemberS[i]  ); \
-             EXPECT_EQ( c1.mMemberSs[i], c2.mMemberSs[i]  ); \
-             EXPECT_FLOAT_EQ( c1.mMemberF[i], c2.mMemberF[i]  ); \
-             EXPECT_DOUBLE_EQ( c1.mMemberD[i], c2.mMemberD[i]  ); \
-             EXPECT_EQ( c1.name1.compare( c2.name1 ), 0 ); \
-             EXPECT_EQ( c1.name2.compare( c2.name2 ), 0 ); \
     }
 
 #define TestRepeatedPrimitiveMessageClass( test, name, seed1, seed2, flag, its, type ) \
-	TEST( P( test ), type ## name )              \
-	 {                                                                     \
-		TestClass4< type, its, flag > c1( seed1 ), c2( seed2 );  \
-		SimpleSerialiseDeserialiseStream( c1, c2 );                           \
+    TEST( P( test ), type ## name )                                               \
+    {                                                                                  \
+        TestClass4< Primitive< type, 0x00 >, its, flag, type > c1( seed1 ), c2( seed2 );     \
+        SimpleSerialiseDeserialiseStream( c1, c2 );                                    \
         c1.TestEqual( c2 );                                                            \
     }
 
@@ -125,7 +113,7 @@ namespace
             }
         }
 
-        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        void OnSerialise( Message &message )
         {
             for ( uint32_t i = 0; i < its; ++i )
             {
@@ -162,7 +150,7 @@ namespace
             }
         }
 
-        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        void OnSerialise( Message &message )
         {
             for ( uint32_t i = 0; i < its; ++i )
             {
@@ -219,12 +207,12 @@ namespace
             name2 = "CouldBeUsedToStoreNames";
         }
 
-        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        void OnSerialise( Message &message )
         {
             message.CreateRepeated( Type::Char, its, 0, Flag );
             message.CreateRepeated( Type::Char, its, 1, Flag );
 
-            for ( uint32_t i = 0; i < its; ++i )
+            for ( size_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberT[i], 0, i, Flag );
                 message.StoreRepeated( mMemberTs[i], 1, i, Flag );
@@ -233,7 +221,7 @@ namespace
             message.CreateRepeated( Type::WORD, its, 2, Flag );
             message.CreateRepeated( Type::WORD, its, 3, Flag );
 
-            for ( uint32_t i = 0; i < its; ++i )
+            for ( size_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberS[i], 2, i, Flag );
                 message.StoreRepeated( mMemberSs[i], 3, i, Flag );
@@ -242,7 +230,7 @@ namespace
             message.CreateRepeated( Type::DWORD, its, 4, Flag );
             message.CreateRepeated( Type::DWORD, its, 5, Flag );
 
-            for ( uint32_t i = 0; i < its; ++i )
+            for ( size_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberR[i], 4, i, Flag );
                 message.StoreRepeated( mMemberRs[i], 5, i, Flag );
@@ -251,7 +239,7 @@ namespace
             message.CreateRepeated( Type::QWORD, its, 6, Flag );
             message.CreateRepeated( Type::QWORD, its, 7, Flag );
 
-            for ( uint32_t i = 0; i < its; ++i )
+            for ( size_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberG[i], 6, i, Flag );
                 message.StoreRepeated( mMemberGs[i], 7, i, Flag );
@@ -262,14 +250,14 @@ namespace
 
             message.CreateRepeated( Type::DWORD, its, 10, Flag );
 
-            for ( uint32_t i = 0; i < its; ++i )
+            for ( size_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberF[i], 10, i, Flag );
             }
 
             message.CreateRepeated( Type::QWORD, its, 11, Flag );
 
-            for ( uint32_t i = 0; i < its; ++i )
+            for ( size_t i = 0; i < its; ++i )
             {
                 message.StoreRepeated( mMemberD[i], 11, i, Flag );
             }
@@ -323,7 +311,7 @@ namespace
         {
         }
 
-        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        void OnSerialise( Message &message )
         {
             message.Store( mMember, 1, Flag );
         }
@@ -352,7 +340,7 @@ namespace
             }
         }
 
-        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        void OnSerialise( Message &message )
         {
             message.CreateRepeated( Type::Message, its, 0, Flag );
 
