@@ -123,7 +123,7 @@ namespace TestClasses
 
         virtual void TestEqual( TestClass1 &c2 )
         {
-            for ( uint32_t i = 0; i < its; i++ )
+            for ( uint32_t i = 0; i < its; ++i )
             {
                 EXPECT_EQ( mMember[i], c2.mMember[i] );
             }
@@ -145,7 +145,7 @@ namespace TestClasses
 
         virtual void TestEqual( TestClass1< float, its, Flag > &c2 )
         {
-            for ( uint32_t i = 0; i < its; i++ )
+            for ( uint32_t i = 0; i < its; ++i )
             {
                 EXPECT_FLOAT_EQ( mMember[i], c2.mMember[i] );
             }
@@ -165,7 +165,7 @@ namespace TestClasses
 
         virtual void TestEqual( TestClass1< double, its, Flag > &c2 )
         {
-            for ( uint32_t i = 0; i < its; i++ )
+            for ( uint32_t i = 0; i < its; ++i )
             {
                 EXPECT_DOUBLE_EQ( mMember[i], c2.mMember[i] );
             }
@@ -204,7 +204,7 @@ namespace TestClasses
 
         virtual void TestEqual( TestClass2 &c2 )
         {
-            for ( uint32_t i = 0; i < its; i++ )
+            for ( uint32_t i = 0; i < its; ++i )
             {
                 EXPECT_EQ( mMemberT[i], c2.mMemberT[i] );
                 EXPECT_EQ( mMemberS[i], c2.mMemberS[i] );
@@ -228,9 +228,9 @@ namespace TestClasses
         {
         }
 
-        virtual void TestEqual( TestClass2 &c2 )
+        virtual void TestEqual( TestClass2< T, float, double, its, Flag > &c2 )
         {
-            for ( uint32_t i = 0; i < its; i++ )
+            for ( uint32_t i = 0; i < its; ++i )
             {
                 EXPECT_EQ( mMemberT[i], c2.mMemberT[i] );
                 EXPECT_FLOAT_EQ( mMemberS[i], c2.mMemberS[i] );
@@ -250,9 +250,9 @@ namespace TestClasses
         {
         }
 
-        virtual void TestEqual( TestClass2 &c2 )
+        virtual void TestEqual( TestClass2< float, T, double, its, Flag > &c2 )
         {
-            for ( uint32_t i = 0; i < its; i++ )
+            for ( uint32_t i = 0; i < its; ++i )
             {
                 EXPECT_FLOAT_EQ( mMemberT[i], c2.mMemberT[i] );
                 EXPECT_EQ( mMemberS[i], c2.mMemberS[i] );
@@ -272,9 +272,9 @@ namespace TestClasses
         {
         }
 
-        virtual void TestEqual( TestClass2 &c2 )
+        virtual void TestEqual( TestClass2< T, double, R, its, Flag > &c2 )
         {
-            for ( uint32_t i = 0; i < its; i++ )
+            for ( uint32_t i = 0; i < its; ++i )
             {
                 EXPECT_DOUBLE_EQ( mMemberS[i], c2.mMemberS[i] );
             }
