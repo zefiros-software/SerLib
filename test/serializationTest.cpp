@@ -147,7 +147,7 @@ namespace TestClasses
         {
             for ( uint32_t i = 0; i < its; ++i )
             {
-                EXPECT_FLOAT_EQ( mMember[i], c2.mMember[i] );
+                EXPECT_FLOAT_EQ( this->mMember[i], c2.mMember[i] );
             }
         }
     };
@@ -167,7 +167,7 @@ namespace TestClasses
         {
             for ( uint32_t i = 0; i < its; ++i )
             {
-                EXPECT_DOUBLE_EQ( mMember[i], c2.mMember[i] );
+                EXPECT_DOUBLE_EQ( this->mMember[i], c2.mMember[i] );
             }
         }
     };
@@ -232,9 +232,9 @@ namespace TestClasses
         {
             for ( uint32_t i = 0; i < its; ++i )
             {
-                EXPECT_EQ( mMemberT[i], c2.mMemberT[i] );
-                EXPECT_FLOAT_EQ( mMemberS[i], c2.mMemberS[i] );
-                EXPECT_DOUBLE_EQ( mMemberR[i], c2.mMemberR[i] );
+                EXPECT_EQ( this->mMemberT[i], c2.mMemberT[i] );
+                EXPECT_FLOAT_EQ( this->mMemberS[i], c2.mMemberS[i] );
+                EXPECT_DOUBLE_EQ( this->mMemberR[i], c2.mMemberR[i] );
             }
         }
     };
@@ -254,9 +254,9 @@ namespace TestClasses
         {
             for ( uint32_t i = 0; i < its; ++i )
             {
-                EXPECT_FLOAT_EQ( mMemberT[i], c2.mMemberT[i] );
-                EXPECT_EQ( mMemberS[i], c2.mMemberS[i] );
-                EXPECT_DOUBLE_EQ( mMemberR[i], c2.mMemberR[i] );
+                EXPECT_FLOAT_EQ( this->mMemberT[i], c2.mMemberT[i] );
+                EXPECT_EQ( this->mMemberS[i], c2.mMemberS[i] );
+                EXPECT_DOUBLE_EQ( this->mMemberR[i], c2.mMemberR[i] );
             }
         }
     };
@@ -276,7 +276,7 @@ namespace TestClasses
         {
             for ( uint32_t i = 0; i < its; ++i )
             {
-                EXPECT_DOUBLE_EQ( mMemberS[i], c2.mMemberS[i] );
+                EXPECT_DOUBLE_EQ( this->mMemberS[i], c2.mMemberS[i] );
             }
         }
     };
