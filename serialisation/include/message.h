@@ -81,6 +81,23 @@ public:
 
     void Store( ISerialisable *const serialisable, uint32_t index = 0 );
 
+    void Store( ISerialisable *const serialisable, const std::string &fileName );
+
+    template< typename S >
+    void Store( ISerialisable *const serialisable, S &stream )
+    {
+        Store( serialisable, 0 );
+
+        if ( mMode == Mode::Serialise )
+        {
+            WriteToStream( stream );
+        }
+        else
+        {
+            ReadFromStream( stream );
+        }
+    }
+
     uint32_t Count( const uint32_t index ) const;
 
     uint32_t GetMemberCount() const;
@@ -109,7 +126,8 @@ public:
 
     void StoreRepeated( std::string &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t = 0 );
 
-    void StoreRepeated( ISerialisable *const serialisable, const uint32_t index, const uint32_t repeatedIndex, const uint32_t = 0 );
+    void StoreRepeated( ISerialisable *const serialisable, const uint32_t index, const uint32_t repeatedIndex,
+                        const uint32_t = 0 );
 
     void WriteToFile( const std::string &fileName ) const;
 
