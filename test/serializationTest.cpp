@@ -139,7 +139,7 @@ namespace TestClasses
     public:
 
         TestClass1F( uint32_t seed = 233232 )
-            : TestClass1( seed )
+            : TestClass1< float, its, Flag >( seed )
         {
         }
 
@@ -159,7 +159,7 @@ namespace TestClasses
     public:
 
         TestClass1D( uint32_t seed = 233232 )
-            : TestClass1( seed )
+            : TestClass1< double, its, Flag >( seed )
         {
         }
 
@@ -224,7 +224,7 @@ namespace TestClasses
     public:
 
         TestClass2F1( uint32_t seed = 233232 )
-            : TestClass2( seed )
+            : TestClass2< T, float, double, its, Flag >( seed )
         {
         }
 
@@ -246,7 +246,7 @@ namespace TestClasses
     public:
 
         TestClass2F2( uint32_t seed = 233232 )
-            : TestClass2( seed )
+            : TestClass2< float, T, double, its, Flag >( seed )
         {
         }
 
@@ -268,7 +268,7 @@ namespace TestClasses
     public:
 
         TestClass2F3( uint32_t seed = 233232 )
-            : TestClass2( seed )
+            : TestClass2< T, double, R, its, Flag >( seed )
         {
         }
 
