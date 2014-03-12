@@ -79,7 +79,4 @@ private:
 	}
 };
 
-template<>
-Type::Type Type::GetEnum< VarIntData >();
-
 #endif

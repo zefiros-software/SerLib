@@ -30,6 +30,9 @@ class VarIntData;
 class StringData;
 class Message;
 
+template< typename T >
+class NumData;
+
 namespace Type
 {
     // underlying type is uint8_t
@@ -49,7 +52,25 @@ namespace Type
     Type GetEnum()
     {
         return Type::Repeated;
-    }
+	}
+
+	template<>
+	Type GetEnum< StringData >();
+
+	template<>
+	Type GetEnum< VarIntData >();
+
+	template<> 
+	Type GetEnum< NumData< uint8_t > >();
+
+	template<>
+	Type GetEnum< NumData< uint16_t > >();
+
+	template<>
+	Type GetEnum< NumData< uint32_t > >();
+
+	template<>
+	Type GetEnum< NumData< uint64_t > >();
 }
 
 namespace Mode

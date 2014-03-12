@@ -47,7 +47,4 @@ private:
     std::string mString;
 };
 
-template<>
-Type::Type Type::GetEnum< StringData >();
-
 #endif

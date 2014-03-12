@@ -87,16 +87,4 @@ protected:
 	}
 };
 
-template<> 
-Type::Type Type::GetEnum< NumData< uint8_t > >();
-
-template<>
-Type::Type Type::GetEnum< NumData< uint16_t > >();
-
-template<>
-Type::Type Type::GetEnum< NumData< uint32_t > >();
-
-template<>
-Type::Type Type::GetEnum< NumData< uint64_t > >();
-
 #endif
