@@ -21,19 +21,19 @@
  */
 
 #pragma once
-#ifndef __SERIALIZATION_VARINTSERIALISEDATA_H__
-#define __SERIALIZATION_VARINTSERIALISEDATA_H__
+#ifndef __SERIALISATION_VARINTDATA_H__
+#define __SERIALISATION_VARINTDATA_H__
 
 #include "interface/ISerialiseData.h"
 
 #include <stdint.h>
 
-class VarIntSerialiseData
+class VarIntData
     : public ISerialiseData
 {
 public:
 
-    VarIntSerialiseData() : mValue(0)
+    VarIntData() : mValue(0)
     {
 
     }

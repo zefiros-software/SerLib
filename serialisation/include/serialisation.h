@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#ifndef __SERIALIZATION_SERIALISATION_H__
-#define __SERIALIZATION_SERIALISATION_H__
+#ifndef __SERIALISATION_SERIALISATION_H__
+#define __SERIALISATION_SERIALISATION_H__
 
 #include "interface/ISerialisable.h"
 #include "message.h"

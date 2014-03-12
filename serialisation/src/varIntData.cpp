@@ -20,28 +20,28 @@
  * THE SOFTWARE.
  */
 
-#include "varIntSerialiseData.h"
+#include "varIntData.h"
 #include "varint.h"
 #include "util.h"
 
-Type::Type VarIntSerialiseData::GetType() const
+Type::Type VarIntData::GetType() const
 {
     return Type::VarInt;
 }
 
-size_t VarIntSerialiseData::Size() const
+size_t VarIntData::Size() const
 {
     return Util::CalculateVarIntSize( mValue );
 }
 
-void VarIntSerialiseData::ReadFromStream( std::istream &stream )
+void VarIntData::ReadFromStream( std::istream &stream )
 {
     VarInt< uint64_t > val;
     val.ReadFromStream( stream );
     mValue = val.GetValue();
 }
 
-void VarIntSerialiseData::WriteToStream( std::ostream &stream ) const
+void VarIntData::WriteToStream( std::ostream &stream ) const
 {
     VarInt< uint64_t > val( mValue );
     val.WriteToStream( stream );

@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#ifndef __SERIALIZATION_REFLECT_H__
-#define __SERIALIZATION_REFLECT_H__
+#ifndef __SERIALISATION_REFLECT_H__
+#define __SERIALISATION_REFLECT_H__
 
 #include <stdint.h>
 

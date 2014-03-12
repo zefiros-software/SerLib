@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#ifndef __SERIALIZATION_ISERIALIZABLE_H__
-#define __SERIALIZATION_ISERIALIZABLE_H__
+#ifndef __SERIALISATION_ISERIALIZABLE_H__
+#define __SERIALISATION_ISERIALIZABLE_H__
 
 #include "defines.h"
 

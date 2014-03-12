@@ -466,59 +466,59 @@ namespace TestClasses
 
 
 
-    TestSerialClass( MultiSerialization, randomVals, uint8_t, 343422, 21331, 0x00, 100 );
-    TestSerialClass( MultiSerialization, randomVals, uint16_t, 343422, 21331, 0x00, 100 );
-    TestSerialClass( MultiSerialization, randomVals, uint32_t, 343422, 21331, 0x00, 100 );
-    TestSerialClass( MultiSerialization, randomVals, uint64_t, 343422, 21331, 0x00, 100 );
+    TestSerialClass( MultiSerialisation, randomVals, uint8_t, 343422, 21331, 0x00, 100 );
+    TestSerialClass( MultiSerialisation, randomVals, uint16_t, 343422, 21331, 0x00, 100 );
+    TestSerialClass( MultiSerialisation, randomVals, uint32_t, 343422, 21331, 0x00, 100 );
+    TestSerialClass( MultiSerialisation, randomVals, uint64_t, 343422, 21331, 0x00, 100 );
 
-    TestSerialClass( MultiSerialization, randomVals, int8_t, 343422, 21331, 0x00, 100 );
-    TestSerialClass( MultiSerialization, randomVals, int16_t, 343422, 21331, 0x00, 100 );
-    TestSerialClass( MultiSerialization, randomVals, int32_t, 343422, 21331, 0x00, 100 );
-    TestSerialClass( MultiSerialization, randomVals, int64_t, 343422, 21331, 0x00, 100 );
+    TestSerialClass( MultiSerialisation, randomVals, int8_t, 343422, 21331, 0x00, 100 );
+    TestSerialClass( MultiSerialisation, randomVals, int16_t, 343422, 21331, 0x00, 100 );
+    TestSerialClass( MultiSerialisation, randomVals, int32_t, 343422, 21331, 0x00, 100 );
+    TestSerialClass( MultiSerialisation, randomVals, int64_t, 343422, 21331, 0x00, 100 );
 
-    TestFSerialClass( MultiSerialization, randomVals, 343422, 21331, 0x00, 100 );
-    TestDSerialClass( MultiSerialization, randomVals, 343422, 21331, 0x00, 100 );
+    TestFSerialClass( MultiSerialisation, randomVals, 343422, 21331, 0x00, 100 );
+    TestDSerialClass( MultiSerialisation, randomVals, 343422, 21331, 0x00, 100 );
 
 
-    TestIFDMixedSerialClass( MixedIFDSerialization, randomVals, uint8_t, 343422, 21331, 0x00, 100 );
-    TestIFDMixedSerialClass( MixedIFDSerialization, randomVals, uint16_t, 343422, 21331, 0x00, 100 );
-    TestIFDMixedSerialClass( MixedIFDSerialization, randomVals, uint32_t, 343422, 21331, 0x00, 100 );
-    TestIFDMixedSerialClass( MixedIFDSerialization, randomVals, uint64_t, 343422, 21331, 0x00, 100 );
+    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, uint8_t, 343422, 21331, 0x00, 100 );
+    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, uint16_t, 343422, 21331, 0x00, 100 );
+    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, uint32_t, 343422, 21331, 0x00, 100 );
+    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, uint64_t, 343422, 21331, 0x00, 100 );
 
-    TestIFDMixedSerialClass( MixedIFDSerialization, randomVals, int8_t, 343422, 21331, 0x00, 100 );
-    TestIFDMixedSerialClass( MixedIFDSerialization, randomVals, int16_t, 343422, 21331, 0x00, 100 );
-    TestIFDMixedSerialClass( MixedIFDSerialization, randomVals, int32_t, 343422, 21331, 0x00, 100 );
-    TestIFDMixedSerialClass( MixedIFDSerialization, randomVals, int64_t, 343422, 21331, 0x00, 100 );
+    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, int8_t, 343422, 21331, 0x00, 100 );
+    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, int16_t, 343422, 21331, 0x00, 100 );
+    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, int32_t, 343422, 21331, 0x00, 100 );
+    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, int64_t, 343422, 21331, 0x00, 100 );
 
-    TestFIDMixedSerialClass( MixedFIDSerialization, randomVals, uint8_t, 343422, 21331, 0x00, 100 );
-    TestFIDMixedSerialClass( MixedFIDSerialization, randomVals, uint16_t, 343422, 21331, 0x00, 100 );
-    TestFIDMixedSerialClass( MixedFIDSerialization, randomVals, uint32_t, 343422, 21331, 0x00, 100 );
-    TestFIDMixedSerialClass( MixedFIDSerialization, randomVals, uint64_t, 343422, 21331, 0x00, 100 );
+    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, uint8_t, 343422, 21331, 0x00, 100 );
+    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, uint16_t, 343422, 21331, 0x00, 100 );
+    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, uint32_t, 343422, 21331, 0x00, 100 );
+    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, uint64_t, 343422, 21331, 0x00, 100 );
 
-    TestFIDMixedSerialClass( MixedFIDSerialization, randomVals, int8_t, 343422, 21331, 0x00, 100 );
-    TestFIDMixedSerialClass( MixedFIDSerialization, randomVals, int16_t, 343422, 21331, 0x00, 100 );
-    TestFIDMixedSerialClass( MixedFIDSerialization, randomVals, int32_t, 343422, 21331, 0x00, 100 );
-    TestFIDMixedSerialClass( MixedFIDSerialization, randomVals, int64_t, 343422, 21331, 0x00, 100 );
+    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, int8_t, 343422, 21331, 0x00, 100 );
+    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, int16_t, 343422, 21331, 0x00, 100 );
+    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, int32_t, 343422, 21331, 0x00, 100 );
+    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, int64_t, 343422, 21331, 0x00, 100 );
 
-    TestIFDMixedSerialClass( PackedMixedIFDSerialization, randomVals, uint8_t, 343422, 21331, 0x01, 100 );
-    TestIFDMixedSerialClass( PackedMixedIFDSerialization, randomVals, uint16_t, 343422, 21331, 0x01, 100 );
-    TestIFDMixedSerialClass( PackedMixedIFDSerialization, randomVals, uint32_t, 343422, 21331, 0x01, 100 );
-    TestIFDMixedSerialClass( PackedMixedIFDSerialization, randomVals, uint64_t, 343422, 21331, 0x01, 100 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, uint8_t, 343422, 21331, 0x01, 100 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, uint16_t, 343422, 21331, 0x01, 100 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, uint32_t, 343422, 21331, 0x01, 100 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, uint64_t, 343422, 21331, 0x01, 100 );
 
-    TestIFDMixedSerialClass( PackedMixedIFDSerialization, randomVals, int8_t, 343422, 21331, 0x01, 100 );
-    TestIFDMixedSerialClass( PackedMixedIFDSerialization, randomVals, int16_t, 343422, 21331, 0x01, 100 );
-    TestIFDMixedSerialClass( PackedMixedIFDSerialization, randomVals, int32_t, 343422, 21331, 0x01, 100 );
-    TestIFDMixedSerialClass( PackedMixedIFDSerialization, randomVals, int64_t, 343422, 21331, 0x01, 100 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, int8_t, 343422, 21331, 0x01, 100 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, int16_t, 343422, 21331, 0x01, 100 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, int32_t, 343422, 21331, 0x01, 100 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, int64_t, 343422, 21331, 0x01, 100 );
 
-    TestFIDMixedSerialClass( PackedMixedFIDSerialization, randomVals, uint8_t, 343422, 21331, 0x01, 100 );
-    TestFIDMixedSerialClass( PackedMixedFIDSerialization, randomVals, uint16_t, 343422, 21331, 0x01, 100 );
-    TestFIDMixedSerialClass( PackedMixedFIDSerialization, randomVals, uint32_t, 343422, 21331, 0x01, 100 );
-    TestFIDMixedSerialClass( PackedMixedFIDSerialization, randomVals, uint64_t, 343422, 21331, 0x01, 100 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, uint8_t, 343422, 21331, 0x01, 100 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, uint16_t, 343422, 21331, 0x01, 100 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, uint32_t, 343422, 21331, 0x01, 100 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, uint64_t, 343422, 21331, 0x01, 100 );
 
-    TestFIDMixedSerialClass( PackedMixedFIDSerialization, randomVals, int8_t, 343422, 21331, 0x01, 100 );
-    TestFIDMixedSerialClass( PackedMixedFIDSerialization, randomVals, int16_t, 343422, 21331, 0x01, 100 );
-    TestFIDMixedSerialClass( PackedMixedFIDSerialization, randomVals, int32_t, 343422, 21331, 0x01, 100 );
-    TestFIDMixedSerialClass( PackedMixedFIDSerialization, randomVals, int64_t, 343422, 21331, 0x01, 100 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, int8_t, 343422, 21331, 0x01, 100 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, int16_t, 343422, 21331, 0x01, 100 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, int32_t, 343422, 21331, 0x01, 100 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, int64_t, 343422, 21331, 0x01, 100 );
 
     TestEasyRepeatedClass( EasyRepeated, randomVals, 343422, 21331, 0x00, 100 );
     TestEasyRepeatedClass( EasyRepeatedPacked, randomVals, 343422, 21331, 0x01, 100 );

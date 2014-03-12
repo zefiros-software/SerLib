@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#ifndef __SERIALIZATION_REPEATEDDATA_H__
-#define __SERIALIZATION_REPEATEDDATA_H__
+#ifndef __SERIALISATION_REPEATEDDATA_H__
+#define __SERIALISATION_REPEATEDDATA_H__
 
 #include "interface/abstractRepeatedData.h"
 #include "interface/ISerialiseData.h"

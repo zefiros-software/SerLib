@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#ifndef __SERIALIZATION_ISERIALISEDATA_H__
-#define __SERIALIZATION_ISERIALISEDATA_H__
+#ifndef __SERIALISATION_ISERIALISEDATA_H__
+#define __SERIALISATION_ISERIALISEDATA_H__
 
 #include "types.h"
 

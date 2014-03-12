@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#ifndef __SERIALIZATION_IREFLECTABLE_H__
-#define __SERIALIZATION_IREFLECTABLE_H__
+#ifndef __SERIALISATION_IREFLECTABLE_H__
+#define __SERIALISATION_IREFLECTABLE_H__
 
 class Reflect;
 
