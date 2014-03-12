@@ -71,6 +71,9 @@ namespace Type
 
 	template<>
 	Type GetEnum< NumData< uint64_t > >();
+
+	template<>
+	Type GetEnum< class Message >();
 }
 
 namespace Mode

@@ -299,7 +299,4 @@ private:
     AbstractRepeatedData *GetRepeated( const uint32_t index, Type::Type subType, uint32_t flags = 0 );
 };
 
-template<>
-Type::Type Type::GetEnum< Message >();
-
 #endif
