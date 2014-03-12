@@ -21,14 +21,13 @@
  */
 
 #pragma once
-#ifndef __SERIALIZATION_MESSAGE_H__
-#define __SERIALIZATION_MESSAGE_H__
+#ifndef __SERIALISATION_MESSAGE_H__
+#define __SERIALISATION_MESSAGE_H__
 
-#include "varIntSerialiseData.h"
+#include "varIntData.h"
 #include "repeatedData.h"
 #include "stringData.h"
 #include "numData.h"
-#include "util.h"
 
 #include <stdint.h>
 #include <assert.h>
@@ -57,27 +56,27 @@ public:
 
     virtual Type::Type GetType() const;
 
-    void Store( int8_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+    void Store( int8_t &value, const uint32_t index, const uint32_t flags = 0 );
 
-    void Store( uint8_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+    void Store( uint8_t &value, const uint32_t index, const uint32_t flags = 0 );
 
-    void Store( int16_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+    void Store( int16_t &value, const uint32_t index, const uint32_t flags = 0 );
 
-    void Store( uint16_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+    void Store( uint16_t &value, const uint32_t index, const uint32_t flags = 0 );
 
-    void Store( int32_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+    void Store( int32_t &value, const uint32_t index, const uint32_t flags = 0 );
 
-    void Store( uint32_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+    void Store( uint32_t &value, const uint32_t index, const uint32_t flags = 0 );
 
-    void Store( int64_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+    void Store( int64_t &value, const uint32_t index, const uint32_t flags = 0 );
 
-    void Store( uint64_t &value, const uint32_t index = 0, const uint32_t flags = 0 );
+    void Store( uint64_t &value, const uint32_t index, const uint32_t flags = 0 );
 
-    void Store( float &value, const uint32_t index = 0, const uint32_t flags = 0 );
+    void Store( float &value, const uint32_t index, const uint32_t flags = 0 );
 
-    void Store( double &value, const uint32_t index = 0, const uint32_t flags = 0 );
+    void Store( double &value, const uint32_t index, const uint32_t flags = 0 );
 
-    void Store( std::string &string, const uint32_t index = 0, const uint32_t = 0 );
+    void Store( std::string &string, const uint32_t index, const uint32_t = 0 );
 
     void Store( ISerialisable *const serialisable, uint32_t index = 0 );
 
@@ -138,90 +137,91 @@ protected:
 
 private:
 
-    typedef NumData< uint8_t, Type::Char >      CharSerialiseData;
-    typedef NumData< uint16_t, Type::WORD >     WORDSerialiseData;
-    typedef NumData< uint32_t, Type::DWORD >    DWORDSerialiseData;
-    typedef NumData< uint64_t, Type::QWORD >    QWORDSerialiseData;
-
-    typedef RepeatedData< Message, Type::Message >              RepeatedMessage;
-    typedef RepeatedData< StringData, Type::String >            RepeatedStringData;
-    typedef RepeatedData< CharSerialiseData, Type::Char >       RepeatedCharData;
-    typedef RepeatedData< WORDSerialiseData, Type::WORD >       RepeatedWORDData;
-    typedef RepeatedData< DWORDSerialiseData, Type::DWORD >     RepeatedDWORDData;
-    typedef RepeatedData< QWORDSerialiseData, Type::QWORD >     RepeatedQWORDData;
-    typedef RepeatedData< VarIntSerialiseData, Type::VarInt >   RepeatedVarIntData;
-
     std::map< uint32_t, ISerialiseData * > mSerialisables;
+    std::pair< uint32_t, ISerialiseData * > mCache;
     Mode::Mode mMode;
 
-    template< typename U, typename DataType, Type::Type T >
+    template< typename T, typename DataType >
+    void Store( T &value, uint32_t index )
+    {
+        DataType *const data = GetSerialisable< DataType >( index );
+
+        if ( data )
+        {
+            data->Store( value, mMode );
+        }
+    }
+
+    template< typename U, Type::Type T >
     void StoreUNum( U &val, const uint32_t index, const uint32_t flags )
     {
         if ( flags & ( uint32_t )Packed )
         {
-            VarIntSerialiseData *const data = GetSerialisable< VarIntSerialiseData, Type::VarInt >( index );
-
-            if ( data )
-            {
-                data->Store( val, mMode );
-            }
+            Store< U, VarIntData >( val, index );
         }
         else
         {
-            DataType *const data = GetSerialisable< DataType, T >( index );
-
-            if ( data )
-            {
-                data->Store( val, mMode );
-            }
+            Store< U, NumData< U > >( val, index );
         }
     }
 
-    template< typename S, typename U, typename DataType, Type::Type T >
+    template< typename S, typename U, Type::Type T >
     void StoreSNum( S &val, const uint32_t index, const uint32_t flags )
     {
         if ( flags & ( uint32_t )Packed )
         {
-            VarIntSerialiseData *const data = GetSerialisable< VarIntSerialiseData, Type::VarInt >( index );
+            bool isSerialising = mMode == Mode::Serialise;
 
-            if ( data )
+            U uVal = isSerialising ? Util::ZigZag< S, U >( val ) : 0;
+
+            Store< U, VarIntData >( uVal, index );
+
+            if ( !isSerialising )
             {
-                bool isSerialising = mMode == Mode::Serialise;
-
-                U uVal = isSerialising ? Util::ZigZag< S, U >( val ) : 0;
-                data->Store( uVal, mMode );
-
-                if ( !isSerialising )
-                {
-                    val = Util::ZagZig< U, S >( uVal );
-                }
+                val = Util::ZagZig< U, S >( uVal );
             }
         }
         else
         {
-            DataType *const data = GetSerialisable< DataType, T >( index );
-
-            if ( data )
-            {
-                data->Store( val, mMode );
-            }
+            Store< U, NumData< U > >( ( U & )val, index );
         }
     }
 
-    template< typename DataType, Type::Type T >
-    DataType *GetSerialisable( const uint32_t index,
-                               DataType * ( Message::*creator )() = &Message::CreateDataType< DataType > )
+    template< typename DataType >
+    ISerialiseData *FindSerialisable( const uint32_t index )
     {
         ISerialiseData *data = NULL;
 
-        typename std::map< uint32_t, ISerialiseData * >::iterator it = mSerialisables.find( index );
-
-        if ( it != mSerialisables.end() )
+        if ( mCache.first == index && mCache.second != NULL )
         {
-            data = it->second;
-
-            assert( data->GetType() == T );
+            data = mCache.second;
         }
+        else
+        {
+            typename std::map< uint32_t, ISerialiseData * >::iterator it = mSerialisables.find( index );
+
+            if ( it != mSerialisables.end() )
+            {
+                data = it->second;
+
+                mCache.first = index;
+                mCache.second = data;
+            }
+        }
+
+        if ( data && data->GetType() != Type::GetEnum< DataType >() )
+        {
+            assert( false );
+            data = NULL;
+        }
+
+        return data;
+    }
+
+    template< typename DataType >
+    DataType *GetSerialisable( const uint32_t index, DataType * ( Message::*creator )() = &Message::CreateDataType< DataType > )
+    {
+        ISerialiseData *data = FindSerialisable< DataType >( index );
 
         switch ( mMode )
         {
@@ -231,6 +231,9 @@ private:
                 {
                     data = ( *this.*creator )();
                     mSerialisables[ index ] = data;
+
+                    mCache.first = index;
+                    mCache.second = data;
                 }
             }
             break;
@@ -242,38 +245,34 @@ private:
         return static_cast< DataType *const >( data );
     }
 
-    template< typename V, typename DataType, Type::Type T >
+
+
+    template< typename V, typename DataType >
     void StoreRepeated( V &value, const uint32_t index, const uint32_t repeatedIndex )
     {
-        typename std::map< uint32_t, ISerialiseData * >::iterator it = mSerialisables.find( index );
-        assert( it != mSerialisables.end() );
-
-        ISerialiseData *const data = it->second;
-
-        assert( data->GetType() == Type::Repeated );
+        ISerialiseData *data = FindSerialisable< RepeatedData< DataType > >( index );
 
         AbstractRepeatedData *const repeated = static_cast< AbstractRepeatedData *const >( data );
 
-        assert( repeated->GetSubType() == T );
-
+        assert( repeated->GetSubType() == Type::GetEnum< DataType >() );
 
         static_cast< DataType *const >( repeated->GetSerialisable( repeatedIndex ) )->Store( value, mMode );
     }
 
-    template< typename V, typename DataType, Type::Type T >
+    template< typename V >
     void StoreRepeatedUNum( V &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags )
     {
         if ( flags & ( uint32_t )Packed )
         {
-            StoreRepeated< V, VarIntSerialiseData, Type::VarInt >( value, index, repeatedIndex );
+            StoreRepeated< V, VarIntData >( value, index, repeatedIndex );
         }
         else
         {
-            StoreRepeated< V, DataType, T >( value, index, repeatedIndex );
+            StoreRepeated< V, NumData< V > >( value, index, repeatedIndex );
         }
     }
 
-    template< typename S, typename U, typename DataType, Type::Type T >
+    template< typename S, typename U >
     void StoreRepeatedSNum( S &value, const uint32_t index, const uint32_t repeatedIndex, const uint32_t flags )
     {
         if ( flags & ( uint32_t )Packed )
@@ -281,7 +280,8 @@ private:
             bool isSerialising = mMode == Mode::Serialise;
 
             U uVal = isSerialising ? Util::ZigZag< S, U >( value ) : 0;
-            StoreRepeated< U, VarIntSerialiseData, Type::VarInt >( uVal, index, repeatedIndex );
+
+            StoreRepeated< U, VarIntData >( uVal, index, repeatedIndex );
 
             if ( !isSerialising )
             {
@@ -290,7 +290,7 @@ private:
         }
         else
         {
-            StoreRepeated< S, DataType, T >( value, index, repeatedIndex );
+            StoreRepeated< S, NumData< U > >( value, index, repeatedIndex );
         }
     }
 
@@ -298,5 +298,8 @@ private:
 
     AbstractRepeatedData *GetRepeated( const uint32_t index, Type::Type subType, uint32_t flags = 0 );
 };
+
+template<>
+Type::Type Type::GetEnum< Message >();
 
 #endif

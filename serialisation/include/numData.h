@@ -21,12 +21,12 @@
  */
 
 #pragma once
-#ifndef __SERIALIZATION_NUMDATA_H__
-#define __SERIALIZATION_NUMDATA_H__
+#ifndef __SERIALISATION_NUMDATA_H__
+#define __SERIALISATION_NUMDATA_H__
 
 #include "interface/ISerialiseData.h"
 
-template< typename U, Type::Type T >
+template< typename U >
 class NumData
     : public ISerialiseData
 {
@@ -35,25 +35,25 @@ public:
     NumData() : mValue(0)
     {}
 
-    template< typename D >
-    void Store( D &val, Mode::Mode mode )
+	template< typename V >
+    void Store( V &val, Mode::Mode mode )
     {
         switch ( mode )
         {
         case Mode::Serialise:
-            mValue = ( U )val;
+            SetValue( val );
             break;
 
         case Mode::Deserialise:
-            val = ( D )mValue;
+            val = GetValue< V >();
             break;
         }
     }
 
-    virtual Type::Type GetType() const
-    {
-        return T;
-    }
+	inline Type::Type GetType() const
+	{
+		return Type::GetEnum< NumData< U > >();
+	}
 
     virtual size_t Size() const
     {
@@ -73,6 +73,30 @@ public:
 protected:
 
     U mValue;
+
+	template< typename V >
+	inline V GetValue() const
+	{
+		return ( V )mValue;
+	}
+
+	template< typename V >
+	inline void SetValue( const V value )
+	{
+		mValue = ( U )value;
+	}
 };
+
+template<> 
+Type::Type Type::GetEnum< NumData< uint8_t > >();
+
+template<>
+Type::Type Type::GetEnum< NumData< uint16_t > >();
+
+template<>
+Type::Type Type::GetEnum< NumData< uint32_t > >();
+
+template<>
+Type::Type Type::GetEnum< NumData< uint64_t > >();
 
 #endif

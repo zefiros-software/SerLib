@@ -25,6 +25,7 @@
 #define __SERIALISATION_STRINGDATA_H__
 
 #include "interface/ISerialiseData.h"
+#include "types.h"
 
 class StringData
     : public ISerialiseData
@@ -45,5 +46,8 @@ private:
 
     std::string mString;
 };
+
+template<>
+Type::Type Type::GetEnum< StringData >();
 
 #endif

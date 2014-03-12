@@ -33,7 +33,7 @@
 #include <stdint.h>
 #include <vector>
 
-template< typename DataType, Type::Type SubType >
+template< typename DataType >
 class RepeatedData
     : public AbstractRepeatedData
 {
@@ -62,12 +62,12 @@ public:
 
     virtual Type::Type GetSubType() const
     {
-        return SubType;
+        return Type::GetEnum< DataType >();
     }
 
     virtual size_t Size() const
     {
-        size_t size = Util::CalculateVarIntSize( Util::CreateHeader( ( uint32_t )mFields.size(), SubType ) );
+        size_t size = Util::CalculateVarIntSize( Util::CreateHeader( ( uint32_t )mFields.size(), GetSubType() ) );
 
         for ( typename std::vector< DataType >::const_iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
         {
