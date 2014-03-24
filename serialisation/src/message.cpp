@@ -27,8 +27,14 @@
 #include "varint.h"
 
 Message::Message( Mode::Mode mode /*= Mode::Serialise */ )
-    : mMode( mode ), mCache( std::pair< uint32_t, ISerialiseData * >( 0, NULL ) )
+	: mMode( mode )
 {
+}
+
+Message::Message( ISerialisable *const serialisable, Mode::Mode mode /*= Mode::Serialise */ )
+	: mMode( mode )
+{
+	Store( serialisable );
 }
 
 Message::~Message()
@@ -124,10 +130,15 @@ void Message::Store( double &value, const uint32_t index /*= 0*/, const uint32_t
     Store< SerialiseData< double > >( value, index, flags );
 }
 
+void Message::Store( ISerialisable *const value )
+{
+	value->SERIALISATION_CUSTOM_INTERFACE( *this );
+}
+
 void Message::Store( ISerialisable *const value, Mode::Mode mode )
 {
-    mMode = mode;
-    value->SERIALISATION_CUSTOM_INTERFACE( *this );
+	mMode = mode;
+	Store( value );
 }
 
 uint32_t Message::Count( const uint32_t index )

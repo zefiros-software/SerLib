@@ -46,9 +46,11 @@ public:
     enum Flags
     {
         Packed = 0x01
-    };
+	};
 
-    Message( Mode::Mode mode = Mode::Serialise );
+	Message( Mode::Mode mode = Mode::Serialise );
+
+	Message( ISerialisable *const serialisable, Mode::Mode mode = Mode::Serialise );
 
 	~Message();
 
@@ -86,11 +88,7 @@ public:
 
     void Store( double &value, const uint32_t index, const uint32_t flags = 0 );
 
-    void Store( ISerialisable *const serialisable, const std::string &fileName );
-
-    void Store( ISerialisable *const serialisable, std::ostream &stream );
-
-    void Store( ISerialisable *const serialisable, std::istream &stream );
+    void Store( ISerialisable *const serialisable );
 
     uint32_t Count( const uint32_t index );
 
@@ -127,7 +125,6 @@ protected:
     std::vector< uint32_t > mIndexes;
     std::vector< ISerialiseData * > mSerialisables;
 
-    std::pair< uint32_t, ISerialiseData * > mCache;
     uint32_t mFlags;
     Mode::Mode mMode;
 
@@ -175,12 +172,6 @@ protected:
 
         mIndexes.push_back( index );
         mSerialisables[ index ] =  data;
-    }
-
-    void SetCache( ISerialiseData *const data, const uint32_t index )
-    {
-        mCache.first = index;
-        mCache.second = data;
     }
 
     template< typename T >
