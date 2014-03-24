@@ -2,15 +2,16 @@
 #ifndef __SERIALISATION_SERIALISEDATA_H__
 #define __SERIALISATION_SERIALISEDATA_H__
 
-#include "interface/ISerialiseData.h"
+#include "interface/IPrimitiveData.h"
 #include "interface/abstractSerialiser.h"
+#include "util.h"
 
 #include <sstream>
 #include <stdexcept>
 
 template< typename T >
 class SerialiseData
-    : public ISerialiseData
+    : public AbstractPrimitiveData
 {
 public:
 
@@ -40,27 +41,59 @@ public:
         return mValue;
     }
 
-    void Store( T &value, Mode::Mode mode )
+    void Store( std::string &, Mode::Mode )
     {
-        switch ( mode )
-        {
-        case Mode::Serialise:
-            mValue = value;
-            break;
+        StoreError();
+    };
 
-        case Mode::Deserialise:
-            value = mValue;
-            break;
-        }
+    void Store( uint8_t &, Mode::Mode )
+    {
+        StoreError();
     }
 
-    template< typename V >
-    void Store( V &, Mode::Mode )
+    void Store( uint16_t &, Mode::Mode )
     {
-        std::stringstream ss;
-        ss << "Storing '" << typeid( V ).name() << "' in '" << typeid( SerialiseData< T > ).name() << "' is not supported.";
-        std::cerr << ss.str();
-        throw std::invalid_argument( ss.str().c_str() );
+        StoreError();
+    }
+
+    void Store( uint32_t &, Mode::Mode )
+    {
+        StoreError();
+    }
+
+    void Store( uint64_t &, Mode::Mode )
+    {
+        StoreError();
+    }
+
+    void Store( int8_t &, Mode::Mode )
+    {
+        StoreError();
+    }
+
+    void Store( int16_t &, Mode::Mode )
+    {
+        StoreError();
+    }
+
+    void Store( int32_t &, Mode::Mode )
+    {
+        StoreError();
+    }
+
+    void Store( int64_t &, Mode::Mode )
+    {
+        StoreError();
+    }
+
+    void Store( float &, Mode::Mode )
+    {
+        StoreError();
+    }
+
+    void Store( double &, Mode::Mode )
+    {
+        StoreError();
     }
 
     virtual void SerialiseTo( AbstractSerialiser *const serialiser )
@@ -107,7 +140,7 @@ protected:
 
         S sVal = isSerialising ? Util::ZagZig< U, S >( value ) : 0;
 
-        StoreV( sVal, mode );
+        Store( sVal, mode );
 
         if ( !isSerialising )
         {
@@ -115,125 +148,292 @@ protected:
         }
     }
 
-    template< typename T, typename U >
-    void StoreT( U &value, Mode::Mode mode )
+    template< typename S, typename U >
+    void StoreS( U &value, Mode::Mode mode )
     {
         bool isSerialising = mode == Mode::Serialise;
 
-        T tVal = isSerialising ? ( T )value : 0;
+        S sVal = isSerialising ? ( S )value : 0;
 
-        Store( tVal, mode );
+        Store( sVal, mode );
 
         if ( !isSerialising )
         {
-            value = ( U )tVal;
+            value = ( U )sVal;
         }
     }
 
-    template< typename V >
-    void StoreV( V &value, Mode::Mode mode )
-    {
-        switch ( mode )
-        {
-        case Mode::Serialise:
-            SetValue( value );
-            break;
+	void StoreT( T &value, Mode::Mode mode )
+	{
+		switch (mode)
+		{
+		case Mode::Serialise:
+			mValue = value;
+			break;
+		case Mode::Deserialise:
+			value = mValue;
+			break;
+		}
+	}
 
-        case Mode::Deserialise:
-            value = GetValue< V >();
-            break;
-        }
+    void StoreError() const
+    {
+        throw std::invalid_argument( "Invalid conversion" );
     }
 };
+
 
 template<>
 void SerialiseData< std::string >::Store( std::string &value, Mode::Mode mode )
 {
-    switch ( mode )
-    {
-    case Mode::Serialise:
-        mValue.assign( value );
-        break;
+	StoreT( value, mode );
+}
 
-    case Mode::Deserialise:
-        value.assign( mValue );
-        break;
+
+template<>
+void SerialiseData< uint8_t >::Store( uint8_t &value, Mode::Mode mode )
+{
+	StoreT( value, mode );
+}
+
+template<>
+void SerialiseData< uint16_t >::Store( uint16_t &value, Mode::Mode mode )
+{
+	StoreT( value, mode );
+}
+
+template<>
+void SerialiseData< uint32_t >::Store( uint32_t &value, Mode::Mode mode )
+{
+	StoreT( value, mode );
+}
+
+template<>
+void SerialiseData< uint64_t >::Store( uint64_t &value, Mode::Mode mode )
+{
+	StoreT( value, mode );
+}
+
+template<>
+void SerialiseData< int8_t >::Store( int8_t &value, Mode::Mode mode )
+{
+	StoreT( value, mode );
+}
+
+template<>
+void SerialiseData< int16_t >::Store( int16_t &value, Mode::Mode mode )
+{
+	StoreT( value, mode );
+}
+
+template<>
+void SerialiseData< int32_t >::Store( int32_t &value, Mode::Mode mode )
+{
+	StoreT( value, mode );
+}
+
+template<>
+void SerialiseData< int64_t >::Store( int64_t &value, Mode::Mode mode )
+{
+	StoreT( value, mode );
+}
+
+template<>
+void SerialiseData< float >::Store( float &value, Mode::Mode mode )
+{
+	StoreT( value, mode );
+}
+
+template<>
+void SerialiseData< double >::Store( double &value, Mode::Mode mode )
+{
+	StoreT( value, mode );
+}
+
+
+
+template<>
+void SerialiseData< uint8_t >::Store( int8_t &value, Mode::Mode mode )
+{
+	ZigZagStore< uint8_t >( value, mode );
+}
+
+template<>
+void SerialiseData< uint16_t >::Store( int16_t &value, Mode::Mode mode )
+{
+	ZigZagStore< uint16_t >( value, mode );
+}
+
+template<>
+void SerialiseData< uint32_t >::Store( int32_t &value, Mode::Mode mode )
+{
+	ZigZagStore< uint32_t >( value, mode );
+}
+
+template<>
+void SerialiseData< uint64_t >::Store( int64_t &value, Mode::Mode mode )
+{
+	ZigZagStore< uint64_t >( value, mode );;
+}
+
+template<>
+void SerialiseData< int8_t >::Store( uint8_t &value, Mode::Mode mode )
+{
+	ZagZigStore< int8_t >( value, mode );
+}
+
+template<>
+void SerialiseData< int16_t >::Store( uint16_t &value, Mode::Mode mode )
+{
+	ZagZigStore< int16_t >( value, mode );
+}
+
+template<>
+void SerialiseData< int32_t >::Store( uint32_t &value, Mode::Mode mode )
+{
+	ZagZigStore< int32_t >( value, mode );
+}
+
+template<>
+void SerialiseData< int64_t >::Store( uint64_t &value, Mode::Mode mode )
+{
+	ZagZigStore< int64_t >( value, mode );
+}
+
+
+
+template<>
+void SerialiseData< uint8_t >::Store( uint64_t &value, Mode::Mode mode )
+{
+    StoreS< uint8_t >( value, mode );
+}
+
+template<>
+void SerialiseData< uint16_t >::Store( uint64_t &value, Mode::Mode mode )
+{
+    StoreS< uint16_t >( value, mode );
+}
+
+template<>
+void SerialiseData< uint32_t >::Store( uint64_t &value, Mode::Mode mode )
+{
+    StoreS< uint32_t >( value, mode );
+}
+
+template<>
+void SerialiseData< int8_t >::Store( uint64_t &value, Mode::Mode mode )
+{
+    StoreS< uint8_t >( value, mode );
+}
+
+template<>
+void SerialiseData< int16_t >::Store( uint64_t &value, Mode::Mode mode )
+{
+    StoreS< uint16_t >( value, mode );
+}
+
+template<>
+void SerialiseData< int32_t >::Store( uint64_t &value, Mode::Mode mode )
+{
+    StoreS< uint32_t >( value, mode );
+}
+
+
+template<>
+void SerialiseData< uint64_t >::Store( uint8_t &value, Mode::Mode mode )
+{
+    StoreS< uint64_t >( value, mode );
+}
+
+template<>
+void SerialiseData< uint64_t >::Store( uint16_t &value, Mode::Mode mode )
+{
+    StoreS< uint64_t >( value, mode );
+}
+
+template<>
+void SerialiseData< uint64_t >::Store( uint32_t &value, Mode::Mode mode )
+{
+    StoreS< uint64_t >( value, mode );
+}
+
+template<>
+void SerialiseData< uint64_t >::Store( int8_t &value, Mode::Mode mode )
+{
+    ZigZagStore< uint8_t >( value, mode );
+}
+
+template<>
+void SerialiseData< uint64_t >::Store( int16_t &value, Mode::Mode mode )
+{
+    ZigZagStore< uint16_t >( value, mode );
+}
+
+template<>
+void SerialiseData< uint64_t >::Store( int32_t &value, Mode::Mode mode )
+{
+    ZigZagStore< uint32_t >( value, mode );
+}
+
+
+template<>
+void SerialiseData< uint32_t >::Store( float &value, Mode::Mode mode )
+{
+    bool isSerialising = mode == Mode::Serialise;
+
+    uint32_t flexman = isSerialising ? Util::FloatToUInt32( value ) : 0;
+
+    Store( flexman, mode );
+
+    if ( !isSerialising )
+    {
+        value = Util::UInt32ToFloat( flexman );
     }
 }
 
-template<> template<>
-void SerialiseData< uint8_t >::Store< int8_t >( int8_t &value, Mode::Mode mode );
+template<>
+void SerialiseData< float >::Store( uint32_t &value, Mode::Mode mode )
+{
+    bool isSerialising = mode == Mode::Serialise;
 
-template<> template<>
-void SerialiseData< uint16_t >::Store< int16_t >( int16_t &value, Mode::Mode mode );
+    float f = isSerialising ? Util::UInt32ToFloat( value ) : 0;
 
-template<> template<>
-void SerialiseData< uint32_t >::Store< int32_t >( int32_t &value, Mode::Mode mode );
+    Store( f, mode );
 
-template<> template<>
-void SerialiseData< uint64_t >::Store< int64_t >( int64_t &value, Mode::Mode mode );
+    if ( !isSerialising )
+    {
+        value = Util::FloatToUInt32( f );
+    }
+}
 
-template<> template<>
-void SerialiseData< int8_t >::Store< uint8_t >( uint8_t &value, Mode::Mode mode );
+template<>
+void SerialiseData< uint64_t >::Store( double &value, Mode::Mode mode )
+{
+    bool isSerialising = mode == Mode::Serialise;
 
-template<> template<>
-void SerialiseData< int16_t >::Store< uint16_t >( uint16_t &value, Mode::Mode mode );
+    uint64_t flexman = isSerialising ? Util::DoubleToUInt64( value ) : 0;
 
-template<> template<>
-void SerialiseData< int32_t >::Store< uint32_t >( uint32_t &value, Mode::Mode mode );
+    Store( flexman, mode );
 
-template<> template<>
-void SerialiseData< int64_t >::Store< uint64_t >( uint64_t &value, Mode::Mode mode );
+    if ( !isSerialising )
+    {
+        value = Util::UInt64ToDouble( flexman );
+    }
+}
 
+template<>
+void SerialiseData< double >::Store( uint64_t &value, Mode::Mode mode )
+{
+    bool isSerialising = mode == Mode::Serialise;
 
-template<> template<>
-void SerialiseData< uint8_t >::Store< uint64_t >( uint64_t &value, Mode::Mode mode );
+    double d = isSerialising ? Util::UInt64ToDouble( value ) : 0;
 
-template<> template<>
-void SerialiseData< uint16_t >::Store< uint64_t >( uint64_t &value, Mode::Mode mode );
+    Store( d, mode );
 
-template<> template<>
-void SerialiseData< uint32_t >::Store< uint64_t >( uint64_t &value, Mode::Mode mode );
-
-template<> template<>
-void SerialiseData< int8_t >::Store< uint64_t >( uint64_t &value, Mode::Mode mode );
-
-template<> template<>
-void SerialiseData< int16_t >::Store< uint64_t >( uint64_t &value, Mode::Mode mode );
-
-template<> template<>
-void SerialiseData< int32_t >::Store< uint64_t >( uint64_t &value, Mode::Mode mode );
-
-
-template<> template<>
-void SerialiseData< uint64_t >::Store< uint8_t >( uint8_t &value, Mode::Mode mode );
-
-template<> template<>
-void SerialiseData< uint64_t >::Store< uint16_t >( uint16_t &value, Mode::Mode mode );
-
-template<> template<>
-void SerialiseData< uint64_t >::Store< uint32_t >( uint32_t &value, Mode::Mode mode );
-
-template<> template<>
-void SerialiseData< uint64_t >::Store< int8_t >( int8_t &value, Mode::Mode mode );
-
-template<> template<>
-void SerialiseData< uint64_t >::Store< int16_t >( int16_t &value, Mode::Mode mode );
-
-template<> template<>
-void SerialiseData< uint64_t >::Store< int32_t >( int32_t &value, Mode::Mode mode );
-
-
-template<> template<>
-void SerialiseData< uint32_t >::Store< float >( float &value, Mode::Mode mode );
-
-template<> template<>
-void SerialiseData< float >::Store< uint32_t >( uint32_t &value, Mode::Mode mode );
-
-template<> template<>
-void SerialiseData< uint64_t >::Store< double >( double &value, Mode::Mode mode );
-
-template<> template<>
-void SerialiseData< double >::Store< uint64_t >( uint64_t &value, Mode::Mode mode );
+    if ( !isSerialising )
+    {
+        value = Util::DoubleToUInt64( d );
+    }
+}
 
 #endif

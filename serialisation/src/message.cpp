@@ -27,22 +27,22 @@
 #include "varint.h"
 
 Message::Message( Mode::Mode mode /*= Mode::Serialise */ )
-	: mMode( mode )
+    : mMode( mode )
 {
 }
 
 Message::Message( ISerialisable *const serialisable, Mode::Mode mode /*= Mode::Serialise */ )
-	: mMode( mode )
+    : mMode( mode )
 {
-	Store( serialisable );
+    Store( serialisable );
 }
 
 Message::~Message()
 {
-	for( std::vector< uint32_t >::iterator it = mIndexes.begin(), end = mIndexes.end(); it != end; ++it )
-	{
-		delete mSerialisables[ *it ];
-	}
+    for ( std::vector< uint32_t >::iterator it = mIndexes.begin(), end = mIndexes.end(); it != end; ++it )
+    {
+        delete mSerialisables[ *it ];
+    }
 }
 
 void Message::SetMode( Mode::Mode mode )
@@ -72,7 +72,15 @@ Internal::Type::Type Message::GetType() const
 
 void Message::Store( ISerialisable *const value, const uint32_t index, const uint32_t flags /*= 0 */ )
 {
-    Store< Message >( value, index, flags );
+    ISerialiseData *data = FindSerialisable( index );
+
+    if ( !data )
+    {
+        data = CreateDataType< Message >( flags );
+        InsertSerialiseDataAt( data, index );
+    }
+
+    static_cast< Message * >( data )->Store( value, mMode );
 }
 
 void Message::Store( std::string &value, const uint32_t index, const uint32_t flags/*= 0 */ )
@@ -132,13 +140,13 @@ void Message::Store( double &value, const uint32_t index /*= 0*/, const uint32_t
 
 void Message::Store( ISerialisable *const value )
 {
-	value->SERIALISATION_CUSTOM_INTERFACE( *this );
+    value->SERIALISATION_CUSTOM_INTERFACE( *this );
 }
 
 void Message::Store( ISerialisable *const value, Mode::Mode mode )
 {
-	mMode = mode;
-	Store( value );
+    mMode = mode;
+    Store( value );
 }
 
 uint32_t Message::Count( const uint32_t index )
@@ -186,15 +194,11 @@ void Message::CreateRepeated( Type::Type type, uint32_t size, const uint32_t ind
 
             case Type::UInt32:
                 data = CreateDataType< RepeatedData< SerialiseData< uint32_t > > >( flags );
-				break;
+                break;
 
-			case Type::UInt64:
-				data = CreateDataType< RepeatedData< SerialiseData< uint64_t > > >( flags );
-				break;
-
-			case Internal::Type::VarInt:
-				data = CreateDataType< RepeatedData< VarIntData > >( flags );
-				break;
+            case Type::UInt64:
+                data = CreateDataType< RepeatedData< SerialiseData< uint64_t > > >( flags );
+                break;
 
             case Type::SInt8:
                 data = CreateDataType< RepeatedData< SerialiseData< int8_t > > >( flags );
@@ -219,6 +223,10 @@ void Message::CreateRepeated( Type::Type type, uint32_t size, const uint32_t ind
             case Type::Double:
                 data = CreateDataType< RepeatedData< SerialiseData< double > > >( flags );
                 break;
+
+            default:
+                data = CreateDataType< RepeatedData< VarIntData > >( flags );
+                break;
             }
 
             InsertSerialiseDataAt( data, index );
@@ -230,7 +238,12 @@ void Message::CreateRepeated( Type::Type type, uint32_t size, const uint32_t ind
 
 void Message::StoreRepeated( ISerialisable *const value, const uint32_t index, const uint32_t repeatedIndex )
 {
-    StoreRepeatedV( value, index, repeatedIndex );
+    ISerialiseData *data = FindSerialisable( index );
+
+    assert( data->GetType() == Internal::Type::Repeated );
+
+    static_cast< Message * >(
+        static_cast< AbstractRepeatedData * >( data )->GetSerialisable( repeatedIndex ) )->Store( value, mMode );
 }
 
 void Message::StoreRepeated( std::string &value, const uint32_t index, const uint32_t repeatedIndex )

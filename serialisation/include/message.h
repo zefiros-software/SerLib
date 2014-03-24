@@ -38,21 +38,21 @@ class AbstractSerialiser;
 class Message
     : public ISerialiseData
 {
-	friend class AbstractSerialiser;
-	friend class AbstractDeserialiser;
+    friend class AbstractSerialiser;
+    friend class AbstractDeserialiser;
 
 public:
 
     enum Flags
     {
         Packed = 0x01
-	};
+    };
 
-	Message( Mode::Mode mode = Mode::Serialise );
+    Message( Mode::Mode mode = Mode::Serialise );
 
-	Message( ISerialisable *const serialisable, Mode::Mode mode = Mode::Serialise );
+    Message( ISerialisable *const serialisable, Mode::Mode mode = Mode::Serialise );
 
-	~Message();
+    ~Message();
 
     void SetMode( Mode::Mode mode );
 
@@ -157,7 +157,7 @@ protected:
             InsertSerialiseDataAt( data, index );
         }
 
-        StoreToSerialiseData( data, value );
+        static_cast< AbstractPrimitiveData *const >( data )->Store( value, mMode );
     }
 
     void InsertSerialiseDataAt( ISerialiseData *const data, const uint32_t index )
@@ -172,66 +172,6 @@ protected:
 
         mIndexes.push_back( index );
         mSerialisables[ index ] =  data;
-    }
-
-    template< typename T >
-    void StoreToSerialiseData( ISerialiseData *const data, T &value )
-    {
-        switch ( data->GetType() )
-        {
-        case Internal::Type::Repeated:
-        case Internal::Type::Variable:
-            static_cast< Message *const >( data )->Store( value, mMode );
-            break;
-
-        case Internal::Type::String:
-            static_cast< SerialiseData< std::string > *const >( data )->Store( value, mMode );
-            break;
-
-        case Internal::Type::UInt8:
-            static_cast< SerialiseData< uint8_t > *const >( data )->Store( value, mMode );
-            break;
-
-        case Internal::Type::UInt16:
-            static_cast< SerialiseData< uint16_t > *const >( data )->Store( value, mMode );
-            break;
-
-        case Internal::Type::UInt32:
-            static_cast< SerialiseData< uint32_t > *const >( data )->Store( value, mMode );
-            break;
-
-        case Internal::Type::UInt64:
-            static_cast< SerialiseData< uint64_t > *const >( data )->Store( value, mMode );
-            break;
-
-        case Internal::Type::VarInt:
-            static_cast< VarIntData *const >( data )->Store( value, mMode );
-            break;
-
-        case Internal::Type::SInt8:
-            static_cast< SerialiseData< int8_t > *const >( data )->Store( value, mMode );
-            break;
-
-        case Internal::Type::SInt16:
-            static_cast< SerialiseData< int16_t > *const >( data )->Store( value, mMode );
-            break;
-
-        case Internal::Type::SInt32:
-            static_cast< SerialiseData< int32_t > *const >( data )->Store( value, mMode );
-            break;
-
-        case Internal::Type::SInt64:
-            static_cast< SerialiseData< int64_t > *const >( data )->Store( value, mMode );
-            break;
-
-        case Internal::Type::Float:
-            static_cast< SerialiseData< float > *const >( data )->Store( value, mMode );
-            break;
-
-        case Internal::Type::Double:
-            static_cast< SerialiseData< double > *const >( data )->Store( value, mMode );
-            break;
-        }
     }
 
     ISerialiseData *FindSerialisable( const uint32_t index )
@@ -251,7 +191,8 @@ protected:
 
         assert( data->GetType() == Internal::Type::Repeated );
 
-        StoreToSerialiseData( static_cast< AbstractRepeatedData *const >( data )->GetSerialisable( repeatedIndex ), value );
+        static_cast< AbstractPrimitiveData * >( 
+			static_cast< AbstractRepeatedData * >( data )->GetSerialisable( repeatedIndex ) )->Store( value, mMode );
     }
 };
 
