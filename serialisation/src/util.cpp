@@ -84,12 +84,12 @@ uint32_t Util::GetHeaderIndex( uint64_t header )
     return ( uint32_t )( header >> 3 );
 }
 
-Type::Type Util::GetHeaderType( uint64_t header )
+Internal::Type::Type Util::GetHeaderType( uint64_t header )
 {
-    return ( Type::Type )( header & 0x07 );
+    return ( Internal::Type::Type )( header & 0x07 );
 }
 
-uint64_t Util::CreateHeader( uint32_t index, Type::Type t )
+uint64_t Util::CreateHeader( uint32_t index, Internal::Type::Type t )
 {
     return ( ( uint64_t )index << 3 ) | ( ( uint64_t )t & 0x07 );
 }

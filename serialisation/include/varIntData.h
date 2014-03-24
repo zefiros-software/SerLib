@@ -26,57 +26,20 @@
 
 #include "interface/ISerialiseData.h"
 #include "types.h"
+#include "serialiseData.h"
 
 #include <stdint.h>
 
 class VarIntData
-    : public ISerialiseData
+    : public SerialiseData< uint64_t >
 {
 public:
 
-    VarIntData() : mValue( 0 )
-    {
+    Internal::Type::Type GetType() const;
 
-    }
+    uint32_t GetFlags() const;
 
-    template< typename V >
-    void Store( V &val, Mode::Mode mode )
-    {
-        switch ( mode )
-        {
-        case Mode::Serialise:
-            SetValue( val );
-            break;
-
-        case Mode::Deserialise:
-            val = GetValue< V >();
-            break;
-        }
-    }
-
-    virtual Type::Type GetType() const;
-
-    virtual size_t Size() const;
-
-    virtual void ReadFromStream( std::istream &stream );
-
-    virtual void WriteToStream( std::ostream &stream ) const;
-
-private:
-
-    uint64_t mValue;
-
-    template< typename V >
-    inline V GetValue() const
-    {
-        return ( V )mValue;
-    }
-
-	template< typename V >
-	inline void SetValue( const V value )
-	{
-		mValue = ( uint64_t )value;
-	}
+    virtual void SerialiseTo( AbstractSerialiser *const serialiser );
 };
 
 #endif

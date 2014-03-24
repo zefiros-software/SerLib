@@ -63,9 +63,9 @@ namespace Util
         return ( u >> 1 ) ^ ( -( ( S )u & 1 ) );
     }
 
-    uint64_t CreateHeader( uint32_t index, Type::Type t );
+    uint64_t CreateHeader( uint32_t index, Internal::Type::Type t );
 
-    Type::Type GetHeaderType( uint64_t header );
+    Internal::Type::Type GetHeaderType( uint64_t header );
 
     uint32_t GetHeaderIndex( uint64_t header );
 }

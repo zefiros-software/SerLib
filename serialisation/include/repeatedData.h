@@ -1,16 +1,16 @@
 /**
  * Copyright (c) 2014 Mick van Duijn, Koen Visscher and Paul Visscher
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,7 +25,6 @@
 #define __SERIALISATION_REPEATEDDATA_H__
 
 #include "interface/abstractRepeatedData.h"
-#include "interface/ISerialiseData.h"
 #include "types.h"
 #include "util.h"
 
@@ -33,64 +32,70 @@
 #include <stdint.h>
 #include <vector>
 
+class AbstractSerialiser;
+
 template< typename DataType >
 class RepeatedData
     : public AbstractRepeatedData
 {
 public:
 
-    virtual ISerialiseData *GetSerialisable( const size_t index )
+    RepeatedData( const uint32_t flags = 0 )
+        : mFlags( flags )
+    {
+
+    }
+
+    virtual uint32_t GetFlags() const
+    {
+        return mFlags;
+    }
+
+	virtual void SetFlags( const uint32_t flags )
+	{
+		mFlags = flags;
+	}
+
+    virtual ISerialiseData *GetSerialisable( const uint32_t index )
+    {
+        return GetConcreteSerialisable( index );
+    }
+
+    virtual DataType *GetConcreteSerialisable( const uint32_t index )
     {
         return &mFields.at( index );
     }
 
-    virtual void WriteToStream( std::ostream &stream ) const
+    virtual Internal::Type::Type GetSubType() const
     {
-        for ( typename std::vector< DataType >::const_iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
-        {
-            it->WriteToStream( stream );
-        }
-    }
-
-    virtual void ReadFromStream( std::istream &stream )
-    {
-        for ( typename std::vector< DataType >::iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
-        {
-            it->ReadFromStream( stream );
-        }
-    }
-
-    virtual Type::Type GetSubType() const
-    {
-        return Type::GetEnum< DataType >();
-    }
-
-    virtual size_t Size() const
-    {
-        size_t size = Util::CalculateVarIntSize( Util::CreateHeader( ( uint32_t )mFields.size(), GetSubType() ) );
-
-        for ( typename std::vector< DataType >::const_iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
-        {
-            size += it->Size();
-        }
-
-        return size;
+        return Internal::Type::GetEnum< DataType >();
     }
 
     virtual void Resize( const size_t size )
     {
-        assert( size >= mFields.size() );
+		size_t oldSize = mFields.size();
         mFields.resize( size );
+
+		for ( size_t i = oldSize; i < size; ++ i )
+		{
+			mFields[ i ].SetFlags( mFlags );
+		}
     }
 
-    virtual uint32_t GetFieldCount() const
+    virtual uint32_t Count() const
     {
         return ( uint32_t )mFields.size();
-    }
+	}
+
+	virtual void SerialiseTo( AbstractSerialiser *const serialiser )
+	{
+		serialiser->Serialise( this );
+	}
 
 protected:
 
     std::vector< DataType > mFields;
+    uint32_t mFlags;
 };
 
 #endif

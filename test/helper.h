@@ -29,6 +29,9 @@
 #define P( prefix ) CONCAT( PREFIX, prefix )
 
 #include "message.h"
+#include "interface/abstractSerialiser.h"
+#include "binarySerialiser.h"
+#include "binaryDeserialiser.h"
 
 #include <sstream>
 #include <cstdlib>
@@ -41,12 +44,13 @@ void SimpleSerialiseDeserialiseStream( T &c1, T &c2 )
     {
         Message message( Mode::Serialise );
         c1.SERIALISATION_CUSTOM_INTERFACE( message );
-        message.WriteToStream( ss );
+		BinarySerialiser bs( ss );
+		bs.SerialiseMessage( message );
     }
-
     {
         Message message( Mode::Deserialise );
-        message.ReadFromStream( ss );
+		BinaryDeserialiser bd( ss );
+		bd.DeserialiseMessage( message );
         c2.SERIALISATION_CUSTOM_INTERFACE( message );
     }
 }

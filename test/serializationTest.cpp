@@ -78,7 +78,7 @@
     }
 
 #define TestEasyRepeatedClass( test, name, seed1, seed2, flag, its ) \
-    TEST( P( test ), name )                                          \
+	TEST( P( test ), name )                                          \
     {                                                                \
         TestClass3< its, flag > c1( seed1 ), c2( seed2 );            \
         SimpleSerialiseDeserialiseStream( c1, c2 );                  \
@@ -312,57 +312,57 @@ namespace TestClasses
 
         void OnSerialise( Message &message )
         {
-            message.CreateRepeated( Type::Char, its, 0, Flag );
-            message.CreateRepeated( Type::Char, its, 1, Flag );
+            message.CreateRepeated( Type::UInt8, its, 0, Flag );
+            message.CreateRepeated( Type::SInt8, its, 1, Flag );
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                message.StoreRepeated( mMemberT[i], 0, i, Flag );
-                message.StoreRepeated( mMemberTs[i], 1, i, Flag );
+                message.StoreRepeated( mMemberT[i], 0, i );
+                message.StoreRepeated( mMemberTs[i], 1, i );
             }
 
-            message.CreateRepeated( Type::WORD, its, 2, Flag );
-            message.CreateRepeated( Type::WORD, its, 3, Flag );
+            message.CreateRepeated( Type::UInt16, its, 2, Flag );
+            message.CreateRepeated( Type::SInt16, its, 3, Flag );
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                message.StoreRepeated( mMemberS[i], 2, i, Flag );
-                message.StoreRepeated( mMemberSs[i], 3, i, Flag );
+                message.StoreRepeated( mMemberS[i], 2, i );
+                message.StoreRepeated( mMemberSs[i], 3, i );
             }
 
-            message.CreateRepeated( Type::DWORD, its, 4, Flag );
-            message.CreateRepeated( Type::DWORD, its, 5, Flag );
+            message.CreateRepeated( Type::UInt32, its, 4, Flag );
+            message.CreateRepeated( Type::SInt32, its, 5, Flag );
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                message.StoreRepeated( mMemberR[i], 4, i, Flag );
-                message.StoreRepeated( mMemberRs[i], 5, i, Flag );
+                message.StoreRepeated( mMemberR[i], 4, i );
+                message.StoreRepeated( mMemberRs[i], 5, i );
             }
 
-            message.CreateRepeated( Type::QWORD, its, 6, Flag );
-            message.CreateRepeated( Type::QWORD, its, 7, Flag );
+            message.CreateRepeated( Type::UInt64, its, 6, Flag );
+            message.CreateRepeated( Type::SInt64, its, 7, Flag );
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                message.StoreRepeated( mMemberG[i], 6, i, Flag );
-                message.StoreRepeated( mMemberGs[i], 7, i, Flag );
+                message.StoreRepeated( mMemberG[i], 6, i );
+                message.StoreRepeated( mMemberGs[i], 7, i );
             }
 
             message.Store( name1, 8, Flag );
             message.Store( name2, 9, Flag );
 
-            message.CreateRepeated( Type::DWORD, its, 10, Flag );
+            message.CreateRepeated( Type::Float, its, 10, Flag );
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                message.StoreRepeated( mMemberF[i], 10, i, Flag );
+                message.StoreRepeated( mMemberF[i], 10, i );
             }
 
-            message.CreateRepeated( Type::QWORD, its, 11, Flag );
+            message.CreateRepeated( Type::Double, its, 11, Flag );
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                message.StoreRepeated( mMemberD[i], 11, i, Flag );
+                message.StoreRepeated( mMemberD[i], 11, i );
             }
 
         }
@@ -445,11 +445,11 @@ namespace TestClasses
 
         void OnSerialise( Message &message )
         {
-            message.CreateRepeated( Type::Message, its, 0, Flag );
+            message.CreateRepeated( Type::Variable, its, 0, Flag );
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                message.StoreRepeated( &mMemberTestClasses[ i ], 0, i, 0 );
+                message.StoreRepeated( &mMemberTestClasses[ i ], 0, i );
             }
         }
 

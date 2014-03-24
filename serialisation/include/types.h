@@ -25,55 +25,105 @@
 #define __SERIALISATION_TYPES_H__
 
 #include <stdint.h>
+#include <string>
 
-class VarIntData;
-class StringData;
 class Message;
+class VarIntData;
 
 template< typename T >
-class NumData;
+class SerialiseData;
+
+namespace Internal
+{
+    namespace Type
+    {
+        // underlying type is uint8_t
+        enum Type
+        {
+            Repeated  = 0x00,
+            Variable  = 0x01,
+            String    = 0x02,
+            UInt8     = 0x03,
+            UInt16    = 0x04,
+            UInt32    = 0x05,
+            UInt64    = 0x06,
+            VarInt    = 0x07,
+            SInt8     = 0x08,
+            SInt16    = 0x09,
+            SInt32    = 0x0A,
+            SInt64    = 0x0B,
+            Float     = 0x0C,
+            Double    = 0x0D
+        };
+
+		bool IsInteger( Type type );
+		
+		bool IsSignedInt( Type type );
+
+        template< typename T >
+        Type GetEnum()
+        {
+            return Type::Repeated;
+        }
+
+        template<>
+        Type GetEnum< class Message >();
+
+        template<>
+        Type GetEnum< SerialiseData< std::string > >();
+
+        template<>
+        Type GetEnum< SerialiseData< uint8_t > >();
+
+        template<>
+        Type GetEnum< SerialiseData< uint16_t > >();
+
+        template<>
+        Type GetEnum< SerialiseData< uint32_t > >();
+
+        template<>
+        Type GetEnum< SerialiseData< uint64_t > >();
+
+        template<>
+        Type GetEnum< VarIntData >();
+
+        template<>
+        Type GetEnum< SerialiseData< int8_t > >();
+
+        template<>
+        Type GetEnum< SerialiseData< int16_t > >();
+
+        template<>
+        Type GetEnum< SerialiseData< int32_t > >();
+
+        template<>
+        Type GetEnum< SerialiseData< int64_t > >();
+
+        template<>
+        Type GetEnum< SerialiseData< float > >();
+
+        template<>
+        Type GetEnum< SerialiseData< double > >();
+    }
+}
 
 namespace Type
 {
-    // underlying type is uint8_t
-    enum Type
-    {
-        Message   = 0x00,
-        String    = 0x01,
-        Char      = 0x02,
-        WORD      = 0x03,
-        DWORD     = 0x04,
-        QWORD     = 0x05,
-        VarInt    = 0x06,
-        Repeated  = 0x07
-    };
-
-    template< typename T >
-    Type GetEnum()
-    {
-        return Type::Repeated;
-	}
-
-	template<>
-	Type GetEnum< StringData >();
-
-	template<>
-	Type GetEnum< VarIntData >();
-
-	template<> 
-	Type GetEnum< NumData< uint8_t > >();
-
-	template<>
-	Type GetEnum< NumData< uint16_t > >();
-
-	template<>
-	Type GetEnum< NumData< uint32_t > >();
-
-	template<>
-	Type GetEnum< NumData< uint64_t > >();
-
-	template<>
-	Type GetEnum< class Message >();
+	enum Type
+	{
+		Variable = Internal::Type::Variable,
+		String   = Internal::Type::String,
+		UInt8    = Internal::Type::UInt8,
+		UInt16   = Internal::Type::UInt16,
+		UInt32   = Internal::Type::UInt32,
+		UInt64   = Internal::Type::UInt64,
+		SInt8    = Internal::Type::SInt8,
+		SInt16   = Internal::Type::SInt16,
+		SInt32   = Internal::Type::SInt32,
+		SInt64   = Internal::Type::SInt64,
+		Float    = Internal::Type::Float,
+		Double   = Internal::Type::Double
+	};
 }
 
 namespace Mode
