@@ -146,20 +146,7 @@ protected:
     }
 };
 
-template<>
-void SerialiseData< std::string >::Store( std::string &value, Mode::Mode mode )
-{
-    switch ( mode )
-    {
-    case Mode::Serialise:
-        mValue.assign( value );
-        break;
 
-    case Mode::Deserialise:
-        value.assign( mValue );
-        break;
-    }
-}
 
 template<> template<>
 void SerialiseData< uint8_t >::Store< int8_t >( int8_t &value, Mode::Mode mode );
