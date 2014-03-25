@@ -163,18 +163,19 @@ protected:
         }
     }
 
-	void StoreT( T &value, Mode::Mode mode )
-	{
-		switch (mode)
-		{
-		case Mode::Serialise:
-			mValue = value;
-			break;
-		case Mode::Deserialise:
-			value = mValue;
-			break;
-		}
-	}
+    void StoreT( T &value, Mode::Mode mode )
+    {
+        switch ( mode )
+        {
+        case Mode::Serialise:
+            mValue = value;
+            break;
+
+        case Mode::Deserialise:
+            value = mValue;
+            break;
+        }
+    }
 
     inline void StoreError() const
     {
@@ -186,68 +187,77 @@ protected:
 template<>
 void SerialiseData< std::string >::Store( std::string &value, Mode::Mode mode )
 {
-	StoreT( value, mode );
+    switch ( mode )
+    {
+    case Mode::Serialise:
+        mValue.assign( value );
+        break;
+
+    case Mode::Deserialise:
+        value.assign( mValue );
+        break;
+    }
 }
 
 
 template<>
 void SerialiseData< uint8_t >::Store( uint8_t &value, Mode::Mode mode )
 {
-	StoreT( value, mode );
+    StoreT( value, mode );
 }
 
 template<>
 void SerialiseData< uint16_t >::Store( uint16_t &value, Mode::Mode mode )
 {
-	StoreT( value, mode );
+    StoreT( value, mode );
 }
 
 template<>
 void SerialiseData< uint32_t >::Store( uint32_t &value, Mode::Mode mode )
 {
-	StoreT( value, mode );
+    StoreT( value, mode );
 }
 
 template<>
 void SerialiseData< uint64_t >::Store( uint64_t &value, Mode::Mode mode )
 {
-	StoreT( value, mode );
+    StoreT( value, mode );
 }
 
 template<>
 void SerialiseData< int8_t >::Store( int8_t &value, Mode::Mode mode )
 {
-	StoreT( value, mode );
+    StoreT( value, mode );
 }
 
 template<>
 void SerialiseData< int16_t >::Store( int16_t &value, Mode::Mode mode )
 {
-	StoreT( value, mode );
+    StoreT( value, mode );
 }
 
 template<>
 void SerialiseData< int32_t >::Store( int32_t &value, Mode::Mode mode )
 {
-	StoreT( value, mode );
+    StoreT( value, mode );
 }
 
 template<>
 void SerialiseData< int64_t >::Store( int64_t &value, Mode::Mode mode )
 {
-	StoreT( value, mode );
+    StoreT( value, mode );
 }
 
 template<>
 void SerialiseData< float >::Store( float &value, Mode::Mode mode )
 {
-	StoreT( value, mode );
+    StoreT( value, mode );
 }
 
 template<>
 void SerialiseData< double >::Store( double &value, Mode::Mode mode )
 {
-	StoreT( value, mode );
+    StoreT( value, mode );
 }
 
 
@@ -255,49 +265,49 @@ void SerialiseData< double >::Store( double &value, Mode::Mode mode )
 template<>
 void SerialiseData< uint8_t >::Store( int8_t &value, Mode::Mode mode )
 {
-	ZigZagStore< uint8_t >( value, mode );
+    ZigZagStore< uint8_t >( value, mode );
 }
 
 template<>
 void SerialiseData< uint16_t >::Store( int16_t &value, Mode::Mode mode )
 {
-	ZigZagStore< uint16_t >( value, mode );
+    ZigZagStore< uint16_t >( value, mode );
 }
 
 template<>
 void SerialiseData< uint32_t >::Store( int32_t &value, Mode::Mode mode )
 {
-	ZigZagStore< uint32_t >( value, mode );
+    ZigZagStore< uint32_t >( value, mode );
 }
 
 template<>
 void SerialiseData< uint64_t >::Store( int64_t &value, Mode::Mode mode )
 {
-	ZigZagStore< uint64_t >( value, mode );;
+    ZigZagStore< uint64_t >( value, mode );;
 }
 
 template<>
 void SerialiseData< int8_t >::Store( uint8_t &value, Mode::Mode mode )
 {
-	ZagZigStore< int8_t >( value, mode );
+    ZagZigStore< int8_t >( value, mode );
 }
 
 template<>
 void SerialiseData< int16_t >::Store( uint16_t &value, Mode::Mode mode )
 {
-	ZagZigStore< int16_t >( value, mode );
+    ZagZigStore< int16_t >( value, mode );
 }
 
 template<>
 void SerialiseData< int32_t >::Store( uint32_t &value, Mode::Mode mode )
 {
-	ZagZigStore< int32_t >( value, mode );
+    ZagZigStore< int32_t >( value, mode );
 }
 
 template<>
 void SerialiseData< int64_t >::Store( uint64_t &value, Mode::Mode mode )
 {
-	ZagZigStore< int64_t >( value, mode );
+    ZagZigStore< int64_t >( value, mode );
 }
 
 
