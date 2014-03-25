@@ -248,8 +248,8 @@ void Message::StoreRepeated( ISerialisable *const value, const uint32_t index, c
 
     assert( data->GetType() == Internal::Type::Repeated );
 
-    static_cast< Message * >(
-        static_cast< AbstractRepeatedData * >( data )->GetSerialisable( repeatedIndex ) )->Store( value, mMode );
+    AbstractRepeatedData *rdata = static_cast< AbstractRepeatedData * >( data );
+    static_cast< Message * >( rdata->GetSerialisable( repeatedIndex ) )->Store( value, mMode );
 }
 
 void Message::StoreRepeated( std::string &value, const uint32_t index, const uint32_t repeatedIndex )
