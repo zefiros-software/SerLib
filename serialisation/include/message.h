@@ -176,7 +176,7 @@ protected:
             mIndexes.reserve( 10 );
         }
 
-        mSerialisables.insert( mSerialisables.begin() + index, data );
+        mSerialisables.at( index ) = data;
 
         mIndexes.push_back( index );
     }
