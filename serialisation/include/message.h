@@ -125,6 +125,7 @@ protected:
     std::vector< uint32_t > mIndexes;
     std::vector< ISerialiseData * > mSerialisables;
 
+    size_t mMemberCount;
     uint32_t mFlags;
     Mode::Mode mMode;
 
@@ -157,7 +158,7 @@ protected:
             InsertSerialiseDataAt( data, index );
         }
 
-        static_cast< AbstractPrimitiveData *const >( data )->Store( value, mMode );
+        static_cast< IPrimitiveData *const >( data )->Store( value, mMode );
     }
 
     void InsertSerialiseDataAt( ISerialiseData *const data, const uint32_t index )
@@ -166,15 +167,24 @@ protected:
 
         if ( index >= size )
         {
-            size_t newSize = size + 10;
-            mSerialisables.resize( newSize >= index ? newSize : index );
+            {
+                size_t newSize = size + 10;
+                mSerialisables.resize( newSize >= index ? newSize : index );
+            }
+
+            {
+                size_t newSize = mIndexes.size() + 10;
+                mIndexes.resize( newSize >= index ? newSize : index );
+            }
+
+            ++mMemberCount;
         }
 
         mIndexes.push_back( index );
         mSerialisables[ index ] =  data;
     }
 
-    ISerialiseData *FindSerialisable( const uint32_t index )
+    inline ISerialiseData *FindSerialisable( const uint32_t index )
     {
         if ( index < mSerialisables.size() )
         {
@@ -191,8 +201,8 @@ protected:
 
         assert( data->GetType() == Internal::Type::Repeated );
 
-        static_cast< AbstractPrimitiveData * >( 
-			static_cast< AbstractRepeatedData * >( data )->GetSerialisable( repeatedIndex ) )->Store( value, mMode );
+        static_cast< IPrimitiveData * >(
+            static_cast< AbstractRepeatedData * >( data )->GetSerialisable( repeatedIndex ) )->Store( value, mMode );
     }
 };
 

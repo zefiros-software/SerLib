@@ -1,10 +1,10 @@
 #pragma once
-#ifndef __SERIALISATION_ABSTRACTPRIMITIVEDATA_H__
-#define __SERIALISATION_ABSTRACTPRIMITIVEDATA_H__
+#ifndef __SERIALISATION_IPRIMITIVEDATA_H__
+#define __SERIALISATION_IPRIMITIVEDATA_H__
 
 #include "interface/ISerialiseData.h"
 
-class AbstractPrimitiveData
+class IPrimitiveData
     : public ISerialiseData
 {
 public:
