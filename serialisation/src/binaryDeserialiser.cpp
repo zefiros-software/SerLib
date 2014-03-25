@@ -69,7 +69,7 @@ void BinaryDeserialiser::Deserialise( Message &message, const uint32_t index, co
     case Internal::Type::VarInt:
         {
             uint64_t value = ReadVarInt();
-            message.Store( value, index, ( uint32_t )Message::Packed );
+            message.Store( value, index, Message::Packed );
         }
         break;
 
