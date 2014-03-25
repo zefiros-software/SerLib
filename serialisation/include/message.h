@@ -176,11 +176,9 @@ protected:
                 size_t newSize = mIndexes.size() + 10;
                 mIndexes.resize( newSize >= index ? newSize : index );
             }
-
-            ++mMemberCount;
         }
 
-        mIndexes.push_back( index );
+		mIndexes[ mMemberCount++ ] = index;
         mSerialisables[ index ] =  data;
     }
 
