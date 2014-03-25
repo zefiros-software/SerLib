@@ -167,19 +167,19 @@ protected:
 
         if ( index >= size )
         {
-            size_t newSize = size + 10;
+            const size_t newSize = size + 10;
             mSerialisables.resize( newSize >= index ? newSize : index );
         }
 
-        if ( mMemberCount == mIndexes.size() )
+        size = mIndexes.size();
+
+        if ( ++mMemberCount == size )
         {
-            mIndexes.reserve( 10 );
+            mIndexes.reserve( size + 10 );
         }
 
         mSerialisables.at( index ) = data;
-
-		mIndexes.push_back( index );
-		mMemberCount++;
+        mIndexes.insert( mIndexes.end(), index );
     }
 
     inline ISerialiseData *FindSerialisable( const uint32_t index )
