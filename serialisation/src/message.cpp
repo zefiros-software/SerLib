@@ -27,13 +27,19 @@
 #include "varint.h"
 
 Message::Message( Mode::Mode mode /*= Mode::Serialise */ )
-    : mMode( mode )
+    : mMode( mode ),
+      mMemberCount( 0 )
 {
+    mIndexes.reserve( 10 );
+    mSerialisables.reserve( 10 );
 }
 
 Message::Message( ISerialisable *const serialisable, Mode::Mode mode /*= Mode::Serialise */ )
-    : mMode( mode )
+    : mMode( mode ),
+      mMemberCount( 0 )
 {
+    mIndexes.reserve( 10 );
+    mSerialisables.reserve( 10 );
     Store( serialisable );
 }
 
@@ -163,7 +169,7 @@ uint32_t Message::Count( const uint32_t index )
 
 uint32_t Message::GetMemberCount() const
 {
-    return ( uint32_t )mIndexes.size();
+    return mMemberCount;
 }
 
 void Message::CreateRepeated( Type::Type type, uint32_t size, const uint32_t index, const uint32_t flags /*= 0 */ )

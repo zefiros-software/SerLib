@@ -11,7 +11,7 @@
 
 template< typename T >
 class SerialiseData
-    : public AbstractPrimitiveData
+    : public IPrimitiveData
 {
 public:
 
@@ -96,7 +96,7 @@ public:
         StoreError();
     }
 
-    virtual void SerialiseTo( AbstractSerialiser *const serialiser )
+    inline virtual void SerialiseTo( AbstractSerialiser *const serialiser )
     {
         serialiser->Serialise( this );
     }
@@ -176,7 +176,7 @@ protected:
 		}
 	}
 
-    void StoreError() const
+    inline void StoreError() const
     {
         throw std::invalid_argument( "Invalid conversion" );
     }
