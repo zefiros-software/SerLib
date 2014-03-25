@@ -171,15 +171,9 @@ protected:
                 size_t newSize = size + 10;
                 mSerialisables.resize( newSize >= index ? newSize : index );
             }
-
-            {
-                size_t newSize = mIndexes.size() + 10;
-                mIndexes.resize( newSize >= index ? newSize : index );
-            }
         }
-
-		mIndexes[ mMemberCount++ ] = index;
-        mSerialisables[ index ] =  data;
+		mSerialisables.insert( mSerialisables.begin() + index, data );
+		mIndexes.push_back( index );
     }
 
     inline ISerialiseData *FindSerialisable( const uint32_t index )
