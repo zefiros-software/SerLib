@@ -178,7 +178,8 @@ protected:
 
         mSerialisables.at( index ) = data;
 
-        mIndexes.push_back( index );
+		mIndexes.push_back( index );
+		mMemberCount++;
     }
 
     inline ISerialiseData *FindSerialisable( const uint32_t index )
