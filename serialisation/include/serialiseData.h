@@ -165,16 +165,7 @@ protected:
 
     void StoreT( T &value, Mode::Mode mode )
     {
-        switch ( mode )
-        {
-        case Mode::Serialise:
-            mValue = value;
-            break;
-
-        case Mode::Deserialise:
-            value = mValue;
-            break;
-        }
+        mValue = value;
     }
 
     inline void StoreError() const
@@ -187,16 +178,7 @@ protected:
 template<>
 void SerialiseData< std::string >::Store( std::string &value, Mode::Mode mode )
 {
-    switch ( mode )
-    {
-    case Mode::Serialise:
-        mValue.assign( value );
-        break;
-
-    case Mode::Deserialise:
-        value.assign( mValue );
-        break;
-    }
+    mValue.assign( value );
 }
 
 
