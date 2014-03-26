@@ -1,16 +1,16 @@
 /**
  * Copyright (c) 2014 Mick van Duijn, Koen Visscher and Paul Visscher
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -32,7 +32,7 @@ class VarInt
 {
 public:
 
-    VarInt( U val = 0 ) : mSize(0)
+    VarInt( U val = 0 ) : mSize( 0 )
     {
         SetValue( val );
     }
@@ -53,24 +53,30 @@ public:
         return mSize;
     }
 
-    void WriteToStream( std::ostream &stream ) const
+    const char *GetBytes() const
     {
-        stream.write( mBytes, mSize );
+        return mBytes;
     }
 
-    void ReadFromStream( std::istream &stream )
+    char *GetBytes()
     {
-        mSize = 0;
-        char c = 0;
-
-        for ( bool next = true; next; next = ( c & 128 ) > 0, ++mSize )
-        {
-            stream.read( &c, 1 );
-            mBytes[ mSize ] = c;
-        }
-
-        ConvertFromBytes();
+        return mBytes;
     }
+
+	void SetBytes( char *c )
+	{
+		mSize = 0;
+		mValue = 0;
+		size_t shift = 0;
+		char *c2 = mBytes;
+
+		for ( bool next = true; next; next = ( *c & 128 ) > 0,  ++c, ++c2, shift += 7, ++mSize )
+		{
+			*c2 = *c;
+			U result = *c & 0x7F;
+			mValue |= ( U )( result ) << shift;
+		}
+	}
 
 private:
 
@@ -92,19 +98,6 @@ private:
             }
 
             mBytes[ mSize ] = c;
-        }
-    }
-
-    void ConvertFromBytes()
-    {
-        mValue = 0;
-        size_t shift = 0;
-
-        for ( uint16_t i = 0; i < mSize; i++, shift += 7 )
-        {
-            char byteVal = mBytes[ i ];
-            U result = byteVal & 0x7F;
-            mValue |= ( U )( result ) << shift;
         }
     }
 };

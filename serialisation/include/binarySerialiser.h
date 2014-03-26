@@ -6,6 +6,7 @@
 #include "types.h"
 
 #include <iostream>
+#include <vector>
 
 class BinarySerialiser
     : public AbstractSerialiser
@@ -14,15 +15,15 @@ public:
 
     BinarySerialiser( std::ostream &stream );
 
-	void SerialiseMessage( Message &message );
+    void SerialiseMessage( Message &message );
 
 protected:
 
     virtual void Prepare( ISerialiseData *const data, const uint32_t index, const uint32_t flags );
 
-	virtual void Serialise( AbstractRepeatedData *const data );
+    virtual void Serialise( AbstractRepeatedData *const data );
 
-	virtual void Serialise( Message *const message );
+    virtual void Serialise( Message *const message );
 
     virtual void Serialise( SerialiseData< std::string > *const data );
 
@@ -50,7 +51,10 @@ protected:
 
 protected:
 
+    uint32_t mBufferSize;
+    uint32_t mBufferIndex;
     std::ostream *mStream;
+    char mBuffer[ 256 ];
 
     void WriteHeader( uint32_t index, Internal::Type::Type type );
 
@@ -59,7 +63,7 @@ protected:
     {
         if ( flags & Message::Packed )
         {
-            VarInt< uint64_t >( value ).WriteToStream( *mStream );
+			WriteVarInt( value );
         }
         else
         {
@@ -67,11 +71,49 @@ protected:
         }
     }
 
+    void FlushBuffer()
+    {
+        mStream->write( mBuffer, mBufferIndex );
+        mBufferIndex = 0;
+    }
+
     template< typename T >
     void WriteBytes( const T *firstByte, const uint32_t byteCount )
     {
-        mStream->write( reinterpret_cast< const char * >( firstByte ), byteCount );
+        int32_t diff = mBufferSize - mBufferIndex;
+        int32_t diff2 = byteCount - diff;
+
+        const char *c = reinterpret_cast< const char * >( firstByte );
+
+        if ( diff2 <= 0 )
+        {
+            memcpy( mBuffer + mBufferIndex, c, byteCount );
+            mBufferIndex += byteCount;
+        }
+        else
+        {
+            memcpy( mBuffer + mBufferIndex, c, diff );
+			mBufferIndex += diff;
+            FlushBuffer();
+            WriteBytes( c + diff, diff2 );
+        }
     }
+
+	void WriteVarInt( const uint64_t value )
+	{
+		uint32_t mSize = 0;
+		for ( uint64_t val = value; ( val > 0 || mSize == 0 ); val >>= 7, ++mSize )
+		{
+			char c = val & 127;
+
+			if ( ( uint64_t )c != val )
+			{
+				c |= 128;
+			}
+
+			WriteBytes( &c, 1 );
+		}
+	}
 };
 
 #endif

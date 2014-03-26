@@ -7,14 +7,14 @@
 
 
 BinarySerialiser::BinarySerialiser( std::ostream &stream )
-    : mStream( &stream )
+    : mStream( &stream ), mBufferIndex( 0 ), mBufferSize( sizeof( mBuffer ) )
 {
-
 }
 
 void BinarySerialiser::SerialiseMessage( Message &message )
 {
     Serialise( &message );
+    FlushBuffer();
 }
 
 void BinarySerialiser::Prepare( ISerialiseData *const data, const uint32_t index, const uint32_t flags )
@@ -53,7 +53,7 @@ void BinarySerialiser::Prepare( ISerialiseData *const data, const uint32_t index
 void BinarySerialiser::Serialise( Message *const message )
 {
     uint32_t count = message->GetMemberCount();
-    VarInt< uint32_t >( count ).WriteToStream( *mStream );
+	WriteVarInt( count );
 
     for ( uint32_t i = 0; i < count; ++i )
     {
@@ -68,11 +68,10 @@ void BinarySerialiser::Serialise( Message *const message )
 
 void BinarySerialiser::Serialise( SerialiseData< std::string > *const data )
 {
-    VarInt< size_t > size( data->GetValue().size() );
-    size.WriteToStream( *mStream );
-
     const std::string &value = data->GetValue();
-    mStream->write( value.c_str(), value.length() );
+    size_t size = value.size();
+    WriteVarInt( size );
+    WriteBytes( value.c_str(), size );
 }
 
 void BinarySerialiser::Serialise( SerialiseData< uint8_t > *const data )
@@ -152,6 +151,5 @@ void BinarySerialiser::Serialise( AbstractRepeatedData *const data )
 
 void BinarySerialiser::WriteHeader( uint32_t index, Internal::Type::Type type )
 {
-    VarInt< uint64_t > vi( Util::CreateHeader( index, type ) );
-    vi.WriteToStream( *mStream );
+    WriteVarInt( Util::CreateHeader( index, type ) );
 }

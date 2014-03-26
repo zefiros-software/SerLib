@@ -21,6 +21,9 @@ public:
 protected:
 
     std::istream *mStream;
+    char mBuffer[ 256 ];
+    uint32_t mBufferSize;
+    uint32_t mBufferIndex;
 
     void Deserialise( Message &message, const uint32_t index, const Internal::Type::Type type );
 
@@ -49,12 +52,36 @@ protected:
     template< typename T >
     void ReadBytes( T *firstByte, const uint32_t byteCount )
     {
-        mStream->read( reinterpret_cast< char * >( firstByte ), byteCount );
+        char *c = reinterpret_cast< char * >( firstByte );
+        int32_t diff = mBufferSize - mBufferIndex;
+        int32_t diff2 = byteCount - diff;
+
+        if ( diff2 <= 0 )
+        {
+            memcpy( c, mBuffer + mBufferIndex, byteCount );
+            mBufferIndex += byteCount;
+        }
+        else
+        {
+            memcpy( c, mBuffer + mBufferIndex, diff );
+			mBufferIndex += diff;
+            FillBuffer();
+            ReadBytes( c + diff, diff2 );
+        }
     }
 
-	void ReadString( std::string &str );
+    void FillBuffer()
+    {
+        uint32_t remaining = mBufferSize - mBufferIndex;
+        memcpy( mBuffer, mBuffer + mBufferIndex, remaining );
+        mBufferIndex = 0;
+        mStream->read( mBuffer + remaining, sizeof( mBuffer ) - remaining );
+        mBufferSize = remaining + (uint32_t)mStream->gcount();
+    }
 
-	uint64_t ReadVarInt();
+    void ReadString( std::string &str );
+
+    uint64_t ReadVarInt();
 };
 
 #endif

@@ -164,8 +164,15 @@ protected:
     }
 
     void StoreT( T &value, Mode::Mode mode )
-    {
-        mValue = value;
+	{
+		if ( mode == Mode::Serialise )
+		{
+			mValue = value;
+		}
+		else
+		{
+			value =  mValue;
+		}
     }
 
     inline void StoreError() const
@@ -178,7 +185,14 @@ protected:
 template<>
 void SerialiseData< std::string >::Store( std::string &value, Mode::Mode mode )
 {
-    mValue.assign( value );
+    if ( mode == Mode::Serialise )
+    {
+        mValue.assign( value );
+    }
+    else
+    {
+        value.assign( mValue );
+    }
 }
 
 

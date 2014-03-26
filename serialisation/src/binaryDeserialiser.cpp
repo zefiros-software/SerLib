@@ -3,14 +3,15 @@
 #include "util.h"
 #include "message.h"
 
-BinaryDeserialiser::BinaryDeserialiser( std::istream &stream ) : mStream( &stream )
+BinaryDeserialiser::BinaryDeserialiser( std::istream &stream )
+    : mStream( &stream ), mBufferIndex( 0 ), mBufferSize( 0 )
 {
 
 }
 
 void BinaryDeserialiser::DeserialiseMessage( Message &message )
 {
-	Mode::Mode tempMode = message.GetMode();
+    Mode::Mode tempMode = message.GetMode();
 
     message.SetMode( Mode::Serialise );
 
@@ -24,7 +25,7 @@ void BinaryDeserialiser::DeserialiseMessage( Message &message )
         Deserialise( message, index, type );
     }
 
-	message.SetMode( tempMode );
+    message.SetMode( tempMode );
 }
 
 void BinaryDeserialiser::Deserialise( Message &message, const uint32_t index, const Internal::Type::Type type )
@@ -45,7 +46,7 @@ void BinaryDeserialiser::Deserialise( Message &message, const uint32_t index, co
     case Internal::Type::String:
         {
             std::string str;
-			ReadString( str );
+            ReadString( str );
             message.Store( str, index, 0 );
         }
         break;
@@ -134,8 +135,8 @@ void BinaryDeserialiser::DeserialiseRepeated( Message &message, const uint32_t i
     case Internal::Type::VarInt:
         {
             for ( uint32_t i = 0; i < size; ++i )
-			{
-				uint64_t value = ReadVarInt();
+            {
+                uint64_t value = ReadVarInt();
                 message.StoreRepeated( value, index, i );
             }
         }
@@ -148,15 +149,25 @@ void BinaryDeserialiser::DeserialiseRepeated( Message &message, const uint32_t i
 
 void BinaryDeserialiser::ReadString( std::string &str )
 {
-	size_t vSize = ( size_t )ReadVarInt();
+    size_t vSize = ( size_t )ReadVarInt();
 
-	str.resize( vSize );
-	ReadBytes( &*str.begin(), vSize );
+    str.resize( vSize );
+    ReadBytes( &*str.begin(), vSize );
 }
 
 uint64_t BinaryDeserialiser::ReadVarInt()
 {
-	VarInt< uint64_t > vi;
-	vi.ReadFromStream( *mStream );
-	return vi.GetValue();
+	uint64_t value = 0;
+	uint64_t result;
+	size_t shift = 0;
+	char c;
+
+	for ( bool next = true; next; next = ( c & 128 ) > 0, shift += 7 )
+	{
+		ReadBytes( &c, 1 );
+		result = c & 0x7F;
+		value |= ( uint64_t )( result ) << shift;
+	}
+
+    return value;
 }

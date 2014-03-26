@@ -64,7 +64,7 @@ namespace
         return rVal;
     }
 
-    VarIntTest( VarIntTestModule, 0, uint8_t, GenNum<uint8_t>( 0 ), 1 );
+    /*VarIntTest( VarIntTestModule, 0, uint8_t, GenNum<uint8_t>( 0 ), 1 );
     VarIntTest( VarIntTestModule, 1, uint8_t, GenNum<uint8_t>( 1 ), 1 );
     VarIntTest( VarIntTestModule, 7, uint8_t, GenNum<uint8_t>( 7 ), 1 );
     VarIntTest( VarIntTestModule, 8, uint8_t, GenNum<uint8_t>( 8 ), 1 );
@@ -125,7 +125,7 @@ namespace
     VarIntTest( VarIntTestModule, zebraInv, uint8_t, GenerateInvZebraValue<uint8_t>(), 1 );
     VarIntTest( VarIntTestModule, zebraInv, uint16_t, GenerateInvZebraValue<uint16_t>(), 1 );
     VarIntTest( VarIntTestModule, zebraInv, uint32_t, GenerateInvZebraValue<uint32_t>(), 1 );
-    VarIntTest( VarIntTestModule, zebraInv, uint64_t, GenerateInvZebraValue<uint64_t>(), 1 );
+    VarIntTest( VarIntTestModule, zebraInv, uint64_t, GenerateInvZebraValue<uint64_t>(), 1 );*/
 
 }
 

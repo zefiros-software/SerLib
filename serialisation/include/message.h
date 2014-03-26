@@ -178,7 +178,7 @@ protected:
             mIndexes.reserve( size + 10 );
         }
 
-        mSerialisables.at( index ) = data;
+        mSerialisables[ index ] = data;
         mIndexes.insert( mIndexes.end(), index );
     }
 
