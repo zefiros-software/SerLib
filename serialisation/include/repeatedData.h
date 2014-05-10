@@ -47,13 +47,13 @@ public:
 
     }
 
-	~RepeatedData()
-	{
-		for (typename std::vector< DataType * >::iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
-		{
-			PoolHolder::Get().GetPool< DataType >().Dispose( *it );
-		}
-	}
+    ~RepeatedData()
+    {
+        for ( typename std::vector< DataType * >::iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
+        {
+            PoolHolder::Get().GetPool< DataType >().Dispose( *it );
+        }
+    }
 
     virtual uint32_t GetFlags() const
     {
@@ -100,10 +100,10 @@ public:
             for ( size_t i = 0, end = size - oldSize; i < end; ++i )
             {
                 DataType *const field = mFields.back();
-				mFields.pop_back();
+                mFields.pop_back();
 
-				field->SetFlags(0);
-				pool.Dispose(field);
+                field->SetFlags( 0 );
+                pool.Dispose( field );
             }
         }
     }
@@ -122,6 +122,11 @@ protected:
 
     std::vector< DataType * > mFields;
     uint32_t mFlags;
+
+    void Dispose()
+    {
+        PoolHolder::Get().GetPool< RepeatedData< DataType > >().Dispose( this );
+    }
 };
 
 #endif

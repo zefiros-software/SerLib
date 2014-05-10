@@ -131,16 +131,25 @@ protected:
 
     virtual void SerialiseTo( AbstractSerialiser *const serialiser );
 
+    virtual void Dispose();
+
     void Store( ISerialisable *const value, Mode::Mode mode );
 
 
-	template< typename T >
-	T *CreateDataType( const uint32_t flags )
-	{
-		T *object = PoolHolder::Get().GetPool< T >().Get();
-		object->SetFlags( flags );
-		return object;
-	}
+    template< typename T >
+    T *CreateDataType( const uint32_t flags )
+    {
+        T *object = PoolHolder::Get().GetPool< T >().Get();
+        object->SetFlags( flags );
+        return object;
+    }
+
+    template< typename T >
+    void DisposeDataType( T *object )
+    {
+        object->SetFlags( 0 );
+        PoolHolder::Get().GetPool< T >().Dispose( object );
+    }
 
     template< typename DataType, typename T >
     void Store( T &value, const uint32_t index, const uint32_t flags )
@@ -174,7 +183,7 @@ protected:
         }
 
         mSerialisables[ index ] = data;
-        mIndexes.insert( mIndexes.end(), index );
+        mIndexes.push_back( index );
     }
 
     inline ISerialiseData *FindSerialisable( const uint32_t index )

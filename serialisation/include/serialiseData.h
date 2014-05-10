@@ -27,6 +27,7 @@
 #include "interface/IPrimitiveData.h"
 #include "interface/abstractSerialiser.h"
 #include "util.h"
+#include "poolHolder.h"
 
 #include <sstream>
 #include <stdexcept>
@@ -127,6 +128,11 @@ protected:
 
     T mValue;
     uint32_t mFlags;
+
+	void Dispose()
+	{
+		PoolHolder::Get().GetPool< SerialiseData< T > >().Dispose( this );
+	}
 
     template< typename V >
     V GetValue() const

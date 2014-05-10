@@ -28,9 +28,15 @@
 
 #include "objectPool.h"
 
-#include "repeatedData.h"
-#include "message.h"
-#include "varIntData.h"
+template< typename T >
+class RepeatedData;
+
+template< typename T >
+class SerialiseData;
+
+class Message;
+
+class VarIntData;
 
 class PoolHolder
 {
@@ -42,6 +48,7 @@ public:
     ObjectPool< T > &GetPool()
     {
         assert( false );
+		return ObjectPool< T >;
     }
 
 private:

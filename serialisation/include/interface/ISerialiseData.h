@@ -31,6 +31,7 @@
 class ISerialiseData
 {
     friend class AbstractSerialiser;
+	friend class Message;
 
 public:
 
@@ -47,6 +48,8 @@ public:
 protected:
 
     virtual void SerialiseTo( AbstractSerialiser *const serialiser ) = 0;
+
+	virtual void Dispose() = 0;
 };
 
 #endif

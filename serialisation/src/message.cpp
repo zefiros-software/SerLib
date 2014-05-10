@@ -47,7 +47,7 @@ Message::~Message()
 {
     for ( std::vector< uint32_t >::iterator it = mIndexes.begin(), end = mIndexes.end(); it != end; ++it )
     {
-        delete mSerialisables[ *it ];
+        mSerialisables[ *it ]->Dispose();
     }
 }
 
@@ -310,4 +310,9 @@ void Message::StoreRepeated( double &value, const uint32_t index, const uint32_t
 void Message::SerialiseTo( AbstractSerialiser *const serialiser )
 {
     serialiser->Serialise( this );
+}
+
+void Message::Dispose()
+{
+	PoolHolder::Get().GetPool< Message >().Dispose( this );
 }
