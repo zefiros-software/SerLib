@@ -47,6 +47,14 @@ public:
     {
     }
 
+	~RepeatedData()
+	{
+		for (typename std::vector< DataType * >::iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
+		{
+			PoolHolder::Get().GetPool< DataType >().Dispose( *it );
+		}
+	}
+
     virtual uint32_t GetFlags() const
     {
         return mFlags;

@@ -31,6 +31,8 @@
 
 #include <stdint.h>
 
+class AbstractSerialiser;
+
 class VarIntData
     : public SerialiseData< uint64_t >
 {
