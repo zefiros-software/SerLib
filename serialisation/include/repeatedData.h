@@ -51,10 +51,10 @@ public:
         return mFlags;
     }
 
-	virtual void SetFlags( const uint32_t flags )
-	{
-		mFlags = flags;
-	}
+    virtual void SetFlags( const uint32_t flags )
+    {
+        mFlags = flags;
+    }
 
     virtual ISerialiseData *GetSerialisable( const uint32_t index )
     {
