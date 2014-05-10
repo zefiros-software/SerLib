@@ -41,7 +41,7 @@ public:
 
     ~ObjectPool()
     {
-        for ( std::vector< T * >::iterator it = mPool.begin(), end = mPool.end(); it != end; ++it )
+        for ( typename std::vector< T * >::iterator it = mPool.begin(), end = mPool.end(); it != end; ++it )
         {
             delete *it;
         }

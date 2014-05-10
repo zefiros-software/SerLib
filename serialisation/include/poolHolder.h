@@ -24,7 +24,6 @@
 #ifndef __SERIALISATION_POOLHOLDER_H__
 #define __SERIALISATION_POOLHOLDER_H__
 
-#include "repeatedData.h"
 #include "varIntData.h"
 #include "objectPool.h"
 #include "message.h"

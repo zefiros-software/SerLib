@@ -5,8 +5,10 @@
 #include <stdint.h>
 #include <string>
 
-class ISerialiseData;
+
 class AbstractRepeatedData;
+class ISerialiseData;
+class VarIntData;
 class Message;
 
 template< typename T >

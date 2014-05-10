@@ -46,8 +46,8 @@ protected:
 
     std::istream *mStream;
     char mBuffer[ 256 ];
-    size_t mBufferSize;
     size_t mBufferIndex;
+    size_t mBufferSize;
 
     void Deserialise( Message &message, const uint32_t index, const Internal::Type::Type type );
 
