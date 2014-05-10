@@ -307,11 +307,6 @@ void Message::StoreRepeated( double &value, const uint32_t index, const uint32_t
     StoreRepeatedV( value, index, repeatedIndex );
 }
 
-Message *Message::CreateMessage()
-{
-    return new Message( mMode );
-}
-
 void Message::SerialiseTo( AbstractSerialiser *const serialiser )
 {
     serialiser->Serialise( this );

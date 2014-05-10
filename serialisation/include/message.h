@@ -133,19 +133,14 @@ protected:
 
     void Store( ISerialisable *const value, Mode::Mode mode );
 
-    template< typename T >
-    T *CreateDataType( const uint32_t flags )
-    {
-        return new T( flags );
-    }
 
-    template<>
-    Message *CreateDataType< Message >( const uint32_t )
-    {
-        return CreateMessage();
-    }
-
-    virtual Message *CreateMessage();
+	template< typename T >
+	T *CreateDataType( const uint32_t flags )
+	{
+		T *object = PoolHolder::Get().GetPool< T >().Get();
+		object->SetFlags( flags );
+		return object;
+	}
 
     template< typename DataType, typename T >
     void Store( T &value, const uint32_t index, const uint32_t flags )

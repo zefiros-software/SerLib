@@ -27,6 +27,7 @@
 #include "interface/abstractRepeatedData.h"
 #include "types.h"
 #include "util.h"
+#include "poolHolder.h"
 
 #include <assert.h>
 #include <stdint.h>
@@ -63,7 +64,7 @@ public:
 
     virtual DataType *GetConcreteSerialisable( const uint32_t index )
     {
-        return &mFields.at( index );
+        return mFields.at( index );
     }
 
     virtual Internal::Type::Type GetSubType() const
@@ -73,28 +74,45 @@ public:
 
     virtual void Resize( const size_t size )
     {
-		size_t oldSize = mFields.size();
-        mFields.resize( size );
+        size_t oldSize = mFields.size();
 
-		for ( size_t i = oldSize; i < size; ++ i )
-		{
-			mFields[ i ].SetFlags( mFlags );
-		}
+        ObjectPool< DataType > &pool = PoolHolder::Get().GetPool< DataType >();
+
+        if ( oldSize < size )
+        {
+            for ( size_t i = oldSize; i < size; ++ i )
+            {
+                DataType *const field = pool.Get();
+                field->SetFlags( mFlags );
+                mFields.push_back( field );
+            }
+        }
+        else
+        {
+            for ( size_t i = 0, end = size - oldSize; i < end; ++i )
+            {
+                DataType *const field = mFields.back();
+				mFields.pop_back();
+
+				field->SetFlags(0);
+				pool.Dispose(field);
+            }
+        }
     }
 
     virtual uint32_t Count() const
     {
         return ( uint32_t )mFields.size();
-	}
+    }
 
-	virtual void SerialiseTo( AbstractSerialiser *const serialiser )
-	{
-		serialiser->Serialise( this );
-	}
+    virtual void SerialiseTo( AbstractSerialiser *const serialiser )
+    {
+        serialiser->Serialise( this );
+    }
 
 protected:
 
-    std::vector< DataType > mFields;
+    std::vector< DataType * > mFields;
     uint32_t mFlags;
 };
 
