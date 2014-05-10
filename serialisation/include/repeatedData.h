@@ -25,9 +25,9 @@
 #define __SERIALISATION_REPEATEDDATA_H__
 
 #include "interface/abstractRepeatedData.h"
+#include "poolHolder.h"
 #include "types.h"
 #include "util.h"
-#include "poolHolder.h"
 
 #include <assert.h>
 #include <stdint.h>
@@ -46,6 +46,14 @@ public:
     {
 
     }
+
+	~RepeatedData()
+	{
+		for (typename std::vector< DataType * >::iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
+		{
+			PoolHolder::Get().GetPool< DataType >().Dispose( *it );
+		}
+	}
 
     virtual uint32_t GetFlags() const
     {
