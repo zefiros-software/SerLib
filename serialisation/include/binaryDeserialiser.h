@@ -28,6 +28,7 @@
 #include "types.h"
 
 #include <iostream>
+#include <cstring>
 
 class Message;
 
