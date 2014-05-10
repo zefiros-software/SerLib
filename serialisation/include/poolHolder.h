@@ -24,8 +24,9 @@
 #ifndef __SERIALISATION_POOLHOLDER_H__
 #define __SERIALISATION_POOLHOLDER_H__
 
+#include <stdint.h>
+
 #include "objectPool.h"
-#include "types.h"
 
 #include "repeatedData.h"
 #include "message.h"

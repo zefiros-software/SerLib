@@ -26,6 +26,7 @@
 #include "varIntData.h"
 #include "message.h"
 #include "repeatedData.h"
+#include <cstring>
 
 
 BinarySerialiser::BinarySerialiser( std::ostream &stream )
