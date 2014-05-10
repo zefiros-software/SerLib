@@ -20,11 +20,11 @@
  * THE SOFTWARE.
  */
 
-#include "interface/ISerialisable.h"
 #include "interface/abstractSerialiser.h"
+#include "interface/ISerialisable.h"
+
 #include "defines.h"
 #include "message.h"
-#include "varint.h"
 
 Message::Message( Mode::Mode mode /*= Mode::Serialise */ )
     : mMode( mode ),
@@ -76,7 +76,7 @@ Internal::Type::Type Message::GetType() const
     return Internal::Type::Variable;
 }
 
-void Message::Store( ISerialisable *const value, const uint32_t index, const uint32_t flags /*= 0 */ )
+void Message::Store( ISerialisable *const value, const uint32_t index, const uint32_t flags /*= 0x00 */ )
 {
     ISerialiseData *data = FindSerialisable( index );
 
@@ -89,57 +89,57 @@ void Message::Store( ISerialisable *const value, const uint32_t index, const uin
     static_cast< Message * >( data )->Store( value, mMode );
 }
 
-void Message::Store( std::string &value, const uint32_t index, const uint32_t flags/*= 0 */ )
+void Message::Store( std::string &value, const uint32_t index, const uint32_t flags/*= 0x00 */ )
 {
     Store< SerialiseData< std::string > >( value, index, flags );
 }
 
-void Message::Store( uint8_t &value, const uint32_t index, const uint32_t flags /*= 0 */ )
+void Message::Store( uint8_t &value, const uint32_t index, const uint32_t flags /*= 0x00 */ )
 {
     Store< SerialiseData< uint8_t > >( value, index, flags );
 }
 
-void Message::Store( uint16_t &value, const uint32_t index, const uint32_t flags /*= 0 */ )
+void Message::Store( uint16_t &value, const uint32_t index, const uint32_t flags /*= 0x00 */ )
 {
     Store< SerialiseData< uint16_t > >( value, index, flags );
 }
 
-void Message::Store( uint32_t &value, const uint32_t index, const uint32_t flags /*= 0 */ )
+void Message::Store( uint32_t &value, const uint32_t index, const uint32_t flags /*= 0x00 */ )
 {
     Store< SerialiseData< uint32_t > >( value, index, flags );
 }
 
-void Message::Store( uint64_t &value, const uint32_t index, const uint32_t flags /*= 0 */ )
+void Message::Store( uint64_t &value, const uint32_t index, const uint32_t flags /*= 0x00 */ )
 {
     Store< SerialiseData< uint64_t > >( value, index, flags );
 }
 
-void Message::Store( int8_t &value, const uint32_t index, const uint32_t flags /*= 0 */ )
+void Message::Store( int8_t &value, const uint32_t index, const uint32_t flags /*= 0x00 */ )
 {
     Store< SerialiseData< int8_t > >( value, index, flags );
 }
 
-void Message::Store( int16_t &value, const uint32_t index, const uint32_t flags /*= 0 */ )
+void Message::Store( int16_t &value, const uint32_t index, const uint32_t flags /*= 0x00 */ )
 {
     Store< SerialiseData< int16_t > >( value, index, flags );
 }
 
-void Message::Store( int32_t &value, const uint32_t index, const uint32_t flags /*= 0 */ )
+void Message::Store( int32_t &value, const uint32_t index, const uint32_t flags /*= 0x00 */ )
 {
     Store< SerialiseData< int32_t > >( value, index, flags );
 }
 
-void Message::Store( int64_t &value, const uint32_t index, const uint32_t flags /*= 0 */ )
+void Message::Store( int64_t &value, const uint32_t index, const uint32_t flags /*= 0x00 */ )
 {
     Store< SerialiseData< int64_t > >( value, index, flags );
 }
 
-void Message::Store( float &value, const uint32_t index, const uint32_t flags /*= 0 */ )
+void Message::Store( float &value, const uint32_t index, const uint32_t flags /*= 0x00 */ )
 {
     Store< SerialiseData< float > >( value, index, flags );
 }
 
-void Message::Store( double &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0 */ )
+void Message::Store( double &value, const uint32_t index /*= 0*/, const uint32_t flags /*= 0x00 */ )
 {
     Store< SerialiseData< double > >( value, index, flags );
 }
@@ -149,7 +149,7 @@ void Message::Store( ISerialisable *const value )
     value->SERIALISATION_CUSTOM_INTERFACE( *this );
 }
 
-void Message::Store( ISerialisable *const value, Mode::Mode mode )
+void Message::Store( ISerialisable *const value, const Mode::Mode mode )
 {
     mMode = mode;
     Store( value );
@@ -172,7 +172,7 @@ uint32_t Message::GetMemberCount() const
     return mMemberCount;
 }
 
-void Message::CreateRepeated( Type::Type type, uint32_t size, const uint32_t index, const uint32_t flags /*= 0 */ )
+void Message::CreateRepeated( Type::Type type, uint32_t size, const uint32_t index, const uint32_t flags /*= 0x00 */ )
 {
     if ( mMode == Mode::Serialise )
     {

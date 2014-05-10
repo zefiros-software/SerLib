@@ -20,11 +20,11 @@
  * THE SOFTWARE.
  */
 
-#include "varIntData.h"
-#include "varint.h"
-#include "util.h"
-#include "message.h"
 #include "interface/abstractSerialiser.h"
+
+#include "varIntData.h"
+#include "message.h"
+#include "util.h"
 
 Internal::Type::Type VarIntData::GetType() const
 {
@@ -38,5 +38,5 @@ uint32_t VarIntData::GetFlags() const
 
 void VarIntData::SerialiseTo( AbstractSerialiser *const serialiser )
 {
-	serialiser->Serialise( this );
+    serialiser->Serialise( this );
 }

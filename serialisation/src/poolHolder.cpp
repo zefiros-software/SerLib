@@ -20,10 +20,10 @@
  * THE SOFTWARE.
  */
 
-#include "poolHolder.h"
 #include "repeatedData.h"
-#include "message.h"
+#include "poolHolder.h"
 #include "varIntData.h"
+#include "message.h"
 
 PoolHolder &PoolHolder::Get()
 {

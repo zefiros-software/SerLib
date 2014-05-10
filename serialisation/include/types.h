@@ -56,9 +56,9 @@ namespace Internal
             Double    = 0x0D
         };
 
-		bool IsInteger( Type type );
-		
-		bool IsSignedInt( Type type );
+        bool IsInteger( Type type );
+
+        bool IsSignedInt( Type type );
 
         template< typename T >
         Type GetEnum()
@@ -109,28 +109,28 @@ namespace Internal
 
 namespace Type
 {
-	enum Type
-	{
-		Variable = Internal::Type::Variable,
-		String   = Internal::Type::String,
-		UInt8    = Internal::Type::UInt8,
-		UInt16   = Internal::Type::UInt16,
-		UInt32   = Internal::Type::UInt32,
-		UInt64   = Internal::Type::UInt64,
-		SInt8    = Internal::Type::SInt8,
-		SInt16   = Internal::Type::SInt16,
-		SInt32   = Internal::Type::SInt32,
-		SInt64   = Internal::Type::SInt64,
-		Float    = Internal::Type::Float,
-		Double   = Internal::Type::Double
-	};
+    enum Type
+    {
+        Variable = Internal::Type::Variable,
+        String   = Internal::Type::String,
+        UInt8    = Internal::Type::UInt8,
+        UInt16   = Internal::Type::UInt16,
+        UInt32   = Internal::Type::UInt32,
+        UInt64   = Internal::Type::UInt64,
+        SInt8    = Internal::Type::SInt8,
+        SInt16   = Internal::Type::SInt16,
+        SInt32   = Internal::Type::SInt32,
+        SInt64   = Internal::Type::SInt64,
+        Float    = Internal::Type::Float,
+        Double   = Internal::Type::Double
+    };
 }
 
 namespace Mode
 {
     enum Mode
     {
-        Serialise = 0x00,
+        Serialise   = 0x00,
         Deserialise = 0x01
     };
 }

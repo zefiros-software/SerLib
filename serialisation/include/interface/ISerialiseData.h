@@ -28,6 +28,8 @@
 
 #include <iostream>
 
+class AbstractSerialiser;
+
 class ISerialiseData
 {
     friend class AbstractSerialiser;
@@ -36,7 +38,7 @@ public:
 
     virtual ~ISerialiseData()
     {
-    };
+    }
 
     virtual Internal::Type::Type GetType() const = 0;
 

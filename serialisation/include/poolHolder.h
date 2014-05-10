@@ -24,13 +24,12 @@
 #ifndef __SERIALISATION_POOLHOLDER_H__
 #define __SERIALISATION_POOLHOLDER_H__
 
-#include <stdint.h>
-
-#include "objectPool.h"
-
 #include "repeatedData.h"
-#include "message.h"
 #include "varIntData.h"
+#include "objectPool.h"
+#include "message.h"
+
+#include <stdint.h>
 
 class PoolHolder
 {

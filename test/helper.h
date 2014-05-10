@@ -28,10 +28,11 @@
 #define CONCAT( a, b ) CONCATEXT( a, b )
 #define P( prefix ) CONCAT( PREFIX, prefix )
 
-#include "message.h"
 #include "interface/abstractSerialiser.h"
-#include "binarySerialiser.h"
+
 #include "binaryDeserialiser.h"
+#include "binarySerialiser.h"
+#include "message.h"
 
 #include <sstream>
 #include <cstdlib>
@@ -44,13 +45,13 @@ void SimpleSerialiseDeserialiseStream( T &c1, T &c2 )
     {
         Message message( Mode::Serialise );
         c1.SERIALISATION_CUSTOM_INTERFACE( message );
-		BinarySerialiser bs( ss );
-		bs.SerialiseMessage( message );
+        BinarySerialiser bs( ss );
+        bs.SerialiseMessage( message );
     }
     {
         Message message( Mode::Deserialise );
-		BinaryDeserialiser bd( ss );
-		bd.DeserialiseMessage( message );
+        BinaryDeserialiser bd( ss );
+        bd.DeserialiseMessage( message );
         c2.SERIALISATION_CUSTOM_INTERFACE( message );
     }
 }

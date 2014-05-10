@@ -24,16 +24,16 @@
 #ifndef __SERIALISATION_MESSAGE_H__
 #define __SERIALISATION_MESSAGE_H__
 
-#include "varIntData.h"
 #include "repeatedData.h"
+#include "varIntData.h"
 
 #include <stdint.h>
 #include <assert.h>
 #include <fstream>
 #include <map>
 
-class ISerialisable;
 class AbstractSerialiser;
+class ISerialisable;
 
 class Message
     : public ISerialiseData
@@ -64,29 +64,29 @@ public:
 
     virtual Internal::Type::Type GetType() const;
 
-    void Store( ISerialisable *const value, const uint32_t index, const uint32_t flags = 0 );
+    void Store( ISerialisable *const value, const uint32_t index, const uint32_t flags = 0x00 );
 
-    void Store( std::string &value, const uint32_t index, const uint32_t flags = 0 );
+    void Store( std::string &value, const uint32_t index, const uint32_t flags = 0x00 );
 
-    void Store( uint8_t &value, const uint32_t index, const uint32_t flags = 0 );
+    void Store( uint8_t &value, const uint32_t index, const uint32_t flags = 0x00 );
 
-    void Store( uint16_t &value, const uint32_t index, const uint32_t flags = 0 );
+    void Store( uint16_t &value, const uint32_t index, const uint32_t flags = 0x00 );
 
-    void Store( uint32_t &value, const uint32_t index, const uint32_t flags = 0 );
+    void Store( uint32_t &value, const uint32_t index, const uint32_t flags = 0x00 );
 
-    void Store( uint64_t &value, const uint32_t index, const uint32_t flags = 0 );
+    void Store( uint64_t &value, const uint32_t index, const uint32_t flags = 0x00 );
 
-    void Store( int8_t &value, const uint32_t index, const uint32_t flags = 0 );
+    void Store( int8_t &value, const uint32_t index, const uint32_t flags = 0x00 );
 
-    void Store( int16_t &value, const uint32_t index, const uint32_t flags = 0 );
+    void Store( int16_t &value, const uint32_t index, const uint32_t flags = 0x00 );
 
-    void Store( int32_t &value, const uint32_t index, const uint32_t flags = 0 );
+    void Store( int32_t &value, const uint32_t index, const uint32_t flags = 0x00 );
 
-    void Store( int64_t &value, const uint32_t index, const uint32_t flags = 0 );
+    void Store( int64_t &value, const uint32_t index, const uint32_t flags = 0x00 );
 
-    void Store( float &value, const uint32_t index, const uint32_t flags = 0 );
+    void Store( float &value, const uint32_t index, const uint32_t flags = 0x00 );
 
-    void Store( double &value, const uint32_t index, const uint32_t flags = 0 );
+    void Store( double &value, const uint32_t index, const uint32_t flags = 0x00 );
 
     void Store( ISerialisable *const serialisable );
 
@@ -94,7 +94,7 @@ public:
 
     uint32_t GetMemberCount() const;
 
-    void CreateRepeated( Type::Type type, uint32_t size, const uint32_t index, const uint32_t flags = 0 );
+    void CreateRepeated( Type::Type type, uint32_t size, const uint32_t index, const uint32_t flags = 0x00 );
 
     void StoreRepeated( ISerialisable *const value, const uint32_t index, const uint32_t repeatedIndex );
 
@@ -125,22 +125,21 @@ protected:
     std::vector< uint32_t > mIndexes;
     std::vector< ISerialiseData * > mSerialisables;
 
-    size_t mMemberCount;
+    uint32_t mMemberCount;
     uint32_t mFlags;
     Mode::Mode mMode;
 
     virtual void SerialiseTo( AbstractSerialiser *const serialiser );
 
-    void Store( ISerialisable *const value, Mode::Mode mode );
+    void Store( ISerialisable *const value, const Mode::Mode mode );
 
-
-	template< typename T >
-	T *CreateDataType( const uint32_t flags )
-	{
-		T *object = PoolHolder::Get().GetPool< T >().Get();
-		object->SetFlags( flags );
-		return object;
-	}
+    template< typename T >
+    T *CreateDataType( const uint32_t flags )
+    {
+        T *object = PoolHolder::Get().GetPool< T >().Get();
+        object->SetFlags( flags );
+        return object;
+    }
 
     template< typename DataType, typename T >
     void Store( T &value, const uint32_t index, const uint32_t flags )
