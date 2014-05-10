@@ -21,28 +21,28 @@
  */
 
 #include "binaryDeserialiser.h"
-#include "varint.h"
-#include "util.h"
 #include "message.h"
+#include "util.h"
 
 BinaryDeserialiser::BinaryDeserialiser( std::istream &stream )
-    : mStream( &stream ), mBufferIndex( 0 ), mBufferSize( 0 )
+    : mStream( &stream ),
+      mBufferIndex( 0 ),
+      mBufferSize( 0 )
 {
-
 }
 
 void BinaryDeserialiser::DeserialiseMessage( Message &message )
 {
-    Mode::Mode tempMode = message.GetMode();
+    const Mode::Mode tempMode = message.GetMode();
 
     message.SetMode( Mode::Serialise );
 
     for ( uint32_t i = 0, end = ( uint32_t )ReadVarInt(); i < end; ++i )
     {
-        uint64_t header = ReadVarInt();
+        const uint64_t header = ReadVarInt();
 
-        Internal::Type::Type type = Util::GetHeaderType( header );
-        uint32_t index = Util::GetHeaderIndex( header );
+        const Internal::Type::Type type = Util::GetHeaderType( header );
+        const uint32_t index = Util::GetHeaderIndex( header );
 
         Deserialise( message, index, type );
     }
@@ -60,7 +60,8 @@ void BinaryDeserialiser::Deserialise( Message &message, const uint32_t index, co
 
     case Internal::Type::Variable:
         {
-            Message *const subMessage = static_cast< Message * >( AbstractDeserialiser::GetFromMessage< Message >( message, index ) );
+            Message *const subMessage = static_cast< Message * >( AbstractDeserialiser::GetFromMessage< Message >( message,
+                                        index ) );
             DeserialiseMessage( *subMessage );
         }
         break;
@@ -103,11 +104,11 @@ void BinaryDeserialiser::Deserialise( Message &message, const uint32_t index, co
 
 void BinaryDeserialiser::DeserialiseRepeated( Message &message, const uint32_t index )
 {
-    uint64_t header = ReadVarInt();
-    Internal::Type::Type type = Util::GetHeaderType( header );
-    uint32_t size = Util::GetHeaderIndex( header );
+    const uint64_t header = ReadVarInt();
+    const Internal::Type::Type type = Util::GetHeaderType( header );
+    const uint32_t size = Util::GetHeaderIndex( header );
 
-    uint32_t flags = type == Internal::Type::VarInt ? ( uint32_t )Message::Packed : 0;
+    const uint32_t flags = ( type == Internal::Type::VarInt ) ? ( uint32_t )Message::Packed : 0;
 
     message.CreateRepeated( ( Type::Type )type, size, index, flags );
 
@@ -171,7 +172,7 @@ void BinaryDeserialiser::DeserialiseRepeated( Message &message, const uint32_t i
 
 void BinaryDeserialiser::ReadString( std::string &str )
 {
-    size_t vSize = ( size_t )ReadVarInt();
+    const size_t vSize = ( size_t )ReadVarInt();
 
     str.resize( vSize );
     ReadBytes( &*str.begin(), vSize );
@@ -179,17 +180,22 @@ void BinaryDeserialiser::ReadString( std::string &str )
 
 uint64_t BinaryDeserialiser::ReadVarInt()
 {
-	uint64_t value = 0;
-	uint64_t result;
-	size_t shift = 0;
-	char c;
+    uint64_t value  = 0;
+    uint64_t result = 0;
+    uint8_t shift   = 0;
 
-	for ( bool next = true; next; next = ( c & 128 ) > 0, shift += 7 )
-	{
-		ReadBytes( &c, 1 );
-		result = c & 0x7F;
-		value |= ( uint64_t )( result ) << shift;
-	}
+    bool next = true;
+
+    while ( next )
+    {
+        uint8_t c;
+        ReadBytes( &c, 1 );
+        result = c & 0x7F;
+        value |= ( uint64_t )( result ) << shift;
+
+        next = ( c & 128 ) > 0;
+        shift += 7;
+    }
 
     return value;
 }

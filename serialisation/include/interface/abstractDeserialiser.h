@@ -7,8 +7,8 @@
 #include <stdint.h>
 #include <string>
 
-class ISerialiseData;
 class AbstractRepeatedData;
+class ISerialiseData;
 class Message;
 
 template< typename T >
@@ -24,6 +24,7 @@ class AbstractDeserialiser
 
     template< typename T >
     friend class SerialiseData;
+
 public:
 
     virtual void DeserialiseMessage( Message &message ) = 0;
@@ -31,7 +32,7 @@ public:
 protected:
 
     template< typename T >
-    ISerialiseData *GetFromMessage( Message &message, const uint32_t index, const uint32_t flags = 0 )
+    ISerialiseData *GetFromMessage( Message &message, const uint32_t index, const uint32_t flags = 0x00 )
     {
         ISerialiseData *data = message.FindSerialisable( index );
 

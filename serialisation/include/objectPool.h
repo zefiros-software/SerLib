@@ -24,8 +24,8 @@
 #ifndef __SERIALISATION_OBJECTPOOL_H__
 #define __SERIALISATION_OBJECTPOOL_H__
 
-#include <vector>
 #include <assert.h>
+#include <vector>
 
 template< typename T >
 class ObjectPool
@@ -33,18 +33,20 @@ class ObjectPool
 public:
 
     ObjectPool( const size_t capacity = 500 )
-        : mCapacity( capacity ), mBorrowedCount( 0 ), mReturnedCount( 0 )
+        : mCapacity( capacity ),
+          mBorrowedCount( 0 ),
+          mReturnedCount( 0 )
     {
     }
 
     ~ObjectPool()
     {
-        for ( std::vector< T * >::iterator it = mPool.begin(), end = mPool.end(); it != end; ++it )
+        for ( typename std::vector< T * >::iterator it = mPool.begin(), end = mPool.end(); it != end; ++it )
         {
-			delete *it;
+            delete *it;
         }
 
-		assert( mBorrowedCount == mReturnedCount );
+        assert( mBorrowedCount == mReturnedCount );
     }
 
     T *Get()
@@ -68,15 +70,15 @@ public:
         }
     }
 
-	size_t GetBorrowedCount() const
-	{
-		return mBorrowedCount;
-	}
+    size_t GetBorrowedCount() const
+    {
+        return mBorrowedCount;
+    }
 
-	size_t GetReturnedCount() const
-	{
-		return mReturnedCount;
-	}
+    size_t GetReturnedCount() const
+    {
+        return mReturnedCount;
+    }
 
 private:
 

@@ -5,9 +5,9 @@
 #include <stdint.h>
 
 class AbstractRepeatedData;
-class Message;
 class StringData;
 class VarIntData;
+class Message;
 
 template< typename T >
 class NumData;

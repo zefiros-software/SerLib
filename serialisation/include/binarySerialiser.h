@@ -25,6 +25,7 @@
 #define __SERIALISATION_BINARYSERIALISER_H__
 
 #include "interface/abstractSerialiser.h"
+
 #include "types.h"
 
 #include <iostream>
@@ -73,8 +74,8 @@ protected:
 
 protected:
 
-    uint32_t mBufferSize;
-    uint32_t mBufferIndex;
+    size_t mBufferSize;
+    size_t mBufferIndex;
     std::ostream *mStream;
     char mBuffer[ 256 ];
 
@@ -85,7 +86,7 @@ protected:
     {
         if ( flags & Message::Packed )
         {
-			WriteVarInt( value );
+            WriteVarInt( value );
         }
         else
         {
@@ -100,12 +101,12 @@ protected:
     }
 
     template< typename T >
-    void WriteBytes( const T *firstByte, const uint32_t byteCount )
+    void WriteBytes( const T *firstByte, const size_t byteCount )
     {
-        int32_t diff = mBufferSize - mBufferIndex;
-        int32_t diff2 = byteCount - diff;
+        const size_t diff = mBufferSize - mBufferIndex;
+        const size_t diff2 = byteCount - diff;
 
-        const char *c = reinterpret_cast< const char * >( firstByte );
+        const int8_t *c = reinterpret_cast< const int8_t * >( firstByte );
 
         if ( diff2 <= 0 )
         {
@@ -115,27 +116,28 @@ protected:
         else
         {
             memcpy( mBuffer + mBufferIndex, c, diff );
-			mBufferIndex += diff;
+            mBufferIndex += diff;
             FlushBuffer();
             WriteBytes( c + diff, diff2 );
         }
     }
 
-	void WriteVarInt( const uint64_t value )
-	{
-		uint32_t mSize = 0;
-		for ( uint64_t val = value; ( val > 0 || mSize == 0 ); val >>= 7, ++mSize )
-		{
-			char c = val & 127;
+    void WriteVarInt( const uint64_t value )
+    {
+        uint32_t size = 0;
 
-			if ( ( uint64_t )c != val )
-			{
-				c |= 128;
-			}
+        for ( uint64_t val = value; val > 0 || size == 0; val >>= 7, ++size )
+        {
+            int8_t c = val & 127;
 
-			WriteBytes( &c, 1 );
-		}
-	}
+            if ( ( uint64_t )c != val )
+            {
+                c |= 128;
+            }
+
+            WriteBytes( &c, 1 );
+        }
+    }
 };
 
 #endif

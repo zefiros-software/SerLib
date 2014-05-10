@@ -21,14 +21,15 @@
  */
 
 #include "binarySerialiser.h"
-#include "util.h"
-#include "varint.h"
+#include "repeatedData.h"
 #include "varIntData.h"
 #include "message.h"
-#include "repeatedData.h"
+#include "util.h"
 
 BinarySerialiser::BinarySerialiser( std::ostream &stream )
-    : mStream( &stream ), mBufferIndex( 0 ), mBufferSize( sizeof( mBuffer ) )
+    : mStream( &stream ),
+      mBufferIndex( 0 ),
+      mBufferSize( sizeof( mBuffer ) )
 {
 }
 
@@ -73,8 +74,8 @@ void BinarySerialiser::Prepare( ISerialiseData *const data, const uint32_t index
 
 void BinarySerialiser::Serialise( Message *const message )
 {
-    uint32_t count = message->GetMemberCount();
-	WriteVarInt( count );
+    const uint32_t count = message->GetMemberCount();
+    WriteVarInt( count );
 
     for ( uint32_t i = 0; i < count; ++i )
     {
@@ -90,7 +91,7 @@ void BinarySerialiser::Serialise( Message *const message )
 void BinarySerialiser::Serialise( SerialiseData< std::string > *const data )
 {
     const std::string &value = data->GetValue();
-    size_t size = value.size();
+    const size_t size = value.size();
     WriteVarInt( size );
     WriteBytes( value.c_str(), size );
 }

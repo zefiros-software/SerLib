@@ -78,7 +78,7 @@
     }
 
 #define TestEasyRepeatedClass( test, name, seed1, seed2, flag, its ) \
-	TEST( P( test ), name )                                          \
+    TEST( P( test ), name )                                          \
     {                                                                \
         TestClass3< its, flag > c1( seed1 ), c2( seed2 );            \
         SimpleSerialiseDeserialiseStream( c1, c2 );                  \
@@ -111,7 +111,7 @@ namespace TestClasses
             }
         }
 
-        void OnSerialise( Message &message )
+        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
         {
             for ( uint32_t i = 0; i < its; ++i )
             {
@@ -189,7 +189,7 @@ namespace TestClasses
             }
         }
 
-        void OnSerialise( Message &message )
+        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
         {
             for ( uint32_t i = 0; i < its; ++i )
             {
@@ -310,7 +310,7 @@ namespace TestClasses
             name2 = "CouldBeUsedToStoreNames";
         }
 
-        void OnSerialise( Message &message )
+        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
         {
             message.CreateRepeated( Type::UInt8, its, 0, Flag );
             message.CreateRepeated( Type::SInt8, its, 1, Flag );
@@ -414,7 +414,7 @@ namespace TestClasses
         {
         }
 
-        void OnSerialise( Message &message )
+        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
         {
             message.Store( mMember, 1, Flag );
         }
@@ -443,7 +443,7 @@ namespace TestClasses
             }
         }
 
-        void OnSerialise( Message &message )
+        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
         {
             message.CreateRepeated( Type::Variable, its, 0, Flag );
 

@@ -24,19 +24,11 @@
 #ifndef __SERIALISATION_POOLHOLDER_H__
 #define __SERIALISATION_POOLHOLDER_H__
 
-#include <stdint.h>
-
+#include "varIntData.h"
 #include "objectPool.h"
+#include "message.h"
 
-template< typename T >
-class RepeatedData;
-
-template< typename T >
-class SerialiseData;
-
-class Message;
-
-class VarIntData;
+#include <stdint.h>
 
 class PoolHolder
 {
@@ -48,7 +40,6 @@ public:
     ObjectPool< T > &GetPool()
     {
         assert( false );
-		return ObjectPool< T >;
     }
 
 private:

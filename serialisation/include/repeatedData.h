@@ -25,6 +25,7 @@
 #define __SERIALISATION_REPEATEDDATA_H__
 
 #include "interface/abstractRepeatedData.h"
+
 #include "poolHolder.h"
 #include "types.h"
 #include "util.h"
@@ -41,19 +42,18 @@ class RepeatedData
 {
 public:
 
-    RepeatedData( const uint32_t flags = 0 )
+    RepeatedData( const uint32_t flags = 0x00 )
         : mFlags( flags )
     {
-
     }
 
-    ~RepeatedData()
-    {
-        for ( typename std::vector< DataType * >::iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
-        {
-            PoolHolder::Get().GetPool< DataType >().Dispose( *it );
-        }
-    }
+	~RepeatedData()
+	{
+		for (typename std::vector< DataType * >::iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
+		{
+			PoolHolder::Get().GetPool< DataType >().Dispose( *it );
+		}
+	}
 
     virtual uint32_t GetFlags() const
     {
@@ -82,13 +82,13 @@ public:
 
     virtual void Resize( const size_t size )
     {
-        size_t oldSize = mFields.size();
+        const size_t oldSize = mFields.size();
 
         ObjectPool< DataType > &pool = PoolHolder::Get().GetPool< DataType >();
 
         if ( oldSize < size )
         {
-            for ( size_t i = oldSize; i < size; ++ i )
+            for ( size_t i = oldSize; i < size; ++i )
             {
                 DataType *const field = pool.Get();
                 field->SetFlags( mFlags );
@@ -102,7 +102,7 @@ public:
                 DataType *const field = mFields.back();
                 mFields.pop_back();
 
-                field->SetFlags( 0 );
+                field->SetFlags( 0x00 );
                 pool.Dispose( field );
             }
         }
