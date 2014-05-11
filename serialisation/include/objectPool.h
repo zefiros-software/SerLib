@@ -33,7 +33,7 @@ class ObjectPool
 {
 public:
 
-    ObjectPool( const size_t capacity = 500 )
+    ObjectPool( const std::size_t capacity = 500 )
         : mCapacity( capacity ),
           mBorrowedCount( 0 ),
           mReturnedCount( 0 )
@@ -71,12 +71,12 @@ public:
         }
     }
 
-    size_t GetBorrowedCount() const
+    std::size_t GetBorrowedCount() const
     {
         return mBorrowedCount;
     }
 
-    size_t GetReturnedCount() const
+    std::size_t GetReturnedCount() const
     {
         return mReturnedCount;
     }
@@ -85,9 +85,9 @@ private:
 
     std::vector< T * > mPool;
 
-    size_t mCapacity;
-    size_t mBorrowedCount;
-    size_t mReturnedCount;
+    std::size_t mCapacity;
+    std::size_t mBorrowedCount;
+    std::size_t mReturnedCount;
 
     T *CreateInstance()
     {
