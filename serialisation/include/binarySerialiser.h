@@ -29,6 +29,7 @@
 #include "types.h"
 
 #include <iostream>
+#include <string.h>
 #include <vector>
 
 class BinarySerialiser
@@ -74,8 +75,9 @@ protected:
 
 protected:
 
-    size_t mBufferSize;
     size_t mBufferIndex;
+    size_t mBufferSize;
+
     std::ostream *mStream;
     char mBuffer[ 256 ];
 
