@@ -25,6 +25,7 @@
 #define __SERIALISATION_MESSAGE_H__
 
 #include "interface/abstractRepeatedData.h"
+#include "poolHolder.h"
 
 #include <stdint.h>
 #include <assert.h>
