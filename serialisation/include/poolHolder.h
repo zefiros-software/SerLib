@@ -27,6 +27,7 @@
 #include "objectPool.h"
 
 #include <stdint.h>
+#include <string>
 
 template< typename T >
 class RepeatedData;
