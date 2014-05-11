@@ -24,8 +24,6 @@
 #ifndef __SERIALISATION_VARINTDATA_H__
 #define __SERIALISATION_VARINTDATA_H__
 
-#include "interface/ISerialiseData.h"
-
 #include "serialiseData.h"
 #include "types.h"
 

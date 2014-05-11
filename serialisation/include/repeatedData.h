@@ -26,7 +26,8 @@
 
 #include "interface/abstractRepeatedData.h"
 
-#include "poolHolder.h"
+class PoolHolder;
+
 #include "types.h"
 #include "util.h"
 
@@ -124,9 +125,9 @@ protected:
     uint32_t mFlags;
 
     void Dispose()
-    {
-        PoolHolder::Get().GetPool< RepeatedData< DataType > >().Dispose( this );
-    }
+	{
+		PoolHolder::Get().GetPool< RepeatedData< DataType > >().Dispose( this );
+	}
 };
 
 #endif
