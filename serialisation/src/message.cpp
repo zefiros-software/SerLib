@@ -30,7 +30,8 @@
 
 Message::Message( Mode::Mode mode /*= Mode::Serialise */ )
     : mMode( mode ),
-      mMemberCount( 0 )
+      mMemberCount( 0 ),
+      mFlags( 0x00 )
 {
     mIndexes.reserve( 10 );
     mSerialisables.reserve( 10 );
@@ -38,7 +39,8 @@ Message::Message( Mode::Mode mode /*= Mode::Serialise */ )
 
 Message::Message( ISerialisable *const serialisable, Mode::Mode mode /*= Mode::Serialise */ )
     : mMode( mode ),
-      mMemberCount( 0 )
+      mMemberCount( 0 ),
+      mFlags( 0x00 )
 {
     mIndexes.reserve( 10 );
     mSerialisables.reserve( 10 );
@@ -316,5 +318,5 @@ void Message::SerialiseTo( AbstractSerialiser *const serialiser )
 
 void Message::Dispose()
 {
-	PoolHolder::Get().GetPool< Message >().Dispose( this );
+    PoolHolder::Get().GetPool< Message >().Dispose( this );
 }

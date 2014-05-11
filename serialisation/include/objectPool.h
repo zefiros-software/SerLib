@@ -25,6 +25,7 @@
 #define __SERIALISATION_OBJECTPOOL_H__
 
 #include <assert.h>
+#include <stdint.h>
 #include <vector>
 
 template< typename T >

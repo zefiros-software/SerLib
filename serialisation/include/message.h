@@ -129,9 +129,10 @@ protected:
     std::vector< uint32_t > mIndexes;
     std::vector< ISerialiseData * > mSerialisables;
 
+    Mode::Mode mMode;
+
     uint32_t mMemberCount;
     uint32_t mFlags;
-    Mode::Mode mMode;
 
     virtual void SerialiseTo( AbstractSerialiser *const serialiser );
 

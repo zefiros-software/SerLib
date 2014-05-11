@@ -75,10 +75,11 @@ protected:
 
 protected:
 
+    std::ostream *mStream;
+
     size_t mBufferIndex;
     size_t mBufferSize;
 
-    std::ostream *mStream;
     char mBuffer[ 256 ];
 
     void WriteHeader( uint32_t index, Internal::Type::Type type );
