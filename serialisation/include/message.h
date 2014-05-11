@@ -25,6 +25,7 @@
 #define __SERIALISATION_MESSAGE_H__
 
 #include "interface/abstractRepeatedData.h"
+
 #include "poolHolder.h"
 
 #include <stdint.h>
@@ -148,7 +149,7 @@ protected:
     template< typename T >
     void DisposeDataType( T *object )
     {
-        object->SetFlags( 0 );
+        object->SetFlags( 0x00 );
         PoolHolder::Get().GetPool< T >().Dispose( object );
     }
 

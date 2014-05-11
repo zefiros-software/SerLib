@@ -20,10 +20,7 @@
  * THE SOFTWARE.
  */
 
-#include "repeatedData.h"
 #include "poolHolder.h"
-#include "varIntData.h"
-#include "message.h"
 
 PoolHolder &PoolHolder::Get()
 {
@@ -34,160 +31,159 @@ PoolHolder &PoolHolder::Get()
 template<>
 ObjectPool< RepeatedData< Message > > &PoolHolder::GetPool()
 {
-    return mRMessagePool;
+    return mPools.RMessagePool;
 }
 
 template<>
 ObjectPool< RepeatedData< SerialiseData< std::string > > > &PoolHolder::GetPool()
 {
-    return mRStringPool;
+    return mPools.RStringPool;
 }
 
 template<>
 ObjectPool< RepeatedData< SerialiseData< uint8_t > > > &PoolHolder::GetPool()
 {
-    return mRU8Pool;
+    return mPools.RU8Pool;
 }
 
 template<>
 ObjectPool< RepeatedData< SerialiseData< uint16_t > > > &PoolHolder::GetPool()
 {
-    return mRU16Pool;
+    return mPools.RU16Pool;
 }
 
 template<>
 ObjectPool< RepeatedData< SerialiseData< uint32_t > > > &PoolHolder::GetPool()
 {
-    return mRU32Pool;
+    return mPools.RU32Pool;
 }
 
 template<>
 ObjectPool< RepeatedData< SerialiseData< uint64_t > > > &PoolHolder::GetPool()
 {
-    return mRU64Pool;
+    return mPools.RU64Pool;
 }
 
 template<>
 ObjectPool< RepeatedData< VarIntData > > &PoolHolder::GetPool()
 {
-    return mRVarIntPool;
+    return mPools.RVarIntPool;
 }
 
 template<>
 ObjectPool< RepeatedData< SerialiseData< int8_t > > > &PoolHolder::GetPool()
 {
-    return mRS8Pool;
+    return mPools.RS8Pool;
 }
 
 template<>
 ObjectPool< RepeatedData< SerialiseData< int16_t > > > &PoolHolder::GetPool()
 {
-    return mRS16Pool;
+    return mPools.RS16Pool;
 }
 
 template<>
 ObjectPool< RepeatedData< SerialiseData< int32_t > > > &PoolHolder::GetPool()
 {
-    return mRS32Pool;
+    return mPools.RS32Pool;
 }
 
 template<>
 ObjectPool< RepeatedData< SerialiseData< int64_t > > > &PoolHolder::GetPool()
 {
-    return mRS64Pool;
+    return mPools.RS64Pool;
 }
 
 template<>
 ObjectPool< RepeatedData< SerialiseData< float > > > &PoolHolder::GetPool()
 {
-    return mRFloatPool;
+    return mPools.RFloatPool;
 }
 
 template<>
 ObjectPool< RepeatedData< SerialiseData< double > > > &PoolHolder::GetPool()
 {
-    return mRDoublePool;
+    return mPools.RDoublePool;
 }
 
 template<>
 ObjectPool< Message > &PoolHolder::GetPool()
 {
-    return mMessagePool;
+    return mPools.MessagePool;
 }
 
 template<>
 ObjectPool< SerialiseData< std::string > > &PoolHolder::GetPool()
 {
-    return mStringPool;
+    return mPools.StringPool;
 }
 
 template<>
 ObjectPool< SerialiseData< uint8_t > > &PoolHolder::GetPool()
 {
-    return mU8Pool;
+    return mPools.U8Pool;
 }
 
 template<>
 ObjectPool< SerialiseData< uint16_t > > &PoolHolder::GetPool()
 {
-    return mU16Pool;
+    return mPools.U16Pool;
 }
 
 template<>
 ObjectPool< SerialiseData< uint32_t > > &PoolHolder::GetPool()
 {
-    return mU32Pool;
+    return mPools.U32Pool;
 }
 
 template<>
 ObjectPool< SerialiseData< uint64_t > > &PoolHolder::GetPool()
 {
-    return mU64Pool;
+    return mPools.U64Pool;
 }
 
 template<>
 ObjectPool< VarIntData > &PoolHolder::GetPool()
 {
-    return mVarIntPool;
+    return mPools.VarIntPool;
 }
 
 template<>
 ObjectPool< SerialiseData< int8_t > > &PoolHolder::GetPool()
 {
-    return mS8Pool;
+    return mPools.S8Pool;
 }
 
 template<>
 ObjectPool< SerialiseData< int16_t > > &PoolHolder::GetPool()
 {
-    return mS16Pool;
+    return mPools.S16Pool;
 }
 
 template<>
 ObjectPool< SerialiseData< int32_t > > &PoolHolder::GetPool()
 {
-    return mS32Pool;
+    return mPools.S32Pool;
 }
 
 template<>
 ObjectPool< SerialiseData< int64_t > > &PoolHolder::GetPool()
 {
-    return mS64Pool;
+    return mPools.S64Pool;
 }
 
 template<>
 ObjectPool< SerialiseData< float > > &PoolHolder::GetPool()
 {
-    return mFloatPool;
+    return mPools.FloatPool;
 }
 
 template<>
 ObjectPool< SerialiseData< double > > &PoolHolder::GetPool()
 {
-    return mDoublePool;
+    return mPools.DoublePool;
 }
 
 PoolHolder::PoolHolder()
 {
-
 }

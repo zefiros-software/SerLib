@@ -27,8 +27,8 @@
 #include "interface/abstractSerialiser.h"
 #include "interface/IPrimitiveData.h"
 
-#include "util.h"
 #include "poolHolder.h"
+#include "util.h"
 
 #include <stdexcept>
 #include <sstream>
