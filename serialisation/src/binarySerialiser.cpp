@@ -20,11 +20,10 @@
  * THE SOFTWARE.
  */
 
+#include "message.h"
 #include "binarySerialiser.h"
 #include "repeatedData.h"
 #include "varIntData.h"
-#include "message.h"
-#include "util.h"
 
 BinarySerialiser::BinarySerialiser( std::ostream &stream )
     : mStream( &stream ),
