@@ -50,10 +50,13 @@ public:
 
 int main( int argc, char **argv )
 {
+
+#ifdef _WIN32
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
     _CrtSetReportMode( _CRT_ASSERT, _CRTDBG_MODE_FILE );
     _CrtSetReportFile( _CRT_ASSERT, _CRTDBG_FILE_STDERR );
     //_crtBreakAlloc =  ;
+#endif
 
     testing::InitGoogleTest( &argc, argv );
 
