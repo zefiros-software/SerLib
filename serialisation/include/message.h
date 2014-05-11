@@ -25,11 +25,11 @@
 #define __SERIALISATION_MESSAGE_H__
 
 #include "interface/abstractRepeatedData.h"
-#include "varIntData.h"
 
 #include <stdint.h>
 #include <assert.h>
 #include <fstream>
+#include <vector>
 #include <map>
 
 class AbstractSerialiser;

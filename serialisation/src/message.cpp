@@ -24,6 +24,7 @@
 #include "interface/ISerialisable.h"
 
 #include "repeatedData.h"
+#include "varIntData.h"
 #include "defines.h"
 #include "message.h"
 
