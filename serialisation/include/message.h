@@ -25,6 +25,8 @@
 #define __SERIALISATION_MESSAGE_H__
 
 #include "interface/abstractRepeatedData.h"
+#include "interface/IPrimitiveData.h"
+#include "interface/ISerialiseData.h"
 
 #include "poolHolder.h"
 
