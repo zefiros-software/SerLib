@@ -24,9 +24,20 @@
 #ifndef __SERIALISATION_POOLHOLDER_H__
 #define __SERIALISATION_POOLHOLDER_H__
 
-#include "pools.h"
+#include "objectPool.h"
 
 #include <stdint.h>
+
+template< typename T >
+class RepeatedData;
+
+template< typename T >
+class SerialiseData;
+
+class VarIntData;
+class Message;
+
+struct Pools;
 
 class PoolHolder
 {
@@ -42,9 +53,9 @@ public:
 
 private:
 
-    Pools mPools;
+    Pools *mPools;
 
-    PoolHolder();
+    PoolHolder( Pools *const pools );
     PoolHolder( const PoolHolder & );
     void operator=( const PoolHolder & );
 };

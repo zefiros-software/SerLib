@@ -27,11 +27,7 @@
 #include "interface/abstractRepeatedData.h"
 
 #include "poolHolder.h"
-#include "types.h"
-#include "util.h"
 
-#include <assert.h>
-#include <stdint.h>
 #include <vector>
 
 class AbstractSerialiser;
