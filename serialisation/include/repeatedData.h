@@ -26,8 +26,7 @@
 
 #include "interface/abstractRepeatedData.h"
 
-class PoolHolder;
-
+#include "repeatedData.h"
 #include "types.h"
 #include "util.h"
 

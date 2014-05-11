@@ -2,7 +2,6 @@
 #ifndef __SERIALISATION_ABSTRACTDESERIALISER_H__
 #define __SERIALISATION_ABSTRACTDESERIALISER_H__
 
-#include "message.h"
 
 #include <stdint.h>
 #include <string>

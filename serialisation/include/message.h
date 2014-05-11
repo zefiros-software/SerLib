@@ -24,7 +24,7 @@
 #ifndef __SERIALISATION_MESSAGE_H__
 #define __SERIALISATION_MESSAGE_H__
 
-#include "repeatedData.h"
+#include "interface/abstractRepeatedData.h"
 #include "varIntData.h"
 
 #include <stdint.h>

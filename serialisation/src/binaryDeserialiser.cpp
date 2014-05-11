@@ -21,6 +21,7 @@
  */
 
 #include "binaryDeserialiser.h"
+#include "repeatedData.h"
 #include "message.h"
 #include "util.h"
 

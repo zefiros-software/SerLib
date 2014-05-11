@@ -23,6 +23,7 @@
 #include "interface/abstractSerialiser.h"
 #include "interface/ISerialisable.h"
 
+#include "repeatedData.h"
 #include "defines.h"
 #include "message.h"
 
