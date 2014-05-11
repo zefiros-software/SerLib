@@ -63,9 +63,9 @@ int main( int argc, char **argv )
     Primitive< int8_t, 1 > c1( std::numeric_limits<float>::max() ), c2( 1.0f );
     SimpleSerialiseDeserialiseStream( c1, c2 );
 
-    RUN_ALL_TESTS();
+    int result = RUN_ALL_TESTS();
 
     //system( "pause" );
 
-    return 0;
+    return result;
 }

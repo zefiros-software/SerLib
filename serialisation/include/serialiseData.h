@@ -209,9 +209,8 @@ protected:
     }
 };
 
-
 template<>
-void SerialiseData< std::string >::Store( std::string &value, Mode::Mode mode )
+    void SerialiseData< std::string >::Store( std::string &value, const Mode::Mode mode )
 {
     if ( mode == Mode::Serialise )
     {
@@ -223,113 +222,113 @@ void SerialiseData< std::string >::Store( std::string &value, Mode::Mode mode )
     }
 }
 
-
 template<>
-void SerialiseData< uint8_t >::Store( uint8_t &value, Mode::Mode mode )
+void SerialiseData< uint8_t >::Store( uint8_t &value, const Mode::Mode mode )
 {
     StoreT( value, mode );
 }
 
 template<>
-void SerialiseData< uint16_t >::Store( uint16_t &value, Mode::Mode mode )
+void SerialiseData< uint16_t >::Store( uint16_t &value, const Mode::Mode mode )
 {
     StoreT( value, mode );
 }
 
 template<>
-void SerialiseData< uint32_t >::Store( uint32_t &value, Mode::Mode mode )
+void SerialiseData< uint32_t >::Store( uint32_t &value, const Mode::Mode mode )
 {
     StoreT( value, mode );
 }
 
 template<>
-void SerialiseData< uint64_t >::Store( uint64_t &value, Mode::Mode mode )
+void SerialiseData< uint64_t >::Store( uint64_t &value, const Mode::Mode mode )
 {
     StoreT( value, mode );
 }
 
 template<>
-void SerialiseData< int8_t >::Store( int8_t &value, Mode::Mode mode )
-{
-    StoreT( value, mode );
-}
-
-template<>
-void SerialiseData< int16_t >::Store( int16_t &value, Mode::Mode mode )
-{
-    StoreT( value, mode );
-}
-
-template<>
-void SerialiseData< int32_t >::Store( int32_t &value, Mode::Mode mode )
-{
-    StoreT( value, mode );
-}
-
-template<>
-void SerialiseData< int64_t >::Store( int64_t &value, Mode::Mode mode )
-{
-    StoreT( value, mode );
-}
-
-template<>
-void SerialiseData< float >::Store( float &value, Mode::Mode mode )
-{
-    StoreT( value, mode );
-}
-
-template<>
-void SerialiseData< double >::Store( double &value, Mode::Mode mode )
+void SerialiseData< int8_t >::Store( int8_t &value, const Mode::Mode mode )
 {
     StoreT( value, mode );
 }
 
 
+template<>
+void SerialiseData< int16_t >::Store( int16_t &value, const Mode::Mode mode )
+{
+    StoreT( value, mode );
+}
 
 template<>
-void SerialiseData< uint8_t >::Store( int8_t &value, Mode::Mode mode )
+void SerialiseData< int32_t >::Store( int32_t &value, const Mode::Mode mode )
+{
+    StoreT( value, mode );
+}
+
+template<>
+void SerialiseData< int64_t >::Store( int64_t &value, const Mode::Mode mode )
+{
+    StoreT( value, mode );
+}
+
+template<>
+void SerialiseData< float >::Store( float &value, const Mode::Mode mode )
+{
+    StoreT( value, mode );
+}
+
+template<>
+void SerialiseData< double >::Store( double &value, const Mode::Mode mode )
+{
+    StoreT( value, mode );
+}
+
+
+
+template<>
+void SerialiseData< uint8_t >::Store( int8_t &value, const Mode::Mode mode )
 {
     ZigZagStore< uint8_t >( value, mode );
 }
 
 template<>
-void SerialiseData< uint16_t >::Store( int16_t &value, Mode::Mode mode )
+void SerialiseData< uint16_t >::Store( int16_t &value, const Mode::Mode mode )
 {
     ZigZagStore< uint16_t >( value, mode );
 }
 
 template<>
-void SerialiseData< uint32_t >::Store( int32_t &value, Mode::Mode mode )
+void SerialiseData< uint32_t >::Store( int32_t &value, const Mode::Mode mode )
 {
     ZigZagStore< uint32_t >( value, mode );
 }
 
 template<>
-void SerialiseData< uint64_t >::Store( int64_t &value, Mode::Mode mode )
+void SerialiseData< uint64_t >::Store( int64_t &value, const Mode::Mode mode )
 {
     ZigZagStore< uint64_t >( value, mode );;
 }
 
 template<>
-void SerialiseData< int8_t >::Store( uint8_t &value, Mode::Mode mode )
+void SerialiseData< int8_t >::Store( uint8_t &value, const Mode::Mode mode )
 {
     ZagZigStore< int8_t >( value, mode );
 }
 
 template<>
-void SerialiseData< int16_t >::Store( uint16_t &value, Mode::Mode mode )
+void SerialiseData< int16_t >::Store( uint16_t &value, const Mode::Mode mode )
 {
     ZagZigStore< int16_t >( value, mode );
 }
 
 template<>
-void SerialiseData< int32_t >::Store( uint32_t &value, Mode::Mode mode )
+void SerialiseData< int32_t >::Store( uint32_t &value, const Mode::Mode mode )
 {
     ZagZigStore< int32_t >( value, mode );
 }
 
 template<>
-void SerialiseData< int64_t >::Store( uint64_t &value, Mode::Mode mode )
+void SerialiseData< int64_t >::Store( uint64_t &value, const Mode::Mode mode )
 {
     ZagZigStore< int64_t >( value, mode );
 }
@@ -337,81 +336,81 @@ void SerialiseData< int64_t >::Store( uint64_t &value, Mode::Mode mode )
 
 
 template<>
-void SerialiseData< uint8_t >::Store( uint64_t &value, Mode::Mode mode )
+void SerialiseData< uint8_t >::Store( uint64_t &value, const Mode::Mode mode )
 {
     StoreS< uint8_t >( value, mode );
 }
 
 template<>
-void SerialiseData< uint16_t >::Store( uint64_t &value, Mode::Mode mode )
+void SerialiseData< uint16_t >::Store( uint64_t &value, const Mode::Mode mode )
 {
     StoreS< uint16_t >( value, mode );
 }
 
 template<>
-void SerialiseData< uint32_t >::Store( uint64_t &value, Mode::Mode mode )
+void SerialiseData< uint32_t >::Store( uint64_t &value, const Mode::Mode mode )
 {
     StoreS< uint32_t >( value, mode );
 }
 
 template<>
-void SerialiseData< int8_t >::Store( uint64_t &value, Mode::Mode mode )
+void SerialiseData< int8_t >::Store( uint64_t &value, const Mode::Mode mode )
 {
     StoreS< uint8_t >( value, mode );
 }
 
 template<>
-void SerialiseData< int16_t >::Store( uint64_t &value, Mode::Mode mode )
+void SerialiseData< int16_t >::Store( uint64_t &value, const Mode::Mode mode )
 {
     StoreS< uint16_t >( value, mode );
 }
 
 template<>
-void SerialiseData< int32_t >::Store( uint64_t &value, Mode::Mode mode )
+void SerialiseData< int32_t >::Store( uint64_t &value, const Mode::Mode mode )
 {
     StoreS< uint32_t >( value, mode );
 }
 
 
 template<>
-void SerialiseData< uint64_t >::Store( uint8_t &value, Mode::Mode mode )
+void SerialiseData< uint64_t >::Store( uint8_t &value, const Mode::Mode mode )
 {
     StoreS< uint64_t >( value, mode );
 }
 
 template<>
-void SerialiseData< uint64_t >::Store( uint16_t &value, Mode::Mode mode )
+void SerialiseData< uint64_t >::Store( uint16_t &value, const Mode::Mode mode )
 {
     StoreS< uint64_t >( value, mode );
 }
 
 template<>
-void SerialiseData< uint64_t >::Store( uint32_t &value, Mode::Mode mode )
+void SerialiseData< uint64_t >::Store( uint32_t &value, const Mode::Mode mode )
 {
     StoreS< uint64_t >( value, mode );
 }
 
 template<>
-void SerialiseData< uint64_t >::Store( int8_t &value, Mode::Mode mode )
+void SerialiseData< uint64_t >::Store( int8_t &value, const Mode::Mode mode )
 {
     ZigZagStore< uint8_t >( value, mode );
 }
 
 template<>
-void SerialiseData< uint64_t >::Store( int16_t &value, Mode::Mode mode )
+void SerialiseData< uint64_t >::Store( int16_t &value, const Mode::Mode mode )
 {
     ZigZagStore< uint16_t >( value, mode );
 }
 
 template<>
-void SerialiseData< uint64_t >::Store( int32_t &value, Mode::Mode mode )
+void SerialiseData< uint64_t >::Store( int32_t &value, const Mode::Mode mode )
 {
     ZigZagStore< uint32_t >( value, mode );
 }
 
 
 template<>
-void SerialiseData< uint32_t >::Store( float &value, Mode::Mode mode )
+void SerialiseData< uint32_t >::Store( float &value, const Mode::Mode mode )
 {
     const bool isSerialising = mode == Mode::Serialise;
 
@@ -426,7 +425,7 @@ void SerialiseData< uint32_t >::Store( float &value, Mode::Mode mode )
 }
 
 template<>
-void SerialiseData< float >::Store( uint32_t &value, Mode::Mode mode )
+void SerialiseData< float >::Store( uint32_t &value, const Mode::Mode mode )
 {
     const bool isSerialising = mode == Mode::Serialise;
 
@@ -441,7 +440,7 @@ void SerialiseData< float >::Store( uint32_t &value, Mode::Mode mode )
 }
 
 template<>
-void SerialiseData< uint64_t >::Store( double &value, Mode::Mode mode )
+void SerialiseData< uint64_t >::Store( double &value, const Mode::Mode mode )
 {
     const bool isSerialising = mode == Mode::Serialise;
 
@@ -456,7 +455,7 @@ void SerialiseData< uint64_t >::Store( double &value, Mode::Mode mode )
 }
 
 template<>
-void SerialiseData< double >::Store( uint64_t &value, Mode::Mode mode )
+void SerialiseData< double >::Store( uint64_t &value, const Mode::Mode mode )
 {
     const bool isSerialising = mode == Mode::Serialise;
 
