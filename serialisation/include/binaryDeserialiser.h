@@ -26,12 +26,11 @@
 
 #include "interface/abstractDeserialiser.h"
 
+#include "message.h"
 #include "types.h"
 
 #include <iostream>
 #include <cstring>
-
-class Message;
 
 class BinaryDeserialiser
     : public AbstractDeserialiser
