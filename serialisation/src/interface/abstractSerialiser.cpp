@@ -32,6 +32,6 @@ void AbstractSerialiser::Serialise( ISerialiseData *const data )
 std::pair< uint32_t, ISerialiseData * > AbstractSerialiser::GetFromMessage( Message *const message,
         const uint32_t index )
 {
-    const uint32_t i = message->mIndexes[ index ];
+    const uint32_t i = message->mIndexes->at( index );
     return std::pair< uint32_t, ISerialiseData * >( i, message->FindSerialisable( i ) );
 }

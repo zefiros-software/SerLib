@@ -44,6 +44,7 @@ class Message
 {
     friend class AbstractSerialiser;
     friend class AbstractDeserialiser;
+    friend class ObjectPool< Message >;
 
 public:
 
@@ -126,8 +127,8 @@ public:
 
 protected:
 
-    std::vector< uint32_t > mIndexes;
-    std::vector< ISerialiseData * > mSerialisables;
+    std::vector< uint32_t > *mIndexes;
+    std::vector< ISerialiseData * > *mSerialisables;
 
     Mode::Mode mMode;
 
@@ -137,7 +138,9 @@ protected:
     virtual void SerialiseTo( AbstractSerialiser *const serialiser );
 
     virtual void Dispose();
-    
+
+    void DisposeSerialisables();
+
     void Store( ISerialisable *const value, const Mode::Mode mode );
 
 
@@ -172,30 +175,30 @@ protected:
 
     void InsertSerialiseDataAt( ISerialiseData *const data, const uint32_t index )
     {
-        size_t size = mSerialisables.size();
+        size_t size = mSerialisables->size();
 
         if ( index >= size )
         {
             const size_t newSize = size + 10;
-            mSerialisables.resize( newSize >= index ? newSize : index );
+            mSerialisables->resize( newSize >= index ? newSize : index );
         }
 
-        size = mIndexes.size();
+        size = mIndexes->size();
 
         if ( ++mMemberCount == size )
         {
-            mIndexes.reserve( size + 10 );
+            mIndexes->reserve( size + 10 );
         }
 
-        mSerialisables[ index ] = data;
-        mIndexes.push_back( index );
+        mSerialisables->at( index ) = data;
+        mIndexes->push_back( index );
     }
 
     inline ISerialiseData *FindSerialisable( const uint32_t index )
     {
-        if ( index < mSerialisables.size() )
+        if ( index < mSerialisables->size() )
         {
-            return mSerialisables[ index ];
+            return mSerialisables->at( index );
         }
 
         return NULL;
@@ -212,5 +215,22 @@ protected:
             static_cast< AbstractRepeatedData * >( data )->GetSerialisable( repeatedIndex ) )->Store( value, mMode );
     }
 };
+
+template<>
+void ObjectPool< Message >::Dispose( Message *const object )
+{
+    ++mReturnedCount;
+
+    object->DisposeSerialisables();
+
+    if ( mPool.size() < mCapacity )
+    {
+        mPool.push_back( object );
+    }
+    else
+    {
+        delete object;
+    }
+}
 
 #endif

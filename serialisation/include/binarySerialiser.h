@@ -106,8 +106,8 @@ protected:
     template< typename T >
     void WriteBytes( const T *firstByte, const size_t byteCount )
     {
-        const size_t diff = mBufferSize - mBufferIndex;
-        const size_t diff2 = byteCount - diff;
+        const int32_t diff = mBufferSize - mBufferIndex;
+        const int32_t diff2 = byteCount - diff;
 
         const int8_t *c = reinterpret_cast< const int8_t * >( firstByte );
 

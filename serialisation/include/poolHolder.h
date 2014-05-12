@@ -37,6 +37,7 @@ class SerialiseData;
 
 class VarIntData;
 class Message;
+class ISerialiseData;
 
 struct Pools;
 
@@ -138,5 +139,11 @@ ObjectPool < SerialiseData< float > > &PoolHolder::GetPool();
 
 template<>
 ObjectPool < SerialiseData< double > > &PoolHolder::GetPool();
+
+template<>
+ObjectPool < std::vector< ISerialiseData * > > &PoolHolder::GetPool();
+
+template<>
+ObjectPool < std::vector< uint32_t > > &PoolHolder::GetPool();
 
 #endif

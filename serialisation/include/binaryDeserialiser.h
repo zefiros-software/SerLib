@@ -76,8 +76,8 @@ protected:
     void ReadBytes( T *firstByte, const size_t byteCount )
     {
         char *c = reinterpret_cast< char * >( firstByte );
-        const size_t diff = mBufferSize - mBufferIndex;
-        const size_t diff2 = byteCount - diff;
+        const int32_t diff = mBufferSize - mBufferIndex;
+        const int32_t diff2 = byteCount - diff;
 
         if ( diff2 <= 0 )
         {

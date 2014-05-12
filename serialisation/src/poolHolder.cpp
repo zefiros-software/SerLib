@@ -191,3 +191,15 @@ PoolHolder::PoolHolder( Pools *const pools )
     : mPools( pools )
 {
 }
+
+template<>
+ObjectPool < std::vector< ISerialiseData * > > &PoolHolder::GetPool()
+{
+	return mPools->ISDVectorPool;
+}
+
+template<>
+ObjectPool < std::vector< uint32_t > > &PoolHolder::GetPool()
+{
+	return mPools->IndexVectorPool;
+}

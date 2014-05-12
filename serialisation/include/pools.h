@@ -44,6 +44,9 @@ struct Pools
 
     ObjectPool< SerialiseData< float > > FloatPool;
     ObjectPool< SerialiseData< double > > DoublePool;
+
+	ObjectPool< std::vector< ISerialiseData * > > ISDVectorPool;
+	ObjectPool< std::vector< uint32_t > > IndexVectorPool;
 };
 
 #endif

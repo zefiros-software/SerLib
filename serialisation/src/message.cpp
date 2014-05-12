@@ -31,28 +31,25 @@
 Message::Message( Mode::Mode mode /*= Mode::Serialise */ )
     : mMode( mode ),
       mMemberCount( 0 ),
-      mFlags( 0x00 )
+      mFlags( 0x00 ),
+      mIndexes( PoolHolder::Get().GetPool< std::vector< uint32_t > >().Get() ),
+      mSerialisables( PoolHolder::Get().GetPool< std::vector< ISerialiseData * > >().Get() )
 {
-    mIndexes.reserve( 10 );
-    mSerialisables.reserve( 10 );
 }
 
 Message::Message( ISerialisable *const serialisable, Mode::Mode mode /*= Mode::Serialise */ )
     : mMode( mode ),
       mMemberCount( 0 ),
-      mFlags( 0x00 )
+      mFlags( 0x00 ),
+      mIndexes( PoolHolder::Get().GetPool< std::vector< uint32_t > >().Get() ),
+      mSerialisables( PoolHolder::Get().GetPool< std::vector< ISerialiseData * > >().Get() )
 {
-    mIndexes.reserve( 10 );
-    mSerialisables.reserve( 10 );
     Store( serialisable );
 }
 
 Message::~Message()
 {
-    for ( std::vector< uint32_t >::iterator it = mIndexes.begin(), end = mIndexes.end(); it != end; ++it )
-    {
-        mSerialisables[ *it ]->Dispose();
-    }
+    DisposeSerialisables();
 }
 
 void Message::SetMode( Mode::Mode mode )
@@ -318,5 +315,27 @@ void Message::SerialiseTo( AbstractSerialiser *const serialiser )
 
 void Message::Dispose()
 {
+    DisposeSerialisables();
+
     PoolHolder::Get().GetPool< Message >().Dispose( this );
+}
+
+void Message::DisposeSerialisables()
+{
+    for ( std::vector< uint32_t >::iterator it = mIndexes->begin(), end = mIndexes->end(); it != end; ++ it )
+    {
+        uint32_t index = *it;
+        mSerialisables->at( index )->Dispose();
+        mSerialisables->at( index ) = NULL;
+    }
+
+    mIndexes->clear();
+
+    PoolHolder &holder = PoolHolder::Get();
+
+    holder.GetPool< std::vector< ISerialiseData * > >().Dispose( mSerialisables );
+    holder.GetPool< std::vector< uint32_t > >().Dispose( mIndexes );
+
+	mSerialisables = NULL;
+mIndexes = NULL;
 }
