@@ -19,34 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "varIntData.h"
-
-#include "serialisation.h"
-#include "helper.h"
-
 #include "gtest/gtest.h"
 
 #include <iostream>
 #include <cstdio>
-
-template< typename T, uint32_t Flag = 0x00 >
-class Primitive
-    : public ISerialisable
-{
-public:
-
-    Primitive( const T &value )
-        : mMember( value )
-    {
-    }
-
-    void SERIALISATION_CUSTOM_INTERFACE( Message &message )
-    {
-        message.Store( mMember, 1, Flag );
-    }
-
-    T mMember;
-};
 
 int main( int argc, char **argv )
 {
@@ -55,17 +31,14 @@ int main( int argc, char **argv )
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
     _CrtSetReportMode( _CRT_ASSERT, _CRTDBG_MODE_FILE );
     _CrtSetReportFile( _CRT_ASSERT, _CRTDBG_FILE_STDERR );
-    //_crtBreakAlloc =  ;
+    _crtBreakAlloc = 0;
 #endif
 
     testing::InitGoogleTest( &argc, argv );
 
-    Primitive< int8_t, 1 > c1( std::numeric_limits<float>::max() ), c2( 1.0f );
-    SimpleSerialiseDeserialiseStream( c1, c2 );
-
     int result = RUN_ALL_TESTS();
 
-    //system( "pause" );
+    system( "pause" );
 
     return result;
 }

@@ -28,7 +28,7 @@
 BinarySerialiser::BinarySerialiser( std::ostream &stream )
     : mStream( &stream ),
       mBufferIndex( 0 ),
-      mBufferSize( sizeof( mBuffer ) )
+      mBufferSize( SERIALISERS_BUFFERSIZE )
 {
 }
 

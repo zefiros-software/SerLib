@@ -326,7 +326,7 @@ void Message::DisposeSerialisables()
     {
         uint32_t index = *it;
         mSerialisables->at( index )->Dispose();
-        mSerialisables->at( index ) = NULL;
+		mSerialisables->at( index ) = NULL;
     }
 
     mIndexes->clear();
@@ -335,7 +335,4 @@ void Message::DisposeSerialisables()
 
     holder.GetPool< std::vector< ISerialiseData * > >().Dispose( mSerialisables );
     holder.GetPool< std::vector< uint32_t > >().Dispose( mIndexes );
-
-	mSerialisables = NULL;
-mIndexes = NULL;
 }

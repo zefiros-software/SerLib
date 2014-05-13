@@ -26,6 +26,7 @@
 
 #include "interface/abstractSerialiser.h"
 #include "interface/ISerialiseData.h"
+#include "interface/ISerialisable.h"
 
 #include "types.h"
 
@@ -47,7 +48,72 @@ public:
     virtual Internal::Type::Type GetType() const
     {
         return Internal::Type::Repeated;
-    }
+	}
+
+	inline virtual void Store( std::string &, const uint32_t, const Mode::Mode )
+	{
+		StoreError();
+	};
+
+	inline virtual void Store( uint8_t &, const uint32_t, const Mode::Mode )
+	{
+		StoreError();
+	}
+
+	inline virtual void Store( uint16_t &, const uint32_t, const Mode::Mode )
+	{
+		StoreError();
+	}
+
+	inline virtual void Store( uint32_t &, const uint32_t, const Mode::Mode )
+	{
+		StoreError();
+	}
+
+	inline virtual void Store( uint64_t &, const uint32_t, const Mode::Mode )
+	{
+		StoreError();
+	}
+
+	inline virtual void Store( int8_t &, const uint32_t, const Mode::Mode )
+	{
+		StoreError();
+	}
+
+	inline virtual void Store( int16_t &, const uint32_t, const Mode::Mode )
+	{
+		StoreError();
+	}
+
+	inline virtual void Store( int32_t &, const uint32_t, const Mode::Mode )
+	{
+		StoreError();
+	}
+
+	inline virtual void Store( int64_t &, const uint32_t, const Mode::Mode )
+	{
+		StoreError();
+	}
+
+	inline virtual void Store( float &, const uint32_t, const Mode::Mode )
+	{
+		StoreError();
+	}
+
+	inline virtual void Store( double &, const uint32_t, const Mode::Mode )
+	{
+		StoreError();
+	}
+
+	inline virtual void Store( ISerialisable &, const uint32_t, const Mode::Mode )
+	{
+		StoreError();
+	}
+
+	inline void StoreError() const
+	{
+		throw std::invalid_argument( "Invalid conversion" );
+	}
 };
 
 #endif

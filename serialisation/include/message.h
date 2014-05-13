@@ -28,6 +28,7 @@
 #include "interface/IPrimitiveData.h"
 #include "interface/ISerialiseData.h"
 
+#include "repeatedData.h"
 #include "poolHolder.h"
 
 #include <stdint.h>
@@ -125,6 +126,18 @@ public:
 
     void StoreRepeated( double &value, const uint32_t index, const uint32_t repeatedIndex );
 
+    template< typename T >
+    void StoreVector( typename std::vector< T > &vector, const uint32_t index, const uint32_t flags = 0x00 )
+    {
+        CreateRepeated( ( Type::Type )Internal::Type::GetEnum< T >(), vector.size(), index, flags );
+        vector.resize( Count( index ) );
+
+        RepeatedData< SerialiseData< T > > *const data = static_cast< RepeatedData< SerialiseData< T > > * >(
+                    mSerialisables->at( index ) );
+
+		data->Store( vector, mMode );
+    }
+
 protected:
 
     std::vector< uint32_t > *mIndexes;
@@ -211,8 +224,8 @@ protected:
 
         assert( data->GetType() == Internal::Type::Repeated );
 
-        static_cast< IPrimitiveData * >(
-            static_cast< AbstractRepeatedData * >( data )->GetSerialisable( repeatedIndex ) )->Store( value, mMode );
+        AbstractRepeatedData *const rData = static_cast< AbstractRepeatedData * >( data );
+        rData->Store( value, repeatedIndex, mMode );
     }
 };
 
@@ -231,6 +244,18 @@ void ObjectPool< Message >::Dispose( Message *const object )
     {
         delete object;
     }
+}
+
+template<>
+Message *ObjectPool< Message >::Get()
+{
+    Message *const message = CreateInstance();
+
+    PoolHolder &holder = PoolHolder::Get();
+    message->mIndexes = holder.GetPool< std::vector< uint32_t > >().Get();
+    message->mSerialisables = holder.GetPool< std::vector< ISerialiseData * > >().Get();
+
+    return message;
 }
 
 #endif

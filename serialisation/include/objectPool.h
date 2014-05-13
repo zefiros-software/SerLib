@@ -33,7 +33,7 @@ class ObjectPool
 {
 public:
 
-    ObjectPool( const std::size_t capacity = 500 )
+    ObjectPool( const std::size_t capacity = 0 )
         : mCapacity( capacity ),
           mBorrowedCount( 0 ),
           mReturnedCount( 0 )
@@ -57,6 +57,25 @@ public:
         return CreateInstance();
     }
 
+    void GetMultiple( typename std::vector< T * > &vector, const size_t count )
+    {
+        mBorrowedCount += count;
+
+        const size_t size = mPool.size();
+        const size_t actualCount = count > size ? size : count;
+
+		typename std::vector< T * >::iterator begin = mPool.begin() + size - actualCount;
+		typename std::vector< T * >::iterator end = mPool.end();
+
+        vector.insert( vector.end(), begin, end );
+		mPool.erase( begin, end );
+
+        for ( size_t i = size; i < count; ++i )
+        {
+            vector.push_back( new T() );
+        }
+    }
+
     void Dispose( T *const object )
     {
         ++mReturnedCount;
@@ -69,6 +88,23 @@ public:
         {
             delete object;
         }
+    }
+
+    void DisposeMultiple( typename std::vector< T * > &vector, typename std::vector< T * >::iterator begin,
+                          typename std::vector< T * >::iterator end )
+    {
+        const size_t remaining = mCapacity - mPool.size();
+        const size_t count = end - begin;
+        const size_t actualCount = count < remaining ? count : remaining;
+
+        mPool.insert( mPool.end(), begin, begin + actualCount );
+
+        for ( typename std::vector< T * >::iterator it = begin + actualCount; it != end; ++it )
+        {
+            delete *it;
+        }
+
+        vector.erase( begin, end );
     }
 
     std::size_t GetBorrowedCount() const

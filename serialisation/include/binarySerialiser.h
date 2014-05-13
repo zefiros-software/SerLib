@@ -26,6 +26,7 @@
 
 #include "interface/abstractSerialiser.h"
 
+#include "defines.h"
 #include "types.h"
 
 #include <iostream>
@@ -80,7 +81,7 @@ protected:
     size_t mBufferIndex;
     size_t mBufferSize;
 
-    char mBuffer[ 256 ];
+    char mBuffer[ SERIALISERS_BUFFERSIZE ];
 
     void WriteHeader( uint32_t index, Internal::Type::Type type );
 

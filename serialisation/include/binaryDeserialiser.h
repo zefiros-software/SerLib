@@ -26,6 +26,7 @@
 
 #include "interface/abstractDeserialiser.h"
 
+#include "defines.h"
 #include "message.h"
 #include "types.h"
 
@@ -44,7 +45,7 @@ public:
 protected:
 
     std::istream *mStream;
-    char mBuffer[ 256 ];
+    char mBuffer[ SERIALISERS_BUFFERSIZE ];
     size_t mBufferIndex;
     size_t mBufferSize;
 
@@ -100,7 +101,7 @@ protected:
         const size_t remaining = mBufferSize - mBufferIndex;
         memcpy( mBuffer, mBuffer + mBufferIndex, remaining );
         mBufferIndex = 0;
-        mStream->read( mBuffer + remaining, sizeof( mBuffer ) - remaining );
+        mStream->read( mBuffer + remaining, SERIALISERS_BUFFERSIZE - remaining );
         mBufferSize = remaining + ( uint32_t )mStream->gcount();
     }
 

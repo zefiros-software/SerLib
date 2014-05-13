@@ -25,14 +25,16 @@
 #define __SERIALISATION_REPEATEDDATA_H__
 
 #include "interface/abstractRepeatedData.h"
+#include "interface/ISerialisable.h"
 
+#include "serialiseData.h"
 #include "poolHolder.h"
 
 #include <vector>
 
 class AbstractSerialiser;
 
-template< typename DataType >
+template< typename T >
 class RepeatedData
     : public AbstractRepeatedData
 {
@@ -43,13 +45,37 @@ public:
     {
     }
 
-	~RepeatedData()
-	{
-		for (typename std::vector< DataType * >::iterator it = mFields.begin(), end = mFields.end(); it != end; ++it )
-		{
-			PoolHolder::Get().GetPool< DataType >().Dispose( *it );
-		}
-	}
+    ~RepeatedData()
+    {
+    }
+
+    void Store( T &value, const uint32_t repeatedIndex, const Mode::Mode mode )
+    {
+        if ( mode == Mode::Serialise )
+        {
+            mValues[ repeatedIndex ] = value;
+        }
+        else
+        {
+            value = mValues[ repeatedIndex ];
+        }
+    }
+
+    void StoreVector( typename std::vector< T > &vector, const Mode::Mode mode )
+    {
+        if ( mode == Mode::Serialise )
+        {
+            size_t size = vector.size();
+            mValues.resize( size );
+            memcpy( &mValues.front(), &vector.front(), size * sizeof( T ) );
+        }
+        else
+        {
+            size_t size = mValues.size();
+            vector.resize( size );
+            memcpy( &vector.front(), &mValues.front(), size * sizeof( T ) );
+        }
+    }
 
     virtual uint32_t GetFlags() const
     {
@@ -61,52 +87,19 @@ public:
         mFlags = flags;
     }
 
-    virtual ISerialiseData *GetSerialisable( const uint32_t index )
-    {
-        return GetConcreteSerialisable( index );
-    }
-
-    virtual DataType *GetConcreteSerialisable( const uint32_t index )
-    {
-        return mFields.at( index );
-    }
-
     virtual Internal::Type::Type GetSubType() const
     {
-        return Internal::Type::GetEnum< DataType >();
+        return Internal::Type::GetEnum< SerialiseData< T > >();
     }
 
     virtual void Resize( const size_t size )
     {
-        const size_t oldSize = mFields.size();
-
-        ObjectPool< DataType > &pool = PoolHolder::Get().GetPool< DataType >();
-
-        if ( oldSize < size )
-        {
-            for ( size_t i = oldSize; i < size; ++i )
-            {
-                DataType *const field = pool.Get();
-                field->SetFlags( mFlags );
-                mFields.push_back( field );
-            }
-        }
-        else
-        {
-            for ( size_t i = 0, end = size - oldSize; i < end; ++i )
-            {
-                DataType *const field = mFields.back();
-                mFields.pop_back();
-
-                field->SetFlags( 0x00 );
-                pool.Dispose( field );
-            }
-        }
+        mValues.resize( size );
     }
 
     virtual uint32_t Count() const
     {
-        return ( uint32_t )mFields.size();
+        return ( uint32_t )mValues.size();
     }
 
     virtual void SerialiseTo( AbstractSerialiser *const serialiser )
@@ -114,15 +107,106 @@ public:
         serialiser->Serialise( this );
     }
 
+    void Dispose()
+    {
+        PoolHolder::Get().GetPool< RepeatedData< T > >().Dispose( this );
+    }
+
 protected:
 
-    std::vector< DataType * > mFields;
+    std::vector< T > mValues;
     uint32_t mFlags;
+};
+
+template<>
+class RepeatedData< Message >
+{
+public:
+
+    RepeatedData( const uint32_t flags = 0x00 )
+        : mFlags( flags )
+    {
+    }
+
+    ~RepeatedData()
+    {
+        DisposeMessages();
+    }
+
+    void Store( ISerialisable &value, const uint32_t repeatedIndex, const Mode::Mode mode )
+    {
+        Message *const message = mMessages[ repeatedIndex ];
+        message->SetMode( mode );
+        value.SERIALISATION_CUSTOM_INTERFACE( *message );
+    }
+
+    void StoreVector( std::vector< ISerialisable > &vector, const Mode::Mode mode )
+    {
+        for ( uint32_t i = 0, end = vector.size(); i < end; ++i )
+        {
+            Store( vector[ i ], i, mode );
+        }
+    }
+
+    virtual uint32_t GetFlags() const
+    {
+        return mFlags;
+    }
+
+    virtual void SetFlags( const uint32_t flags )
+    {
+        mFlags = flags;
+    }
+
+    virtual Internal::Type::Type GetSubType() const
+    {
+        return Internal::Type::Variable;
+    }
+
+    virtual void Resize( const size_t size )
+    {
+        size_t mesSize = mMessages.size();
+        ObjectPool< Message > &pool = PoolHolder::Get().GetPool< Message >();
+
+        if ( size > mesSize )
+        {
+            pool.GetMultiple( mMessages, size - mesSize );
+        }
+        else
+        {
+            pool.DisposeMultiple( mMessages, mMessages.begin() + mesSize, mMessages.end() );
+        }
+    }
+
+    virtual uint32_t Count() const
+    {
+        return ( uint32_t )mMessages.size();
+    }
+
+    virtual void SerialiseTo( AbstractSerialiser *const serialiser )
+    {
+        serialiser->Serialise( this );
+    }
 
     void Dispose()
-	{
-		PoolHolder::Get().GetPool< RepeatedData< DataType > >().Dispose( this );
-	}
+    {
+        DisposeMessages();
+
+        PoolHolder::Get().GetPool< RepeatedData< Message > >().Dispose( this );
+    }
+
+    void DisposeMessages()
+    {
+        ObjectPool< Message > &pool = PoolHolder::Get().GetPool< Message >();
+
+        pool.DisposeMultiple( mMessages, mMessages.begin(), mMessages.end() );
+    }
+
+protected:
+
+    std::vector< Message * > mMessages;
+    uint32_t mFlags;
+
 };
 
 #endif

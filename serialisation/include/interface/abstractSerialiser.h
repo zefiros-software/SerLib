@@ -63,6 +63,8 @@ protected:
     virtual void Serialise( SerialiseData< float > *const data ) = 0;
 
     virtual void Serialise( SerialiseData< double > *const data ) = 0;
+
+    virtual void Serialise( RepeatedData< Message > *const data ) = 0;
 };
 
 #endif

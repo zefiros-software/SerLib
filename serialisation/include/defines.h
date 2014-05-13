@@ -28,4 +28,8 @@
 #   define SERIALISATION_CUSTOM_INTERFACE OnStore
 #endif
 
+#ifndef SERIALISERS_BUFFERSIZE
+#	define SERIALISERS_BUFFERSIZE 1024
+#endif
+
 #endif
