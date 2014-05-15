@@ -33,7 +33,7 @@ class ObjectPool
 {
 public:
 
-    ObjectPool( const std::size_t capacity = 0 )
+    ObjectPool( const std::size_t capacity = 5000 )
         : mCapacity( capacity ),
           mBorrowedCount( 0 ),
           mReturnedCount( 0 )

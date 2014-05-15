@@ -8,7 +8,6 @@
 
 class AbstractRepeatedData;
 class ISerialiseData;
-class VarIntData;
 class Message;
 
 template< typename T >
@@ -17,7 +16,6 @@ class SerialiseData;
 class AbstractSerialiser
 {
     friend class Message;
-    friend class VarIntData;
 
     template< typename T >
     friend class RepeatedData;
@@ -34,37 +32,51 @@ protected:
 
     virtual void Serialise( ISerialiseData *const data );
 
-    virtual void Prepare( ISerialiseData *const data, const uint32_t index, const uint32_t flags ) = 0;
+	virtual void Serialise( Message *const message ) = 0;
 
-    virtual void Serialise( AbstractRepeatedData *const repeated ) = 0;
+	virtual void Serialise( SerialiseData< std::string > *const data ) = 0;
 
-    virtual void Serialise( Message *const message ) = 0;
+	virtual void Serialise( SerialiseData< uint8_t > *const data ) = 0;
 
-    virtual void Serialise( SerialiseData< std::string > *const data ) = 0;
+	virtual void Serialise( SerialiseData< uint16_t > *const data ) = 0;
 
-    virtual void Serialise( SerialiseData< uint8_t > *const data ) = 0;
+	virtual void Serialise( SerialiseData< uint32_t > *const data ) = 0;
 
-    virtual void Serialise( SerialiseData< uint16_t > *const data ) = 0;
+	virtual void Serialise( SerialiseData< uint64_t > *const data ) = 0;
 
-    virtual void Serialise( SerialiseData< uint32_t > *const data ) = 0;
+	virtual void Serialise( SerialiseData< int8_t > *const data ) = 0;
 
-    virtual void Serialise( SerialiseData< uint64_t > *const data ) = 0;
+	virtual void Serialise( SerialiseData< int16_t > *const data ) = 0;
 
-    virtual void Serialise( VarIntData *const data ) = 0;
+	virtual void Serialise( SerialiseData< int32_t > *const data ) = 0;
 
-    virtual void Serialise( SerialiseData< int8_t > *const data ) = 0;
+	virtual void Serialise( SerialiseData< int64_t > *const data ) = 0;
 
-    virtual void Serialise( SerialiseData< int16_t > *const data ) = 0;
+	virtual void Serialise( SerialiseData< float > *const data ) = 0;
 
-    virtual void Serialise( SerialiseData< int32_t > *const data ) = 0;
+	virtual void Serialise( SerialiseData< double > *const data ) = 0;
 
-    virtual void Serialise( SerialiseData< int64_t > *const data ) = 0;
+	virtual void Serialise( RepeatedData< std::string > *const data ) = 0;
 
-    virtual void Serialise( SerialiseData< float > *const data ) = 0;
+	virtual void Serialise( RepeatedData< uint8_t > *const data ) = 0;
 
-    virtual void Serialise( SerialiseData< double > *const data ) = 0;
+	virtual void Serialise( RepeatedData< uint16_t > *const data ) = 0;
 
-    virtual void Serialise( RepeatedData< Message > *const data ) = 0;
+	virtual void Serialise( RepeatedData< uint32_t > *const data ) = 0;
+
+	virtual void Serialise( RepeatedData< uint64_t > *const data ) = 0;
+
+	virtual void Serialise( RepeatedData< int8_t > *const data ) = 0;
+
+	virtual void Serialise( RepeatedData< int16_t > *const data ) = 0;
+
+	virtual void Serialise( RepeatedData< int32_t > *const data ) = 0;
+
+	virtual void Serialise( RepeatedData< int64_t > *const data ) = 0;
+
+	virtual void Serialise( RepeatedData< float > *const data ) = 0;
+
+	virtual void Serialise( RepeatedData< double > *const data ) = 0;
 };
 
 #endif

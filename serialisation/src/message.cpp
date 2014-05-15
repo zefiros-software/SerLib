@@ -24,7 +24,6 @@
 #include "interface/ISerialisable.h"
 
 #include "repeatedData.h"
-#include "varIntData.h"
 #include "defines.h"
 #include "message.h"
 
@@ -188,51 +187,51 @@ void Message::CreateRepeated( Type::Type type, uint32_t size, const uint32_t ind
                 break;
 
             case Type::String:
-                data = CreateDataType< RepeatedData< SerialiseData< std::string > > >( flags );
+                data = CreateDataType< RepeatedData< std::string > >( flags );
                 break;
 
             case Type::UInt8:
-                data = CreateDataType< RepeatedData< SerialiseData< uint8_t > > >( flags );
+                data = CreateDataType< RepeatedData< uint8_t > >( flags );
                 break;
 
             case Type::UInt16:
-                data = CreateDataType< RepeatedData< SerialiseData< uint16_t > > >( flags );
+                data = CreateDataType< RepeatedData< uint16_t > >( flags );
                 break;
 
             case Type::UInt32:
-                data = CreateDataType< RepeatedData< SerialiseData< uint32_t > > >( flags );
+                data = CreateDataType< RepeatedData< uint32_t > >( flags );
                 break;
 
             case Type::UInt64:
-                data = CreateDataType< RepeatedData< SerialiseData< uint64_t > > >( flags );
+                data = CreateDataType< RepeatedData< uint64_t > >( flags );
                 break;
 
             case Type::SInt8:
-                data = CreateDataType< RepeatedData< SerialiseData< int8_t > > >( flags );
+                data = CreateDataType< RepeatedData< int8_t > >( flags );
                 break;
 
             case Type::SInt16:
-                data = CreateDataType< RepeatedData< SerialiseData< int16_t > > >( flags );
+                data = CreateDataType< RepeatedData< int16_t > >( flags );
                 break;
 
             case Type::SInt32:
-                data = CreateDataType< RepeatedData< SerialiseData< int32_t > > >( flags );
+                data = CreateDataType< RepeatedData< int32_t > >( flags );
                 break;
 
             case Type::SInt64:
-                data = CreateDataType< RepeatedData< SerialiseData< int64_t > > >( flags );
+                data = CreateDataType< RepeatedData< int64_t > >( flags );
                 break;
 
             case Type::Float:
-                data = CreateDataType< RepeatedData< SerialiseData< float > > >( flags );
+                data = CreateDataType< RepeatedData< float > >( flags );
                 break;
 
             case Type::Double:
-                data = CreateDataType< RepeatedData< SerialiseData< double > > >( flags );
+                data = CreateDataType< RepeatedData< double > >( flags );
                 break;
 
             default:
-                data = CreateDataType< RepeatedData< VarIntData > >( flags );
+                data = CreateDataType< RepeatedData< uint64_t > >( flags );
                 break;
             }
 
@@ -250,7 +249,7 @@ void Message::StoreRepeated( ISerialisable *const value, const uint32_t index, c
     assert( data->GetType() == Internal::Type::Repeated );
 
     AbstractRepeatedData *rdata = static_cast< AbstractRepeatedData * >( data );
-    static_cast< Message * >( rdata->GetSerialisable( repeatedIndex ) )->Store( value, mMode );
+    //rdata->Store( *value, repeatedIndex, mMode );
 }
 
 void Message::StoreRepeated( std::string &value, const uint32_t index, const uint32_t repeatedIndex )
@@ -326,7 +325,7 @@ void Message::DisposeSerialisables()
     {
         uint32_t index = *it;
         mSerialisables->at( index )->Dispose();
-		mSerialisables->at( index ) = NULL;
+        mSerialisables->at( index ) = NULL;
     }
 
     mIndexes->clear();

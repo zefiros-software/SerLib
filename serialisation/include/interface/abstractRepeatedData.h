@@ -37,8 +37,6 @@ class AbstractRepeatedData
 {
 public:
 
-    virtual ISerialiseData *GetSerialisable( const uint32_t index ) = 0;
-
     virtual Internal::Type::Type GetSubType() const = 0;
 
     virtual uint32_t Count() const = 0;
@@ -50,70 +48,27 @@ public:
         return Internal::Type::Repeated;
 	}
 
-	inline virtual void Store( std::string &, const uint32_t, const Mode::Mode )
-	{
-		StoreError();
-	};
+	virtual void Store( std::string &value, const uint32_t repeatedIndex, const Mode::Mode mode ) = 0;
 
-	inline virtual void Store( uint8_t &, const uint32_t, const Mode::Mode )
-	{
-		StoreError();
-	}
+	virtual void Store( uint8_t &value, const uint32_t repeatedIndex, const Mode::Mode mode ) = 0;
 
-	inline virtual void Store( uint16_t &, const uint32_t, const Mode::Mode )
-	{
-		StoreError();
-	}
+	virtual void Store( uint16_t &value, const uint32_t repeatedIndex, const Mode::Mode mode ) = 0;
 
-	inline virtual void Store( uint32_t &, const uint32_t, const Mode::Mode )
-	{
-		StoreError();
-	}
+	virtual void Store( uint32_t &value, const uint32_t repeatedIndex, const Mode::Mode mode ) = 0;
 
-	inline virtual void Store( uint64_t &, const uint32_t, const Mode::Mode )
-	{
-		StoreError();
-	}
+	virtual void Store( uint64_t &value, const uint32_t repeatedIndex, const Mode::Mode mode ) = 0;
 
-	inline virtual void Store( int8_t &, const uint32_t, const Mode::Mode )
-	{
-		StoreError();
-	}
+	virtual void Store( int8_t &value, const uint32_t repeatedIndex, const Mode::Mode mode ) = 0;
 
-	inline virtual void Store( int16_t &, const uint32_t, const Mode::Mode )
-	{
-		StoreError();
-	}
+	virtual void Store( int16_t &value, const uint32_t repeatedIndex, const Mode::Mode mode ) = 0;
 
-	inline virtual void Store( int32_t &, const uint32_t, const Mode::Mode )
-	{
-		StoreError();
-	}
+	virtual void Store( int32_t &value, const uint32_t repeatedIndex, const Mode::Mode mode ) = 0;
 
-	inline virtual void Store( int64_t &, const uint32_t, const Mode::Mode )
-	{
-		StoreError();
-	}
+	virtual void Store( int64_t &value, const uint32_t repeatedIndex, const Mode::Mode mode ) = 0;
 
-	inline virtual void Store( float &, const uint32_t, const Mode::Mode )
-	{
-		StoreError();
-	}
+	virtual void Store( float &value, const uint32_t repeatedIndex, const Mode::Mode mode ) = 0;
 
-	inline virtual void Store( double &, const uint32_t, const Mode::Mode )
-	{
-		StoreError();
-	}
-
-	inline virtual void Store( ISerialisable &, const uint32_t, const Mode::Mode )
-	{
-		StoreError();
-	}
-
-	inline void StoreError() const
-	{
-		throw std::invalid_argument( "Invalid conversion" );
-	}
+	virtual void Store( double &value, const uint32_t repeatedIndex, const Mode::Mode mode ) = 0;
 };
 
 #endif

@@ -23,7 +23,6 @@
 #include "message.h"
 #include "binarySerialiser.h"
 #include "repeatedData.h"
-#include "varIntData.h"
 
 BinarySerialiser::BinarySerialiser( std::ostream &stream )
     : mStream( &stream ),
@@ -38,10 +37,8 @@ void BinarySerialiser::SerialiseMessage( Message &message )
     FlushBuffer();
 }
 
-void BinarySerialiser::Prepare( ISerialiseData *const data, const uint32_t index, const uint32_t flags )
+void BinarySerialiser::Prepare( Internal::Type::Type type, const uint32_t index, const uint32_t flags )
 {
-    Internal::Type::Type type = data->GetType();
-
     if ( ( flags & Message::Packed ) &&
             Internal::Type::IsInteger( type ) &&
             type != Internal::Type::UInt8 &&
@@ -63,12 +60,6 @@ void BinarySerialiser::Prepare( ISerialiseData *const data, const uint32_t index
     }
 
     WriteHeader( index, type );
-
-    if ( type == Internal::Type::Repeated )
-    {
-        AbstractRepeatedData *const repeated = static_cast< AbstractRepeatedData * >( data );
-        Prepare( repeated->GetSerialisable( 0 ), repeated->Count(), flags );
-    }
 }
 
 void BinarySerialiser::Serialise( Message *const message )
@@ -81,7 +72,20 @@ void BinarySerialiser::Serialise( Message *const message )
         std::pair< uint32_t, ISerialiseData * > data = AbstractSerialiser::GetFromMessage( message, i );
 
         ISerialiseData *sData = data.second;
-        Prepare( sData, data.first, sData->GetFlags() );
+
+        Internal::Type::Type type = sData->GetType();
+
+        if ( type == Internal::Type::Repeated )
+        {
+            WriteHeader( data.first, type );
+
+            AbstractRepeatedData *rData = static_cast< AbstractRepeatedData * >( sData );
+            Prepare( rData->GetSubType(), rData->Count(), rData->GetFlags() );
+        }
+        else
+        {
+            Prepare( type, data.first, sData->GetFlags() );
+        }
 
         AbstractSerialiser::Serialise( data.second );
     }
@@ -111,11 +115,6 @@ void BinarySerialiser::Serialise( SerialiseData< uint32_t > *const data )
 }
 
 void BinarySerialiser::Serialise( SerialiseData< uint64_t > *const data )
-{
-    SerialiseNum( data->GetValue(), data->GetFlags() );
-}
-
-void BinarySerialiser::Serialise( VarIntData *const data )
 {
     SerialiseNum( data->GetValue(), data->GetFlags() );
 }
@@ -162,11 +161,75 @@ void BinarySerialiser::Serialise( SerialiseData< double > *const data )
     SerialiseNum( value, data->GetFlags() & ~Message::Packed );
 }
 
-void BinarySerialiser::Serialise( AbstractRepeatedData *const data )
+void BinarySerialiser::Serialise( RepeatedData< std::string > *const data )
 {
-    for ( uint32_t i = 0, end = data->Count(); i < end; ++i )
+    std::vector< std::string > &values = data->GetValues();
+
+    for ( std::vector< std::string >::iterator it = values.begin(), end = values.end(); it != end; ++it )
     {
-        AbstractSerialiser::Serialise( data->GetSerialisable( i ) );
+        const size_t size = it->size();
+        WriteVarInt( size );
+        WriteBytes( it->c_str(), size );
+    }
+}
+
+void BinarySerialiser::Serialise( RepeatedData< uint8_t > *const data )
+{
+    WriteBytes( &data->GetValues().front(), data->Count() );
+}
+
+void BinarySerialiser::Serialise( RepeatedData< uint16_t > *const data )
+{
+    SerialiseRepeatedUNum( data );
+}
+
+void BinarySerialiser::Serialise( RepeatedData< uint32_t > *const data )
+{
+    SerialiseRepeatedUNum( data );
+}
+
+void BinarySerialiser::Serialise( RepeatedData< uint64_t > *const data )
+{
+    SerialiseRepeatedUNum( data );
+}
+
+void BinarySerialiser::Serialise( RepeatedData< int8_t > *const data )
+{
+    WriteBytes( &data->GetValues().front(), data->Count() );
+}
+
+void BinarySerialiser::Serialise( RepeatedData< int16_t > *const data )
+{
+    SerialiseRepeatedSNum< uint16_t >( data );
+}
+
+void BinarySerialiser::Serialise( RepeatedData< int32_t > *const data )
+{
+    SerialiseRepeatedSNum< uint32_t >( data );
+}
+
+void BinarySerialiser::Serialise( RepeatedData< int64_t > *const data )
+{
+    SerialiseRepeatedSNum< uint64_t >( data );
+}
+
+void BinarySerialiser::Serialise( RepeatedData< float > *const data )
+{
+	std::vector< float > &values = data->GetValues();
+    for ( std::vector< float >::iterator it = values.begin(), end = values.end(); it != end; ++it )
+    {
+        uint32_t flexman = Util::FloatToUInt32( *it );
+        WriteBytes( &flexman, sizeof( uint32_t ) );
+    }
+}
+
+void BinarySerialiser::Serialise( RepeatedData< double > *const data )
+{
+	std::vector< double > &values = data->GetValues();
+	for ( std::vector< double >::iterator it = values.begin(), end = values.end(); it != end; ++it )
+    {
+        uint64_t flexman = Util::DoubleToUInt64( *it );
+        WriteBytes( &flexman, sizeof( uint64_t ) );
     }
 }
 

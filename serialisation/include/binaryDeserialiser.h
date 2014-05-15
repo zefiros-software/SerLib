@@ -64,13 +64,10 @@ protected:
     template< typename T >
     void DeserialiseRepeatedNum( Message &message, const uint32_t index, const uint32_t size )
     {
-        T value;
+        RepeatedData< T > *const data = 
+			static_cast< RepeatedData< T > * >( AbstractDeserialiser::GetFromMessage< RepeatedData< T > >( message, index ) );
 
-        for ( uint32_t i = 0; i < size; ++i )
-        {
-            ReadBytes( &value, sizeof( T ) );
-            message.StoreRepeated( value, index, i );
-        }
+        ReadBytes( &*data->GetValues().begin(), size * sizeof( T ) );
     }
 
     template< typename T >

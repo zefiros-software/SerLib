@@ -3,29 +3,26 @@
 #define __SERIALISATION_POOLS_H__
 
 #include "repeatedData.h"
-#include "varIntData.h"
 #include "objectPool.h"
 #include "message.h"
 
 struct Pools
 {
     ObjectPool< RepeatedData< Message > > RMessagePool;
-    ObjectPool< RepeatedData< SerialiseData< std::string > > > RStringPool;
+    ObjectPool< RepeatedData< std::string > > RStringPool;
 
-    ObjectPool< RepeatedData< SerialiseData< uint8_t > > > RU8Pool;
-    ObjectPool< RepeatedData< SerialiseData< uint16_t > > > RU16Pool;
-    ObjectPool< RepeatedData< SerialiseData< uint32_t > > > RU32Pool;
-    ObjectPool< RepeatedData< SerialiseData< uint64_t > > > RU64Pool;
+    ObjectPool< RepeatedData< uint8_t > > RU8Pool;
+    ObjectPool< RepeatedData< uint16_t > > RU16Pool;
+    ObjectPool< RepeatedData< uint32_t > > RU32Pool;
+    ObjectPool< RepeatedData< uint64_t > > RU64Pool;
 
-    ObjectPool< RepeatedData< VarIntData > > RVarIntPool;
+    ObjectPool< RepeatedData< int8_t > > RS8Pool;
+    ObjectPool< RepeatedData< int16_t > > RS16Pool;
+    ObjectPool< RepeatedData< int32_t > > RS32Pool;
+    ObjectPool< RepeatedData< int64_t > > RS64Pool;
 
-    ObjectPool< RepeatedData< SerialiseData< int8_t > > > RS8Pool;
-    ObjectPool< RepeatedData< SerialiseData< int16_t > > > RS16Pool;
-    ObjectPool< RepeatedData< SerialiseData< int32_t > > > RS32Pool;
-    ObjectPool< RepeatedData< SerialiseData< int64_t > > > RS64Pool;
-
-    ObjectPool< RepeatedData< SerialiseData< float > > > RFloatPool;
-    ObjectPool< RepeatedData< SerialiseData< double > > > RDoublePool;
+    ObjectPool< RepeatedData< float > > RFloatPool;
+    ObjectPool< RepeatedData< double > > RDoublePool;
 
     ObjectPool< Message > MessagePool;
     ObjectPool< SerialiseData< std::string > > StringPool;
@@ -34,8 +31,6 @@ struct Pools
     ObjectPool< SerialiseData< uint16_t > > U16Pool;
     ObjectPool< SerialiseData< uint32_t > > U32Pool;
     ObjectPool< SerialiseData< uint64_t > > U64Pool;
-
-    ObjectPool< VarIntData > VarIntPool;
 
     ObjectPool< SerialiseData< int8_t > > S8Pool;
     ObjectPool< SerialiseData< int16_t > > S16Pool;

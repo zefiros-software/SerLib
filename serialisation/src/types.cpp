@@ -39,73 +39,67 @@ Internal::Type::Type Internal::Type::GetEnum< Message >()
 }
 
 template<>
-Internal::Type::Type Internal::Type::GetEnum< SerialiseData< std::string > >()
+Internal::Type::Type Internal::Type::GetEnum<  std::string >()
 {
     return Internal::Type::String;
 }
 
 template<>
-Internal::Type::Type Internal::Type::GetEnum< SerialiseData< uint8_t > >()
+Internal::Type::Type Internal::Type::GetEnum< uint8_t >()
 {
     return Type::UInt8;
 }
 
 template<>
-Internal::Type::Type Internal::Type::GetEnum< SerialiseData< uint16_t > >()
+Internal::Type::Type Internal::Type::GetEnum< uint16_t >()
 {
     return Type::UInt16;
 }
 
 template<>
-Internal::Type::Type Internal::Type::GetEnum< SerialiseData< uint32_t > >()
+Internal::Type::Type Internal::Type::GetEnum< uint32_t >()
 {
     return Type::UInt32;
 }
 
 template<>
-Internal::Type::Type Internal::Type::GetEnum< SerialiseData< uint64_t > >()
+Internal::Type::Type Internal::Type::GetEnum< uint64_t >()
 {
     return Type::UInt64;
 }
 
 template<>
-Internal::Type::Type Internal::Type::GetEnum< VarIntData >()
-{
-    return Type::VarInt;
-}
-
-template<>
-Internal::Type::Type Internal::Type::GetEnum< SerialiseData< int8_t > >()
+Internal::Type::Type Internal::Type::GetEnum< int8_t >()
 {
     return Type::SInt8;
 }
 
 template<>
-Internal::Type::Type Internal::Type::GetEnum< SerialiseData< int16_t > >()
+Internal::Type::Type Internal::Type::GetEnum< int16_t >()
 {
     return Type::SInt16;
 }
 
 template<>
-Internal::Type::Type Internal::Type::GetEnum< SerialiseData< int32_t > >()
+Internal::Type::Type Internal::Type::GetEnum< int32_t >()
 {
     return Type::SInt32;
 }
 
 template<>
-Internal::Type::Type Internal::Type::GetEnum< SerialiseData< int64_t > >()
+Internal::Type::Type Internal::Type::GetEnum< int64_t >()
 {
     return Type::SInt64;
 }
 
 template<>
-Internal::Type::Type Internal::Type::GetEnum< SerialiseData< float > >()
+Internal::Type::Type Internal::Type::GetEnum< float >()
 {
     return Type::Float;
 }
 
 template<>
-Internal::Type::Type Internal::Type::GetEnum< SerialiseData< double > >()
+Internal::Type::Type Internal::Type::GetEnum< double >()
 {
     return Type::Double;
 }

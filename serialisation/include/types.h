@@ -28,13 +28,20 @@
 #include <string>
 
 class Message;
-class VarIntData;
 
 template< typename T >
 class SerialiseData;
 
 namespace Internal
 {
+	namespace Flags
+	{
+		enum Flags
+		{
+			Packed = 0x01
+		};
+	}
+
     namespace Type
     {
         // underlying type is uint8_t
@@ -70,40 +77,37 @@ namespace Internal
         Type GetEnum< class Message >();
 
         template<>
-        Type GetEnum< SerialiseData< std::string > >();
+        Type GetEnum< std::string >();
 
         template<>
-        Type GetEnum< SerialiseData< uint8_t > >();
+        Type GetEnum< uint8_t >();
 
         template<>
-        Type GetEnum< SerialiseData< uint16_t > >();
+        Type GetEnum< uint16_t >();
 
         template<>
-        Type GetEnum< SerialiseData< uint32_t > >();
+        Type GetEnum< uint32_t >();
 
         template<>
-        Type GetEnum< SerialiseData< uint64_t > >();
+        Type GetEnum< uint64_t >();
 
         template<>
-        Type GetEnum< VarIntData >();
+        Type GetEnum< int8_t >();
 
         template<>
-        Type GetEnum< SerialiseData< int8_t > >();
+        Type GetEnum< int16_t >();
 
         template<>
-        Type GetEnum< SerialiseData< int16_t > >();
+        Type GetEnum< int32_t >();
 
         template<>
-        Type GetEnum< SerialiseData< int32_t > >();
+        Type GetEnum< int64_t >();
 
         template<>
-        Type GetEnum< SerialiseData< int64_t > >();
+        Type GetEnum< float >();
 
         template<>
-        Type GetEnum< SerialiseData< float > >();
-
-        template<>
-        Type GetEnum< SerialiseData< double > >();
+        Type GetEnum< double >();
     }
 }
 

@@ -35,7 +35,6 @@ class RepeatedData;
 template< typename T >
 class SerialiseData;
 
-class VarIntData;
 class Message;
 class ISerialiseData;
 
@@ -66,40 +65,37 @@ template<>
 ObjectPool< RepeatedData< Message > > &PoolHolder::GetPool();
 
 template<>
-ObjectPool< RepeatedData< SerialiseData< std::string > > > &PoolHolder::GetPool();
+ObjectPool< RepeatedData< std::string > > &PoolHolder::GetPool();
 
 template<>
-ObjectPool< RepeatedData< SerialiseData< uint8_t > > > &PoolHolder::GetPool();
+ObjectPool< RepeatedData< uint8_t > > &PoolHolder::GetPool();
 
 template<>
-ObjectPool< RepeatedData< SerialiseData< uint16_t > > > &PoolHolder::GetPool();
+ObjectPool< RepeatedData< uint16_t > > &PoolHolder::GetPool();
 
 template<>
-ObjectPool< RepeatedData< SerialiseData< uint32_t > > > &PoolHolder::GetPool();
+ObjectPool< RepeatedData< uint32_t > > &PoolHolder::GetPool();
 
 template<>
-ObjectPool < RepeatedData< SerialiseData< uint64_t > > > &PoolHolder::GetPool();
+ObjectPool < RepeatedData< uint64_t > > &PoolHolder::GetPool();
 
 template<>
-ObjectPool < RepeatedData< VarIntData > > &PoolHolder::GetPool();
+ObjectPool < RepeatedData< int8_t > > &PoolHolder::GetPool();
 
 template<>
-ObjectPool < RepeatedData< SerialiseData< int8_t > > > &PoolHolder::GetPool();
+ObjectPool < RepeatedData< int16_t > > &PoolHolder::GetPool();
 
 template<>
-ObjectPool < RepeatedData< SerialiseData< int16_t > > > &PoolHolder::GetPool();
+ObjectPool < RepeatedData< int32_t > > &PoolHolder::GetPool();
 
 template<>
-ObjectPool < RepeatedData< SerialiseData< int32_t > > > &PoolHolder::GetPool();
+ObjectPool < RepeatedData< int64_t > > &PoolHolder::GetPool();
 
 template<>
-ObjectPool < RepeatedData< SerialiseData< int64_t > > > &PoolHolder::GetPool();
+ObjectPool < RepeatedData< float > > &PoolHolder::GetPool();
 
 template<>
-ObjectPool < RepeatedData< SerialiseData< float > > > &PoolHolder::GetPool();
-
-template<>
-ObjectPool < RepeatedData< SerialiseData< double > > > &PoolHolder::GetPool();
+ObjectPool < RepeatedData< double > > &PoolHolder::GetPool();
 
 template<>
 ObjectPool < Message > &PoolHolder::GetPool();
@@ -118,9 +114,6 @@ ObjectPool < SerialiseData< uint32_t > > &PoolHolder::GetPool();
 
 template<>
 ObjectPool < SerialiseData< uint64_t > > &PoolHolder::GetPool();
-
-template<>
-ObjectPool < VarIntData > &PoolHolder::GetPool();
 
 template<>
 ObjectPool < SerialiseData< int8_t > > &PoolHolder::GetPool();

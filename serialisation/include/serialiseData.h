@@ -28,6 +28,7 @@
 #include "interface/IPrimitiveData.h"
 
 #include "poolHolder.h"
+#include "types.h"
 #include "util.h"
 
 #include <stdexcept>
@@ -46,7 +47,7 @@ public:
 
     virtual Internal::Type::Type GetType() const
     {
-        return Internal::Type::GetEnum< SerialiseData< T > >();
+        return Internal::Type::GetEnum< T >();
     }
 
     virtual uint32_t GetFlags() const
@@ -149,30 +150,44 @@ protected:
     template< typename U, typename S >
     void ZigZagStore( S &value, const Mode::Mode mode )
     {
-        const bool isSerialising = mode == Mode::Serialise;
-
-        U uVal = isSerialising ? Util::ZigZag< S, U >( value ) : 0;
-
-        Store( uVal, mode );
-
-        if ( !isSerialising )
+        if ( mFlags & Internal::Flags::Packed )
         {
-            value = Util::ZagZig< U, S >( uVal );
+            const bool isSerialising = mode == Mode::Serialise;
+
+            U uVal = isSerialising ? Util::ZigZag< S, U >( value ) : 0;
+
+            Store( uVal, mode );
+
+            if ( !isSerialising )
+            {
+                value = Util::ZagZig< U, S >( uVal );
+            }
+        }
+        else
+        {
+            StoreS< U >( value, mode );
         }
     }
 
     template< typename S, typename U >
     void ZagZigStore( U &value, const Mode::Mode mode )
     {
-        const bool isSerialising = mode == Mode::Serialise;
-
-        S sVal = isSerialising ? Util::ZagZig< U, S >( value ) : 0;
-
-        Store( sVal, mode );
-
-        if ( !isSerialising )
+        if ( mFlags & Internal::Flags::Packed )
         {
-            value = Util::ZigZag< S, U >( sVal );
+            const bool isSerialising = mode == Mode::Serialise;
+
+            S sVal = isSerialising ? Util::ZagZig< U, S >( value ) : 0;
+
+            Store( sVal, mode );
+
+            if ( !isSerialising )
+            {
+                value = Util::ZigZag< S, U >( sVal );
+            }
+        }
+        else
+        {
+            StoreS< S >( value, mode );
         }
     }
 
@@ -288,7 +303,7 @@ inline void SerialiseData< double >::Store( double &value, const Mode::Mode mode
 template<>
 inline void SerialiseData< uint8_t >::Store( int8_t &value, const Mode::Mode mode )
 {
-    ZigZagStore< uint8_t >( value, mode );
+    StoreS< uint8_t >( value, mode );
 }
 
 template<>
@@ -312,7 +327,7 @@ inline void SerialiseData< uint64_t >::Store( int64_t &value, const Mode::Mode m
 template<>
 inline void SerialiseData< int8_t >::Store( uint8_t &value, const Mode::Mode mode )
 {
-    ZagZigStore< int8_t >( value, mode );
+    StoreS< int8_t >( value, mode );
 }
 
 template<>
@@ -394,6 +409,7 @@ template<>
 inline void SerialiseData< uint64_t >::Store( int8_t &value, const Mode::Mode mode )
 {
     ZigZagStore< uint8_t >( value, mode );
+
 }
 
 template<>

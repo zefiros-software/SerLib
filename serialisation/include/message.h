@@ -30,6 +30,7 @@
 
 #include "repeatedData.h"
 #include "poolHolder.h"
+#include "store.h"
 
 #include <stdint.h>
 #include <assert.h>
@@ -47,11 +48,14 @@ class Message
     friend class AbstractDeserialiser;
     friend class ObjectPool< Message >;
 
+	template< typename Container >
+	friend void Store::StoreContainer( Message &message, Container &container, const uint32_t index, const uint32_t flags /* = 0x00 */ );
+
 public:
 
     enum Flags
     {
-        Packed = 0x01
+		Packed = Internal::Flags::Packed
     };
 
     Message( Mode::Mode mode = Mode::Serialise );
@@ -125,18 +129,6 @@ public:
     void StoreRepeated( float &value, const uint32_t index, const uint32_t repeatedIndex );
 
     void StoreRepeated( double &value, const uint32_t index, const uint32_t repeatedIndex );
-
-    template< typename T >
-    void StoreVector( typename std::vector< T > &vector, const uint32_t index, const uint32_t flags = 0x00 )
-    {
-        CreateRepeated( ( Type::Type )Internal::Type::GetEnum< T >(), vector.size(), index, flags );
-        vector.resize( Count( index ) );
-
-        RepeatedData< SerialiseData< T > > *const data = static_cast< RepeatedData< SerialiseData< T > > * >(
-                    mSerialisables->at( index ) );
-
-		data->Store( vector, mMode );
-    }
 
 protected:
 

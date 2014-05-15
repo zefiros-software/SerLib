@@ -38,73 +38,67 @@ ObjectPool< RepeatedData< Message > > &PoolHolder::GetPool()
 }
 
 template<>
-ObjectPool< RepeatedData< SerialiseData< std::string > > > &PoolHolder::GetPool()
+ObjectPool< RepeatedData< std::string > > &PoolHolder::GetPool()
 {
     return mPools->RStringPool;
 }
 
 template<>
-ObjectPool< RepeatedData< SerialiseData< uint8_t > > > &PoolHolder::GetPool()
+ObjectPool< RepeatedData< uint8_t > > &PoolHolder::GetPool()
 {
     return mPools->RU8Pool;
 }
 
 template<>
-ObjectPool< RepeatedData< SerialiseData< uint16_t > > > &PoolHolder::GetPool()
+ObjectPool< RepeatedData< uint16_t > > &PoolHolder::GetPool()
 {
     return mPools->RU16Pool;
 }
 
 template<>
-ObjectPool< RepeatedData< SerialiseData< uint32_t > > > &PoolHolder::GetPool()
+ObjectPool< RepeatedData< uint32_t > > &PoolHolder::GetPool()
 {
     return mPools->RU32Pool;
 }
 
 template<>
-ObjectPool< RepeatedData< SerialiseData< uint64_t > > > &PoolHolder::GetPool()
+ObjectPool< RepeatedData< uint64_t > > &PoolHolder::GetPool()
 {
     return mPools->RU64Pool;
 }
 
 template<>
-ObjectPool< RepeatedData< VarIntData > > &PoolHolder::GetPool()
-{
-    return mPools->RVarIntPool;
-}
-
-template<>
-ObjectPool< RepeatedData< SerialiseData< int8_t > > > &PoolHolder::GetPool()
+ObjectPool< RepeatedData< int8_t > > &PoolHolder::GetPool()
 {
     return mPools->RS8Pool;
 }
 
 template<>
-ObjectPool< RepeatedData< SerialiseData< int16_t > > > &PoolHolder::GetPool()
+ObjectPool< RepeatedData< int16_t > > &PoolHolder::GetPool()
 {
     return mPools->RS16Pool;
 }
 
 template<>
-ObjectPool< RepeatedData< SerialiseData< int32_t > > > &PoolHolder::GetPool()
+ObjectPool< RepeatedData< int32_t > > &PoolHolder::GetPool()
 {
     return mPools->RS32Pool;
 }
 
 template<>
-ObjectPool< RepeatedData< SerialiseData< int64_t > > > &PoolHolder::GetPool()
+ObjectPool< RepeatedData< int64_t > > &PoolHolder::GetPool()
 {
     return mPools->RS64Pool;
 }
 
 template<>
-ObjectPool< RepeatedData< SerialiseData< float > > > &PoolHolder::GetPool()
+ObjectPool< RepeatedData< float > > &PoolHolder::GetPool()
 {
     return mPools->RFloatPool;
 }
 
 template<>
-ObjectPool< RepeatedData< SerialiseData< double > > > &PoolHolder::GetPool()
+ObjectPool< RepeatedData< double > > &PoolHolder::GetPool()
 {
     return mPools->RDoublePool;
 }
@@ -143,12 +137,6 @@ template<>
 ObjectPool< SerialiseData< uint64_t > > &PoolHolder::GetPool()
 {
     return mPools->U64Pool;
-}
-
-template<>
-ObjectPool< VarIntData > &PoolHolder::GetPool()
-{
-    return mPools->VarIntPool;
 }
 
 template<>

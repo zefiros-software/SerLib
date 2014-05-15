@@ -44,9 +44,7 @@ public:
 
 protected:
 
-    virtual void Prepare( ISerialiseData *const data, const uint32_t index, const uint32_t flags );
-
-    virtual void Serialise( AbstractRepeatedData *const data );
+    virtual void Prepare( Internal::Type::Type type, const uint32_t index, const uint32_t flags );
 
     virtual void Serialise( Message *const message );
 
@@ -60,8 +58,6 @@ protected:
 
     virtual void Serialise( SerialiseData< uint64_t > *const data );
 
-    virtual void Serialise( VarIntData *const data );
-
     virtual void Serialise( SerialiseData< int8_t > *const data );
 
     virtual void Serialise( SerialiseData< int16_t > *const data );
@@ -73,6 +69,28 @@ protected:
     virtual void Serialise( SerialiseData< float > *const data );
 
     virtual void Serialise( SerialiseData< double > *const data );
+
+    virtual void Serialise( RepeatedData< std::string > *const data );
+
+    virtual void Serialise( RepeatedData< uint8_t > *const data );
+
+    virtual void Serialise( RepeatedData< uint16_t > *const data );
+
+    virtual void Serialise( RepeatedData< uint32_t > *const data );
+
+    virtual void Serialise( RepeatedData< uint64_t > *const data );
+
+    virtual void Serialise( RepeatedData< int8_t > *const data );
+
+    virtual void Serialise( RepeatedData< int16_t > *const data );
+
+    virtual void Serialise( RepeatedData< int32_t > *const data );
+
+    virtual void Serialise( RepeatedData< int64_t > *const data );
+
+    virtual void Serialise( RepeatedData< float > *const data );
+
+    virtual void Serialise( RepeatedData< double > *const data );
 
 protected:
 
@@ -95,6 +113,43 @@ protected:
         else
         {
             WriteBytes( &value, sizeof( T ) );
+        }
+    }
+
+    template< typename T >
+    void SerialiseRepeatedUNum( RepeatedData< T > *const data )
+    {
+        typename std::vector< T > &values = data->GetValues();
+
+        if ( data->GetFlags() & Message::Packed )
+        {
+            for ( typename std::vector< T >::iterator it = values.begin(), end = values.end(); it != end; ++it )
+            {
+                WriteVarInt( ( uint64_t )*it );
+            }
+        }
+        else
+        {
+            WriteBytes( &values.front(), data->Count() * sizeof( T ) );
+        }
+    }
+
+    template< typename U, typename S >
+    void SerialiseRepeatedSNum( RepeatedData< S > *const data )
+    {
+        typename std::vector< S > &values = data->GetValues();
+
+        if ( data->GetFlags() & Message::Packed )
+        {
+            for ( typename std::vector< S >::iterator it = values.begin(), end = values.end(); it != end; ++it )
+            {
+                U uVal = Util::ZigZag< S, U >( *it );
+                WriteVarInt( ( uint64_t )uVal );
+            }
+        }
+        else
+        {
+            WriteBytes( &values.front(), data->Count() * sizeof( S ) );
         }
     }
 

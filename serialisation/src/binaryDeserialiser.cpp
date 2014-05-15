@@ -123,7 +123,7 @@ void BinaryDeserialiser::DeserialiseRepeated( Message &message, const uint32_t i
 
             for ( uint32_t i = 0; i < size; ++i )
             {
-                DeserialiseMessage( *repeated->GetConcreteSerialisable( i ) );
+                /////////DeserialiseMessage( *repeated->GetConcreteSerialisable( i ) );
             }
         }
         break;
