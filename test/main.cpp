@@ -19,10 +19,109 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include "serialisation/message.h"
+
 #include "gtest/gtest.h"
 
 #include <iostream>
 #include <cstdio>
+
+class Testclass
+    : public ISerialisable
+{
+public:
+
+    Testclass()
+    {
+        std::stringstream ss;
+        ss << std::rand();
+
+        mValue1 = std::rand();
+
+        while ( ( mValue2 = Util::UInt32ToFloat( std::rand() ) ) == std::numeric_limits< float >::infinity() );
+
+        mValue3 = ss.str();
+    }
+
+    void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+    {
+        message.Store( mValue1, 0 );
+        message.Store( mValue2, 1 );
+        message.Store( mValue3, 2 );
+    }
+
+private:
+
+    uint32_t mValue1;
+    float mValue2;
+    std::string mValue3;
+};
+
+class Testclass2
+	: public ISerialisable
+{
+public:
+
+	Testclass2()
+	{
+		std::stringstream ss;
+		ss << std::rand();
+
+		mValue1 = std::rand();
+
+		while ( ( mValue2 = Util::UInt32ToFloat( std::rand() ) ) == std::numeric_limits< float >::infinity() );
+
+		mValue3 = ss.str();
+	}
+
+	void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+	{
+		message.Store( mValue4, 3 );
+		message.Store( mValue3, 2 );
+		message.Store( mValue2, 1 );
+		message.Store( mValue1, 0 );
+	}
+
+private:
+
+	uint32_t mValue1;
+	float mValue2;
+	std::string mValue3;
+	Testclass mValue4;
+};
+
+class Testclass3
+	: public ISerialisable
+{
+public:
+
+	Testclass3()
+	{
+		std::stringstream ss;
+		ss << std::rand();
+
+		mValue1 = std::rand();
+
+		while ( ( mValue2 = Util::UInt32ToFloat( std::rand() ) ) == std::numeric_limits< float >::infinity() );
+
+		mValue3 = ss.str();
+	}
+
+	void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+	{
+		message.Store( mValue3, 2 );
+		message.Store( mValue2, 1 );
+		message.Store( mValue1, 0 );
+		message.Store( mValue4, 3 );
+	}
+
+private:
+
+	uint32_t mValue1;
+	float mValue2;
+	std::string mValue3;
+	Testclass mValue4;
+};
 
 int main( int argc, char **argv )
 {
@@ -34,11 +133,23 @@ int main( int argc, char **argv )
     //_crtBreakAlloc = 139;
 #endif
 
-    testing::InitGoogleTest( &argc, argv );
+    //testing::InitGoogleTest( &argc, argv );
 
-    int result = RUN_ALL_TESTS();
+    //int result = RUN_ALL_TESTS();
+
+    std::stringstream ss;
+
+    Message message( ss );
+    Testclass2 tc;
+    Testclass3 tc2;
+
+    message.Store( tc );
+    message.SetMode( Mode::Deserialise );
+    message.Store( tc2 );
+
+    std::cout << ss.str() << std::endl;
 
     system( "pause" );
 
-    return result;
+    //return result;
 }

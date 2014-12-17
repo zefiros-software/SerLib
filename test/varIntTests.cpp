@@ -21,7 +21,7 @@
  */
 
 #include "helper.h"
-#include "util.h"
+#include "serialisation/util.h"
 
 #include "gtest/gtest.h"
 

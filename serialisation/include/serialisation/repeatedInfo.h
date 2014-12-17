@@ -21,53 +21,28 @@
  */
 
 #pragma once
-#ifndef __SERIALISATION_UTIL_H__
-#define __SERIALISATION_UTIL_H__
+#ifndef __SERIALISATION_REPEATEDINFO_H__
+#define __SERIALISATION_REPEATEDINFO_H__
 
 #include "types.h"
 
-#include <stdint.h>
-
-namespace Util
+struct RepeatedInfo
 {
-    uint32_t FloatToUInt32( const float f );
+    uint32_t Flags;
+    uint32_t RemainingCount;
+    Internal::Type::Type Type;
 
-    float UInt32ToFloat( const uint32_t i );
-
-    uint64_t DoubleToUInt64( const double f );
-
-    double UInt64ToDouble( const uint64_t i );
-
-    template< typename T >
-    uint8_t CalculateVarIntSize( T val )
+    RepeatedInfo( const Internal::Type::Type type, const uint32_t remainingCount, const uint32_t flags )
+        : Type( type ), RemainingCount( remainingCount ), Flags( flags )
     {
-        uint8_t size = 1;
-
-        for ( val >>= 7; val > 0; val >>= 7 )
-        {
-            ++size;
-        }
-
-        return size;
     }
 
-    template< typename S, typename U >
-    U ZigZag( const S s )
+    void Set( const Internal::Type::Type type, const uint32_t remainingCount, const uint32_t flags )
     {
-        return ( s >> ( ( sizeof( S ) << 3 ) - 1 ) ) ^ ( s << 1 );
+        Type = type;
+        RemainingCount = remainingCount;
+        Flags = flags;
     }
-
-    template< typename U, typename S >
-    S ZagZig( const U u )
-    {
-        return ( u >> 1 ) ^ ( -( ( S )u & 1 ) );
-    }
-
-    uint64_t CreateHeader( const uint32_t index, const Internal::Type::Type t );
-
-    Internal::Type::Type GetHeaderType( const uint64_t header );
-
-    uint32_t GetHeaderIndex( const uint64_t header );
-}
+};
 
 #endif

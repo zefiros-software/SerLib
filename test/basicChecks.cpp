@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-#include "serialisation.h"
+#include "serialisation/serialisation.h"
 #include "helper.h"
 
 #include "gtest/gtest.h"

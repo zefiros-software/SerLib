@@ -20,23 +20,20 @@
  * THE SOFTWARE.
  */
 
-#include "reflect.h"
+#pragma once
+#ifndef __SERIALISATION_IINTERMEDIATEDATA_H__
+#define __SERIALISATION_IINTERMEDIATEDATA_H__
 
-#include <assert.h>
+#include "serialisation/streamBuffer.h"
+#include "serialisation/defines.h"
+#include "serialisation/types.h"
 
-const std::string &Reflect::Get( const uint32_t index ) const
+class IIntermediateData
 {
-    const Map::const_iterator it = mNames.find( index );
-    assert( it != mNames.end() );
-    return it->second;
-}
+public:
 
-void Reflect::Set( const uint32_t index, const std::string &name )
-{
-    mNames.insert( std::pair< uint32_t, std::string >( index, name ) );
-}
+    virtual Internal::Type::Type GetType() const = 0;
+	virtual void ReadFrom( StreamBuffer< SERIALISERS_BUFFERSIZE > &streamBuffer ) = 0;
+};
 
-bool Reflect::Exists( const uint32_t index ) const
-{
-    return mNames.find( index ) != mNames.end();
-}
+#endif

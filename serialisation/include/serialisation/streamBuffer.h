@@ -1,0 +1,160 @@
+/**
+ * Copyright (c) 2014 Mick van Duijn, Koen Visscher and Paul Visscher
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+#pragma once
+#ifndef __SERIALISATION_STREAMBUFFER_H__
+#define __SERIALISATION_STREAMBUFFER_H__
+
+#include "serialisation/types.h"
+
+#include <fstream>
+
+template< uint32_t BufferSize >
+class StreamBuffer
+{
+public:
+
+    StreamBuffer( std::string &fileName )
+        : mFileStream( fileName ), mStream( &mFileStream )
+    {
+    }
+
+    StreamBuffer( std::iostream &stream )
+        : mStream( &stream ), mReadIndex( 0 ), mReadSize( 0 ), mWriteIndex( 0 ), mWriteSize( 0 )
+    {
+
+    }
+
+    StreamBuffer( StreamBuffer< BufferSize > &buffer )
+        : mStream( buffer.mStream ), mReadIndex( buffer.mReadIndex ), mReadSize( buffer.mReadSize ), mWriteIndex( buffer.mWriteIndex ),
+          mWriteSize( buffer.mWriteSize )
+    {
+        memcpy( mReadBuffer, buffer.mReadBuffer, BufferSize );
+        memcpy( mWriteBuffer, buffer.mWriteBuffer, BufferSize );
+    }
+
+    ~StreamBuffer()
+    {
+        ClearReadBuffer();
+        FlushWriteBuffer();
+
+        if ( mFileStream.is_open() )
+        {
+            mFileStream.close();
+        }
+    }
+
+    template< typename T >
+    void WriteBytes( const T *firstByte, const int32_t byteCount )
+    {
+        const int32_t diff = BufferSize - mWriteIndex;
+        const int32_t diff2 = byteCount - diff;
+
+        const int8_t *c = reinterpret_cast< const int8_t * >( firstByte );
+
+        if ( diff2 <= 0 )
+        {
+            memcpy( mWriteBuffer + mWriteIndex, c, byteCount );
+            mWriteIndex += byteCount;
+        }
+        else
+        {
+            memcpy( mWriteBuffer + mWriteIndex, c, diff );
+            mWriteIndex += diff;
+            FlushWriteBuffer();
+            WriteBytes( c + diff, diff2 );
+        }
+    }
+
+    template< typename T >
+    void ReadBytes( T *firstByte, const size_t byteCount )
+    {
+        char *c = reinterpret_cast< char * >( firstByte );
+        const int32_t diff = mReadSize - mReadIndex;
+        const int32_t diff2 = byteCount - diff;
+
+        if ( diff2 <= 0 )
+        {
+            memcpy( c, mReadBuffer + mReadIndex, byteCount );
+            mReadIndex += byteCount;
+        }
+        else
+        {
+            memcpy( c, mReadBuffer + mReadIndex, diff );
+            mReadIndex += diff;
+            FillReadBuffer();
+
+            char *size = c + diff;
+            ReadBytes( size, diff2 );
+        }
+    }
+
+    void FlushWriteBuffer()
+    {
+        mStream->write( mWriteBuffer, mWriteIndex );
+        mStream->flush();
+        mWriteIndex = 0;
+    }
+
+    void ClearReadBuffer()
+    {
+        //mStream->write(mReadBuffer+mReadIndex,mReadSize-mReadIndex);
+        mStream->seekg( ( int32_t )( mReadIndex - mReadSize ), std::ios::cur );
+        mReadIndex = 0;
+        mReadSize = 0;
+    }
+
+    StreamBuffer< BufferSize > &operator=( StreamBuffer< BufferSize > buffer )
+    {
+        mStream =  buffer.mStream;
+        mReadIndex = buffer.mReadIndex;
+        mReadSize = buffer.mReadSize;
+        mWriteIndex = buffer.mWriteIndex;
+        mWriteSize = buffer.mWriteSize;
+        memcpy( mReadBuffer, buffer.mReadBuffer, BufferSize );
+        memcpy( mWriteBuffer, buffer.mWriteBuffer, BufferSize );
+        return *this;
+    }
+
+private:
+
+    std::fstream mFileStream;
+
+    std::iostream *mStream;
+
+    int32_t mWriteIndex, mWriteSize;
+    int32_t mReadIndex, mReadSize;
+
+    char mReadBuffer[ BufferSize ];
+    char mWriteBuffer[ BufferSize ];
+
+    void FillReadBuffer()
+    {
+        const size_t remaining = mReadSize - mReadIndex;
+        memcpy( mReadBuffer, mReadBuffer + mReadIndex, remaining );
+        mReadIndex = 0;
+        mStream->get( mReadBuffer + remaining, BufferSize - remaining );
+        mReadSize = remaining + ( uint32_t )mStream->gcount();
+    }
+};
+
+#endif

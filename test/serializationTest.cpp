@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-#include "serialisation.h"
+#include "serialisation/serialisation.h"
 #include "helper.h"
 
 #include "gtest/gtest.h"
@@ -113,7 +113,7 @@ namespace TestClasses
 
         void SERIALISATION_CUSTOM_INTERFACE( Message &message )
         {
-            for ( uint32_t i = 0; i < its; ++i )
+            for ( uint8_t i = 0; i < its; ++i )
             {
                 message.Store( mMember[i], i, Flag );
             }
@@ -171,7 +171,7 @@ namespace TestClasses
     };
 
 
-    template< typename T, typename S, typename R, uint32_t its = 100, uint32_t Flag = 0x00 >
+    template< typename T, typename S, typename R, uint8_t its = 100, uint32_t Flag = 0x00 >
     class TestClass2
         : public ISerialisable
     {
@@ -191,9 +191,9 @@ namespace TestClasses
 
         void SERIALISATION_CUSTOM_INTERFACE( Message &message )
         {
-            for ( uint32_t i = 0; i < its; ++i )
+            for ( uint8_t i = 0; i < its; ++i )
             {
-                uint32_t j = 3 * i;
+                uint8_t j = 3 * i;
                 message.Store( mMemberT[i], j, Flag );
                 message.Store( mMemberS[i], j + 1, Flag );
                 message.Store( mMemberR[i], j + 2, Flag );

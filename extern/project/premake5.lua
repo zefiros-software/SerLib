@@ -44,14 +44,22 @@ solution "serialisation"
 	configuration "Release"		
 		flags "LinkTimeOptimization"
 		optimize "Speed"
+		
+	configuration { "**util_x64-86.asm", "vs*" }
+
+	buildcommands {
+	   "ml64.exe /c  /nologo /Fo$(OutDir)util_x64-86.obj /W3 /Zi /Ta %(Identity)"
+	}
+
+	buildoutputs {
+	   "$(OutDir)util_x64-86.obj;%(Outputs)"
+	}
 				
 	configuration {}
 			
 	project "serialisation-test"
 		location(  root .. "test/" )
-		
-		links "Serialisation"
-		
+				
 		kind "ConsoleApp"
 		flags "WinMain"
 		defines "GTEST_HAS_TR1_TUPLE=0"
@@ -94,6 +102,5 @@ solution "serialisation"
 			}	
 			
 		files { 
-			root .. "serialisation/include/**.h",
-			root .. "serialisation/src/**.cpp"
+			root .. "serialisation/include/serialisation/**.h",
 			}

@@ -28,11 +28,7 @@
 #define CONCAT( a, b ) CONCATEXT( a, b )
 #define P( prefix ) CONCAT( PREFIX, prefix )
 
-#include "interface/abstractSerialiser.h"
-
-#include "binaryDeserialiser.h"
-#include "binarySerialiser.h"
-#include "message.h"
+#include "serialisation/message.h"
 
 #include <sstream>
 #include <cstdlib>
@@ -43,15 +39,11 @@ void SimpleSerialiseDeserialiseStream( T &c1, T &c2 )
 {
     std::stringstream ss;
     {
-        Message message( Mode::Serialise );
+        Message message( ss, Mode::Serialise );
         c1.SERIALISATION_CUSTOM_INTERFACE( message );
-        BinarySerialiser bs( ss );
-        bs.SerialiseMessage( message );
     }
     {
-        Message message( Mode::Deserialise );
-        BinaryDeserialiser bd( ss );
-        bd.DeserialiseMessage( message );
+        Message message( ss, Mode::Deserialise );
         c2.SERIALISATION_CUSTOM_INTERFACE( message );
     }
 }

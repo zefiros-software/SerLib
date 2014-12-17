@@ -34,13 +34,24 @@ class SerialiseData;
 
 namespace Internal
 {
-	namespace Flags
+	namespace Mode
 	{
-		enum Flags
+		enum Mode
 		{
-			Packed = 0x01
+			Serialise = 0x00,
+			Deserialise = 0x01,
+			PrePass = 0x02,
+			Intermediate = 0x03
 		};
 	}
+
+    namespace Flags
+    {
+        enum Flags
+        {
+            Packed = 0x01
+        };
+    }
 
     namespace Type
     {
@@ -63,51 +74,99 @@ namespace Internal
             Double    = 0x0D
         };
 
-        bool IsInteger( Type type );
+        inline bool IsInteger( Type type )
+        {
+            return ( type >= Type::UInt8 ) && ( type <= SInt64 );
+        }
 
-        bool IsSignedInt( Type type );
+        inline bool IsSignedInt( Type type )
+        {
+            return ( type >= Type::SInt8 ) && ( type <= Type::SInt64 );
+        }
 
         template< typename T >
-        Type GetEnum()
+        inline Type GetEnum()
         {
             return Type::Repeated;
+		}
+
+		template<>
+		inline Type GetEnum< class Message >()
+		{
+			return Type::Variable;
+		}
+
+		template<>
+		inline Type GetEnum< class ISerialisable >()
+		{
+			return Type::Variable;
+		}
+
+        template<>
+        inline Type GetEnum< std::string >()
+        {
+            return Type::String;
         }
 
         template<>
-        Type GetEnum< class Message >();
+        inline Type GetEnum< uint8_t >()
+        {
+            return Type::UInt8;
+        }
 
         template<>
-        Type GetEnum< std::string >();
+        inline Type GetEnum< uint16_t >()
+        {
+            return Type::UInt16;
+        }
 
         template<>
-        Type GetEnum< uint8_t >();
+        inline Type GetEnum< uint32_t >()
+        {
+            return Type::UInt32;
+        }
 
         template<>
-        Type GetEnum< uint16_t >();
+        inline Type GetEnum< uint64_t >()
+        {
+            return Type::UInt64;
+        }
 
         template<>
-        Type GetEnum< uint32_t >();
+        inline Type GetEnum< int8_t >()
+        {
+            return Type::SInt8;
+        }
 
         template<>
-        Type GetEnum< uint64_t >();
+        inline Type GetEnum< int16_t >()
+        {
+            return Type::SInt16;
+        }
 
         template<>
-        Type GetEnum< int8_t >();
+        inline Type GetEnum< int32_t >()
+        {
+            return Type::SInt32;
+        }
 
         template<>
-        Type GetEnum< int16_t >();
+        inline Type GetEnum< int64_t >()
+        {
+            return Type::SInt64;
+        }
 
         template<>
-        Type GetEnum< int32_t >();
+        inline Type GetEnum< float >()
+        {
+            return Type::Float;
+        }
 
         template<>
-        Type GetEnum< int64_t >();
-
-        template<>
-        Type GetEnum< float >();
-
-        template<>
-        Type GetEnum< double >();
+        inline Type GetEnum< double >()
+        {
+            return Type::Double;
+        }
     }
 }
 
@@ -134,8 +193,8 @@ namespace Mode
 {
     enum Mode
     {
-        Serialise   = 0x00,
-        Deserialise = 0x01
+        Serialise   = Internal::Mode::Serialise,
+        Deserialise = Internal::Mode::Deserialise
     };
 }
 

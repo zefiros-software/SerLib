@@ -21,37 +21,18 @@
  */
 
 #pragma once
-#ifndef __SERIALISATION_ISERIALISEDATA_H__
-#define __SERIALISATION_ISERIALISEDATA_H__
+#ifndef __SERIALISATION_ISERIALIZABLE_H__
+#define __SERIALISATION_ISERIALIZABLE_H__
 
-#include "types.h"
+#include "serialisation/defines.h"
 
-#include <iostream>
+class Message;
 
-class AbstractSerialiser;
-
-class ISerialiseData
+class ISerialisable
 {
-    friend class AbstractSerialiser;
-	friend class Message;
-
 public:
 
-    virtual ~ISerialiseData()
-    {
-    }
-
-    virtual Internal::Type::Type GetType() const = 0;
-
-    virtual uint32_t GetFlags() const = 0;
-
-    virtual void SetFlags( const uint32_t flags ) = 0;
-
-protected:
-
-    virtual void SerialiseTo( AbstractSerialiser *const serialiser ) = 0;
-
-	virtual void Dispose() = 0;
+    virtual void SERIALISATION_CUSTOM_INTERFACE( Message &message ) = 0;
 };
 
 #endif

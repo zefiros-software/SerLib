@@ -21,16 +21,51 @@
  */
 
 #pragma once
-#ifndef __SERIALISATION_IREFLECTABLE_H__
-#define __SERIALISATION_IREFLECTABLE_H__
+#ifndef __SERIALISATION_BUFFEREDDATA_H__
+#define __SERIALISATION_BUFFEREDDATA_H__
 
-class Reflect;
+#include "serialisation/interface/IIntermediateData.h"
 
-class IReflectable
+#include "serialisation/defines.h"
+#include "serialisation/types.h"
+
+#include <vector>
+
+template< typename T >
+class IntermediateData
+    : public IIntermediateData
 {
 public:
 
-    virtual void OnReflect( Reflect &reflect ) = 0;
+    Internal::Type::Type GetType() const
+    {
+        return Internal::Type::GetEnum< T >();
+    }
+
+    const T &GetValue() const
+    {
+        return mValue;
+    }
+
+    void ReadFrom( StreamBuffer< SERIALISERS_BUFFERSIZE > &streamBuffer )
+    {
+        streamBuffer.ReadBytes( &mValue, sizeof( T ) );
+    }
+
+private:
+
+    T mValue;
 };
+
+void IntermediateData< std::string >::ReadFrom( StreamBuffer< SERIALISERS_BUFFERSIZE > &streamBuffer )
+{
+    uint32_t size;
+    streamBuffer.ReadBytes( &size, sizeof( uint32_t ) );
+
+    std::vector< char > buffer( size );
+
+    streamBuffer.ReadBytes( &buffer[0], size );
+    mValue = std::string( &buffer[0], size );
+}
 
 #endif
