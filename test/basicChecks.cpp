@@ -77,7 +77,7 @@ namespace
 
         void SERIALISATION_CUSTOM_INTERFACE( Message &message )
         {
-            message.Store( mMember, 1, Flag );
+            message.Store( mMember, 1 );
         }
 
         T mMember;

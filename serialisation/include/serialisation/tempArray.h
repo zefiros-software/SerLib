@@ -21,28 +21,64 @@
  */
 
 #pragma once
-#ifndef __SERIALISATION_REPEATEDINFO_H__
-#define __SERIALISATION_REPEATEDINFO_H__
+#ifndef __SERIALISATION_TEMPARRAY_H__
+#define __SERIALISATION_TEMPARRAY_H__
 
-#include "types.h"
+#include "interface/abstractTempArray.h"
 
-struct RepeatedInfo
+template< typename T >
+class TempArray
+	: public AbstractTempArray
 {
-    uint32_t Flags;
-    uint32_t RemainingCount;
-    Internal::Type::Type Type;
+public:
 
-    RepeatedInfo( const Internal::Type::Type type, const uint32_t remainingCount, const uint32_t flags )
-        : Type( type ), RemainingCount( remainingCount ), Flags( flags )
-    {
-    }
+	Internal::Type::Type GetSubType() const
+	{
+		return Internal::Type::GetEnum< T >();
+	}
 
-    void Set( const Internal::Type::Type type, const uint32_t remainingCount, const uint32_t flags )
-    {
-        Type = type;
-        RemainingCount = remainingCount;
-        Flags = flags;
-    }
+	T* GetData()
+	{
+		return &mValues.front();
+	}
+
+	void Resize( const uint32_t size )
+	{
+		mValues.resize( size );
+	}
+
+	void PushBack( const T &value )
+	{
+		mValues.push_back(value);
+	}
+
+	void PopFront( T &dest )
+	{
+		dest = mValues.front();
+		mValues.erase(mValues.begin());
+	}
+
+	uint32_t GetRemainingCount() const
+	{
+		return mValues.size();
+	}
+
+	~TempArray()
+	{
+
+	}
+
+private:
+
+	std::vector< T > mValues;
 };
+
+TempArray< TempObject * >::~TempArray()
+{
+	for(std::vector<TempObject *>::iterator it = mValues.begin(), end = mValues.end(); it != end; ++it )
+	{
+		delete *it;
+	}
+}
 
 #endif

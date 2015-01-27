@@ -21,19 +21,19 @@
  */
 
 #pragma once
-#ifndef __SERIALISATION_IINTERMEDIATEDATA_H__
-#define __SERIALISATION_IINTERMEDIATEDATA_H__
+#ifndef __SERIALISATION_ITEMPDATA_H__
+#define __SERIALISATION_ITEMPDATA_H__
 
 #include "serialisation/streamBuffer.h"
 #include "serialisation/defines.h"
 #include "serialisation/types.h"
 
-class IIntermediateData
+class ITempData
 {
 public:
 
     virtual Internal::Type::Type GetType() const = 0;
-	virtual void ReadFrom( StreamBuffer< SERIALISERS_BUFFERSIZE > &streamBuffer ) = 0;
+    virtual ~ITempData() {};
 };
 
 #endif

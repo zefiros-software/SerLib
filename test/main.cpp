@@ -130,26 +130,14 @@ int main( int argc, char **argv )
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
     _CrtSetReportMode( _CRT_ASSERT, _CRTDBG_MODE_FILE );
     _CrtSetReportFile( _CRT_ASSERT, _CRTDBG_FILE_STDERR );
-    //_crtBreakAlloc = 139;
+    //_crtBreakAlloc = 4568;
 #endif
 
-    //testing::InitGoogleTest( &argc, argv );
+    testing::InitGoogleTest( &argc, argv );
 
-    //int result = RUN_ALL_TESTS();
-
-    std::stringstream ss;
-
-    Message message( ss );
-    Testclass2 tc;
-    Testclass3 tc2;
-
-    message.Store( tc );
-    message.SetMode( Mode::Deserialise );
-    message.Store( tc2 );
-
-    std::cout << ss.str() << std::endl;
-
+    int result = RUN_ALL_TESTS();
+	
     system( "pause" );
 
-    //return result;
+    return result;
 }

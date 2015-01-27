@@ -21,66 +21,24 @@
  */
 
 #pragma once
-#ifndef __HELPER_H__
-#define __HELPER_H__
+#ifndef __SERIALISATION_ABSTRACTTEMPARRAY_H__
+#define __SERIALISATION_ABSTRACTTEMPARRAY_H__
 
-#define CONCATEXT( a, b ) a##b
-#define CONCAT( a, b ) CONCATEXT( a, b )
-#define P( prefix ) CONCAT( PREFIX, prefix )
+#include "ITempData.h"
 
-#include "serialisation/message.h"
-
-#include <sstream>
-#include <cstdlib>
-#include <limits>
-
-template< typename T >
-void SimpleSerialiseDeserialiseStream( T &c1, T &c2 )
+class AbstractTempArray
+	: public ITempData
 {
-    std::stringstream ss;
-    {
-        Message message( ss, Mode::Serialise );
-		message.Store(c1);
-    }
-    {
-        Message message( ss, Mode::Deserialise );
-        message.Store(c2);
-    }
-}
+public:
 
-template< typename T >
-T GenerateZebraValue()
-{
-    const uint16_t bits = sizeof( T ) << 3;
-    T result = 0;
+	Internal::Type::Type GetType() const
+	{
+		return Internal::Type::Array;
+	}
 
-    for ( uint16_t i = 0; i < bits; ++++i )
-    {
-        result |= ( T )( 1ull << i );
-    }
+	virtual Internal::Type::Type GetSubType() const = 0;
 
-    return result;
-}
-
-template< typename T >
-T GenerateInvZebraValue()
-{
-    return GenerateZebraValue< T >() ^ std::numeric_limits<T>::max();
-}
-
-
-template< typename T >
-T GetRandom()
-{
-    return static_cast< T >( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< T >::max() );
-}
-
-template<>
-float GetRandom< float >();
-
-
-template<>
-double GetRandom< double >();
-
+	virtual uint32_t GetRemainingCount() const = 0;
+};
 
 #endif

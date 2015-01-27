@@ -21,66 +21,64 @@
  */
 
 #pragma once
-#ifndef __HELPER_H__
-#define __HELPER_H__
+#ifndef __SERIALISATION_TEMPOBJECT_H__
+#define __SERIALISATION_TEMPOBJECT_H__
 
-#define CONCATEXT( a, b ) a##b
-#define CONCAT( a, b ) CONCATEXT( a, b )
-#define P( prefix ) CONCAT( PREFIX, prefix )
+#include "interface/ITempData.h"
 
-#include "serialisation/message.h"
+#include <vector>
 
-#include <sstream>
-#include <cstdlib>
-#include <limits>
-
-template< typename T >
-void SimpleSerialiseDeserialiseStream( T &c1, T &c2 )
+class TempObject
+    : public ITempData
 {
-    std::stringstream ss;
-    {
-        Message message( ss, Mode::Serialise );
-		message.Store(c1);
-    }
-    {
-        Message message( ss, Mode::Deserialise );
-        message.Store(c2);
-    }
-}
+public:
 
-template< typename T >
-T GenerateZebraValue()
-{
-    const uint16_t bits = sizeof( T ) << 3;
-    T result = 0;
-
-    for ( uint16_t i = 0; i < bits; ++++i )
+    Internal::Type::Type GetType() const
     {
-        result |= ( T )( 1ull << i );
+        return Internal::Type::Object;
     }
 
-    return result;
-}
+    void AddData( uint8_t index, ITempData *data )
+    {
+        mTempData.push_back( std::pair< uint8_t, ITempData * >( index, data ) );
+    }
 
-template< typename T >
-T GenerateInvZebraValue()
-{
-    return GenerateZebraValue< T >() ^ std::numeric_limits<T>::max();
-}
+    ITempData *TryRemoveData( uint8_t index )
+    {
+        for ( std::vector< std::pair< uint8_t, ITempData * > >::iterator it = mTempData.begin(), end = mTempData.end(); it != end; ++it )
+        {
+			if(it->first == index )
+			{
+				ITempData *data = it->second;
+				mTempData.erase(it);
+				return data;
+			}
+        }
 
+		return NULL;
+    }
 
-template< typename T >
-T GetRandom()
-{
-    return static_cast< T >( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< T >::max() );
-}
+	TempObject()
+		: mTerminatorRead( false )
+	{
 
-template<>
-float GetRandom< float >();
+	}
 
+	bool GetTerminatorRead() const
+	{
+		return mTerminatorRead;
+	}
 
-template<>
-double GetRandom< double >();
+	void SetTerminatorRead()
+	{
+		mTerminatorRead = true;
+	}
 
+private:
+
+    std::vector< std::pair< uint8_t, ITempData * > > mTempData;
+
+	bool mTerminatorRead;
+};
 
 #endif

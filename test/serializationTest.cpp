@@ -29,73 +29,73 @@
 #include <stdio.h>
 #include <vector>
 
-#define TestSerialClass( test, name, type, seed1, seed2, flag, its )      \
+#define TestSerialClass( test, name, type, seed1, seed2, its )      \
     TEST( P( test ), type ## name )                                       \
     {                                                                     \
-        TestClass1< type, its, flag > c1( seed1 ), c2( seed2 );           \
+        TestClass1< type, its > c1( seed1 ), c2( seed2 );           \
         SimpleSerialiseDeserialiseStream( c1, c2 );                       \
         c1.TestEqual( c2 );                                               \
     }
 
-#define TestFSerialClass( test, name, seed1, seed2, flag, its )     \
+#define TestFSerialClass( test, name, seed1, seed2, its )     \
     TEST( P( test ), float ## name )                                \
     {                                                               \
-        TestClass1F< its, flag > c1( seed1 ), c2( seed2 );          \
+        TestClass1F< its > c1( seed1 ), c2( seed2 );          \
         SimpleSerialiseDeserialiseStream( c1, c2 );                 \
         c1.TestEqual( c2 );                                         \
     }
 
-#define TestDSerialClass( test, name, seed1, seed2, flag, its ) \
+#define TestDSerialClass( test, name, seed1, seed2, its ) \
     TEST( P( test ), double ## name )                           \
     {                                                           \
-        TestClass1D< its, flag > c1( seed1 ), c2( seed2 );      \
+        TestClass1D< its > c1( seed1 ), c2( seed2 );      \
         SimpleSerialiseDeserialiseStream( c1, c2 );             \
         c1.TestEqual( c2 );                                     \
     }
 
-#define TestIFDMixedSerialClass( test, name, typeI, seed1, seed2, flag, its )   \
+#define TestIFDMixedSerialClass( test, name, typeI, seed1, seed2, its )   \
     TEST( P( test ), typeI ## name )                                            \
     {                                                                           \
-        TestClass2F1< typeI, its, flag > c1( seed1 ), c2( seed2 );              \
+        TestClass2F1< typeI, its > c1( seed1 ), c2( seed2 );              \
         SimpleSerialiseDeserialiseStream( c1, c2 );                             \
         c1.TestEqual( c2 );                                                     \
     }
 
-#define TestFIDMixedSerialClass( test, name, typeI, seed1, seed2, flag, its )  \
+#define TestFIDMixedSerialClass( test, name, typeI, seed1, seed2, its )  \
     TEST( P( test ), typeI ## name )                                           \
     {                                                                          \
-        TestClass2F2< typeI, its, flag > c1( seed1 ), c2( seed2 );             \
+        TestClass2F2< typeI, its > c1( seed1 ), c2( seed2 );             \
         SimpleSerialiseDeserialiseStream( c1, c2 );                            \
         c1.TestEqual( c2 );                                                    \
     }
 
-#define TestIDIMixedSerialClass( test, name, typeI1, typeI2, seed1, seed2, flag, its )  \
+#define TestIDIMixedSerialClass( test, name, typeI1, typeI2, seed1, seed2, its )  \
     TEST( P( test ), typeI1 ## typeI2 ## name )                                         \
     {                                                                                   \
-        TestClass2F3< typeI1, typeI2, its, flag > c1( seed1 ), c2( seed2 );             \
+        TestClass2F3< typeI1, typeI2, its > c1( seed1 ), c2( seed2 );             \
         SimpleSerialiseDeserialiseStream( c1, c2 );                                     \
         c1.TestEqual( c2 )                                                              \
     }
 
-#define TestEasyRepeatedClass( test, name, seed1, seed2, flag, its ) \
+#define TestEasyRepeatedClass( test, name, seed1, seed2, its ) \
     TEST( P( test ), name )                                          \
     {                                                                \
-        TestClass3< its, flag > c1( seed1 ), c2( seed2 );            \
+        TestClass3< its > c1( seed1 ), c2( seed2 );            \
         SimpleSerialiseDeserialiseStream( c1, c2 );                  \
         c1.TestEqual( c2 );                                          \
     }
 
-#define TestRepeatedPrimitiveMessageClass( test, name, seed1, seed2, flag, its, type )      \
+#define TestRepeatedPrimitiveMessageClass( test, name, seed1, seed2, its, type )      \
     TEST( P( test ), type ## name )                                                         \
     {                                                                                       \
-        TestClass4< Primitive< type, 0x00 >, its, flag, type > c1( seed1 ), c2( seed2 );    \
+        TestClass4< Primitive< type >, its, type > c1( seed1 ), c2( seed2 );    \
         SimpleSerialiseDeserialiseStream( c1, c2 );                                         \
         c1.TestEqual( c2 );                                                                 \
     }
 
 namespace TestClasses
 {
-    template< typename T, uint32_t its = 100, uint32_t Flag = 0x00 >
+    template< typename T, uint32_t its = 32 >
     class TestClass1
         : public ISerialisable
     {
@@ -115,7 +115,7 @@ namespace TestClasses
         {
             for ( uint8_t i = 0; i < its; ++i )
             {
-                message.Store( mMember[i], i, Flag );
+                message.Store( mMember[i], i );
             }
         }
 
@@ -130,18 +130,18 @@ namespace TestClasses
         T mMember[its];
     };
 
-    template< uint32_t its = 100, uint32_t Flag = 0x00 >
+    template< uint32_t its = 32 >
     class TestClass1F
-        : public TestClass1< float, its, Flag >
+        : public TestClass1< float, its >
     {
     public:
 
         TestClass1F( uint32_t seed = 233232 )
-            : TestClass1< float, its, Flag >( seed )
+            : TestClass1< float, its >( seed )
         {
         }
 
-        virtual void TestEqual( TestClass1< float, its, Flag > &c2 )
+        virtual void TestEqual( TestClass1< float, its > &c2 )
         {
             for ( uint32_t i = 0; i < its; ++i )
             {
@@ -150,18 +150,18 @@ namespace TestClasses
         }
     };
 
-    template< uint32_t its = 100, uint32_t Flag = 0x00 >
+    template< uint32_t its = 32 >
     class TestClass1D
-        : public TestClass1< double, its, Flag >
+        : public TestClass1< double, its >
     {
     public:
 
         TestClass1D( uint32_t seed = 233232 )
-            : TestClass1< double, its, Flag >( seed )
+            : TestClass1< double, its >( seed )
         {
         }
 
-        virtual void TestEqual( TestClass1< double, its, Flag > &c2 )
+        virtual void TestEqual( TestClass1< double, its > &c2 )
         {
             for ( uint32_t i = 0; i < its; ++i )
             {
@@ -171,7 +171,7 @@ namespace TestClasses
     };
 
 
-    template< typename T, typename S, typename R, uint8_t its = 100, uint32_t Flag = 0x00 >
+    template< typename T, typename S, typename R, uint8_t its = 10 >
     class TestClass2
         : public ISerialisable
     {
@@ -194,9 +194,9 @@ namespace TestClasses
             for ( uint8_t i = 0; i < its; ++i )
             {
                 uint8_t j = 3 * i;
-                message.Store( mMemberT[i], j, Flag );
-                message.Store( mMemberS[i], j + 1, Flag );
-                message.Store( mMemberR[i], j + 2, Flag );
+                message.Store( mMemberT[i], j );
+                message.Store( mMemberS[i], j + 1 );
+                message.Store( mMemberR[i], j + 2 );
             }
         }
 
@@ -215,18 +215,18 @@ namespace TestClasses
         R mMemberR[its];
     };
 
-    template< typename T, uint32_t its = 100, uint32_t Flag = 0x00 >
+    template< typename T, uint32_t its = 100 >
     class TestClass2F1
-        : public TestClass2< T, float, double, its, Flag >
+        : public TestClass2< T, float, double, its >
     {
     public:
 
         TestClass2F1( uint32_t seed = 233232 )
-            : TestClass2< T, float, double, its, Flag >( seed )
+            : TestClass2< T, float, double, its >( seed )
         {
         }
 
-        virtual void TestEqual( TestClass2< T, float, double, its, Flag > &c2 )
+        virtual void TestEqual( TestClass2< T, float, double, its > &c2 )
         {
             for ( uint32_t i = 0; i < its; ++i )
             {
@@ -237,18 +237,18 @@ namespace TestClasses
         }
     };
 
-    template< typename T, uint32_t its = 100, uint32_t Flag = 0x00 >
+    template< typename T, uint32_t its = 100 >
     class TestClass2F2
-        : public TestClass2< float, T, double, its, Flag >
+        : public TestClass2< float, T, double, its >
     {
     public:
 
         TestClass2F2( uint32_t seed = 233232 )
-            : TestClass2< float, T, double, its, Flag >( seed )
+            : TestClass2< float, T, double, its >( seed )
         {
         }
 
-        virtual void TestEqual( TestClass2< float, T, double, its, Flag > &c2 )
+        virtual void TestEqual( TestClass2< float, T, double, its > &c2 )
         {
             for ( uint32_t i = 0; i < its; ++i )
             {
@@ -259,18 +259,18 @@ namespace TestClasses
         }
     };
 
-    template< typename T, typename R, uint32_t its = 100, uint32_t Flag = 0x00 >
+    template< typename T, typename R, uint32_t its = 100 >
     class TestClass2F3
-        : public TestClass2< T, double, R, its, Flag >
+        : public TestClass2< T, double, R, its >
     {
     public:
 
         TestClass2F3( uint32_t seed = 233232 )
-            : TestClass2< T, double, R, its, Flag >( seed )
+            : TestClass2< T, double, R, its >( seed )
         {
         }
 
-        virtual void TestEqual( TestClass2< T, double, R, its, Flag > &c2 )
+        virtual void TestEqual( TestClass2< T, double, R, its > &c2 )
         {
             for ( uint32_t i = 0; i < its; ++i )
             {
@@ -279,7 +279,7 @@ namespace TestClasses
         }
     };
 
-    template< uint32_t its = 100, uint32_t Flag = 0x00 >
+    template< uint32_t its = 100 >
     class TestClass3
         : public ISerialisable
     {
@@ -312,57 +312,77 @@ namespace TestClasses
 
         void SERIALISATION_CUSTOM_INTERFACE( Message &message )
         {
-            message.CreateRepeated( Type::UInt8, its, 1, Flag );
-            message.CreateRepeated( Type::SInt8, its, 0, Flag );
+            message.CreateArray( Type::UInt8, its, 1 );
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                message.StoreRepeated( mMemberT[i], 1, i );
-                message.StoreRepeated( mMemberTs[i], 0, i );
+                message.StoreArrayItem( mMemberT[i] );
             }
 
-            message.CreateRepeated( Type::UInt16, its, 2, Flag );
-            message.CreateRepeated( Type::SInt16, its, 3, Flag );
+            message.CreateArray( Type::SInt8, its, 0 );
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                message.StoreRepeated( mMemberS[i], 2, i );
-                message.StoreRepeated( mMemberSs[i], 3, i );
+                message.StoreArrayItem( mMemberTs[i] );
             }
 
-            message.CreateRepeated( Type::UInt32, its, 4, Flag );
-            message.CreateRepeated( Type::SInt32, its, 5, Flag );
+            message.CreateArray( Type::UInt16, its, 2 );
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                message.StoreRepeated( mMemberR[i], 4, i );
-                message.StoreRepeated( mMemberRs[i], 5, i );
+                message.StoreArrayItem( mMemberS[i] );
             }
 
-            message.CreateRepeated( Type::UInt64, its, 6, Flag );
-            message.CreateRepeated( Type::SInt64, its, 7, Flag );
+            message.CreateArray( Type::SInt16, its, 3 );
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                message.StoreRepeated( mMemberG[i], 6, i );
-                message.StoreRepeated( mMemberGs[i], 7, i );
+                message.StoreArrayItem( mMemberSs[i] );
             }
 
-            message.Store( name1, 8, Flag );
-            message.Store( name2, 9, Flag );
-
-            message.CreateRepeated( Type::Float, its, 10, Flag );
+            message.CreateArray( Type::UInt32, its, 4 );
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                message.StoreRepeated( mMemberF[i], 10, i );
+                message.StoreArrayItem( mMemberR[i] );
             }
 
-            message.CreateRepeated( Type::Double, its, 11, Flag );
+            message.CreateArray( Type::SInt32, its, 5 );
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                message.StoreRepeated( mMemberD[i], 11, i );
+                message.StoreArrayItem( mMemberRs[i] );
+            }
+
+            message.CreateArray( Type::UInt64, its, 6 );
+
+            for ( uint32_t i = 0; i < its; ++i )
+            {
+                message.StoreArrayItem( mMemberG[i] );
+            }
+
+            message.CreateArray( Type::SInt64, its, 7 );
+
+            for ( uint32_t i = 0; i < its; ++i )
+            {
+                message.StoreArrayItem( mMemberGs[i] );
+            }
+
+            message.Store( name1, 8 );
+            message.Store( name2, 9 );
+
+            message.CreateArray( Type::Float, its, 10 );
+
+            for ( uint32_t i = 0; i < its; ++i )
+            {
+                message.StoreArrayItem( mMemberF[i] );
+            }
+
+            message.CreateArray( Type::Double, its, 11 );
+
+            for ( uint32_t i = 0; i < its; ++i )
+            {
+                message.StoreArrayItem( mMemberD[i] );
             }
 
         }
@@ -381,9 +401,10 @@ namespace TestClasses
                 EXPECT_EQ( mMemberSs[i], c2.mMemberSs[i] );
                 EXPECT_FLOAT_EQ( mMemberF[i], c2.mMemberF[i] );
                 EXPECT_DOUBLE_EQ( mMemberD[i], c2.mMemberD[i] );
-                EXPECT_EQ( name1.compare( c2.name1 ), 0 );
-                EXPECT_EQ( name2.compare( c2.name2 ), 0 );
             }
+
+            EXPECT_EQ( name1.compare( c2.name1 ), 0 );
+            EXPECT_EQ( name2.compare( c2.name2 ), 0 );
         }
 
         std::vector< uint8_t > mMemberT;
@@ -403,7 +424,7 @@ namespace TestClasses
         std::vector< double > mMemberD;
     };
 
-    template< typename T, uint32_t Flag = 0x00 >
+    template< typename T >
     class Primitive
         : public ISerialisable
     {
@@ -416,7 +437,7 @@ namespace TestClasses
 
         void SERIALISATION_CUSTOM_INTERFACE( Message &message )
         {
-            message.Store( mMember, 1, Flag );
+            message.Store( mMember, 1 );
         }
 
         void TestEqual( Primitive &c2 )
@@ -427,7 +448,7 @@ namespace TestClasses
         T mMember;
     };
 
-    template< typename TestClass, uint32_t its = 100, uint32_t Flag = 0x00, typename T = uint32_t >
+    template< typename TestClass, uint32_t its = 100, typename T = uint32_t >
     class TestClass4
         : public ISerialisable
     {
@@ -445,11 +466,11 @@ namespace TestClasses
 
         void SERIALISATION_CUSTOM_INTERFACE( Message &message )
         {
-            message.CreateRepeated( Type::Variable, its, 0, Flag );
+            message.CreateArray( Type::Object, its, 0 );
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                message.StoreRepeated( &mMemberTestClasses[ i ], 0, i );
+                message.StoreArrayItem( mMemberTestClasses[ i ] );
             }
         }
 
@@ -466,71 +487,71 @@ namespace TestClasses
 
 
 
-    TestSerialClass( MultiSerialisation, randomVals, uint8_t, 343422, 21331, 0x00, 100 );
-    TestSerialClass( MultiSerialisation, randomVals, uint16_t, 343422, 21331, 0x00, 100 );
-    TestSerialClass( MultiSerialisation, randomVals, uint32_t, 343422, 21331, 0x00, 100 );
-    TestSerialClass( MultiSerialisation, randomVals, uint64_t, 343422, 21331, 0x00, 100 );
+    TestSerialClass( MultiSerialisation, randomVals, uint8_t, 343422, 21331, 32 );
+    TestSerialClass( MultiSerialisation, randomVals, uint16_t, 343422, 21331, 32 );
+    TestSerialClass( MultiSerialisation, randomVals, uint32_t, 343422, 21331, 32 );
+    TestSerialClass( MultiSerialisation, randomVals, uint64_t, 343422, 21331, 32 );
 
-    TestSerialClass( MultiSerialisation, randomVals, int8_t, 343422, 21331, 0x00, 100 );
-    TestSerialClass( MultiSerialisation, randomVals, int16_t, 343422, 21331, 0x00, 100 );
-    TestSerialClass( MultiSerialisation, randomVals, int32_t, 343422, 21331, 0x00, 100 );
-    TestSerialClass( MultiSerialisation, randomVals, int64_t, 343422, 21331, 0x00, 100 );
+    TestSerialClass( MultiSerialisation, randomVals, int8_t, 343422, 21331, 32 );
+    TestSerialClass( MultiSerialisation, randomVals, int16_t, 343422, 21331, 32 );
+    TestSerialClass( MultiSerialisation, randomVals, int32_t, 343422, 21331, 32 );
+    TestSerialClass( MultiSerialisation, randomVals, int64_t, 343422, 21331, 32 );
 
-    TestFSerialClass( MultiSerialisation, randomVals, 343422, 21331, 0x00, 100 );
-    TestDSerialClass( MultiSerialisation, randomVals, 343422, 21331, 0x00, 100 );
+    TestFSerialClass( MultiSerialisation, randomVals, 343422, 21331, 32 );
+    TestDSerialClass( MultiSerialisation, randomVals, 343422, 21331, 32 );
 
 
-    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, uint8_t, 343422, 21331, 0x00, 100 );
-    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, uint16_t, 343422, 21331, 0x00, 100 );
-    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, uint32_t, 343422, 21331, 0x00, 100 );
-    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, uint64_t, 343422, 21331, 0x00, 100 );
+    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, uint8_t, 343422, 21331, 10 );
+    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, uint16_t, 343422, 21331, 10 );
+    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, uint32_t, 343422, 21331, 10 );
+    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, uint64_t, 343422, 21331, 10 );
 
-    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, int8_t, 343422, 21331, 0x00, 100 );
-    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, int16_t, 343422, 21331, 0x00, 100 );
-    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, int32_t, 343422, 21331, 0x00, 100 );
-    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, int64_t, 343422, 21331, 0x00, 100 );
+    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, int8_t, 343422, 21331, 10 );
+    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, int16_t, 343422, 21331, 10 );
+    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, int32_t, 343422, 21331, 10 );
+    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, int64_t, 343422, 21331, 10 );
 
-    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, uint8_t, 343422, 21331, 0x00, 100 );
-    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, uint16_t, 343422, 21331, 0x00, 100 );
-    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, uint32_t, 343422, 21331, 0x00, 100 );
-    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, uint64_t, 343422, 21331, 0x00, 100 );
+    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, uint8_t, 343422, 21331, 10 );
+    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, uint16_t, 343422, 21331, 10 );
+    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, uint32_t, 343422, 21331, 10 );
+    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, uint64_t, 343422, 21331, 10 );
 
-    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, int8_t, 343422, 21331, 0x00, 100 );
-    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, int16_t, 343422, 21331, 0x00, 100 );
-    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, int32_t, 343422, 21331, 0x00, 100 );
-    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, int64_t, 343422, 21331, 0x00, 100 );
+    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, int8_t, 343422, 21331, 10 );
+    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, int16_t, 343422, 21331, 10 );
+    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, int32_t, 343422, 21331, 10 );
+    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, int64_t, 343422, 21331, 10 );
 
-    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, uint8_t, 343422, 21331, 0x01, 100 );
-    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, uint16_t, 343422, 21331, 0x01, 100 );
-    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, uint32_t, 343422, 21331, 0x01, 100 );
-    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, uint64_t, 343422, 21331, 0x01, 100 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, uint8_t, 343422, 21331, 10 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, uint16_t, 343422, 21331, 10 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, uint32_t, 343422, 21331, 10 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, uint64_t, 343422, 21331, 10 );
 
-    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, int8_t, 343422, 21331, 0x01, 100 );
-    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, int16_t, 343422, 21331, 0x01, 100 );
-    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, int32_t, 343422, 21331, 0x01, 100 );
-    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, int64_t, 343422, 21331, 0x01, 100 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, int8_t, 343422, 21331, 10 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, int16_t, 343422, 21331, 10 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, int32_t, 343422, 21331, 10 );
+    TestIFDMixedSerialClass( PackedMixedIFDSerialisation, randomVals, int64_t, 343422, 21331, 10 );
 
-    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, uint8_t, 343422, 21331, 0x01, 100 );
-    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, uint16_t, 343422, 21331, 0x01, 100 );
-    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, uint32_t, 343422, 21331, 0x01, 100 );
-    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, uint64_t, 343422, 21331, 0x01, 100 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, uint8_t, 343422, 21331, 10 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, uint16_t, 343422, 21331, 10 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, uint32_t, 343422, 21331, 10 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, uint64_t, 343422, 21331, 10 );
 
-    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, int8_t, 343422, 21331, 0x01, 100 );
-    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, int16_t, 343422, 21331, 0x01, 100 );
-    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, int32_t, 343422, 21331, 0x01, 100 );
-    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, int64_t, 343422, 21331, 0x01, 100 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, int8_t, 343422, 21331, 10 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, int16_t, 343422, 21331, 10 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, int32_t, 343422, 21331, 10 );
+    TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, int64_t, 343422, 21331, 10 );
+    
+    TestEasyRepeatedClass( EasyRepeated, randomVals, 343422, 21331, 5 );
+    TestEasyRepeatedClass( EasyRepeatedPacked, randomVals, 343422, 21331, 100 );
 
-    TestEasyRepeatedClass( EasyRepeated, randomVals, 343422, 21331, 0x00, 5 );
-    TestEasyRepeatedClass( EasyRepeatedPacked, randomVals, 343422, 21331, 0x01, 100 );
+    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, uint8_t );
+    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, uint16_t );
+    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, uint32_t );
+    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, uint64_t );
 
-    //TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 0x00, 100, uint8_t );
-    //TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 0x00, 100, uint16_t );
-    //TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 0x00, 100, uint32_t );
-    //TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 0x00, 100, uint64_t );
-
-    //TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 0x00, 100, int8_t );
-    //TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 0x00, 100, int16_t );
-    //TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 0x00, 100, int32_t );
-    //TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 0x00, 100, int64_t );
+    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, int8_t );
+    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, int16_t );
+    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, int32_t );
+    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, int64_t );
 
 }

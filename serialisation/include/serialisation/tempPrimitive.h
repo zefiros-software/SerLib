@@ -21,66 +21,40 @@
  */
 
 #pragma once
-#ifndef __HELPER_H__
-#define __HELPER_H__
+#ifndef __SERIALISATION_TEMPPRIMITIVE_H__
+#define __SERIALISATION_TEMPPRIMITIVE_H__
 
-#define CONCATEXT( a, b ) a##b
-#define CONCAT( a, b ) CONCATEXT( a, b )
-#define P( prefix ) CONCAT( PREFIX, prefix )
+#include "serialisation/interface/ITempData.h"
 
-#include "serialisation/message.h"
+#include "serialisation/defines.h"
+#include "serialisation/types.h"
 
-#include <sstream>
-#include <cstdlib>
-#include <limits>
+#include <vector>
 
 template< typename T >
-void SimpleSerialiseDeserialiseStream( T &c1, T &c2 )
+class TempPrimitive
+    : public ITempData
 {
-    std::stringstream ss;
-    {
-        Message message( ss, Mode::Serialise );
-		message.Store(c1);
-    }
-    {
-        Message message( ss, Mode::Deserialise );
-        message.Store(c2);
-    }
-}
+public:
 
-template< typename T >
-T GenerateZebraValue()
-{
-    const uint16_t bits = sizeof( T ) << 3;
-    T result = 0;
-
-    for ( uint16_t i = 0; i < bits; ++++i )
+    Internal::Type::Type GetType() const
     {
-        result |= ( T )( 1ull << i );
+        return Internal::Type::GetEnum< T >();
     }
 
-    return result;
-}
+    const T &GetValue() const
+    {
+        return mValue;
+    }
 
-template< typename T >
-T GenerateInvZebraValue()
-{
-    return GenerateZebraValue< T >() ^ std::numeric_limits<T>::max();
-}
+	void SetValue( T &value )
+	{
+		mValue = value;
+	}
 
+private:
 
-template< typename T >
-T GetRandom()
-{
-    return static_cast< T >( ( ( double )rand() / RAND_MAX ) * std::numeric_limits< T >::max() );
-}
-
-template<>
-float GetRandom< float >();
-
-
-template<>
-double GetRandom< double >();
-
+    T mValue;
+};
 
 #endif

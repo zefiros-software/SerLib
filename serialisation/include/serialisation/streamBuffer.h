@@ -54,14 +54,19 @@ public:
 
     ~StreamBuffer()
     {
-        ClearReadBuffer();
-        FlushWriteBuffer();
-
-        if ( mFileStream.is_open() )
-        {
-            mFileStream.close();
-        }
+        Close();
     }
+
+	void Close()
+	{
+		ClearReadBuffer();
+		FlushWriteBuffer();
+
+		if ( mFileStream.is_open() )
+		{
+			mFileStream.close();
+		}
+	}
 
     template< typename T >
     void WriteBytes( const T *firstByte, const int32_t byteCount )
@@ -123,18 +128,6 @@ public:
         mReadSize = 0;
     }
 
-    StreamBuffer< BufferSize > &operator=( StreamBuffer< BufferSize > buffer )
-    {
-        mStream =  buffer.mStream;
-        mReadIndex = buffer.mReadIndex;
-        mReadSize = buffer.mReadSize;
-        mWriteIndex = buffer.mWriteIndex;
-        mWriteSize = buffer.mWriteSize;
-        memcpy( mReadBuffer, buffer.mReadBuffer, BufferSize );
-        memcpy( mWriteBuffer, buffer.mWriteBuffer, BufferSize );
-        return *this;
-    }
-
 private:
 
     std::fstream mFileStream;
@@ -152,7 +145,18 @@ private:
         const size_t remaining = mReadSize - mReadIndex;
         memcpy( mReadBuffer, mReadBuffer + mReadIndex, remaining );
         mReadIndex = 0;
-        mStream->get( mReadBuffer + remaining, BufferSize - remaining );
+
+		uint32_t oldPos = (uint32_t)mStream->tellg();
+
+		mStream->seekg(0, std::ios_base::end);
+		uint32_t size = (uint32_t)mStream->tellg() - oldPos;
+		mStream->seekg(oldPos);
+
+		uint32_t remainingBufferSize = BufferSize - remaining;
+
+		uint32_t readSize = remainingBufferSize < size ? remainingBufferSize : size;
+
+        mStream->read( mReadBuffer + remaining, readSize );
         mReadSize = remaining + ( uint32_t )mStream->gcount();
     }
 };

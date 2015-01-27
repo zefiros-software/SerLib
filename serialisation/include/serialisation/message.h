@@ -26,19 +26,21 @@
 
 #include "interface\ISerialisable.h"
 
-#include "intermediateData.h"
+#include "tempPrimitive.h"
 #include "streamBuffer.h"
-#include "repeatedInfo.h"
+#include "tempObject.h"
+#include "arrayInfo.h"
+#include "tempArray.h"
 #include "types.h"
 #include "util.h"
 
-#include <iostream>
 #include <assert.h>
+#include <iostream>
 #include <fstream>
 #include <vector>
+#include <stack>
 
 class Message
-    : public IIntermediateData
 {
 public:
 
@@ -48,31 +50,27 @@ public:
     };
 
     Message( std::iostream &stream, Mode::Mode mode = Mode::Serialise )
-        : mMode( ( Internal::Mode::Mode )mode ), mStreamBuffer( *new StreamBuffer< SERIALISERS_BUFFERSIZE >( stream ) ),
-          mRemainingCount( 0 ),  mStreamBufferCreated( &mStreamBuffer ), mRepeatedInfo( Internal::Type::Repeated, 0, 0 )
+        : mMode( ( Internal::Mode::Mode )mode ), mStreamBuffer( stream ),  mArrayInfo( Internal::Type::Terminator, 0 ),
+          mCurrentArray( NULL )
     {
     }
 
     Message( std::string &fileName, Mode::Mode mode = Mode::Serialise )
-        : mMode( ( Internal::Mode::Mode )mode ), mStreamBuffer( *new StreamBuffer< SERIALISERS_BUFFERSIZE >( fileName ) ),
-          mRemainingCount( 0 ), mStreamBufferCreated( &mStreamBuffer ), mRepeatedInfo( Internal::Type::Repeated, 0, 0 )
+        : mMode( ( Internal::Mode::Mode )mode ), mStreamBuffer( fileName ),  mArrayInfo( Internal::Type::Terminator, 0 ),
+          mCurrentArray( NULL )
     {
 
     }
 
     Message( ISerialisable &serialisable, std::iostream &stream, Mode::Mode mode = Mode::Serialise )
-        : mStreamBuffer( *new StreamBuffer< SERIALISERS_BUFFERSIZE >( stream ) ), mMode( ( Internal::Mode::Mode )mode ),
-          mRemainingCount( 0 ), mStreamBufferCreated( &mStreamBuffer ), mRepeatedInfo( Internal::Type::Repeated, 0, 0 )
+        : mStreamBuffer( stream ), mMode( ( Internal::Mode::Mode )mode ), mArrayInfo( Internal::Type::Array, 0 ), mCurrentArray( NULL )
     {
         Store( serialisable );
     }
 
     ~Message()
     {
-        if ( mStreamBufferCreated )
-        {
-            delete mStreamBufferCreated;
-        }
+        mStreamBuffer.Close();
     }
 
     void SetMode( Mode::Mode mode )
@@ -85,318 +83,365 @@ public:
         return ( Mode::Mode )mMode;
     }
 
-    uint32_t GetFlags() const
+    void Store( ISerialisable &value, const uint8_t index )
     {
-        return mFlags;
+        StoreValue( value, index );
     }
 
-    void SetFlags( const uint32_t flags )
+    void Store( std::string &value, const uint8_t index )
     {
-        mFlags = flags;
+        StoreValue( value, index );
     }
 
-    Internal::Type::Type GetType() const
+    void Store( uint8_t &value, const uint8_t index )
     {
-        return Internal::Type::Variable;
+        StoreValue( value, index );
     }
 
-    void Store( ISerialisable &value, const uint8_t index, const uint32_t flags = 0x00 )
+    void Store( uint16_t &value, const uint8_t index )
     {
-        StoreValue( value, index, flags );
+        StoreValue( value, index );
     }
 
-    void Store( std::string &value, const uint8_t index, const uint32_t flags = 0x00 )
+    void Store( uint32_t &value, const uint8_t index )
     {
-        StoreValue( value, index, flags );
+        StoreValue( value, index );
     }
 
-    void Store( uint8_t &value, const uint8_t index, const uint32_t flags = 0x00 )
+    void Store( uint64_t &value, const uint8_t index )
     {
-        StoreValue( value, index, flags );
+        StoreValue( value, index );
     }
 
-    void Store( uint16_t &value, const uint8_t index, const uint32_t flags = 0x00 )
+    void Store( int8_t &value, const uint8_t index )
     {
-        StoreValue( value, index, flags );
+        StoreValue( value, index );
     }
 
-    void Store( uint32_t &value, const uint8_t index, const uint32_t flags = 0x00 )
+    void Store( int16_t &value, const uint8_t index )
     {
-        StoreValue( value, index, flags );
+        StoreValue( value, index );
     }
 
-    void Store( uint64_t &value, const uint8_t index, const uint32_t flags = 0x00 )
+    void Store( int32_t &value, const uint8_t index )
     {
-        StoreValue( value, index, flags );
+        StoreValue( value, index );
     }
 
-    void Store( int8_t &value, const uint8_t index, const uint32_t flags = 0x00 )
+    void Store( int64_t &value, const uint8_t index )
     {
-        StoreValue( value, index, flags );
+        StoreValue( value, index );
     }
 
-    void Store( int16_t &value, const uint8_t index, const uint32_t flags = 0x00 )
+    void Store( float &value, const uint8_t index )
     {
-        StoreValue( value, index, flags );
+        bool isSerialising = mMode == Mode::Serialise;
+
+        uint32_t flexman = isSerialising ? Util::FloatToUInt32( value ) : 0;
+
+        StoreValue( flexman, index );
+
+        if ( !isSerialising )
+        {
+            value = Util::UInt32ToFloat( flexman );
+        }
     }
 
-    void Store( int32_t &value, const uint8_t index, const uint32_t flags = 0x00 )
+    void Store( double &value, const uint8_t index )
     {
-        StoreValue( value, index, flags );
-    }
+        bool isSerialising = mMode == Mode::Serialise;
 
-    void Store( int64_t &value, const uint8_t index, const uint32_t flags = 0x00 )
-    {
-        StoreValue( value, index, flags );
-    }
+        uint64_t flexman = isSerialising ? Util::DoubleToUInt64( value ) : 0;
 
-    void Store( float &value, const uint8_t index, const uint32_t flags = 0x00 )
-    {
-        StoreValue( value, index, flags );
-    }
+        StoreValue( flexman, index );
 
-    void Store( double &value, const uint8_t index, const uint32_t flags = 0x00 )
-    {
-        StoreValue( value, index, flags );
+        if ( !isSerialising )
+        {
+            value = Util::UInt64ToDouble( flexman );
+        }
     }
 
     void Store( ISerialisable &serialisable )
     {
-        bool isSerialising = mMode == Internal::Mode::Serialise;
-        bool isDeserialising = mMode == Internal::Mode::Deserialise;
+        TempObject *const temp = CreateTempData< TempObject >();
 
-        if ( isSerialising )
-        {
-            mMode = Internal::Mode::PrePass;
-            serialisable.OnStore( *this );
+        Store( serialisable, temp );
 
-            mMode = Internal::Mode::Serialise;
-
-            WriteToStream( mRemainingCount, 0 );
-        }
-        else if ( isDeserialising )
-        {
-            ReadFromStream( mRemainingCount );
-        }
-
-        serialisable.OnStore( *this );
-
-        if ( isSerialising )
-        {
-            mStreamBuffer.FlushWriteBuffer();
-        }
-        else if ( isDeserialising )
-        {
-            mStreamBuffer.ClearReadBuffer();
-        }
+        DeleteTempData( temp );
     }
 
-    uint32_t CreateRepeated( Type::Type type, uint32_t size, const uint8_t index, const uint32_t flags )
+    uint32_t CreateArray( Type::Type type, uint32_t size, const uint8_t index )
     {
         Internal::Type::Type iType = ( Internal::Type::Type )type;
 
-        switch ( mMode )
+        if ( mMode == Internal::Mode::Serialise )
         {
-        case Internal::Mode::Serialise:
+            mArrayInfo.Set( iType, size );
+            WriteHeader( index, Internal::Type::Array );
+            WriteHeader( size, iType );
+        }
+        else
+        {
+            if ( mCurrentArray )
             {
-                mRepeatedInfo.Set( iType, size, flags );
-                WriteHeader( index, Internal::Type::Repeated );
-                WriteHeader( size, iType );
+                DeleteTempData( mCurrentArray );
+                mCurrentArray = NULL;
             }
-            break;
 
-		case Internal::Mode::Deserialise:
-			{
-				std::vector< std::pair< uint8_t, IIntermediateData * > >::iterator it = SearchBuffer( index );
+            AbstractTempArray *temp = static_cast< AbstractTempArray * >( mCurrentObject->TryRemoveData( index ) );
 
-				if ( it != mIntermediateData.end() )
-				{
-					ReadFromIntermediate( value, it );
-					delete it->second;
-					mIntermediateData.erase( it );
-				}
-				else
-				{
+            if ( temp )
+            {
+                mCurrentArray = temp;
+                mArrayInfo.Set( temp->GetSubType(), temp->GetRemainingCount() );
+            }
+            else
+            {
+                if ( mMode == Internal::Mode::Deserialise && !mCurrentObject->GetTerminatorRead() )
+                {
+                    Internal::Type::Type type = ReadUntil( index );
 
-				}
-			}
-            break;
+                    if ( type != Internal::Type::Terminator )
+                    {
+                        Internal::Type::Type rType;
+                        ReadHeader( size, rType );
+                        mArrayInfo.Set( rType, size );
+                    }
+                }
+            }
+        }
 
-        case Internal::Mode::PrePass:
-            break;
+        return size;
+    }
 
-        case Internal::Mode::Intermediate:
-            break;
+    void StoreArrayItem( ISerialisable &value )
+    {
+        StoreArrayValue( value );
+    }
+
+    void StoreArrayItem( std::string &value )
+    {
+        StoreArrayValue( value );
+    }
+
+    void StoreArrayItem( uint8_t &value )
+    {
+        StoreArrayValue( value );
+    }
+
+    void StoreArrayItem( uint16_t &value )
+    {
+        StoreArrayValue( value );
+    }
+
+    void StoreArrayItem( uint32_t &value )
+    {
+        StoreArrayValue( value );
+    }
+
+    void StoreArrayItem( uint64_t &value )
+    {
+        StoreArrayValue( value );
+    }
+
+    void StoreArrayItem( int8_t &value )
+    {
+        StoreArrayValue( value );
+    }
+
+    void StoreArrayItem( int16_t &value )
+    {
+        StoreArrayValue( value );
+    }
+
+    void StoreArrayItem( int32_t &value )
+    {
+        StoreArrayValue( value );
+    }
+
+    void StoreArrayItem( int64_t &value )
+    {
+        StoreArrayValue( value );
+    }
+
+    void StoreArrayItem( float &value )
+    {
+        bool isSerialising = mMode == Mode::Serialise;
+
+        uint32_t flexman = isSerialising ? Util::FloatToUInt32( value ) : 0;
+
+        StoreArrayValue( flexman );
+
+        if ( !isSerialising )
+        {
+            value = Util::UInt32ToFloat( flexman );
         }
     }
 
-    void StoreRepeated( ISerialisable &value )
+    void StoreArrayItem( double &value )
     {
-        WriteToStream( value, mRepeatedInfo.Flags );
-    }
+        bool isSerialising = mMode == Mode::Serialise;
 
-    void StoreRepeated( std::string &value )
-	{
-		WriteToStream( value, mRepeatedInfo.Flags );
-    }
+        uint64_t flexman = isSerialising ? Util::DoubleToUInt64( value ) : 0;
 
-    void StoreRepeated( uint8_t &value )
-	{
-		WriteToStream( value, mRepeatedInfo.Flags );
-    }
+        StoreArrayValue( flexman );
 
-    void StoreRepeated( uint16_t &value )
-	{
-		WriteToStream( value, mRepeatedInfo.Flags );
-    }
-
-    void StoreRepeated( uint32_t &value )
-	{
-		WriteToStream( value, mRepeatedInfo.Flags );
-    }
-
-    void StoreRepeated( uint64_t &value )
-	{
-		WriteToStream( value, mRepeatedInfo.Flags );
-    }
-
-    void StoreRepeated( int8_t &value )
-	{
-		WriteToStream( value, mRepeatedInfo.Flags );
-    }
-
-    void StoreRepeated( int16_t &value )
-	{
-		WriteToStream( value, mRepeatedInfo.Flags );
-    }
-
-    void StoreRepeated( int32_t &value )
-	{
-		WriteToStream( value, mRepeatedInfo.Flags );
-    }
-
-    void StoreRepeated( int64_t &value )
-	{
-		WriteToStream( value, mRepeatedInfo.Flags );
-    }
-
-    void StoreRepeated( float &value )
-	{
-		WriteToStream( value, mRepeatedInfo.Flags );
-    }
-
-    void StoreRepeated( double &value )
-	{
-		WriteToStream( value, mRepeatedInfo.Flags );
+        if ( !isSerialising )
+        {
+            value = Util::UInt64ToDouble( flexman );
+        }
     }
 
 private:
 
     Internal::Mode::Mode mMode;
 
-    StreamBuffer< SERIALISERS_BUFFERSIZE > &mStreamBuffer;
-    StreamBuffer< SERIALISERS_BUFFERSIZE > *mStreamBufferCreated;
+    StreamBuffer< SERIALISERS_BUFFERSIZE > mStreamBuffer;
 
-    uint32_t mFlags;
-    int8_t mRemainingCount;
+    ArrayInfo mArrayInfo;
+    AbstractTempArray *mCurrentArray;
 
-    RepeatedInfo mRepeatedInfo;
-
-    std::vector< std::pair< uint8_t, IIntermediateData * > > mIntermediateData;
-
-    Message( ISerialisable &serialisable, StreamBuffer< SERIALISERS_BUFFERSIZE > &streamBuffer, Mode::Mode mode = Mode::Serialise )
-        : mStreamBuffer( streamBuffer ), mMode( ( Internal::Mode::Mode )mode ), mRemainingCount( 0 ), mStreamBufferCreated( NULL ),
-          mRepeatedInfo( Internal::Type::Repeated, 0, 0 )
-    {
-        Store( serialisable );
-    }
-
-    Message( StreamBuffer< SERIALISERS_BUFFERSIZE > &streamBuffer, Mode::Mode mode = Mode::Serialise )
-        : mStreamBuffer( streamBuffer ), mMode( ( Internal::Mode::Mode )mode ), mRemainingCount( 0 ), mStreamBufferCreated( NULL ),
-          mRepeatedInfo( Internal::Type::Repeated, 0, 0 )
-    {
-    }
+    std::stack< TempObject * > mTempBuffer;
+    TempObject *mCurrentObject;
 
     template< typename T >
-    void StoreValue( T &value, const uint8_t index, const uint32_t flags )
+    T *CreateTempData()
     {
-        Internal::Type::Type type = Internal::Type::GetEnum< T >();
+        return new T();
+    }
 
-        switch ( mMode )
+	template< typename T >
+	void DeleteTempData( T *data )
+	{
+		delete data;
+	}
+
+    void Store( ISerialisable &serialisable, TempObject *obj )
+    {
+        mTempBuffer.push( mCurrentObject );
+        mCurrentObject = obj;
+
+        serialisable.OnStore( *this );
+
+        if ( mMode == Internal::Mode::Serialise )
         {
-        case Internal::Mode::Serialise:
+            WriteHeader( ( uint8_t )0, Internal::Type::Terminator );
+            mStreamBuffer.FlushWriteBuffer();
+        }
+        else if ( mMode == Internal::Mode::Deserialise )
+        {
+            if ( !mCurrentObject->GetTerminatorRead() )
             {
-                WriteHeader( index, type );
-                WriteToStream( value, flags );
-                --mRemainingCount;
-            }
-            break;
+                ReadAll();
+			}
+			mStreamBuffer.ClearReadBuffer();
 
-        case Internal::Mode::Deserialise:
-            {
-                std::vector< std::pair< uint8_t, IIntermediateData * > >::iterator it = SearchBuffer( index );
+        }
 
-                if ( it != mIntermediateData.end() )
-                {
-                    ReadFromIntermediate( value, it );
-                    delete it->second;
-                    mIntermediateData.erase( it );
-                }
-                else
-                {
-                    ReadValue( value, index );
-                }
-            }
-            break;
+        mCurrentObject = mTempBuffer.top();
+        mTempBuffer.pop();
 
-        case Internal::Mode::Intermediate:
-            {
-                std::vector< std::pair< uint8_t, IIntermediateData * > >::iterator it = SearchBuffer( index );
-                ReadFromIntermediate( value, it );
-                delete it->second;
-                mIntermediateData.erase( it );
-            }
-            break;
-
-        case Internal::Mode::PrePass:
-            ++mRemainingCount;
-            break;
-
-        default:
-            break;
+        if ( mCurrentArray )
+        {
+            DeleteTempData( mCurrentArray );
+            mCurrentArray = NULL;
         }
     }
 
     template< typename T >
-    void WriteToStream( T value, const uint32_t )
+    void StoreValue( T &value, const uint8_t index )
+    {
+        Internal::Type::Type type = Internal::Type::GetEnum< T >();
+
+        if ( mMode == Internal::Mode::Serialise )
+        {
+            WriteHeader( index, type );
+            WriteToStream( value );
+        }
+        else
+        {
+            ITempData *data = mCurrentObject->TryRemoveData( index );
+
+            if ( data )
+            {
+                ReadFromTemp( value, data );
+                DeleteTempData( data );
+            }
+            else if ( mMode == Internal::Mode::Deserialise && !mCurrentObject->GetTerminatorRead() )
+            {
+                ReadValue( value, index );
+            }
+        }
+    }
+
+    template< typename T >
+    void StoreArrayValue( T &value )
+    {
+        if ( mMode == Internal::Mode::Serialise )
+        {
+            WriteToStream( value );
+        }
+        else
+        {
+            if ( mCurrentArray )
+            {
+                static_cast< TempArray< T > * >( mCurrentArray )->PopFront( value );
+            }
+            else if ( mMode == Internal::Mode::Deserialise && !mCurrentObject->GetTerminatorRead() )
+            {
+                ReadFromStream( value );
+            }
+        }
+
+        --mArrayInfo.RemainingCount;
+    }
+
+    template<>
+    void StoreArrayValue( ISerialisable &value )
+    {
+        if ( mMode == Internal::Mode::Serialise )
+        {
+            WriteToStream( value );
+        }
+        else
+        {
+            if ( mCurrentArray )
+            {
+                TempObject *temp;
+                static_cast< TempArray< TempObject * > * >( mCurrentArray )->PopFront( temp );
+
+                Store( value, temp );
+
+                DeleteTempData( temp );
+            }
+            else if ( mMode == Internal::Mode::Deserialise && !mCurrentObject->GetTerminatorRead() )
+            {
+                ReadFromStream( value );
+            }
+        }
+
+        --mArrayInfo.RemainingCount;
+    }
+
+    template< typename T >
+    void WriteToStream( T value )
     {
         mStreamBuffer.WriteBytes( &value, sizeof( T ) );
     }
 
-    void WriteToStream( std::string &value, const uint32_t )
+    void WriteToStream( std::string &value )
     {
-        WriteToStream( ( uint32_t )value.length(), 0x00 );
+        WriteToStream( ( uint32_t )value.length() );
         mStreamBuffer.WriteBytes( value.c_str(), value.length() );
     }
 
-    void WriteToStream( ISerialisable &value, const uint32_t )
+    void WriteToStream( ISerialisable &value )
     {
-        Message( value, mStreamBuffer, Mode::Serialise );
+        Store( value );
     }
 
-    void WriteToStream( float value, const uint32_t flags )
-    {
-        uint32_t flexman = Util::FloatToUInt32( value );
-        WriteToStream( flexman, flags );
-    }
-
-    void WriteToStream( double value, const uint32_t flags )
-    {
-        uint64_t flexman = Util::DoubleToUInt64( value );
-        WriteToStream( flexman, flags );
-    }
-
-    void WriteHeader( const uint8_t index, Internal::Type::Type type )
+    template< typename T >
+    void WriteHeader( const T index, Internal::Type::Type type )
     {
         if ( Internal::Type::IsSignedInt( type ) )
         {
@@ -408,78 +453,81 @@ private:
         }
         else if ( type == Internal::Type::Double )
         {
-            type = Internal::Type::Double;
+            type = Internal::Type::UInt64;
         }
 
-        uint8_t header = Util::CreateHeader( index, type );
-        WriteToStream( header, 0x00 );
+        T header = Util::CreateHeader( index, type );
+        WriteToStream( header );
     }
 
-    void ReadHeader( uint8_t &index, Internal::Type::Type &type )
+    template< typename T >
+    void ReadHeader( T &index, Internal::Type::Type &type )
     {
-        uint8_t header;
+        T header;
         ReadFromStream( header );
         index = Util::GetHeaderIndex( header );
         type = Util::GetHeaderType( header );
     }
 
-    std::vector< std::pair< uint8_t, IIntermediateData * > >::iterator SearchBuffer( const uint32_t index )
-    {
-        for ( std::vector< std::pair< uint8_t, IIntermediateData * > >::iterator it = mIntermediateData.begin(),
-                end = mIntermediateData.end();
-                it != end; ++it )
-        {
-            if ( it->first == index )
-            {
-                return it;
-            }
-        }
-
-        return mIntermediateData.end();
-    }
-
     template< typename T >
     void ReadValue( T &value, const uint8_t index )
+    {
+        Internal::Type::Type type = ReadUntil( index );
+
+        if ( type != Internal::Type::Terminator )
+        {
+            ReadFromStream( value );
+        }
+    }
+
+    Internal::Type::Type ReadUntil( uint8_t index )
     {
         uint8_t rIndex;
         Internal::Type::Type type;
 
         ReadHeader( rIndex, type );
 
-        while ( rIndex != index )
+        while ( rIndex != index && type != Internal::Type::Terminator )
         {
-            ReadToIntermediate( rIndex, type );
+            ReadToTemp( rIndex, type );
             ReadHeader( rIndex, type );
-            --mRemainingCount;
         }
 
-        ReadFromStream( value );
-        --mRemainingCount;
+        if ( type == Internal::Type::Terminator )
+        {
+            mCurrentObject->SetTerminatorRead();
+        }
+
+        return type;
+    }
+
+    void ReadAll()
+    {
+        uint8_t index;
+        Internal::Type::Type type;
+
+        ReadHeader( index, type );
+
+        while ( type != Internal::Type::Terminator )
+        {
+            ReadToTemp( index, type );
+            ReadHeader( index, type );
+        }
+
+        mCurrentObject->SetTerminatorRead();
     }
 
     template< typename T >
-    void ReadFromIntermediate( T &value, std::vector< std::pair< uint8_t, IIntermediateData * > >::iterator it )
+    void ReadFromTemp( T &value, ITempData *const data )
     {
-        value = static_cast< IntermediateData< T > * >( it->second )->GetValue();
+        value = static_cast< TempPrimitive< T > * >( data )->GetValue();
     }
 
-    template<>
-    void ReadFromIntermediate( ISerialisable &value, std::vector< std::pair< uint8_t, IIntermediateData * > >::iterator it )
+    void ReadFromTemp( ISerialisable &value, ITempData *const data )
     {
-        Message &message = *static_cast< Message * >( it->second );
-        message.Store( value );
-    }
-
-    void ReadFromIntermediate( float &value, std::vector< std::pair< uint8_t, IIntermediateData * > >::iterator it )
-    {
-        uint32_t flexman = static_cast< IntermediateData< uint32_t > * >( it->second )->GetValue();
-        value = Util::UInt32ToFloat( flexman );
-    }
-
-    void ReadFromIntermediate( double &value, std::vector< std::pair< uint8_t, IIntermediateData * > >::iterator it )
-    {
-        uint64_t flexman = static_cast< IntermediateData< uint64_t > * >( it->second )->GetValue();
-        value = Util::UInt64ToDouble( flexman );
+        mMode = Internal::Mode::DeserialiseTemp;
+        Store( value, static_cast< TempObject * >( data ) );
+        mMode = Internal::Mode::Deserialise;
     }
 
     template< typename T >
@@ -488,10 +536,9 @@ private:
         mStreamBuffer.ReadBytes( &value, sizeof( T ) );
     }
 
-    template<>
     void ReadFromStream( ISerialisable &value )
     {
-        Message( value, mStreamBuffer, Mode::Deserialise );
+        Store( value );
     }
 
     void ReadFromStream( std::string &value )
@@ -499,82 +546,155 @@ private:
         uint32_t size;
         ReadFromStream( size );
 
-        std::vector< char > buffer( size );
+		value.resize(size,' ');
 
-        char *firstByte = &buffer.front();
-
-        mStreamBuffer.ReadBytes( firstByte, size );
-        value = std::string( firstByte, size );
+        mStreamBuffer.ReadBytes( &value.front(), size );
     }
 
-    void ReadFromStream( float &value )
+    void ReadToTemp( const uint8_t index, const Internal::Type::Type type )
     {
-        uint32_t flexman;
-        ReadFromStream( flexman );
-        value = Util::UInt32ToFloat( flexman );
-    }
-
-    void ReadFromStream( double &value )
-    {
-        uint64_t flexman;
-        ReadFromStream( flexman );
-        value = Util::UInt64ToDouble( flexman );
-    }
-
-    void ReadToIntermediate( const uint8_t index, const Internal::Type::Type type )
-    {
-        IIntermediateData *data = NULL;
+        ITempData *data = NULL;
 
         switch ( type )
         {
-        case Internal::Type::Variable:
-            data = new Message( mStreamBuffer, Mode::Deserialise );
+        case Internal::Type::Array:
+            data = ReadTempArray();
+            break;
+
+        case Internal::Type::Object:
+            data = ReadTempObject();
             break;
 
         case Internal::Type::String:
-            data = new IntermediateData< std::string >();
+            data = ReadTempPrimitive< std::string >( );
             break;
 
         case Internal::Type::UInt8:
-            data = new IntermediateData< uint8_t >();
+            data = ReadTempPrimitive< uint8_t >( );
             break;
 
         case Internal::Type::UInt16:
-            data = new IntermediateData< uint16_t >();
+            data = ReadTempPrimitive< uint16_t >( );
             break;
 
         case Internal::Type::UInt32:
-            data = new IntermediateData< uint32_t >();
+            data = ReadTempPrimitive< uint32_t >( );
             break;
 
         case Internal::Type::UInt64:
-            data = new IntermediateData< uint64_t >();
+            data = ReadTempPrimitive< uint64_t >( );
             break;
         }
 
-        data->ReadFrom( mStreamBuffer );
-        mIntermediateData.push_back( std::pair< uint8_t, IIntermediateData * >( index, data ) );
+        mCurrentObject->AddData( index, data );
     }
 
-    void ReadFrom( StreamBuffer< SERIALISERS_BUFFERSIZE > &streamBuffer )
+    template< typename T >
+    ITempData *ReadTempPrimitive()
     {
-        std::swap( mStreamBuffer, streamBuffer );
+        TempPrimitive< T > *temp = CreateTempData< TempPrimitive< T > >();
 
-        ReadFromStream( mRemainingCount );
+        T value;
+        ReadFromStream( value );
+        temp->SetValue( value );
 
-        uint8_t index;
+        return temp;
+    }
+
+    TempObject *ReadTempObject()
+    {
+        mTempBuffer.push( mCurrentObject );
+        mCurrentObject = CreateTempData< TempObject >();
+
+        ReadAll();
+
+        TempObject *temp = mCurrentObject;
+        mCurrentObject = mTempBuffer.top();
+        mTempBuffer.pop();
+
+        return temp;
+    }
+
+    ITempData *ReadTempArray()
+    {
+        ITempData *data = NULL;
+
+        uint32_t size;
         Internal::Type::Type type;
 
-        for ( int8_t i = 0; i < mRemainingCount; ++i )
+        ReadHeader( size, type );
+
+        switch ( type )
         {
-            ReadHeader( index, type );
-            ReadToIntermediate( index, type );
+        case Internal::Type::Object:
+            data = ReadTempArrayObject( size );
+            break;
+
+        case Internal::Type::String:
+            data = ReadTempArrayPrimitive< std::string >( size );
+            break;
+
+        case Internal::Type::UInt8:
+            data = ReadTempArrayPrimitive< uint8_t >( size );
+            break;
+
+        case Internal::Type::UInt16:
+            data = ReadTempArrayPrimitive< uint16_t >( size );
+            break;
+
+        case Internal::Type::UInt32:
+            data = ReadTempArrayPrimitive< uint32_t >( size );
+            break;
+
+        case Internal::Type::UInt64:
+            data = ReadTempArrayPrimitive< uint64_t >( size );
+            break;
         }
 
-        mRemainingCount = 0;
-        mMode = Internal::Mode::Intermediate;
+        return data;
+    }
 
-        std::swap( mStreamBuffer, streamBuffer );
+    template< typename T >
+    ITempData *ReadTempArrayPrimitive( const uint32_t size )
+    {
+        TempArray< T > *temp = CreateTempData< TempArray< T > >();
+        temp->Resize( size );
+
+        T *first = temp->GetData();
+        mStreamBuffer.ReadBytes( first, sizeof( T ) * size );
+
+        return temp;
+    }
+
+    template<>
+    ITempData *ReadTempArrayPrimitive< std::string >( const uint32_t size )
+    {
+        TempArray< std::string > *temp = CreateTempData< TempArray< std::string > >();
+        std::vector< char > strVec;
+
+        for ( uint32_t i = 0; i < size; ++i )
+        {
+            uint32_t strSize;
+            ReadFromStream( strSize );
+            strVec.resize( strSize );
+            mStreamBuffer.ReadBytes( &strVec[0], strSize );
+            temp->PushBack( std::string( &strVec[0], strSize ) );
+        }
+
+        return temp;
+    }
+
+    ITempData *ReadTempArrayObject( const uint32_t size )
+    {
+        TempArray< TempObject * > *temp = CreateTempData< TempArray< TempObject * > >();
+
+        for ( uint32_t i = 0; i < size; ++i )
+        {
+            TempObject *obj = ReadTempObject();
+            temp->PushBack( obj );
+        }
+
+        return temp;
     }
 };
 

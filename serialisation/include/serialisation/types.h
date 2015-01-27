@@ -38,10 +38,9 @@ namespace Internal
 	{
 		enum Mode
 		{
-			Serialise = 0x00,
-			Deserialise = 0x01,
-			PrePass = 0x02,
-			Intermediate = 0x03
+			Serialise       = 0x00,
+			Deserialise     = 0x01,
+			DeserialiseTemp = 0x02
 		};
 	}
 
@@ -58,20 +57,20 @@ namespace Internal
         // underlying type is uint8_t
         enum Type
         {
-            Repeated  = 0x00,
-            Variable  = 0x01,
-            String    = 0x02,
-            UInt8     = 0x03,
-            UInt16    = 0x04,
-            UInt32    = 0x05,
-            UInt64    = 0x06,
-            VarInt    = 0x07,
-            SInt8     = 0x08,
-            SInt16    = 0x09,
-            SInt32    = 0x0A,
-            SInt64    = 0x0B,
-            Float     = 0x0C,
-            Double    = 0x0D
+			Terminator = 0x00,
+            Array      = 0x01,
+            Object     = 0x02,
+            String     = 0x03,
+            UInt8      = 0x04,
+            UInt16     = 0x05,
+            UInt32     = 0x06,
+            UInt64     = 0x07,
+            SInt8      = 0x08,
+            SInt16     = 0x09,
+            SInt32     = 0x0A,
+            SInt64     = 0x0B,
+            Float      = 0x0C,
+            Double     = 0x0D
         };
 
         inline bool IsInteger( Type type )
@@ -87,19 +86,19 @@ namespace Internal
         template< typename T >
         inline Type GetEnum()
         {
-            return Type::Repeated;
+            return Type::Array;
 		}
 
 		template<>
 		inline Type GetEnum< class Message >()
 		{
-			return Type::Variable;
+			return Type::Object;
 		}
 
 		template<>
 		inline Type GetEnum< class ISerialisable >()
 		{
-			return Type::Variable;
+			return Type::Object;
 		}
 
         template<>
@@ -174,7 +173,7 @@ namespace Type
 {
     enum Type
     {
-        Variable = Internal::Type::Variable,
+        Object = Internal::Type::Object,
         String   = Internal::Type::String,
         UInt8    = Internal::Type::UInt8,
         UInt16   = Internal::Type::UInt16,

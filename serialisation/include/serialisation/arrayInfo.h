@@ -21,51 +21,26 @@
  */
 
 #pragma once
-#ifndef __SERIALISATION_BUFFEREDDATA_H__
-#define __SERIALISATION_BUFFEREDDATA_H__
+#ifndef __SERIALISATION_ARRAYINFO_H__
+#define __SERIALISATION_ARRAYINFO_H__
 
-#include "serialisation/interface/IIntermediateData.h"
+#include "types.h"
 
-#include "serialisation/defines.h"
-#include "serialisation/types.h"
-
-#include <vector>
-
-template< typename T >
-class IntermediateData
-    : public IIntermediateData
+struct ArrayInfo
 {
-public:
+    uint32_t RemainingCount;
+    Internal::Type::Type Type;
 
-    Internal::Type::Type GetType() const
+    ArrayInfo( const Internal::Type::Type type, const uint32_t remainingCount )
+        : Type( type ), RemainingCount( remainingCount )
     {
-        return Internal::Type::GetEnum< T >();
     }
 
-    const T &GetValue() const
+    void Set( const Internal::Type::Type type, const uint32_t remainingCount )
     {
-        return mValue;
+        Type = type;
+        RemainingCount = remainingCount;
     }
-
-    void ReadFrom( StreamBuffer< SERIALISERS_BUFFERSIZE > &streamBuffer )
-    {
-        streamBuffer.ReadBytes( &mValue, sizeof( T ) );
-    }
-
-private:
-
-    T mValue;
 };
-
-void IntermediateData< std::string >::ReadFrom( StreamBuffer< SERIALISERS_BUFFERSIZE > &streamBuffer )
-{
-    uint32_t size;
-    streamBuffer.ReadBytes( &size, sizeof( uint32_t ) );
-
-    std::vector< char > buffer( size );
-
-    streamBuffer.ReadBytes( &buffer[0], size );
-    mValue = std::string( &buffer[0], size );
-}
 
 #endif
