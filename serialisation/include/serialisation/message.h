@@ -328,7 +328,7 @@ private:
         mTempBuffer.push( mCurrentObject );
         mCurrentObject = obj;
 
-        serialisable.OnStore( *this );
+        serialisable.SERIALISATION_CUSTOM_INTERFACE( *this );
 
         if ( mMode == Internal::Mode::Serialise )
         {
