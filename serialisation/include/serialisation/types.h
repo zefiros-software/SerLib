@@ -173,7 +173,7 @@ namespace Type
 {
     enum Type
     {
-        Object = Internal::Type::Object,
+        Object   = Internal::Type::Object,
         String   = Internal::Type::String,
         UInt8    = Internal::Type::UInt8,
         UInt16   = Internal::Type::UInt16,

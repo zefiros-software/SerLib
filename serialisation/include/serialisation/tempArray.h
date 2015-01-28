@@ -28,57 +28,56 @@
 
 template< typename T >
 class TempArray
-	: public AbstractTempArray
+    : public AbstractTempArray
 {
 public:
 
-	Internal::Type::Type GetSubType() const
-	{
-		return Internal::Type::GetEnum< T >();
-	}
+    ~TempArray()
+    {
+    }
 
-	T* GetData()
-	{
-		return &mValues.front();
-	}
+    Internal::Type::Type GetSubType() const
+    {
+        return Internal::Type::GetEnum< T >();
+    }
 
-	void Resize( const uint32_t size )
-	{
-		mValues.resize( size );
-	}
+    T *GetData()
+    {
+        return &mValues.front();
+    }
 
-	void PushBack( const T &value )
-	{
-		mValues.push_back(value);
-	}
+    void Resize( const uint32_t size )
+    {
+        mValues.resize( size );
+    }
 
-	void PopFront( T &dest )
-	{
-		dest = mValues.front();
-		mValues.erase(mValues.begin());
-	}
+    void PushBack( const T &value )
+    {
+        mValues.push_back( value );
+    }
 
-	uint32_t GetRemainingCount() const
-	{
-		return mValues.size();
-	}
+    void PopFront( T &dest )
+    {
+        dest = mValues.front();
+        mValues.erase( mValues.begin() );
+    }
 
-	~TempArray()
-	{
-
-	}
+    uint32_t GetRemainingCount() const
+    {
+        return mValues.size();
+    }
 
 private:
 
-	std::vector< T > mValues;
+    std::vector< T > mValues;
 };
 
 TempArray< TempObject * >::~TempArray()
 {
-	for(std::vector<TempObject *>::iterator it = mValues.begin(), end = mValues.end(); it != end; ++it )
-	{
-		delete *it;
-	}
+    for ( std::vector<TempObject *>::iterator it = mValues.begin(), end = mValues.end(); it != end; ++it )
+    {
+        delete *it;
+    }
 }
 
 #endif

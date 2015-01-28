@@ -33,6 +33,11 @@ class TempObject
 {
 public:
 
+    TempObject()
+        : mTerminatorRead( false )
+    {
+    }
+
     Internal::Type::Type GetType() const
     {
         return Internal::Type::Object;
@@ -45,40 +50,35 @@ public:
 
     ITempData *TryRemoveData( uint8_t index )
     {
-        for ( std::vector< std::pair< uint8_t, ITempData * > >::iterator it = mTempData.begin(), end = mTempData.end(); it != end; ++it )
+        for ( std::vector< std::pair< uint8_t, ITempData * > >::iterator it = mTempData.begin(), end = mTempData.end();
+                it != end; ++it )
         {
-			if(it->first == index )
-			{
-				ITempData *data = it->second;
-				mTempData.erase(it);
-				return data;
-			}
+            if ( it->first == index )
+            {
+                ITempData *data = it->second;
+                mTempData.erase( it );
+                return data;
+            }
         }
 
-		return NULL;
+        return NULL;
     }
 
-	TempObject()
-		: mTerminatorRead( false )
-	{
+    bool GetTerminatorRead() const
+    {
+        return mTerminatorRead;
+    }
 
-	}
-
-	bool GetTerminatorRead() const
-	{
-		return mTerminatorRead;
-	}
-
-	void SetTerminatorRead()
-	{
-		mTerminatorRead = true;
-	}
+    void SetTerminatorRead()
+    {
+        mTerminatorRead = true;
+    }
 
 private:
 
     std::vector< std::pair< uint8_t, ITempData * > > mTempData;
 
-	bool mTerminatorRead;
+    bool mTerminatorRead;
 };
 
 #endif

@@ -36,7 +36,7 @@ class TempPrimitive
     : public ITempData
 {
 public:
-
+    
     Internal::Type::Type GetType() const
     {
         return Internal::Type::GetEnum< T >();

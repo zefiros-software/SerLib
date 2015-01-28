@@ -34,18 +34,26 @@ class StreamBuffer
 public:
 
     StreamBuffer( std::string &fileName )
-        : mFileStream( fileName ), mStream( &mFileStream )
+        : mFileStream( fileName ),
+          mStream( &mFileStream )
     {
     }
 
     StreamBuffer( std::iostream &stream )
-        : mStream( &stream ), mReadIndex( 0 ), mReadSize( 0 ), mWriteIndex( 0 ), mWriteSize( 0 )
+        : mStream( &stream ),
+          mReadIndex( 0 ),
+          mReadSize( 0 ),
+          mWriteIndex( 0 ),
+          mWriteSize( 0 )
     {
 
     }
 
     StreamBuffer( StreamBuffer< BufferSize > &buffer )
-        : mStream( buffer.mStream ), mReadIndex( buffer.mReadIndex ), mReadSize( buffer.mReadSize ), mWriteIndex( buffer.mWriteIndex ),
+        : mStream( buffer.mStream ),
+          mReadIndex( buffer.mReadIndex ),
+          mReadSize( buffer.mReadSize ),
+          mWriteIndex( buffer.mWriteIndex ),
           mWriteSize( buffer.mWriteSize )
     {
         memcpy( mReadBuffer, buffer.mReadBuffer, BufferSize );
@@ -57,24 +65,24 @@ public:
         Close();
     }
 
-	void Close()
-	{
-		ClearReadBuffer();
-		FlushWriteBuffer();
+    void Close()
+    {
+        ClearReadBuffer();
+        FlushWriteBuffer();
 
-		if ( mFileStream.is_open() )
-		{
-			mFileStream.close();
-		}
-	}
+        if ( mFileStream.is_open() )
+        {
+            mFileStream.close();
+        }
+    }
 
     template< typename T >
-    void WriteBytes( const T *firstByte, const int32_t byteCount )
+    void WriteBytes( const T *const firstByte, int32_t byteCount )
     {
         const int32_t diff = BufferSize - mWriteIndex;
         const int32_t diff2 = byteCount - diff;
 
-        const int8_t *c = reinterpret_cast< const int8_t * >( firstByte );
+        const int8_t *const c = reinterpret_cast< const int8_t *const >( firstByte );
 
         if ( diff2 <= 0 )
         {
@@ -91,9 +99,9 @@ public:
     }
 
     template< typename T >
-    void ReadBytes( T *firstByte, const size_t byteCount )
+    void ReadBytes( T *const firstByte, size_t byteCount )
     {
-        char *c = reinterpret_cast< char * >( firstByte );
+        char *const c = reinterpret_cast< char *const >( firstByte );
         const int32_t diff = mReadSize - mReadIndex;
         const int32_t diff2 = byteCount - diff;
 
@@ -123,7 +131,7 @@ public:
     void ClearReadBuffer()
     {
         //mStream->write(mReadBuffer+mReadIndex,mReadSize-mReadIndex);
-        mStream->seekg( ( int32_t )( mReadIndex - mReadSize ), std::ios::cur );
+        mStream->seekg( static_cast<  int32_t >( mReadIndex - mReadSize ), std::ios::cur );
         mReadIndex = 0;
         mReadSize = 0;
     }
@@ -146,18 +154,18 @@ private:
         memcpy( mReadBuffer, mReadBuffer + mReadIndex, remaining );
         mReadIndex = 0;
 
-		uint32_t oldPos = (uint32_t)mStream->tellg();
+        const uint32_t oldPos = static_cast<  uint32_t >( mStream->tellg() );
 
-		mStream->seekg(0, std::ios_base::end);
-		uint32_t size = (uint32_t)mStream->tellg() - oldPos;
-		mStream->seekg(oldPos);
+        mStream->seekg( 0, std::ios_base::end );
+        const uint32_t size = static_cast< uint32_t >( mStream->tellg() ) - oldPos;
+        mStream->seekg( oldPos );
 
-		uint32_t remainingBufferSize = BufferSize - remaining;
+        const uint32_t remainingBufferSize = BufferSize - remaining;
 
-		uint32_t readSize = remainingBufferSize < size ? remainingBufferSize : size;
+        const uint32_t readSize = remainingBufferSize < size ? remainingBufferSize : size;
 
         mStream->read( mReadBuffer + remaining, readSize );
-        mReadSize = remaining + ( uint32_t )mStream->gcount();
+        mReadSize = remaining + static_cast<  uint32_t >( mStream->gcount() );
     }
 };
 

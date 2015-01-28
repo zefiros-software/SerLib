@@ -130,19 +130,19 @@ namespace Util
 #endif
     }
 
-	template< typename T >
+    template< typename T >
     T CreateHeader( const T index, const Internal::Type::Type t )
     {
         return ( index << 3 ) | ( ( T )t & 0x07 );
     }
 
-	template< typename T >
+    template< typename T >
     Internal::Type::Type GetHeaderType( const T header )
     {
         return ( Internal::Type::Type )( header & 0x07 );
     }
 
-	template< typename T >
+    template< typename T >
     T GetHeaderIndex( const T header )
     {
         return ( T )( header >> 3 );

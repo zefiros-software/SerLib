@@ -28,18 +28,19 @@
 
 struct ArrayInfo
 {
-    uint32_t RemainingCount;
-    Internal::Type::Type Type;
+    uint32_t remainingCount;
+    Internal::Type::Type type;
 
-    ArrayInfo( const Internal::Type::Type type, const uint32_t remainingCount )
-        : Type( type ), RemainingCount( remainingCount )
+    ArrayInfo( Internal::Type::Type type, uint32_t remainingCount )
+        : type( type ),
+          remainingCount( remainingCount )
     {
     }
 
-    void Set( const Internal::Type::Type type, const uint32_t remainingCount )
+    void Set( Internal::Type::Type type, uint32_t remainingCount )
     {
-        Type = type;
-        RemainingCount = remainingCount;
+        type = type;
+        remainingCount = remainingCount;
     }
 };
 
