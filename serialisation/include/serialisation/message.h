@@ -90,6 +90,12 @@ public:
         return static_cast<  Mode::Mode >( mMode );
     }
 
+    void ClearBuffers()
+    {
+        mStreamBuffer.FlushWriteBuffer();
+        mStreamBuffer.ClearReadBuffer();
+    }
+
     void Store( ISerialisable &value, uint8_t index )
     {
         StoreValue( value, index );
@@ -333,7 +339,6 @@ private:
         if ( mMode == Internal::Mode::Serialise )
         {
             WriteHeader( static_cast<  uint8_t >( 0 ), Internal::Type::Terminator );
-            mStreamBuffer.FlushWriteBuffer();
         }
         else if ( mMode == Internal::Mode::Deserialise )
         {
@@ -341,9 +346,6 @@ private:
             {
                 ReadAll();
             }
-
-            mStreamBuffer.ClearReadBuffer();
-
         }
 
         mCurrentObject = mTempBuffer.top();
