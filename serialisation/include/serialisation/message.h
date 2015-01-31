@@ -74,7 +74,7 @@ public:
     {
         Store( serialisable );
     }
-
+    
     ~Message()
     {
         mStreamBuffer.Close();
@@ -169,6 +169,16 @@ public:
     }
 
     void Store( ISerialisable &serialisable )
+    {
+        TempObject *const temp = CreateTempData< TempObject >();
+
+        Store( serialisable, temp );
+
+        DeleteTempData( temp );
+    }
+
+    template< typename TSerialisable >
+    void Store( TSerialisable &serialisable )
     {
         TempObject *const temp = CreateTempData< TempObject >();
 
@@ -323,7 +333,8 @@ private:
         delete data;
     }
 
-    void Store( ISerialisable &serialisable, TempObject *obj )
+    template< typename TObject >
+    void Store( TObject &serialisable, TempObject *obj )
     {
         mTempBuffer.push( mCurrentObject );
         mCurrentObject = obj;
