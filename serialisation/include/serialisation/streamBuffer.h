@@ -75,14 +75,14 @@ public:
 
         if ( diff2 <= 0 )
         {
-            std::copy( c, c + byteCount, mWriteBuffer + mWriteIndex );
-            //memcpy( mWriteBuffer + mWriteIndex, c, byteCount );
+            //std::copy( c, c + byteCount, mWriteBuffer + mWriteIndex );
+            memcpy( mWriteBuffer + mWriteIndex, c, byteCount );
             mWriteIndex += byteCount;
         }
         else
         {
-            std::copy( c, c + diff, mWriteBuffer + mWriteIndex );
-            //memcpy( mWriteBuffer + mWriteIndex, c, diff );
+            //std::copy( c, c + diff, mWriteBuffer + mWriteIndex );
+            memcpy( mWriteBuffer + mWriteIndex, c, diff );
             mWriteIndex += diff;
             FlushWriteBuffer();
             WriteBytes( c + diff, diff2 );
@@ -99,15 +99,15 @@ public:
         if ( diff2 <= 0 )
         {
             char *const firstRead = mReadBuffer + mReadIndex;
-            std::copy( firstRead, firstRead + byteCount, c );
-            //memcpy( c, mReadBuffer + mReadIndex, byteCount );
+            //std::copy( firstRead, firstRead + byteCount, c );
+            memcpy( c, mReadBuffer + mReadIndex, byteCount );
             mReadIndex += byteCount;
         }
         else
         {
             char *const firstRead = mReadBuffer + mReadIndex;
-            std::copy( firstRead, firstRead + diff, c );
-            //memcpy( c, mReadBuffer + mReadIndex, diff );
+            //std::copy( firstRead, firstRead + diff, c );
+            memcpy( c, mReadBuffer + mReadIndex, diff );
             mReadIndex += diff;
             FillReadBuffer();
 
