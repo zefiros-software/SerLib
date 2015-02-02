@@ -80,7 +80,7 @@ public:
     {
         Store( serialisable );
     }
-
+    
     ~Message()
     {
         mStreamBuffer.Close();
@@ -189,7 +189,17 @@ public:
         DeleteTempData( temp );
     }
 
-    uint32_t CreateArray( Type::Type type, uint32_t size, uint8_t index, uint8_t flags = 0x00 )
+    template< typename TSerialisable >
+    void Store( TSerialisable &serialisable )
+    {
+        TempObject *const temp = CreateTempData< TempObject >();
+
+        Store( serialisable, temp );
+
+        DeleteTempData( temp );
+    }
+
+    uint32_t CreateArray( Type::Type type, uint32_t size, uint8_t index )
     {
         const Internal::Type::Type iType = static_cast< Internal::Type::Type >( type );
 
@@ -338,6 +348,54 @@ private:
         delete data;
     }
 
+    template< typename TObject >
+    void Store( TObject &serialisable, TempObject *obj )
+    {
+        mTempBuffer.push( mCurrentObject );
+        mCurrentObject = obj;
+
+        if ( mCurrentObject )
+        {
+            mBufferNonEmpty = mCurrentObject->IsNonEmpty();
+        }
+        else
+        {
+            mBufferNonEmpty = false;
+        }
+
+        serialisable.SERIALISATION_CUSTOM_INTERFACE( *this );
+
+        if ( mMode == Internal::Mode::Serialise )
+        {
+            WriteHeader( static_cast<  uint8_t >( 0 ), Internal::Type::Terminator );
+        }
+        else if ( mMode == Internal::Mode::Deserialise )
+        {
+            if ( !mCurrentObject->GetTerminatorRead() )
+            {
+                ReadAll();
+            }
+        }
+
+        mCurrentObject = mTempBuffer.top();
+        mTempBuffer.pop();
+
+        if ( mCurrentArray )
+        {
+            DeleteTempData( mCurrentArray );
+            mCurrentArray = NULL;
+        }
+
+        if ( mCurrentObject )
+        {
+            mBufferNonEmpty = mCurrentObject->IsNonEmpty();
+        }
+        else
+        {
+            mBufferNonEmpty = false;
+        }
+    }
+    
     void Store( ISerialisable &serialisable, TempObject *obj )
     {
         mTempBuffer.push( mCurrentObject );
@@ -408,10 +466,6 @@ private:
             {
                 ReadValue( value, index );
             }
-			else
-			{
-				int u = 1;
-			}
         }
     }
 
