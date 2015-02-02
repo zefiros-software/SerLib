@@ -74,6 +74,11 @@ public:
         mTerminatorRead = true;
     }
 
+    bool IsNonEmpty() const
+    {
+        return mTempData.size() > 0;
+    }
+
 private:
 
     std::vector< std::pair< uint8_t, ITempData * > > mTempData;

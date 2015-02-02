@@ -53,7 +53,9 @@ public:
         : mMode( static_cast< Internal::Mode::Mode >( mode ) ),
           mStreamBuffer( stream ),
           mArrayInfo( Internal::Type::Terminator, 0 ),
-          mCurrentArray( NULL )
+          mCurrentObject( NULL ),
+          mCurrentArray( NULL ),
+          mBufferNonEmpty( false )
     {
     }
 
@@ -61,7 +63,9 @@ public:
         : mMode( static_cast< Internal::Mode::Mode >( mode ) ),
           mStreamBuffer( fileName ),
           mArrayInfo( Internal::Type::Terminator, 0 ),
-          mCurrentArray( NULL )
+          mCurrentObject( NULL ),
+          mCurrentArray( NULL ),
+          mBufferNonEmpty( false )
     {
 
     }
@@ -70,7 +74,9 @@ public:
         : mStreamBuffer( stream ),
           mMode( static_cast< Internal::Mode::Mode >( mode ) ),
           mArrayInfo( Internal::Type::Array, 0 ),
-          mCurrentArray( NULL )
+          mCurrentObject( NULL ),
+          mCurrentArray( NULL ),
+          mBufferNonEmpty( false )
     {
         Store( serialisable );
     }
@@ -183,7 +189,7 @@ public:
         DeleteTempData( temp );
     }
 
-    uint32_t CreateArray( Type::Type type, uint32_t size, uint8_t index )
+    uint32_t CreateArray( Type::Type type, uint32_t size, uint8_t index, uint8_t flags = 0x00 )
     {
         const Internal::Type::Type iType = static_cast< Internal::Type::Type >( type );
 
@@ -191,7 +197,8 @@ public:
         {
             mArrayInfo.Set( iType, size );
             WriteHeader( index, Internal::Type::Array );
-            WriteHeader( size, iType );
+            WriteHeader( flags, iType );
+            WriteToStream( size );
         }
         else
         {
@@ -201,7 +208,7 @@ public:
                 mCurrentArray = NULL;
             }
 
-            AbstractTempArray *temp = static_cast< AbstractTempArray * >( mCurrentObject->TryRemoveData( index ) );
+            AbstractTempArray *temp = mBufferNonEmpty ? static_cast< AbstractTempArray * >( mCurrentObject->TryRemoveData( index ) ) : NULL;
 
             if ( temp )
             {
@@ -217,7 +224,8 @@ public:
                     if ( type != Internal::Type::Terminator )
                     {
                         Internal::Type::Type rType;
-                        ReadHeader( size, rType );
+                        ReadHeader( flags, rType );
+                        ReadFromStream( size );
                         mArrayInfo.Set( rType, size );
                     }
                 }
@@ -316,6 +324,7 @@ private:
 
     std::stack< TempObject * > mTempBuffer;
     TempObject *mCurrentObject;
+    bool mBufferNonEmpty;
 
     template< typename T >
     T *CreateTempData()
@@ -333,6 +342,15 @@ private:
     {
         mTempBuffer.push( mCurrentObject );
         mCurrentObject = obj;
+
+        if ( mCurrentObject )
+        {
+            mBufferNonEmpty = mCurrentObject->IsNonEmpty();
+        }
+        else
+        {
+            mBufferNonEmpty = false;
+        }
 
         serialisable.SERIALISATION_CUSTOM_INTERFACE( *this );
 
@@ -356,6 +374,15 @@ private:
             DeleteTempData( mCurrentArray );
             mCurrentArray = NULL;
         }
+
+        if ( mCurrentObject )
+        {
+            mBufferNonEmpty = mCurrentObject->IsNonEmpty();
+        }
+        else
+        {
+            mBufferNonEmpty = false;
+        }
     }
 
     template< typename T >
@@ -370,7 +397,7 @@ private:
         }
         else
         {
-            ITempData *const data = mCurrentObject->TryRemoveData( index );
+            ITempData *const data = mBufferNonEmpty ? mCurrentObject->TryRemoveData( index ) : NULL;
 
             if ( data )
             {
@@ -381,6 +408,10 @@ private:
             {
                 ReadValue( value, index );
             }
+			else
+			{
+				int u = 1;
+			}
         }
     }
 
@@ -497,6 +528,11 @@ private:
 
         ReadHeader( rIndex, type );
 
+        if ( rIndex != index )
+        {
+            mBufferNonEmpty = true;
+        }
+
         while ( rIndex != index && type != Internal::Type::Terminator )
         {
             ReadToTemp( rIndex, type );
@@ -525,6 +561,8 @@ private:
         }
 
         mCurrentObject->SetTerminatorRead();
+
+        mBufferNonEmpty = true;
     }
 
     template< typename T >
@@ -615,6 +653,7 @@ private:
     {
         mTempBuffer.push( mCurrentObject );
         mCurrentObject = CreateTempData< TempObject >();
+        mBufferNonEmpty = true;
 
         ReadAll();
 
