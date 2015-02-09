@@ -30,6 +30,7 @@
 #   include <intrin.h>
 #endif
 
+#include <stdlib.h>
 #include <stdint.h>
 #include <float.h>
 
