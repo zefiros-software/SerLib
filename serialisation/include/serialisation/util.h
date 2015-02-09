@@ -113,26 +113,6 @@ namespace Util
         return size;
     }
 
-    inline uint8_t IntLog2( uint32_t value )
-    {
-#if defined( _MSC_VER )
-
-        if ( !value )
-        {
-            return 0;
-        }
-        else
-        {
-            unsigned long index;
-            _BitScanReverse( &index, value );
-            return ( uint8_t )index;
-        }
-
-#elif defined( GCC_VERSION )
-        return ( uint8_t )value;
-#endif
-    }
-
     template< typename T >
     T CreateHeader( const T index, const Internal::Type::Type t )
     {
