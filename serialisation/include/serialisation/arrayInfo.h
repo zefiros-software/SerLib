@@ -28,8 +28,8 @@
 
 struct ArrayInfo
 {
-    uint32_t remainingCount;
     Internal::Type::Type type;
+    uint32_t remainingCount;
 
     ArrayInfo( Internal::Type::Type type, uint32_t remainingCount )
         : type( type ),

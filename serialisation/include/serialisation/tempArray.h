@@ -72,6 +72,7 @@ private:
     std::vector< T > mValues;
 };
 
+template<>
 TempArray< TempObject * >::~TempArray()
 {
     for ( std::vector<TempObject *>::iterator it = mValues.begin(), end = mValues.end(); it != end; ++it )
