@@ -652,7 +652,7 @@ private:
 
         value.resize( size, ' ' );
 
-        mStreamBuffer.ReadBytes( &value.front(), size );
+        mStreamBuffer.ReadBytes( &value.at(0), size );
     }
 
     void ReadToTemp( uint8_t index, Internal::Type::Type type )
@@ -687,6 +687,10 @@ private:
 
         case Internal::Type::UInt64:
             data = ReadTempPrimitive< uint64_t >( );
+            break;
+
+        default:
+            assert(false, "Something went terribly haywire...");
             break;
         }
 
