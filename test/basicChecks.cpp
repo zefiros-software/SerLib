@@ -62,6 +62,14 @@
         ASSERT_DOUBLE_EQ( init1, c1.mMember );                          \
     }
 
+#define TestArrayHeader( test, name, type, index, flag )                \
+    TEST( P(test), Type ## name )                                       \
+    {                                                                   \
+        ArrayHeader< type, flag > c1, c2;                               \
+        SimpleSerialiseDeserialiseStream( c1, c2 );                     \
+    }
+
+
 namespace
 {
     template< typename T, uint32_t Flag = 0x00 >
@@ -81,6 +89,18 @@ namespace
         }
 
         T mMember;
+    };
+
+    template< typename T, uint32_t Flag = 0x00 >
+    class ArrayHeader
+        : public ISerialisable
+    {
+    public:
+
+        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        {
+            message.CreateArray( static_cast< Type::Type >( Internal::Type::GetEnum< T >() ), 0, 5 );
+        }
     };
 
     TestSinglePrimitive( Max, uint8_t, std::numeric_limits<uint8_t>::max(), 1 );

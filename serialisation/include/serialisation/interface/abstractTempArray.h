@@ -38,7 +38,9 @@ public:
 
 	virtual Internal::Type::Type GetSubType() const = 0;
 
-	virtual uint32_t GetRemainingCount() const = 0;
+	virtual size_t GetRemainingCount() const = 0;
+
+	virtual void Resize( const size_t size ) = 0;
 };
 
 #endif

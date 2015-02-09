@@ -44,6 +44,8 @@ class Message
 {
 public:
 
+    friend struct StoreHelper;
+
     enum Flags
     {
         Packed = Internal::Flags::Packed
@@ -80,7 +82,7 @@ public:
     {
         Store( serialisable );
     }
-    
+
     ~Message()
     {
         mStreamBuffer.Close();
@@ -199,7 +201,7 @@ public:
         DeleteTempData( temp );
     }
 
-    uint32_t CreateArray( Type::Type type, uint32_t size, uint8_t index )
+    size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 )
     {
         const Internal::Type::Type iType = static_cast< Internal::Type::Type >( type );
 
@@ -208,7 +210,7 @@ public:
             mArrayInfo.Set( iType, size );
             WriteHeader( index, Internal::Type::Array );
             WriteHeader( flags, iType );
-            WriteToStream( size );
+            mStreamBuffer.WriteSize( size );
         }
         else
         {
@@ -235,7 +237,7 @@ public:
                     {
                         Internal::Type::Type rType;
                         ReadHeader( flags, rType );
-                        ReadFromStream( size );
+                        size = mStreamBuffer.ReadSize();
                         mArrayInfo.Set( rType, size );
                     }
                 }
@@ -395,7 +397,7 @@ private:
             mBufferNonEmpty = false;
         }
     }
-    
+
     void Store( ISerialisable &serialisable, TempObject *obj )
     {
         mTempBuffer.push( mCurrentObject );
@@ -526,7 +528,7 @@ private:
 
     void WriteToStream( std::string &value )
     {
-        WriteToStream( static_cast<  uint32_t  >( value.length() ) );
+        mStreamBuffer.WriteSize( value.length() );
         mStreamBuffer.WriteBytes( value.c_str(), value.length() );
     }
 
@@ -645,8 +647,7 @@ private:
 
     void ReadFromStream( std::string &value )
     {
-        uint32_t size;
-        ReadFromStream( size );
+        size_t size = mStreamBuffer.ReadSize();
 
         value.resize( size, ' ' );
 
@@ -722,10 +723,8 @@ private:
     {
         ITempData *data = NULL;
 
-        uint32_t size;
-        Internal::Type::Type type;
-
-        ReadHeader( size, type );
+		Internal::Type::Type type = mArrayInfo.type;
+		size_t size = mArrayInfo.remainingCount;
 
         switch ( type )
         {
@@ -758,7 +757,7 @@ private:
     }
 
     template< typename T >
-    ITempData *ReadTempArrayPrimitive( uint32_t size )
+    ITempData *ReadTempArrayPrimitive( size_t size )
     {
         TempArray< T > *temp = CreateTempData< TempArray< T > >();
         temp->Resize( size );
@@ -770,16 +769,16 @@ private:
     }
 
     template<>
-    ITempData *ReadTempArrayPrimitive< std::string >( uint32_t size )
+    ITempData *ReadTempArrayPrimitive< std::string >( size_t size )
     {
         TempArray< std::string > *temp = CreateTempData< TempArray< std::string > >();
         std::vector< char > strVec;
 
-        uint32_t strSize;
+        size_t strSize;
 
-        for ( uint32_t i = 0; i < size; ++i )
+        for ( size_t i = 0; i < size; ++i )
         {
-            ReadFromStream( strSize );
+            strSize = mStreamBuffer.ReadSize();
             strVec.resize( strSize );
             mStreamBuffer.ReadBytes( &strVec[0], strSize );
             temp->PushBack( std::string( &strVec[0], strSize ) );
@@ -788,11 +787,11 @@ private:
         return temp;
     }
 
-    ITempData *ReadTempArrayObject( uint32_t size )
+    ITempData *ReadTempArrayObject( size_t size )
     {
         TempArray< TempObject * > *temp = CreateTempData< TempArray< TempObject * > >();
 
-        for ( uint32_t i = 0; i < size; ++i )
+        for ( size_t i = 0; i < size; ++i )
         {
             TempObject *obj = ReadTempObject();
             temp->PushBack( obj );

@@ -39,8 +39,7 @@ public:
           mReadIndex( 0 ),
           mReadSize( 0 ),
           mWriteIndex( 0 ),
-          mWriteSize( 0 ),
-          mTotalRead( 0 )
+          mWriteSize( 0 )
     {
     }
 
@@ -49,8 +48,7 @@ public:
           mReadIndex( 0 ),
           mReadSize( 0 ),
           mWriteIndex( 0 ),
-          mWriteSize( 0 ),
-          mTotalRead( 0 )
+          mWriteSize( 0 )
     {
 
     }
@@ -72,10 +70,10 @@ public:
     }
 
     template< typename T >
-    void WriteBytes( const T *const firstByte, int32_t byteCount )
+    void WriteBytes( const T *const firstByte, size_t byteCount )
     {
         const int32_t diff = BufferSize - mWriteIndex;
-        const int32_t diff2 = byteCount - diff;
+        const std::ptrdiff_t diff2 = byteCount - diff;
 
         const int8_t *const c = reinterpret_cast< const int8_t *const >( firstByte );
 
@@ -83,7 +81,7 @@ public:
         {
             //std::copy( c, c + byteCount, mWriteBuffer + mWriteIndex );
             memcpy( mWriteBuffer + mWriteIndex, c, byteCount );
-            mWriteIndex += byteCount;
+            mWriteIndex += static_cast< uint32_t >( byteCount );
         }
         else
         {
@@ -100,18 +98,18 @@ public:
     {
         char *const c = reinterpret_cast< char *const >( firstByte );
         const int32_t diff = mReadSize - mReadIndex;
-        const int32_t diff2 = byteCount - diff;
+        const std::ptrdiff_t diff2 = byteCount - diff;
 
         if ( diff2 <= 0 )
         {
-            char *const firstRead = mReadBuffer + mReadIndex;
+            //char *const firstRead = mReadBuffer + mReadIndex;
             //std::copy( firstRead, firstRead + byteCount, c );
             memcpy( c, mReadBuffer + mReadIndex, byteCount );
-            mReadIndex += byteCount;
+            mReadIndex += static_cast< uint32_t >( byteCount );
         }
         else
         {
-            char *const firstRead = mReadBuffer + mReadIndex;
+            //char *const firstRead = mReadBuffer + mReadIndex;
             //std::copy( firstRead, firstRead + diff, c );
             memcpy( c, mReadBuffer + mReadIndex, diff );
             mReadIndex += diff;
@@ -122,6 +120,39 @@ public:
         }
     }
 
+    void WriteSize( size_t size )
+    {
+        uint8_t bufferIndex;
+
+        for ( bufferIndex = 0; size >= 0x80; size >>= 7, bufferIndex++ )
+        {
+            mVarIntBuffer[ bufferIndex ] = static_cast< uint8_t >( size & 0x7F | 0x80 );
+        }
+
+        mVarIntBuffer[ bufferIndex ] = static_cast< uint8_t >( size );
+
+        WriteBytes( mVarIntBuffer, ++bufferIndex );
+    }
+
+    size_t ReadSize()
+    {
+        uint64_t size = 0; uint8_t shift = 0;
+
+        uint8_t byte;
+
+        ReadBytes( &byte, 1 );
+
+        while ( byte & 0x80 )
+        {
+            size |= static_cast< uint64_t >( byte & 0x7F ) << shift;
+            ReadBytes( &byte, 1 );
+            shift += 7;
+        }
+
+        size |= static_cast< uint64_t >( byte ) << shift;
+
+        return static_cast< size_t >( size );
+    }
     void FlushWriteBuffer()
     {
         mStream->write( mWriteBuffer, mWriteIndex );
@@ -131,7 +162,7 @@ public:
 
     void ClearReadBuffer()
     {
-        mStream->seekg( static_cast<  int32_t >( mReadIndex - mReadSize ), std::ios::cur );
+        mStream->seekg( static_cast<  std::ios::off_type >( mReadIndex - mReadSize ), std::ios::cur );
         mReadIndex = 0;
         mReadSize = 0;
     }
@@ -145,7 +176,7 @@ private:
     int32_t mWriteIndex, mWriteSize;
     int32_t mReadIndex, mReadSize;
 
-    std::streampos mTotalRead;
+    uint8_t mVarIntBuffer[ 10 ];
 
     char mReadBuffer[ BufferSize ];
     char mWriteBuffer[ BufferSize ];
@@ -157,9 +188,9 @@ private:
             FlushWriteBuffer();
         }
 
-        const size_t remaining = mReadSize - mReadIndex;
+        const int32_t remaining = mReadSize - mReadIndex;
 
-        char *const firstRemaining = mReadBuffer + mReadIndex;
+        //char *const firstRemaining = mReadBuffer + mReadIndex;
         //std::copy( firstRemaining, firstRemaining + remaining, mReadBuffer );
         memcpy( mReadBuffer, mReadBuffer + mReadIndex, remaining );
         mReadIndex = 0;
@@ -173,25 +204,12 @@ private:
         mStream->read( mReadBuffer + remaining, remainingBufferSize );
         const uint32_t bytesRead = static_cast< uint32_t >( mStream->gcount() );
         mReadSize = remaining + bytesRead;
-		mTotalRead += bytesRead;
 
         //If eof was reached, clear the error bits
         if ( mStream->eof() )
         {
             mStream->clear();
-            mStream->seekg(mTotalRead);
         }
-    }
-
-    uint32_t AvailableReadCound()
-    {
-        const uint32_t oldPos = static_cast<  uint32_t >( mStream->tellg() );
-
-        mStream->seekg( 0, std::ios_base::end );
-        const uint32_t size = static_cast< uint32_t >( mStream->tellg() ) - oldPos;
-        mStream->seekg( oldPos );
-
-        return size;
     }
 };
 

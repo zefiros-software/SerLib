@@ -46,7 +46,7 @@ public:
         return &mValues.front();
     }
 
-    void Resize( const uint32_t size )
+    void Resize( const size_t size )
     {
         mValues.resize( size );
     }
@@ -62,7 +62,7 @@ public:
         mValues.erase( mValues.begin() );
     }
 
-    uint32_t GetRemainingCount() const
+    size_t GetRemainingCount() const
     {
         return mValues.size();
     }
