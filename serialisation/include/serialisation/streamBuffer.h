@@ -138,17 +138,17 @@ public:
 
 private:
 
+    char mReadBuffer[ BufferSize ];
+    char mWriteBuffer[ BufferSize ];
+
     std::fstream mFileStream;
 
     std::iostream *mStream;
 
-    int32_t mWriteIndex, mWriteSize;
-    int32_t mReadIndex, mReadSize;
-
     std::streampos mTotalRead;
 
-    char mReadBuffer[ BufferSize ];
-    char mWriteBuffer[ BufferSize ];
+    int32_t mWriteIndex, mWriteSize;
+    int32_t mReadIndex, mReadSize;
 
     void FillReadBuffer()
     {

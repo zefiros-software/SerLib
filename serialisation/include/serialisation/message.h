@@ -80,7 +80,7 @@ public:
     {
         Store( serialisable );
     }
-    
+
     ~Message()
     {
         mStreamBuffer.Close();
@@ -218,7 +218,8 @@ public:
                 mCurrentArray = NULL;
             }
 
-            AbstractTempArray *temp = mBufferNonEmpty ? static_cast< AbstractTempArray * >( mCurrentObject->TryRemoveData( index ) ) : NULL;
+            AbstractTempArray *temp = mBufferNonEmpty ? static_cast< AbstractTempArray * >( mCurrentObject->TryRemoveData(
+                                          index ) ) : NULL;
 
             if ( temp )
             {
@@ -325,15 +326,17 @@ public:
 
 private:
 
-    Internal::Mode::Mode mMode;
-
     StreamBuffer< SERIALISERS_BUFFERSIZE > mStreamBuffer;
 
-    ArrayInfo mArrayInfo;
-    AbstractTempArray *mCurrentArray;
-
     std::stack< TempObject * > mTempBuffer;
+
+    ArrayInfo mArrayInfo;
+
+    AbstractTempArray *mCurrentArray;
     TempObject *mCurrentObject;
+
+    Internal::Mode::Mode mMode;
+
     bool mBufferNonEmpty;
 
     template< typename T >
@@ -395,7 +398,7 @@ private:
             mBufferNonEmpty = false;
         }
     }
-    
+
     void Store( ISerialisable &serialisable, TempObject *obj )
     {
         mTempBuffer.push( mCurrentObject );
