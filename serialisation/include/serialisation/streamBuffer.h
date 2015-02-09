@@ -139,7 +139,7 @@ public:
 
     size_t ReadSize()
     {
-        uint64_t size = 0; uint8_t shift = 0;
+        uint64_t size = 0; uint64_t shift = 0;
 
         uint8_t byte;
 
