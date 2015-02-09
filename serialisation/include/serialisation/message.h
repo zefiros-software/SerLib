@@ -728,7 +728,7 @@ private:
     inline ITempData *ReadTempArray();
 
     template< typename T >
-    inline ITempData *ReadTempArrayPrimitive( uint32_t size )
+    inline ITempData *ReadTempArrayPrimitive( size_t size )
     {
         TempArray< T > *temp = CreateTempData< TempArray< T > >();
         temp->Resize( size );
@@ -739,7 +739,7 @@ private:
         return temp;
     }
 
-    inline ITempData *ReadTempArrayObject( uint32_t size )
+    inline ITempData *ReadTempArrayObject( size_t size )
     {
         TempArray< TempObject * > *temp = CreateTempData< TempArray< TempObject * > >();
 
@@ -754,12 +754,12 @@ private:
 };
 
 template<>
-inline ITempData *Message::ReadTempArrayPrimitive< std::string >( uint32_t size )
+inline ITempData *Message::ReadTempArrayPrimitive< std::string >( size_t size )
 {
     TempArray< std::string > *temp = CreateTempData< TempArray< std::string > >();
     std::vector< char > strVec;
 
-    uint32_t strSize;
+    size_t strSize;
 
     for ( uint32_t i = 0; i < size; ++i )
     {

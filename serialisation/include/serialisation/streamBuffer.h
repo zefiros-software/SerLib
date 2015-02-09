@@ -40,7 +40,7 @@ public:
         : mFileStream( fileName.c_str() ),
           mStream( &mFileStream ),
           mWriteIndex( 0 ),
-          mWriteSize( 0 )
+          mWriteSize( 0 ),
           mReadIndex( 0 ),
           mReadSize( 0 )
     {
@@ -49,7 +49,7 @@ public:
     StreamBuffer( std::iostream &stream )
         : mStream( &stream ),
           mWriteIndex( 0 ),
-          mWriteSize( 0 )
+          mWriteSize( 0 ),
           mReadIndex( 0 ),
           mReadSize( 0 )
     {
