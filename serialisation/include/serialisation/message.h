@@ -59,7 +59,7 @@ public:
     {
     }
 
-    Message( std::string &fileName, Mode::Mode mode = Mode::Serialise )
+    Message( const std::string &fileName, Mode::Mode mode = Mode::Serialise )
         : mStreamBuffer( fileName ),
           mArrayInfo( Internal::Type::Terminator, 0 ),
           mCurrentArray( NULL ),
@@ -652,7 +652,7 @@ private:
 
         value.resize( size, ' ' );
 
-        mStreamBuffer.ReadBytes( &value.at(0), size );
+        mStreamBuffer.ReadBytes( &value.at( 0 ), size );
     }
 
     void ReadToTemp( uint8_t index, Internal::Type::Type type )
@@ -690,7 +690,7 @@ private:
             break;
 
         default:
-            assert(false && "Something went terribly haywire...");
+            assert( false && "Something went terribly haywire..." );
             break;
         }
 
@@ -807,7 +807,7 @@ ITempData *Message::ReadTempArray()
         break;
 
     default:
-        assert(false && "Something went terribly haywire...");
+        assert( false && "Something went terribly haywire..." );
         break;
     }
 

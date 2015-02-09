@@ -33,7 +33,7 @@ class StreamBuffer
 {
 public:
 
-    StreamBuffer( std::string &fileName )
+    StreamBuffer( const std::string &fileName )
         : mFileStream( fileName ),
           mStream( &mFileStream ),
           mTotalRead( 0 ),
@@ -52,7 +52,6 @@ public:
           mReadIndex( 0 ),
           mReadSize( 0 )
     {
-
     }
 
     ~StreamBuffer()
