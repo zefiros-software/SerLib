@@ -27,6 +27,8 @@
 #include "serialisation/types.h"
 
 #include <fstream>
+
+#include <string.h>
 #include <stdio.h>
 
 template< uint32_t BufferSize >
