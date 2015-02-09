@@ -50,21 +50,21 @@ public:
     };
 
     Message( std::iostream &stream, Mode::Mode mode = Mode::Serialise )
-        : mMode( static_cast< Internal::Mode::Mode >( mode ) ),
-          mStreamBuffer( stream ),
+        : mStreamBuffer( stream ),
           mArrayInfo( Internal::Type::Terminator, 0 ),
-          mCurrentObject( NULL ),
           mCurrentArray( NULL ),
+          mCurrentObject( NULL ),
+          mMode( static_cast< Internal::Mode::Mode >( mode ) ),
           mBufferNonEmpty( false )
     {
     }
 
     Message( std::string &fileName, Mode::Mode mode = Mode::Serialise )
-        : mMode( static_cast< Internal::Mode::Mode >( mode ) ),
-          mStreamBuffer( fileName ),
+        : mStreamBuffer( fileName ),
           mArrayInfo( Internal::Type::Terminator, 0 ),
-          mCurrentObject( NULL ),
           mCurrentArray( NULL ),
+          mCurrentObject( NULL ),
+          mMode( static_cast< Internal::Mode::Mode >( mode ) ),
           mBufferNonEmpty( false )
     {
 
@@ -72,10 +72,10 @@ public:
 
     Message( ISerialisable &serialisable, std::iostream &stream, Mode::Mode mode = Mode::Serialise )
         : mStreamBuffer( stream ),
-          mMode( static_cast< Internal::Mode::Mode >( mode ) ),
           mArrayInfo( Internal::Type::Array, 0 ),
-          mCurrentObject( NULL ),
           mCurrentArray( NULL ),
+          mCurrentObject( NULL ),
+          mMode( static_cast< Internal::Mode::Mode >( mode ) ),
           mBufferNonEmpty( false )
     {
         Store( serialisable );
