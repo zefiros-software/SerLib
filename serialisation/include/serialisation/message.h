@@ -724,10 +724,10 @@ private:
         return temp;
     }
 
-    ITempData *ReadTempArray();
+    inline ITempData *ReadTempArray();
 
     template< typename T >
-    ITempData *ReadTempArrayPrimitive( uint32_t size )
+    inline ITempData *ReadTempArrayPrimitive( uint32_t size )
     {
         TempArray< T > *temp = CreateTempData< TempArray< T > >();
         temp->Resize( size );
@@ -738,7 +738,7 @@ private:
         return temp;
     }
 
-    ITempData *ReadTempArrayObject( uint32_t size )
+    inline ITempData *ReadTempArrayObject( uint32_t size )
     {
         TempArray< TempObject * > *temp = CreateTempData< TempArray< TempObject * > >();
 
@@ -753,7 +753,7 @@ private:
 };
 
 template<>
-ITempData *Message::ReadTempArrayPrimitive< std::string >( uint32_t size )
+inline ITempData *Message::ReadTempArrayPrimitive< std::string >( uint32_t size )
 {
     TempArray< std::string > *temp = CreateTempData< TempArray< std::string > >();
     std::vector< char > strVec;
@@ -771,7 +771,7 @@ ITempData *Message::ReadTempArrayPrimitive< std::string >( uint32_t size )
     return temp;
 }
 
-ITempData *Message::ReadTempArray()
+inline ITempData *Message::ReadTempArray()
 {
     ITempData *data = NULL;
 
