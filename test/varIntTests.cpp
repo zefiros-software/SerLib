@@ -26,6 +26,7 @@
 #include "gtest/gtest.h"
 
 #include <climits>
+#include <sstream>
 
 template< typename T >
 T VarIntConvert( T value )
