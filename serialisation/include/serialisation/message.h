@@ -207,7 +207,7 @@ public:
         {
             mArrayInfo.Set( iType, size );
             WriteHeader( index, Internal::Type::Array );
-            WriteHeader( flags, iType );
+            WriteHeader( index, iType );
             WriteToStream( size );
         }
         else
@@ -234,7 +234,7 @@ public:
                     if ( type != Internal::Type::Terminator )
                     {
                         Internal::Type::Type rType;
-                        ReadHeader( flags, rType );
+                        ReadHeader( index, rType );
                         ReadFromStream( size );
                         mArrayInfo.Set( rType, size );
                     }
@@ -491,7 +491,6 @@ private:
         --mArrayInfo.remainingCount;
     }
 
-    template<>
     void StoreArrayValue( ISerialisable &value )
     {
         if ( mMode == Internal::Mode::Serialise )
