@@ -34,7 +34,7 @@ class StreamBuffer
 public:
 
     StreamBuffer( const std::string &fileName )
-        : mFileStream( fileName ),
+        : mFileStream( fileName.c_str() ),
           mStream( &mFileStream ),
           mTotalRead( 0 ),
           mWriteIndex( 0 ),
