@@ -106,14 +106,14 @@ public:
 
         if ( diff2 <= 0 )
         {
-            char *const firstRead = mReadBuffer + mReadIndex;
+            //char *const firstRead = mReadBuffer + mReadIndex;
             //std::copy( firstRead, firstRead + byteCount, c );
             memcpy( c, mReadBuffer + mReadIndex, byteCount );
             mReadIndex += byteCount;
         }
         else
         {
-            char *const firstRead = mReadBuffer + mReadIndex;
+            //char *const firstRead = mReadBuffer + mReadIndex;
             //std::copy( firstRead, firstRead + diff, c );
             memcpy( c, mReadBuffer + mReadIndex, diff );
             mReadIndex += diff;
@@ -163,7 +163,7 @@ private:
 
         const size_t remaining = mReadSize - mReadIndex;
 
-        char *const firstRemaining = mReadBuffer + mReadIndex;
+        //char *const firstRemaining = mReadBuffer + mReadIndex;
         //std::copy( firstRemaining, firstRemaining + remaining, mReadBuffer );
         memcpy( mReadBuffer, mReadBuffer + mReadIndex, remaining );
         mReadIndex = 0;
