@@ -27,6 +27,7 @@
 #include "serialisation/types.h"
 
 #include <fstream>
+#include <stdio.h>
 
 template< uint32_t BufferSize >
 class StreamBuffer
