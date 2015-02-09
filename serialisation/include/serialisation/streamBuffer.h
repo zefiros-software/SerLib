@@ -35,17 +35,17 @@ public:
 
     StreamBuffer( std::string &fileName )
         : mFileStream( fileName ),
-          mStream( &mFileStream ), ,
-          mTotalRead( 0 )
-          mWriteIndex( 0 ), ,
-          mWriteSize( 0 )
+          mStream( &mFileStream ),
+          mTotalRead( 0 ),
+          mWriteIndex( 0 ),
+          mWriteSize( 0 ),
           mReadIndex( 0 ),
           mReadSize( 0 )
     {
     }
 
     StreamBuffer( std::iostream &stream )
-        : mStream( &stream ), ,
+        : mStream( &stream ),
           mTotalRead( 0 ),
           mWriteIndex( 0 ),
           mWriteSize( 0 ),
