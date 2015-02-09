@@ -53,6 +53,7 @@ public:
           mReadIndex( 0 ),
           mReadSize( 0 )
     {
+
     }
 
     ~StreamBuffer()
