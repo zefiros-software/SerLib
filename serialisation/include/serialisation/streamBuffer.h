@@ -35,22 +35,22 @@ public:
 
     StreamBuffer( std::string &fileName )
         : mFileStream( fileName ),
-          mStream( &mFileStream ),
-          mReadIndex( 0 ),
-          mReadSize( 0 ),
-          mWriteIndex( 0 ),
-          mWriteSize( 0 ),
+          mStream( &mFileStream ), ,
           mTotalRead( 0 )
+          mWriteIndex( 0 ), ,
+          mWriteSize( 0 )
+          mReadIndex( 0 ),
+          mReadSize( 0 )
     {
     }
 
     StreamBuffer( std::iostream &stream )
-        : mStream( &stream ),
-          mReadIndex( 0 ),
-          mReadSize( 0 ),
+        : mStream( &stream ), ,
+          mTotalRead( 0 ),
           mWriteIndex( 0 ),
           mWriteSize( 0 ),
-          mTotalRead( 0 )
+          mReadIndex( 0 ),
+          mReadSize( 0 )
     {
 
     }
@@ -147,8 +147,10 @@ private:
 
     std::streampos mTotalRead;
 
-    int32_t mWriteIndex, mWriteSize;
-    int32_t mReadIndex, mReadSize;
+    int32_t mWriteIndex;
+    int32_t mWriteSize;
+    int32_t mReadIndex;
+    int32_t mReadSize;
 
     void FillReadBuffer()
     {
@@ -173,13 +175,13 @@ private:
         mStream->read( mReadBuffer + remaining, remainingBufferSize );
         const uint32_t bytesRead = static_cast< uint32_t >( mStream->gcount() );
         mReadSize = remaining + bytesRead;
-		mTotalRead += bytesRead;
+        mTotalRead += bytesRead;
 
         //If eof was reached, clear the error bits
         if ( mStream->eof() )
         {
             mStream->clear();
-            mStream->seekg(mTotalRead);
+            mStream->seekg( mTotalRead );
         }
     }
 
