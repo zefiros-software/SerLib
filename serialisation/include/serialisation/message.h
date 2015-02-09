@@ -690,7 +690,7 @@ private:
             break;
 
         default:
-            assert(false, "Something went terribly haywire...");
+            assert(false && "Something went terribly haywire...");
             break;
         }
 
