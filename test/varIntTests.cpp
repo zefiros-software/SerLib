@@ -32,7 +32,7 @@ template< typename T >
 T VarIntConvert( T value )
 {
 	std::stringstream ss;
-    StreamBuffer< SERIALISERS_BUFFERSIZE > sb = StreamBuffer< SERIALISERS_BUFFERSIZE >( ss );
+    StreamBuffer< SERIALISERS_BUFFERSIZE > sb( ss );
     sb.WriteSize( value );
     return static_cast< T >( sb.ReadSize() );
 }
