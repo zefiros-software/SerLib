@@ -154,7 +154,7 @@ public:
 
     void Store( float &value, uint8_t index )
     {
-        const bool isSerialising = mMode == Mode::Serialise;
+        const bool isSerialising = mMode == static_cast<Internal::Mode::Mode>( Mode::Serialise );
 
         uint32_t flexman = isSerialising ? Util::FloatToUInt32( value ) : 0;
 
@@ -168,7 +168,7 @@ public:
 
     void Store( double &value, uint8_t index )
     {
-        const bool isSerialising = mMode == Mode::Serialise;
+        const bool isSerialising = mMode == static_cast<Internal::Mode::Mode>( Mode::Serialise );
 
         uint64_t flexman = isSerialising ? Util::DoubleToUInt64( value ) : 0;
 
@@ -203,7 +203,7 @@ public:
     {
         const Internal::Type::Type iType = static_cast< Internal::Type::Type >( type );
 
-        if ( mMode == Internal::Mode::Serialise )
+        if ( mMode == static_cast<Internal::Mode::Mode>( Mode::Serialise ) )
         {
             mArrayInfo.Set( iType, size );
             WriteHeader( index, Internal::Type::Array );
@@ -228,7 +228,7 @@ public:
             }
             else
             {
-                if ( mMode == Internal::Mode::Deserialise && !mCurrentObject->GetTerminatorRead() )
+                if ( mMode == static_cast<Internal::Mode::Mode>( Mode::Deserialise ) && !mCurrentObject->GetTerminatorRead() )
                 {
                     const Internal::Type::Type type = ReadUntil( index );
 
@@ -298,7 +298,7 @@ public:
 
     void StoreArrayItem( float &value )
     {
-        const bool isSerialising = mMode == Mode::Serialise;
+        const bool isSerialising = mMode == static_cast<Internal::Mode::Mode>( Mode::Serialise );
 
         uint32_t flexman = isSerialising ? Util::FloatToUInt32( value ) : 0;
 
@@ -312,7 +312,7 @@ public:
 
     void StoreArrayItem( double &value )
     {
-        const bool isSerialising = mMode == Mode::Serialise;
+        const bool isSerialising = mMode == static_cast<Internal::Mode::Mode>( Mode::Serialise );
 
         uint64_t flexman = isSerialising ? Util::DoubleToUInt64( value ) : 0;
 
@@ -451,7 +451,7 @@ private:
     {
         const Internal::Type::Type type = Internal::Type::GetEnum< T >();
 
-        if ( mMode == Internal::Mode::Serialise )
+        if ( mMode == static_cast<Internal::Mode::Mode>( Mode::Serialise ) )
         {
             WriteHeader( index, type );
             WriteToStream( value );
@@ -465,7 +465,7 @@ private:
                 ReadFromTemp( value, data );
                 DeleteTempData( data );
             }
-            else if ( mMode == Internal::Mode::Deserialise && !mCurrentObject->GetTerminatorRead() )
+            else if ( mMode == static_cast<Internal::Mode::Mode>( Mode::Deserialise ) && !mCurrentObject->GetTerminatorRead() )
             {
                 ReadValue( value, index );
             }
@@ -475,7 +475,7 @@ private:
     template< typename T >
     void StoreArrayValue( T &value )
     {
-        if ( mMode == Internal::Mode::Serialise )
+        if ( mMode == static_cast<Internal::Mode::Mode>( Mode::Serialise ) )
         {
             WriteToStream( value );
         }
@@ -485,7 +485,7 @@ private:
             {
                 static_cast< TempArray< T > * >( mCurrentArray )->PopFront( value );
             }
-            else if ( mMode == Internal::Mode::Deserialise && !mCurrentObject->GetTerminatorRead() )
+            else if ( mMode == static_cast<Internal::Mode::Mode>( Mode::Deserialise ) && !mCurrentObject->GetTerminatorRead() )
             {
                 ReadFromStream( value );
             }
@@ -496,7 +496,7 @@ private:
 
     void StoreArrayValue( ISerialisable &value )
     {
-        if ( mMode == Internal::Mode::Serialise )
+        if ( mMode == static_cast<Internal::Mode::Mode>( Mode::Serialise ) )
         {
             WriteToStream( value );
         }
@@ -511,7 +511,7 @@ private:
 
                 DeleteTempData( temp );
             }
-            else if ( mMode == Internal::Mode::Deserialise && !mCurrentObject->GetTerminatorRead() )
+            else if ( mMode == static_cast<Internal::Mode::Mode>( Mode::Deserialise ) && !mCurrentObject->GetTerminatorRead() )
             {
                 ReadFromStream( value );
             }
