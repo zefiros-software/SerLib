@@ -804,6 +804,10 @@ inline ITempData *Message::ReadTempArray()
     case Internal::Type::UInt64:
         data = ReadTempArrayPrimitive< uint64_t >( size );
         break;
+
+    default:
+        assert( false && "Something went terribly haywire..." );
+        break;
     }
 
     return data;
