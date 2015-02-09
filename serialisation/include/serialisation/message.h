@@ -728,7 +728,7 @@ private:
     inline ITempData *ReadTempArray();
 
     template< typename T >
-    inline ITempData *ReadTempArrayPrimitive( uint32_t size )
+    inline ITempData *ReadTempArrayPrimitive( size_t size )
     {
         TempArray< T > *temp = CreateTempData< TempArray< T > >();
         temp->Resize( size );
@@ -739,7 +739,7 @@ private:
         return temp;
     }
 
-    inline ITempData *ReadTempArrayObject( uint32_t size )
+    inline ITempData *ReadTempArrayObject( size_t size )
     {
         TempArray< TempObject * > *temp = CreateTempData< TempArray< TempObject * > >();
 
@@ -754,7 +754,7 @@ private:
 };
 
 template<>
-inline ITempData *Message::ReadTempArrayPrimitive< std::string >( uint32_t size )
+inline ITempData *Message::ReadTempArrayPrimitive< std::string >( size_t size )
 {
     TempArray< std::string > *temp = CreateTempData< TempArray< std::string > >();
     std::vector< char > strVec;
@@ -776,8 +776,8 @@ inline ITempData *Message::ReadTempArray()
 {
     ITempData *data = NULL;
 
-		Internal::Type::Type type = mArrayInfo.type;
-		size_t size = mArrayInfo.remainingCount;
+    Internal::Type::Type type = mArrayInfo.type;
+    size_t size = mArrayInfo.remainingCount;
 
     switch ( type )
     {
@@ -808,50 +808,5 @@ inline ITempData *Message::ReadTempArray()
 
     return data;
 }
-
-    template< typename T >
-    ITempData *ReadTempArrayPrimitive( size_t size )
-    {
-        TempArray< T > *temp = CreateTempData< TempArray< T > >();
-        temp->Resize( size );
-
-        T *first = temp->GetData();
-        mStreamBuffer.ReadBytes( first, sizeof( T ) * size );
-
-        return temp;
-    }
-
-    template<>
-    ITempData *ReadTempArrayPrimitive< std::string >( size_t size )
-    {
-        TempArray< std::string > *temp = CreateTempData< TempArray< std::string > >();
-        std::vector< char > strVec;
-
-        size_t strSize;
-
-        for ( size_t i = 0; i < size; ++i )
-        {
-            strSize = mStreamBuffer.ReadSize();
-            strVec.resize( strSize );
-            mStreamBuffer.ReadBytes( &strVec[0], strSize );
-            temp->PushBack( std::string( &strVec[0], strSize ) );
-        }
-
-        return temp;
-    }
-
-    ITempData *ReadTempArrayObject( size_t size )
-    {
-        TempArray< TempObject * > *temp = CreateTempData< TempArray< TempObject * > >();
-
-        for ( size_t i = 0; i < size; ++i )
-        {
-            TempObject *obj = ReadTempObject();
-            temp->PushBack( obj );
-        }
-
-        return temp;
-    }
-};
 
 #endif
