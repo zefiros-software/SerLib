@@ -32,7 +32,7 @@ class TempArray
 {
 public:
 
-    ~TempArray()
+    virtual ~TempArray()
     {
     }
 
