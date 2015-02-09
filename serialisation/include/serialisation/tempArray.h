@@ -32,7 +32,7 @@ class TempArray
 {
 public:
 
-    ~TempArray()
+    inline ~TempArray()
     {
     }
 
@@ -72,7 +72,8 @@ private:
     std::vector< T > mValues;
 };
 
-TempArray< TempObject * >::~TempArray()
+template<>
+inline TempArray< TempObject * >::~TempArray()
 {
     for ( std::vector<TempObject *>::iterator it = mValues.begin(), end = mValues.end(); it != end; ++it )
     {

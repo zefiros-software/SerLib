@@ -26,6 +26,8 @@
 #include <iostream>
 #include <cstdio>
 
+#include <stdlib.h>
+
 class Testclass
     : public ISerialisable
 {
@@ -34,11 +36,11 @@ public:
     Testclass()
     {
         std::stringstream ss;
-        ss << std::rand();
+        ss << rand();
 
-        mValue1 = std::rand();
+        mValue1 = rand();
 
-        while ( ( mValue2 = Util::UInt32ToFloat( std::rand() ) ) == std::numeric_limits< float >::infinity() );
+        while ( ( mValue2 = Util::UInt32ToFloat( rand() ) ) == std::numeric_limits< float >::infinity() );
 
         mValue3 = ss.str();
     }
@@ -65,11 +67,11 @@ public:
 	Testclass2()
 	{
 		std::stringstream ss;
-		ss << std::rand();
+		ss << rand();
 
-		mValue1 = std::rand();
+		mValue1 = rand();
 
-		while ( ( mValue2 = Util::UInt32ToFloat( std::rand() ) ) == std::numeric_limits< float >::infinity() );
+		while ( ( mValue2 = Util::UInt32ToFloat( rand() ) ) == std::numeric_limits< float >::infinity() );
 
 		mValue3 = ss.str();
 	}
@@ -98,11 +100,11 @@ public:
 	Testclass3()
 	{
 		std::stringstream ss;
-		ss << std::rand();
+		ss << rand();
 
-		mValue1 = std::rand();
+		mValue1 = rand();
 
-		while ( ( mValue2 = Util::UInt32ToFloat( std::rand() ) ) == std::numeric_limits< float >::infinity() );
+		while ( ( mValue2 = Util::UInt32ToFloat( rand() ) ) == std::numeric_limits< float >::infinity() );
 
 		mValue3 = ss.str();
 	}

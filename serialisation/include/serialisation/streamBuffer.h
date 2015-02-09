@@ -28,29 +28,31 @@
 
 #include <fstream>
 
+#include <string.h>
+#include <stdio.h>
+
 template< uint32_t BufferSize >
 class StreamBuffer
 {
 public:
 
-    StreamBuffer( std::string &fileName )
-        : mFileStream( fileName ),
+    StreamBuffer( const std::string &fileName )
+        : mFileStream( fileName.c_str() ),
           mStream( &mFileStream ),
-          mReadIndex( 0 ),
-          mReadSize( 0 ),
           mWriteIndex( 0 ),
           mWriteSize( 0 )
+          mReadIndex( 0 ),
+          mReadSize( 0 )
     {
     }
 
     StreamBuffer( std::iostream &stream )
         : mStream( &stream ),
-          mReadIndex( 0 ),
-          mReadSize( 0 ),
           mWriteIndex( 0 ),
           mWriteSize( 0 )
+          mReadIndex( 0 ),
+          mReadSize( 0 )
     {
-
     }
 
     ~StreamBuffer()
@@ -169,17 +171,19 @@ public:
 
 private:
 
+    char mReadBuffer[ BufferSize ];
+    char mWriteBuffer[ BufferSize ];
+
     std::fstream mFileStream;
 
     std::iostream *mStream;
 
-    int32_t mWriteIndex, mWriteSize;
-    int32_t mReadIndex, mReadSize;
-
     uint8_t mVarIntBuffer[ 10 ];
 
-    char mReadBuffer[ BufferSize ];
-    char mWriteBuffer[ BufferSize ];
+    int32_t mWriteIndex;
+    int32_t mWriteSize;
+    int32_t mReadIndex;
+    int32_t mReadSize;
 
     void FillReadBuffer()
     {
