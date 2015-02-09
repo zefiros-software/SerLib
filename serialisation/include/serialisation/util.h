@@ -31,6 +31,7 @@
 #endif
 
 #include <stdint.h>
+#include <float.h>
 
 
 namespace Util
@@ -50,12 +51,12 @@ namespace Util
     inline uint32_t FloatToUInt32( const float f )
     {
         int32_t exp;
-        float fi = frexp( f, &exp );
+        float fi = std::frexp( f, &exp );
 
         const int32_t sign = exp < 0 ? 1 : 0;
 
-        uint32_t result = ( abs( exp ) & 0xff ) << 1;
-        result |= ZigZag< int32_t, uint32_t >( static_cast< int32_t >( ldexp( fi, 22 ) ) ) << 9;
+        uint32_t result = ( std::abs( exp ) & 0xff ) << 1;
+        result |= ZigZag< int32_t, uint32_t >( static_cast< int32_t >( std::ldexp( fi, 22 ) ) ) << 9;
         result |= sign;
 
         return result;
@@ -75,12 +76,12 @@ namespace Util
     inline uint64_t DoubleToUInt64( const double f )
     {
         int32_t exp;
-        double fi = frexp( f, &exp );
+        double fi = std::frexp( f, &exp );
 
         const int32_t sign = exp < 0 ? 1 : 0;
 
-        uint64_t result = ( uint64_t )( abs( exp ) & 0x7FF ) << 1;
-        result |= ZigZag< int64_t, uint64_t >( static_cast< int64_t >( ldexp( fi, 51 ) ) ) << 12;
+        uint64_t result = ( uint64_t )( std::abs( exp ) & 0x7FF ) << 1;
+        result |= ZigZag< int64_t, uint64_t >( static_cast< int64_t >( std::ldexp( fi, 51 ) ) ) << 12;
         result |= sign;
 
         return result;
