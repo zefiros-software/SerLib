@@ -717,44 +717,7 @@ private:
         return temp;
     }
 
-    ITempData *ReadTempArray()
-    {
-        ITempData *data = NULL;
-
-        uint32_t size;
-        Internal::Type::Type type;
-
-        ReadHeader( size, type );
-
-        switch ( type )
-        {
-        case Internal::Type::Object:
-            data = ReadTempArrayObject( size );
-            break;
-
-        case Internal::Type::String:
-            data = ReadTempArrayPrimitive< std::string >( size );
-            break;
-
-        case Internal::Type::UInt8:
-            data = ReadTempArrayPrimitive< uint8_t >( size );
-            break;
-
-        case Internal::Type::UInt16:
-            data = ReadTempArrayPrimitive< uint16_t >( size );
-            break;
-
-        case Internal::Type::UInt32:
-            data = ReadTempArrayPrimitive< uint32_t >( size );
-            break;
-
-        case Internal::Type::UInt64:
-            data = ReadTempArrayPrimitive< uint64_t >( size );
-            break;
-        }
-
-        return data;
-    }
+    ITempData *ReadTempArray();
 
     template< typename T >
     ITempData *ReadTempArrayPrimitive( uint32_t size )
@@ -764,25 +727,6 @@ private:
 
         T *first = temp->GetData();
         mStreamBuffer.ReadBytes( first, sizeof( T ) * size );
-
-        return temp;
-    }
-
-    template<>
-    ITempData *ReadTempArrayPrimitive< std::string >( uint32_t size )
-    {
-        TempArray< std::string > *temp = CreateTempData< TempArray< std::string > >();
-        std::vector< char > strVec;
-
-        uint32_t strSize;
-
-        for ( uint32_t i = 0; i < size; ++i )
-        {
-            ReadFromStream( strSize );
-            strVec.resize( strSize );
-            mStreamBuffer.ReadBytes( &strVec[0], strSize );
-            temp->PushBack( std::string( &strVec[0], strSize ) );
-        }
 
         return temp;
     }
@@ -800,5 +744,63 @@ private:
         return temp;
     }
 };
+
+template<>
+ITempData *Message::ReadTempArrayPrimitive< std::string >( uint32_t size )
+{
+    TempArray< std::string > *temp = CreateTempData< TempArray< std::string > >();
+    std::vector< char > strVec;
+
+    uint32_t strSize;
+
+    for ( uint32_t i = 0; i < size; ++i )
+    {
+        ReadFromStream( strSize );
+        strVec.resize( strSize );
+        mStreamBuffer.ReadBytes( &strVec[0], strSize );
+        temp->PushBack( std::string( &strVec[0], strSize ) );
+    }
+
+    return temp;
+}
+
+ITempData *Message::ReadTempArray()
+{
+    ITempData *data = NULL;
+
+    uint32_t size;
+    Internal::Type::Type type;
+
+    ReadHeader( size, type );
+
+    switch ( type )
+    {
+    case Internal::Type::Object:
+        data = ReadTempArrayObject( size );
+        break;
+
+    case Internal::Type::String:
+        data = ReadTempArrayPrimitive< std::string >( size );
+        break;
+
+    case Internal::Type::UInt8:
+        data = ReadTempArrayPrimitive< uint8_t >( size );
+        break;
+
+    case Internal::Type::UInt16:
+        data = ReadTempArrayPrimitive< uint16_t >( size );
+        break;
+
+    case Internal::Type::UInt32:
+        data = ReadTempArrayPrimitive< uint32_t >( size );
+        break;
+
+    case Internal::Type::UInt64:
+        data = ReadTempArrayPrimitive< uint64_t >( size );
+        break;
+    }
+
+    return data;
+}
 
 #endif
