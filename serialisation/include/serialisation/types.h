@@ -84,13 +84,7 @@ namespace Internal
         }
 
         template< typename T >
-        inline Type GetEnum()
-        {
-            return Type::Array;
-		}
-
-		template<>
-		inline Type GetEnum< class Message >()
+		inline Type GetEnum()
 		{
 			return Type::Object;
 		}
