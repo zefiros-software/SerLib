@@ -49,7 +49,7 @@ public:
             std::fstream ftemp;
             ftemp.open( fileName.c_str(), std::ios::out );
             ftemp.flush();
-            mFileStream = std::fstream( fileName.c_str() );
+            mFileStream.open( fileName.c_str() );
         }
     }
 
