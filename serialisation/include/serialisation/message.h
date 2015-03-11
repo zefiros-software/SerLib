@@ -25,6 +25,7 @@
 #define __SERIALISATION_MESSAGE_H__
 
 #include "interface/ISerialisable.h"
+#include "interface/IMessage.h"
 
 #include "tempPrimitive.h"
 #include "streamBuffer.h"
@@ -70,17 +71,6 @@ public:
           mBufferNonEmpty( false )
     {
 
-    }
-
-    Message( ISerialisable &serialisable, std::iostream &stream, Mode::Mode mode = Mode::Serialise )
-        : mStreamBuffer( stream ),
-          mArrayInfo( Internal::Type::Array, 0 ),
-          mCurrentArray( NULL ),
-          mCurrentObject( NULL ),
-          mMode( static_cast< Internal::Mode::Mode >( mode ) ),
-          mBufferNonEmpty( false )
-    {
-        Store( serialisable );
     }
 
     ~Message()
