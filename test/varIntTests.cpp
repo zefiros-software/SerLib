@@ -68,4 +68,4 @@ T VarIntConvert( T value )
 TestVarInt( uint8_t );
 TestVarInt( uint16_t );
 TestVarInt( uint32_t );
-TestVarInt( uint64_t );
+TestVarInt( size_t );
