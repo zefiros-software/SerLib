@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#ifndef __SERIALISATION_BINARYMESSAGE_H__
-#define __SERIALISATION_BINARYMESSAGE_H__
+#ifndef __SERIALISATION_BINARYSERMESSAGE_H__
+#define __SERIALISATION_BINARYSERMESSAGE_H__
 
 #include "interface/abstractTempArray.h"
 #include "interface/ISerialisable.h"
