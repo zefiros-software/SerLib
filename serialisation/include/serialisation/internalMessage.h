@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#ifndef __INTERNALMESSAGE_H__
-#define __INTERNALMESSAGE_H__
+#ifndef __SERIALISATION_INTERNALMESSAGE_H__
+#define __SERIALISATION_INTERNALMESSAGE_H__
 
 #include "serialisation/interface/ISerialisable.h"
 #include "serialisation/types.h"

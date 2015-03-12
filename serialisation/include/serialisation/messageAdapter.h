@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#ifndef __MESSAGEADAPTER_H__
-#define __MESSAGEADAPTER_H__
+#ifndef __SERIALISATION_MESSAGEADAPTER_H__
+#define __SERIALISATION_MESSAGEADAPTER_H__
 
 #include "types.h"
 #include "defines.h"
