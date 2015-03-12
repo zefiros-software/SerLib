@@ -52,35 +52,35 @@ public:
 
     }
 
-	void InitObject()
-	{
+    void InitObject()
+    {
 
-	}
+    }
 
-	void FinishObject()
-	{
-		WriteHeader( static_cast<  uint8_t >( 0 ), Internal::Type::Terminator );
-	}
+    void FinishObject()
+    {
+        WriteHeader( static_cast<  uint8_t >( 0 ), Internal::Type::Terminator );
+    }
 
-	void InitObject( uint8_t index )
-	{
-		WriteHeader( index, Internal::Type::Object );
-	}
+    void InitObject( uint8_t index )
+    {
+        WriteHeader( index, Internal::Type::Object );
+    }
 
-	void FinishObject( uint8_t /*index*/ )
-	{
-		FinishObject();
-	}
+    void FinishObject( uint8_t /*index*/ )
+    {
+        FinishObject();
+    }
 
-	void InitArrayObject()
-	{
+    void InitArrayObject()
+    {
 
-	}
+    }
 
-	void FinishArrayObject()
-	{
-		FinishObject();
-	}
+    void FinishArrayObject()
+    {
+        FinishObject();
+    }
 
 
 
@@ -138,7 +138,7 @@ public:
         WritePrimitive( value );
     }
 
-	template<>
+    template<>
     void StoreArrayItem< float >( float &value )
     {
         uint32_t flexman = Util::FloatToUInt32( value );
@@ -146,7 +146,7 @@ public:
         StoreArrayItem( flexman );
     }
 
-	template<>
+    template<>
     void StoreArrayItem( double &value )
     {
         uint64_t flexman = Util::DoubleToUInt64( value );
@@ -201,7 +201,7 @@ private:
     }
 
 
-	BinarySerMessage &operator=( const BinarySerMessage &bsm );
+    BinarySerMessage &operator=( const BinarySerMessage &bsm );
 };
 
 #endif

@@ -34,15 +34,15 @@ class SerialiseData;
 
 namespace Internal
 {
-	namespace Mode
-	{
-		enum Mode
-		{
-			Serialise       = 0x00,
-			Deserialise     = 0x01,
-			DeserialiseTemp = 0x02
-		};
-	}
+    namespace Mode
+    {
+        enum Mode
+        {
+            Serialise       = 0x00,
+            Deserialise     = 0x01,
+            DeserialiseTemp = 0x02
+        };
+    }
 
     namespace Flags
     {
@@ -57,7 +57,7 @@ namespace Internal
         // underlying type is uint8_t
         enum Type
         {
-			Terminator = 0x00,
+            Terminator = 0x00,
             Array      = 0x01,
             Object     = 0x02,
             String     = 0x03,
@@ -83,17 +83,37 @@ namespace Internal
             return ( type >= Type::SInt8 ) && ( type <= Type::SInt64 );
         }
 
-        template< typename T >
-		inline Type GetEnum()
-		{
-			return Type::Object;
-		}
+        inline bool AreCompatible( Type type, Type type2 )
+        {
+            if ( type == type2 )
+            {
+                return true;
+            }
 
-		template<>
-		inline Type GetEnum< class ISerialisable >()
-		{
-			return Type::Object;
-		}
+            if ( IsSignedInt( type ) && type - SInt8 == type2 - UInt8 )
+            {
+                return true;
+            }
+
+            if ( IsSignedInt( type2 ) && type2 - SInt8 == type - UInt8 )
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        template< typename T >
+        inline Type GetEnum()
+        {
+            return Type::Object;
+        }
+
+        template<>
+        inline Type GetEnum< class ISerialisable >()
+        {
+            return Type::Object;
+        }
 
         template<>
         inline Type GetEnum< std::string >()

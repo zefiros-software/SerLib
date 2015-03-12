@@ -31,46 +31,46 @@ class InternalMessage
 {
 public:
 
-	virtual void InitObject() = 0;
-	virtual void FinishObject() = 0;
+    virtual void InitObject() = 0;
+    virtual void FinishObject() = 0;
 
-	virtual void InitObject( uint8_t index ) = 0;
-	virtual void FinishObject( uint8_t index ) = 0;
+    virtual void InitObject( uint8_t index ) = 0;
+    virtual void FinishObject( uint8_t index ) = 0;
 
-	virtual void InitArrayObject() = 0;
-	virtual void FinishArrayObject() = 0;
+    virtual void InitArrayObject() = 0;
+    virtual void FinishArrayObject() = 0;
 
-	virtual void Store( std::string &value, uint8_t index ) = 0;
+    virtual void Store( std::string &value, uint8_t index ) = 0;
 
-	virtual void Store( uint8_t &value, uint8_t index ) = 0;
-	virtual void Store( uint16_t &value, uint8_t index ) = 0;
-	virtual void Store( uint32_t &value, uint8_t index ) = 0;
-	virtual void Store( uint64_t &value, uint8_t index ) = 0;
+    virtual void Store( uint8_t &value, uint8_t index ) = 0;
+    virtual void Store( uint16_t &value, uint8_t index ) = 0;
+    virtual void Store( uint32_t &value, uint8_t index ) = 0;
+    virtual void Store( uint64_t &value, uint8_t index ) = 0;
 
-	virtual void Store( int8_t &value, uint8_t index ) = 0;
-	virtual void Store( int16_t &value, uint8_t index ) = 0;
-	virtual void Store( int32_t &value, uint8_t index ) = 0;
-	virtual void Store( int64_t &value, uint8_t index ) = 0;
+    virtual void Store( int8_t &value, uint8_t index ) = 0;
+    virtual void Store( int16_t &value, uint8_t index ) = 0;
+    virtual void Store( int32_t &value, uint8_t index ) = 0;
+    virtual void Store( int64_t &value, uint8_t index ) = 0;
 
-	virtual void Store( float &value, uint8_t index ) = 0;
-	virtual void Store( double &value, uint8_t index ) = 0;
+    virtual void Store( float &value, uint8_t index ) = 0;
+    virtual void Store( double &value, uint8_t index ) = 0;
 
-	virtual size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 ) = 0;
+    virtual size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 ) = 0;
 
-	virtual void StoreArrayItem( std::string &value ) = 0;
+    virtual void StoreArrayItem( std::string &value ) = 0;
 
-	virtual void StoreArrayItem( uint8_t &value ) = 0;
-	virtual void StoreArrayItem( uint16_t &value ) = 0;
-	virtual void StoreArrayItem( uint32_t &value ) = 0;
-	virtual void StoreArrayItem( uint64_t &value ) = 0;
+    virtual void StoreArrayItem( uint8_t &value ) = 0;
+    virtual void StoreArrayItem( uint16_t &value ) = 0;
+    virtual void StoreArrayItem( uint32_t &value ) = 0;
+    virtual void StoreArrayItem( uint64_t &value ) = 0;
 
-	virtual void StoreArrayItem( int8_t &value ) = 0;
-	virtual void StoreArrayItem( int16_t &value ) = 0;
-	virtual void StoreArrayItem( int32_t &value ) = 0;
-	virtual void StoreArrayItem( int64_t &value ) = 0;
+    virtual void StoreArrayItem( int8_t &value ) = 0;
+    virtual void StoreArrayItem( int16_t &value ) = 0;
+    virtual void StoreArrayItem( int32_t &value ) = 0;
+    virtual void StoreArrayItem( int64_t &value ) = 0;
 
-	virtual void StoreArrayItem( float &value ) = 0;
-	virtual void StoreArrayItem( double &value ) = 0;
+    virtual void StoreArrayItem( float &value ) = 0;
+    virtual void StoreArrayItem( double &value ) = 0;
 };
 
 #endif

@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#include "serialisation/messageAdapter.h"
 #include "serialisation/message.h"
 
 #include "gtest/gtest.h"
@@ -60,70 +61,71 @@ private:
 };
 
 class Testclass2
-	: public ISerialisable
+    : public ISerialisable
 {
 public:
 
-	Testclass2()
-	{
-		std::stringstream ss;
-		ss << rand();
+    Testclass2()
+    {
+        std::stringstream ss;
+        ss << rand();
 
-		mValue1 = rand();
+        mValue1 = rand();
 
-		while ( ( mValue2 = Util::UInt32ToFloat( rand() ) ) == std::numeric_limits< float >::infinity() );
+        while ( ( mValue2 = Util::UInt32ToFloat( rand() ) ) == std::numeric_limits< float >::infinity() );
 
-		mValue3 = ss.str();
-	}
+        mValue3 = ss.str();
+    }
 
-	void SERIALISATION_CUSTOM_INTERFACE( Message &message )
-	{
-		message.Store( mValue4, 3 );
-		message.Store( mValue3, 2 );
-		message.Store( mValue2, 1 );
-		message.Store( mValue1, 0 );
-	}
+    void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+    {
+        message.Store( mValue4, 3 );
+        message.Store( mValue3, 2 );
+        message.Store( mValue2, 1 );
+        message.Store( mValue1, 0 );
+    }
 
 private:
 
-	uint32_t mValue1;
-	float mValue2;
-	std::string mValue3;
-	Testclass mValue4;
+    uint32_t mValue1;
+    float mValue2;
+    std::string mValue3;
+    Testclass mValue4;
 };
 
 class Testclass3
-	: public ISerialisable
+    : public ISerialisable
 {
 public:
 
-	Testclass3()
-	{
-		std::stringstream ss;
-		ss << rand();
+    Testclass3()
+    {
+        std::stringstream ss;
+        ss << rand();
 
-		mValue1 = rand();
+        mValue1 = rand();
 
-		while ( ( mValue2 = Util::UInt32ToFloat( rand() ) ) == std::numeric_limits< float >::infinity() );
+        while ( ( mValue2 = Util::UInt32ToFloat( rand() ) ) == std::numeric_limits< float >::infinity() );
 
-		mValue3 = ss.str();
-	}
+        mValue3 = ss.str();
+    }
 
-	void SERIALISATION_CUSTOM_INTERFACE( Message &message )
-	{
-		message.Store( mValue3, 2 );
-		message.Store( mValue2, 1 );
-		message.Store( mValue1, 0 );
-		message.Store( mValue4, 3 );
-	}
+    void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+    {
+        message.Store( mValue3, 2 );
+        message.Store( mValue2, 1 );
+        message.Store( mValue1, 0 );
+        message.Store( mValue4, 3 );
+    }
 
 private:
 
-	uint32_t mValue1;
-	float mValue2;
-	std::string mValue3;
-	Testclass mValue4;
+    uint32_t mValue1;
+    float mValue2;
+    std::string mValue3;
+    Testclass mValue4;
 };
+
 
 int main( int argc, char **argv )
 {

@@ -36,7 +36,7 @@ class TempPrimitive
     : public ITempData
 {
 public:
-    
+
     Internal::Type::Type GetType() const
     {
         return Internal::Type::GetEnum< T >();
@@ -47,10 +47,10 @@ public:
         return mValue;
     }
 
-	void SetValue( T &value )
-	{
-		mValue = value;
-	}
+    void SetValue( T &value )
+    {
+        mValue = value;
+    }
 
 private:
 
