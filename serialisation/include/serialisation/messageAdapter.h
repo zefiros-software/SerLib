@@ -27,6 +27,7 @@
 #include "types.h"
 #include "defines.h"
 #include "streamBuffer.h"
+#include "internalMessage.h"
 
 template< typename TMessage >
 class MessageAdapter
