@@ -21,6 +21,7 @@
  */
 #include "serialisation/messageAdapter.h"
 #include "serialisation/message.h"
+#include "serialisation/util.h"
 
 #include "gtest/gtest.h"
 
@@ -134,14 +135,14 @@ int main( int argc, char **argv )
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
     _CrtSetReportMode( _CRT_ASSERT, _CRTDBG_MODE_FILE );
     _CrtSetReportFile( _CRT_ASSERT, _CRTDBG_FILE_STDERR );
-    //_crtBreakAlloc = 4568;
+    //_crtBreakAlloc = 4885;
 #endif
 
     testing::InitGoogleTest( &argc, argv );
 
     int result = RUN_ALL_TESTS();
-	
-    //system( "pause" );
+
+    system( "pause" );
 
     return 0;
 }

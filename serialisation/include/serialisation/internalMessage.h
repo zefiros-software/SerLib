@@ -26,15 +26,21 @@
 
 #include "serialisation/interface/ISerialisable.h"
 #include "serialisation/types.h"
+#include <vector>
 
 class InternalMessage
 {
 public:
 
+    virtual ~InternalMessage()
+    {
+
+    }
+
     virtual void InitObject() = 0;
     virtual void FinishObject() = 0;
 
-    virtual void InitObject( uint8_t index ) = 0;
+    virtual bool InitObject( uint8_t index ) = 0;
     virtual void FinishObject( uint8_t index ) = 0;
 
     virtual void InitArrayObject() = 0;
@@ -71,6 +77,20 @@ public:
 
     virtual void StoreArrayItem( float &value ) = 0;
     virtual void StoreArrayItem( double &value ) = 0;
+
+
+    virtual void StoreContainer( std::vector< uint8_t > &container, uint8_t index, uint8_t flags ) = 0;
+    virtual void StoreContainer( std::vector< uint16_t > &container, uint8_t index, uint8_t flags ) = 0;
+    virtual void StoreContainer( std::vector< uint32_t > &container, uint8_t index, uint8_t flags ) = 0;
+    virtual void StoreContainer( std::vector< uint64_t > &container, uint8_t index, uint8_t flags ) = 0;
+
+    virtual void StoreContainer( std::vector< int8_t > &container, uint8_t index, uint8_t flags ) = 0;
+    virtual void StoreContainer( std::vector< int16_t > &container, uint8_t index, uint8_t flags ) = 0;
+    virtual void StoreContainer( std::vector< int32_t > &container, uint8_t index, uint8_t flags ) = 0;
+    virtual void StoreContainer( std::vector< int64_t > &container, uint8_t index, uint8_t flags ) = 0;
+
+    virtual void StoreContainer( std::vector< float > &container, uint8_t index, uint8_t flags ) = 0;
+    virtual void StoreContainer( std::vector< double > &container, uint8_t index, uint8_t flags ) = 0;
 };
 
 #endif

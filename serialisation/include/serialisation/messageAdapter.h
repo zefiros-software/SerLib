@@ -51,9 +51,9 @@ public:
         mMessage.FinishObject();
     }
 
-    inline void InitObject( uint8_t index )
+    inline bool InitObject( uint8_t index )
     {
-        mMessage.InitObject( index );
+        return mMessage.InitObject( index );
     }
 
     inline void FinishObject( uint8_t index )
@@ -190,6 +190,59 @@ public:
         mMessage.StoreArrayItem( value );
     }
 
+
+
+    void StoreContainer( std::vector< uint8_t > &container, uint8_t index, uint8_t flags )
+    {
+        mMessage.StoreVector( container, index, flags );
+    }
+
+    void StoreContainer( std::vector< uint16_t > &container, uint8_t index, uint8_t flags )
+    {
+        mMessage.StoreVector( container, index, flags );
+    }
+
+    void StoreContainer( std::vector< uint32_t > &container, uint8_t index, uint8_t flags )
+    {
+        mMessage.StoreVector( container, index, flags );
+    }
+
+    void StoreContainer( std::vector< uint64_t > &container, uint8_t index, uint8_t flags )
+    {
+        mMessage.StoreVector( container, index, flags );
+    }
+
+
+    void StoreContainer( std::vector< int8_t > &container, uint8_t index, uint8_t flags )
+    {
+        mMessage.StoreVector( container, index, flags );
+    }
+
+    void StoreContainer( std::vector< int16_t > &container, uint8_t index, uint8_t flags )
+    {
+        mMessage.StoreVector( container, index, flags );
+    }
+
+    void StoreContainer( std::vector< int32_t > &container, uint8_t index, uint8_t flags )
+    {
+        mMessage.StoreVector( container, index, flags );
+    }
+
+    void StoreContainer( std::vector< int64_t > &container, uint8_t index, uint8_t flags )
+    {
+        mMessage.StoreVector( container, index, flags );
+    }
+
+
+    void StoreContainer( std::vector< float > &container, uint8_t index, uint8_t flags )
+    {
+        mMessage.StoreVector( container, index, flags );
+    }
+
+    void StoreContainer( std::vector< double > &container, uint8_t index, uint8_t flags )
+    {
+        mMessage.StoreVector( container, index, flags );
+    }
 
 private:
 

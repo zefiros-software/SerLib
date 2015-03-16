@@ -39,12 +39,12 @@ void SimpleSerialiseDeserialiseStream( T &c1, T &c2 )
 {
     std::stringstream ss;
     {
-        Message message( ss, Mode::Serialise );
-		message.Store(c1);
+        Message message( ss, Format::Binary, Mode::Serialise );
+        message.Store( c1 );
     }
     {
-        Message message( ss, Mode::Deserialise );
-        message.Store(c2);
+        Message message( ss, Format::Binary, Mode::Deserialise );
+        message.Store( c2 );
     }
 }
 

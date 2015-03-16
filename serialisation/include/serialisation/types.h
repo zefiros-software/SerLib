@@ -44,6 +44,14 @@ namespace Internal
         };
     }
 
+    namespace Format
+    {
+        enum Format
+        {
+            Binary = 0x00
+        };
+    }
+
     namespace Flags
     {
         enum Flags
@@ -83,19 +91,25 @@ namespace Internal
             return ( type >= Type::SInt8 ) && ( type <= Type::SInt64 );
         }
 
-        inline bool AreCompatible( Type type, Type type2 )
+        inline bool AreCompatible( const Type type, const Type type2 )
         {
             if ( type == type2 )
             {
                 return true;
             }
 
-            if ( IsSignedInt( type ) && type - SInt8 == type2 - UInt8 )
+            if ( ( IsSignedInt( type ) && type - SInt8 == type2 - UInt8 ) || ( IsSignedInt( type2 ) && type2 - SInt8 == type - UInt8 ) )
             {
                 return true;
             }
 
-            if ( IsSignedInt( type2 ) && type2 - SInt8 == type - UInt8 )
+
+            if ( ( type == Float && type2 == UInt32 ) || ( type2 == Float && type == UInt32 ) )
+            {
+                return true;
+            }
+
+            if ( ( type == Double && type2 == UInt64 ) || ( type2 == Double && type == UInt64 ) )
             {
                 return true;
             }
@@ -208,6 +222,14 @@ namespace Mode
     {
         Serialise   = Internal::Mode::Serialise,
         Deserialise = Internal::Mode::Deserialise
+    };
+}
+
+namespace Format
+{
+    enum Format
+    {
+        Binary = Internal::Format::Binary
     };
 }
 

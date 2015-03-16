@@ -32,9 +32,7 @@ class IMessage
 {
 public:
 
-	friend struct StoreHelper;
-
-//    virtual void Store( ISerialisable &serialisable, uint8_t index ) = 0;
+    virtual void Store( ISerialisable &serialisable, uint8_t index ) = 0;
     virtual void Store( std::string &value, uint8_t index ) = 0;
 
     virtual void Store( uint8_t &value, uint8_t index ) = 0;
@@ -50,12 +48,12 @@ public:
     virtual void Store( float &value, uint8_t index ) = 0;
     virtual void Store( double &value, uint8_t index ) = 0;
 
-//    virtual void Store( ISerialisable &serialisable ) = 0;
+    virtual void Store( ISerialisable &serialisable ) = 0;
 
 
     virtual size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 ) = 0;
 
-//    virtual void StoreArrayItem( ISerialisable &value ) = 0;
+    virtual void StoreArrayItem( ISerialisable &value ) = 0;
     virtual void StoreArrayItem( std::string &value ) = 0;
 
     virtual void StoreArrayItem( uint8_t &value ) = 0;
