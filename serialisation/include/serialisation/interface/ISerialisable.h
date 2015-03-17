@@ -33,8 +33,13 @@ class ISerialisable
 {
 public:
 
-	virtual void SERIALISATION_CUSTOM_INTERFACE( Message &message ) = 0;
-//	virtual void SERIALISATION_CUSTOM_INTERFACE( OldMessage &message ) = 0;
+    virtual ~ISerialisable()
+    {
+
+    }
+
+    virtual void SERIALISATION_CUSTOM_INTERFACE( Message &message ) = 0;
+    //  virtual void SERIALISATION_CUSTOM_INTERFACE( OldMessage &message ) = 0;
 };
 
 #endif

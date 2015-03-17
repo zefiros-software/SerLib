@@ -54,16 +54,8 @@ public:
 
     inline void InitObject()
     {
-        if ( mCurrentObject )
-        {
-            mBufferUsedHistory.push( true );
-            mBufferHistory.push( mCurrentObject );
-            mCurrentObject = NULL;
-        }
-        else
-        {
-            mBufferUsedHistory.push( false );
-        }
+        mObjectHistory.push( mCurrentObject );
+        mCurrentObject = NULL;
 
         mTerminatorRead = false;
     }
@@ -80,11 +72,24 @@ public:
     inline void InitArrayObject()
     {
         InitObject();
+
+        if ( mCurrentArray )
+        {
+            static_cast< TempArray< TempObject * > * >( mCurrentArray )->PopFront( mCurrentObject );
+            mTerminatorRead = true;
+        }
+
+        mArrayHistory.push( mCurrentArray );
+        mCurrentArray = NULL;
     }
 
     inline void FinishArrayObject()
     {
         FinishObject();
+        mCurrentArray = mArrayHistory.top();
+        mArrayHistory.pop();
+
+        --mArrayInfo.RemainingCount;
     }
 
     template< typename TPrimitive >
@@ -112,15 +117,15 @@ public:
             mStreamBuffer.ReadBytes( &container.at( 0 ), size * sizeof( TPrimitive ) );
         }
 
-        mArrayInfo.remainingCount -= size;
+        mArrayInfo.RemainingCount -= size;
     }
 
 private:
 
     StreamBuffer< SERIALISERS_BUFFERSIZE > &mStreamBuffer;
 
-    std::stack< TempObject * > mBufferHistory;
-    std::stack< bool > mBufferUsedHistory;
+    std::stack< TempObject * > mObjectHistory;
+    std::stack< AbstractTempArray * > mArrayHistory;
 
     ArrayInfo mArrayInfo;
 
@@ -342,7 +347,7 @@ inline void BinaryDeserMessage::ReadValue( TPrimitive &value, uint8_t index )
 {
     const Internal::Type::Type type = ReadUntil( index );
 
-    if ( !mCurrentObject || !mCurrentObject->GetTerminatorRead() )
+    if ( !mTerminatorRead )
     {
         const Internal::Type::Type expected = Internal::Type::GetEnum< TPrimitive >();
         assert( Internal::Type::AreCompatible( type, expected ) && "Whoops, seems like you tried to Deserialise with the wrong type" );
@@ -430,7 +435,7 @@ inline void BinaryDeserMessage::StoreArrayItem( TPrimitive &value )
         ReadFromStream( value );
     }
 
-    --mArrayInfo.remainingCount;
+    --mArrayInfo.RemainingCount;
 }
 
 template< typename TPrimitive >
@@ -464,6 +469,7 @@ inline size_t BinaryDeserMessage::CreateArray( Type::Type type, size_t size, uin
     {
         mCurrentArray = temp;
         mArrayInfo.Set( temp->GetSubType(), temp->GetRemainingCount() );
+        return mArrayInfo.RemainingCount;
     }
     else
     {
@@ -523,7 +529,7 @@ inline void BinaryDeserMessage::StoreVector( std::vector< float > &container, ui
         }
     }
 
-    mArrayInfo.remainingCount -= size;
+    mArrayInfo.RemainingCount -= size;
 }
 
 template<>
@@ -562,7 +568,7 @@ inline void BinaryDeserMessage::StoreVector( std::vector< double > &container, u
         }
     }
 
-    mArrayInfo.remainingCount -= size;
+    mArrayInfo.RemainingCount -= size;
 }
 
 
@@ -589,16 +595,11 @@ inline void BinaryDeserMessage::FinishObject()
         }
 
         DeleteTempData( mCurrentObject );
-        mCurrentObject = NULL;
     }
 
-    if ( mBufferUsedHistory.top() )
-    {
-        mCurrentObject = mBufferHistory.top();
-        mBufferHistory.pop();
-    }
+    mCurrentObject = mObjectHistory.top();
+    mObjectHistory.pop();
 
-    mBufferUsedHistory.pop();
     mTerminatorRead = false;
 }
 
@@ -612,6 +613,7 @@ inline bool BinaryDeserMessage::InitObject( uint8_t index )
     {
         InitObject();
         mCurrentObject = static_cast< TempObject * >( data );
+        mTerminatorRead = true;
     }
     else
     {

@@ -481,7 +481,7 @@ private:
             }
         }
 
-        --mArrayInfo.remainingCount;
+        --mArrayInfo.RemainingCount;
     }
 
     void StoreArrayValue( ISerialisable &value )
@@ -507,7 +507,7 @@ private:
             }
         }
 
-        --mArrayInfo.remainingCount;
+        --mArrayInfo.RemainingCount;
     }
 
     template< typename T >
@@ -765,7 +765,7 @@ inline ITempData *OldMessage::ReadTempArray()
     ITempData *data = NULL;
 
     Internal::Type::Type type = mArrayInfo.type;
-    size_t size = mArrayInfo.remainingCount;
+    size_t size = mArrayInfo.RemainingCount;
 
     switch ( type )
     {
