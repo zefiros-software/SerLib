@@ -40,7 +40,7 @@ public:
 
 	virtual size_t GetRemainingCount() const = 0;
 
-	virtual void Resize( const size_t size ) = 0;
+	virtual void Resize( size_t size ) = 0;
 };
 
 #endif

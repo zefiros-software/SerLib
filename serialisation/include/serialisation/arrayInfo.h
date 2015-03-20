@@ -30,18 +30,6 @@ struct ArrayInfo
 {
     Internal::Type::Type type;
     size_t remainingCount;
-
-    ArrayInfo( Internal::Type::Type type, size_t remainingCount )
-        : type( type ),
-          remainingCount( remainingCount )
-    {
-    }
-
-    void Set( Internal::Type::Type type, size_t remainingCount )
-    {
-        type = type;
-        remainingCount = remainingCount;
-    }
 };
 
 #endif

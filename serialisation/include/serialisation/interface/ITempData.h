@@ -32,8 +32,9 @@ class ITempData
 {
 public:
 
-    virtual Internal::Type::Type GetType() const = 0;
     virtual ~ITempData() {};
+
+    virtual Internal::Type::Type GetType() const = 0;
 };
 
 #endif

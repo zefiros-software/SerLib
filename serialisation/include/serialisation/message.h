@@ -53,33 +53,35 @@ public:
 
     Message( std::iostream &stream, Mode::Mode mode = Mode::Serialise )
         : mStreamBuffer( stream ),
-          mArrayInfo( Internal::Type::Terminator, 0 ),
           mCurrentArray( NULL ),
           mCurrentObject( NULL ),
           mMode( static_cast< Internal::Mode::Mode >( mode ) ),
           mBufferNonEmpty( false )
     {
+        ArrayInfo nullInfo = {Internal::Type::Terminator, 0 };
+        mArrayInfo = nullInfo;
     }
 
     Message( const std::string &fileName, Mode::Mode mode = Mode::Serialise )
         : mStreamBuffer( fileName ),
-          mArrayInfo( Internal::Type::Terminator, 0 ),
           mCurrentArray( NULL ),
           mCurrentObject( NULL ),
           mMode( static_cast< Internal::Mode::Mode >( mode ) ),
           mBufferNonEmpty( false )
     {
-
+        ArrayInfo nullInfo = {Internal::Type::Terminator, 0 };
+        mArrayInfo = nullInfo;
     }
 
     Message( ISerialisable &serialisable, std::iostream &stream, Mode::Mode mode = Mode::Serialise )
         : mStreamBuffer( stream ),
-          mArrayInfo( Internal::Type::Array, 0 ),
           mCurrentArray( NULL ),
           mCurrentObject( NULL ),
           mMode( static_cast< Internal::Mode::Mode >( mode ) ),
           mBufferNonEmpty( false )
     {
+        ArrayInfo arrayInfo = {Internal::Type::Array, 0 };
+        mArrayInfo = arrayInfo;
         Store( serialisable );
     }
 
@@ -207,7 +209,9 @@ public:
 
         if ( mMode == static_cast<Internal::Mode::Mode>( Mode::Serialise ) )
         {
-            mArrayInfo.Set( iType, size );
+            mArrayInfo.type =  iType;
+            mArrayInfo.remainingCount = size;
+
             WriteHeader( index, Internal::Type::Array );
             WriteHeader( flags, iType );
             mStreamBuffer.WriteSize( size );
@@ -226,7 +230,8 @@ public:
             if ( temp )
             {
                 mCurrentArray = temp;
-                mArrayInfo.Set( temp->GetSubType(), temp->GetRemainingCount() );
+                mArrayInfo.type = temp->GetSubType();
+                mArrayInfo.remainingCount = temp->GetRemainingCount();
             }
             else
             {
@@ -239,7 +244,9 @@ public:
                         Internal::Type::Type rType;
                         ReadHeader( flags, rType );
                         size = mStreamBuffer.ReadSize();
-                        mArrayInfo.Set( rType, size );
+
+                        mArrayInfo.type = rType;
+                        mArrayInfo.remainingCount = size;
                     }
                 }
             }
@@ -449,7 +456,7 @@ private:
     }
 
     template< typename T >
-    void StoreValue( T &value, uint8_t index )
+    inline void StoreValue( T &value, uint8_t index )
     {
         const Internal::Type::Type type = Internal::Type::GetEnum< T >();
 

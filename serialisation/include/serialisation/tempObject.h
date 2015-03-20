@@ -76,7 +76,7 @@ public:
 
     bool IsNonEmpty() const
     {
-        return mTempData.size() > 0;
+        return !mTempData.empty();
     }
 
 private:
