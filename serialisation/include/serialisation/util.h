@@ -33,7 +33,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <float.h>
-#include <math.h> 
+#include <math.h>
 
 
 namespace Util

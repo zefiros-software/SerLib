@@ -44,6 +44,13 @@ public:
           mReadIndex( 0 ),
           mReadSize( 0 )
     {
+        if ( !mFileStream.is_open() )
+        {
+            std::fstream ftemp;
+            ftemp.open( fileName.c_str(), std::ios::out );
+            ftemp.flush();
+            mFileStream.open( fileName.c_str() );
+        }
     }
 
     StreamBuffer( std::iostream &stream )
@@ -139,8 +146,8 @@ public:
 
     size_t ReadSize()
     {
-        uint64_t size = 0;
-		uint8_t shift = 0;
+        size_t size = 0;
+        uint8_t shift = 0;
 
         uint8_t byte;
 
@@ -148,14 +155,14 @@ public:
 
         while ( byte & 0x80 )
         {
-            size |= static_cast< uint64_t >( byte & 0x7F ) << shift;
+            size |= static_cast< size_t >( byte & 0x7F ) << shift;
             ReadBytes( &byte, 1 );
             shift += 7;
         }
 
-        size |= static_cast< uint64_t >( byte ) << shift;
+        size |= static_cast< size_t >( byte ) << shift;
 
-        return static_cast< size_t >( size );
+        return size;
     }
     void FlushWriteBuffer()
     {

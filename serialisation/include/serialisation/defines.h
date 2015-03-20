@@ -29,7 +29,7 @@
 #endif
 
 #ifndef SERIALISERS_BUFFERSIZE
-#	define SERIALISERS_BUFFERSIZE 1024
+#   define SERIALISERS_BUFFERSIZE 1024
 #endif
 
 #endif

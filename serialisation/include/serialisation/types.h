@@ -34,15 +34,23 @@ class SerialiseData;
 
 namespace Internal
 {
-	namespace Mode
-	{
-		enum Mode
-		{
-			Serialise       = 0x00,
-			Deserialise     = 0x01,
-			DeserialiseTemp = 0x02
-		};
-	}
+    namespace Mode
+    {
+        enum Mode
+        {
+            Serialise       = 0x00,
+            Deserialise     = 0x01,
+            DeserialiseTemp = 0x02
+        };
+    }
+
+    namespace Format
+    {
+        enum Format
+        {
+            Binary = 0x00
+        };
+    }
 
     namespace Flags
     {
@@ -57,7 +65,7 @@ namespace Internal
         // underlying type is uint8_t
         enum Type
         {
-			Terminator = 0x00,
+            Terminator = 0x00,
             Array      = 0x01,
             Object     = 0x02,
             String     = 0x03,
@@ -83,23 +91,43 @@ namespace Internal
             return ( type >= Type::SInt8 ) && ( type <= Type::SInt64 );
         }
 
+        inline bool AreCompatible( const Type type, const Type type2 )
+        {
+            if ( type == type2 )
+            {
+                return true;
+            }
+
+            if ( ( IsSignedInt( type ) && type - SInt8 == type2 - UInt8 ) || ( IsSignedInt( type2 ) && type2 - SInt8 == type - UInt8 ) )
+            {
+                return true;
+            }
+
+
+            if ( ( type == Float && type2 == UInt32 ) || ( type2 == Float && type == UInt32 ) )
+            {
+                return true;
+            }
+
+            if ( ( type == Double && type2 == UInt64 ) || ( type2 == Double && type == UInt64 ) )
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         template< typename T >
         inline Type GetEnum()
         {
-            return Type::Array;
-		}
+            return Type::Object;
+        }
 
-		template<>
-		inline Type GetEnum< class Message >()
-		{
-			return Type::Object;
-		}
-
-		template<>
-		inline Type GetEnum< class ISerialisable >()
-		{
-			return Type::Object;
-		}
+        template<>
+        inline Type GetEnum< class ISerialisable >()
+        {
+            return Type::Object;
+        }
 
         template<>
         inline Type GetEnum< std::string >()
@@ -194,6 +222,14 @@ namespace Mode
     {
         Serialise   = Internal::Mode::Serialise,
         Deserialise = Internal::Mode::Deserialise
+    };
+}
+
+namespace Format
+{
+    enum Format
+    {
+        Binary = Internal::Format::Binary
     };
 }
 

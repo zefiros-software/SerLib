@@ -64,6 +64,18 @@ public:
         return NULL;
     }
 
+    size_t GetSize()
+    {
+        return mTempData.size();
+    }
+
+    ITempData *PopBack()
+    {
+        ITempData *temp = mTempData.back().second;
+        mTempData.pop_back();
+        return temp;
+    }
+
     bool GetTerminatorRead() const
     {
         return mTerminatorRead;

@@ -347,6 +347,8 @@ namespace TestClasses
                 message.StoreArrayItem( mMemberR[i] );
             }
 
+            message.StoreContainer( mMemberR, 4 );
+
             message.CreateArray( Type::SInt32, its, 5 );
 
             for ( uint32_t i = 0; i < its; ++i )
@@ -540,7 +542,7 @@ namespace TestClasses
     TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, int16_t, 343422, 21331, 10 );
     TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, int32_t, 343422, 21331, 10 );
     TestFIDMixedSerialClass( PackedMixedFIDSerialisation, randomVals, int64_t, 343422, 21331, 10 );
-    
+
     TestEasyRepeatedClass( EasyRepeated, randomVals, 343422, 21331, 5 );
     TestEasyRepeatedClass( EasyRepeatedPacked, randomVals, 343422, 21331, 100 );
 
