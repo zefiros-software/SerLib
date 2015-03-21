@@ -118,7 +118,7 @@ public:
             mStreamBuffer.ReadBytes( &container.at( 0 ), size * sizeof( TPrimitive ) );
         }
 
-        mArrayInfo.RemainingCount -= size;
+        mArrayInfo.remainingCount -= size;
     }
 
 private:
