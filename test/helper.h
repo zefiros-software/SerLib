@@ -34,8 +34,8 @@
 #include <cstdlib>
 #include <limits>
 
-template< typename T >
-void SimpleSerialiseDeserialiseStream( T &c1, T &c2 )
+template< typename T1, typename T2 >
+void SimpleSerialiseDeserialiseStream( T1 &c1, T2 &c2 )
 {
     std::stringstream ss;
     {

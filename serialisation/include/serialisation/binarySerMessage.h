@@ -236,7 +236,7 @@ inline void BinarySerMessage::StoreVector( std::vector< double > &container, uin
             intBuffer[ k ] = Util::DoubleToUInt64( firstFloat[ k ] );
         }
 
-        mStreamBuffer.WriteBytes( intBuffer, blockSize * sizeof( uint32_t ) );
+        mStreamBuffer.WriteBytes( intBuffer, blockSize * sizeof( uint64_t ) );
     }
 }
 

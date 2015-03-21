@@ -31,7 +31,7 @@
 template< typename T >
 T VarIntConvert( T value )
 {
-	std::stringstream ss;
+    std::stringstream ss;
     StreamBuffer< SERIALISERS_BUFFERSIZE > sb( ss );
     sb.WriteSize( value );
     return static_cast< T >( sb.ReadSize() );
@@ -58,11 +58,11 @@ T VarIntConvert( T value )
     \
     TEST( P( VarIntTest), type ## Random )                      \
     {                                                           \
-        for(uint32_t i = 0; i < 1000; ++i )						\
-        {														\
-            const type ul = static_cast< type >( std::rand() );	\
-            ASSERT_EQ( ul, VarIntConvert(ul));					\
-        }														\
+        for(uint32_t i = 0; i < 1000; ++i )                     \
+        {                                                       \
+            const type ul = static_cast< type >( std::rand() ); \
+            ASSERT_EQ( ul, VarIntConvert(ul));                  \
+        }                                                       \
     }
 
 TestVarInt( uint8_t );

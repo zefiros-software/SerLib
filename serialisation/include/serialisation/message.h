@@ -268,9 +268,10 @@ public:
 
 
     template< typename TContainer >
-    void StoreContainer( TContainer &container, uint8_t index, uint16_t flags = 0x00 )
+    void StoreContainer( TContainer &container, uint8_t index, uint8_t flags = 0x00 )
     {
-        size_t size = CreateArray( static_cast< Type::Type >( Internal::Type::GetEnum< TContainer::value_type >() ), container.size(),
+        size_t size = CreateArray( static_cast< Type::Type >( Internal::Type::GetEnum< typename TContainer::value_type >() ),
+                                   container.size(),
                                    index, flags );
         container.resize( size );
 
