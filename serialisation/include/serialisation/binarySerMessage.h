@@ -52,7 +52,6 @@ public:
 
     inline void InitObject()
     {
-
     }
 
     inline void FinishObject()
@@ -73,15 +72,12 @@ public:
 
     inline void InitArrayObject()
     {
-
     }
 
     inline void FinishArrayObject()
     {
         FinishObject();
     }
-
-
 
     inline void ClearBuffers()
     {
@@ -92,6 +88,7 @@ public:
     void Store( TPrimitive &value, uint8_t index )
     {
         const Internal::Type::Type type = Internal::Type::GetEnum< TPrimitive >();
+
         WriteHeader( index, type );
         WritePrimitive( value );
     }
@@ -105,6 +102,7 @@ public:
 
         WriteHeader( index, Internal::Type::Array );
         WriteHeader( flags, iType );
+
         mStreamBuffer.WriteSize( size );
 
         return size;
@@ -119,8 +117,10 @@ public:
     template< typename TPrimitive >
     void StoreVector( std::vector< TPrimitive > &container, uint8_t index, uint8_t flags )
     {
-        size_t size = container.size();
+        const size_t size = container.size();
+
         CreateArray( static_cast< Type::Type >( Internal::Type::GetEnum< TPrimitive >() ), size, index, flags );
+
         mStreamBuffer.WriteBytes( &container.at( 0 ), size * sizeof( TPrimitive ) );
     }
 
@@ -133,7 +133,8 @@ private:
     template< typename T >
     void WriteHeader( const T index, Internal::Type::Type type )
     {
-        T header = Util::CreateHeader( index, ToBinaryType( type ) );
+        const T header = Util::CreateHeader( index, ToBinaryType( type ) );
+
         WritePrimitive( header );
     }
 
@@ -163,7 +164,6 @@ private:
         mStreamBuffer.WriteBytes( &value, sizeof( TPrimitive ) );
     }
 
-
     BinarySerMessage &operator=( const BinarySerMessage &bsm );
 };
 
@@ -173,7 +173,6 @@ inline void BinarySerMessage::WritePrimitive( std::string &value )
     mStreamBuffer.WriteSize( value.length() );
     mStreamBuffer.WriteBytes( value.c_str(), value.length() );
 }
-
 
 template<>
 inline void BinarySerMessage::StoreArrayItem< float >( float &value )
@@ -191,14 +190,10 @@ inline void BinarySerMessage::StoreArrayItem( double &value )
     StoreArrayItem( flexman );
 }
 
-
-
-
-
 template<>
 inline void BinarySerMessage::StoreVector( std::vector< float > &container, uint8_t index, uint8_t flags )
 {
-    size_t size = container.size();
+    const size_t size = container.size();
     CreateArray( Type::Float, size, index, flags );
 
     uint32_t intBuffer[ 128 ];
@@ -221,7 +216,7 @@ inline void BinarySerMessage::StoreVector( std::vector< float > &container, uint
 template<>
 inline void BinarySerMessage::StoreVector( std::vector< double > &container, uint8_t index, uint8_t flags )
 {
-    size_t size = container.size();
+    const size_t size = container.size();
     CreateArray( Type::Double, size, index, flags );
 
     uint64_t intBuffer[ 128 ];
@@ -239,10 +234,6 @@ inline void BinarySerMessage::StoreVector( std::vector< double > &container, uin
         mStreamBuffer.WriteBytes( intBuffer, blockSize * sizeof( uint64_t ) );
     }
 }
-
-
-
-
 
 template<>
 inline void BinarySerMessage::Store( std::string &value, uint8_t index )
@@ -266,6 +257,5 @@ inline void BinarySerMessage::Store( double &value, uint8_t index )
 
     Store( flexman, index );
 }
-
 
 #endif

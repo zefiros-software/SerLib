@@ -27,7 +27,7 @@
 #include "serialisation/defines.h"
 
 class Message;
-class OldMessage;
+//class OldMessage;
 
 class ISerialisable
 {
@@ -35,7 +35,6 @@ public:
 
     virtual ~ISerialisable()
     {
-
     }
 
     virtual void SERIALISATION_CUSTOM_INTERFACE( Message &message ) = 0;

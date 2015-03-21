@@ -30,11 +30,11 @@
 #include "streamBuffer.h"
 #include "defines.h"
 #include "types.h"
-#include <assert.h>
 #include "messageAdapter.h"
 #include "binarySerMessage.h"
 #include "binaryDeserMessage.h"
 
+#include <assert.h>
 
 class Message
 {
@@ -51,7 +51,6 @@ public:
           mMode( mode ),
           mFormat( format )
     {
-
     }
 
     Message( std::iostream &stream, Format::Format format, Mode::Mode mode = Mode::Serialise )
@@ -60,7 +59,6 @@ public:
           mMode( mode ),
           mFormat( format )
     {
-
     }
 
     ~Message()
@@ -75,11 +73,12 @@ public:
         mStreamBuffer.FlushWriteBuffer();
     }
 
-
     void SetMode( Mode::Mode mode )
     {
         mMode = mode;
+
         DeleteInternalMessage( mInternalMessage );
+
         mInternalMessage = GetInternalMessage( mFormat, mMode );
     }
 
@@ -103,7 +102,9 @@ public:
     void Store( TSerialisable &serialisable )
     {
         mInternalMessage->InitObject();
+
         serialisable.SERIALISATION_CUSTOM_INTERFACE( *this );
+
         mInternalMessage->FinishObject();
     }
 
@@ -118,6 +119,7 @@ public:
         if ( mInternalMessage->InitObject( index ) )
         {
             serialisable.SERIALISATION_CUSTOM_INTERFACE( *this );
+
             mInternalMessage->FinishObject( index );
         }
     }
@@ -127,12 +129,10 @@ public:
         Store< ISerialisable >( serialisable, index );
     }
 
-
     void Store( std::string &value, uint8_t index )
     {
         mInternalMessage->Store( value, index );
     }
-
 
     void Store( uint8_t &value, uint8_t index )
     {
@@ -154,7 +154,6 @@ public:
         mInternalMessage->Store( value, index );
     }
 
-
     void Store( int8_t &value, uint8_t index )
     {
         mInternalMessage->Store( value, index );
@@ -175,7 +174,6 @@ public:
         mInternalMessage->Store( value, index );
     }
 
-
     virtual void Store( float &value, uint8_t index )
     {
         mInternalMessage->Store( value, index );
@@ -185,7 +183,6 @@ public:
     {
         mInternalMessage->Store( value, index );
     }
-
 
     size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 )
     {
@@ -205,12 +202,10 @@ public:
         StoreArrayItem< ISerialisable >( value );
     }
 
-
     void StoreArrayItem( std::string &value )
     {
         mInternalMessage->StoreArrayItem( value );
     }
-
 
     void StoreArrayItem( uint8_t &value )
     {
@@ -232,7 +227,6 @@ public:
         mInternalMessage->StoreArrayItem( value );
     }
 
-
     void StoreArrayItem( int8_t &value )
     {
         mInternalMessage->StoreArrayItem( value );
@@ -253,7 +247,6 @@ public:
         mInternalMessage->StoreArrayItem( value );
     }
 
-
     void StoreArrayItem( float &value )
     {
         mInternalMessage->StoreArrayItem( value );
@@ -264,15 +257,11 @@ public:
         mInternalMessage->StoreArrayItem( value );
     }
 
-
-
-
     template< typename TContainer >
     void StoreContainer( TContainer &container, uint8_t index, uint8_t flags = 0x00 )
     {
-        size_t size = CreateArray( static_cast< Type::Type >( Internal::Type::GetEnum< typename TContainer::value_type >() ),
-                                   container.size(),
-                                   index, flags );
+        const Type::Type type = static_cast< Type::Type >( Internal::Type::GetEnum< typename TContainer::value_type >() );
+        const size_t size = CreateArray( type, container.size(), index, flags );
         container.resize( size );
 
         for ( typename TContainer::iterator it = container.begin(), end = container.end(); it != end; ++it )
@@ -301,7 +290,6 @@ public:
         mInternalMessage->StoreContainer( container, index, flags );
     }
 
-
     void StoreContainer( std::vector< int8_t > &container, uint8_t index, uint8_t flags = 0x00 )
     {
         mInternalMessage->StoreContainer( container, index, flags );
@@ -321,7 +309,6 @@ public:
     {
         mInternalMessage->StoreContainer( container, index, flags );
     }
-
 
     void StoreContainer( std::vector< float > &container, uint8_t index, uint8_t flags = 0x00 )
     {

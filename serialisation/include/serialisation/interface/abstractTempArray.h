@@ -30,17 +30,17 @@ class AbstractTempArray
     : public ITempData
 {
 public:
-
-    Internal::Type::Type GetType() const
-    {
-        return Internal::Type::Array;
-    }
-
+    
     virtual Internal::Type::Type GetSubType() const = 0;
 
     virtual size_t GetRemainingCount() const = 0;
 
     virtual void Resize( size_t size ) = 0;
+
+    Internal::Type::Type GetType() const
+    {
+        return Internal::Type::Array;
+    }
 };
 
 #endif

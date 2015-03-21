@@ -60,9 +60,9 @@ public:
         mTerminatorRead = false;
     }
 
-    inline void FinishObject();
-
     inline bool InitObject( uint8_t index );
+
+    inline void FinishObject();
 
     inline void FinishObject( uint8_t /*index*/ )
     {
@@ -86,6 +86,7 @@ public:
     inline void FinishArrayObject()
     {
         FinishObject();
+
         mCurrentArray = mArrayHistory.top();
         mArrayHistory.pop();
 
@@ -100,12 +101,12 @@ public:
     template< typename TPrimitive >
     void StoreArrayItem( TPrimitive &value );
 
-
     template< typename TPrimitive >
     void StoreVector( std::vector< TPrimitive > &container, uint8_t index, uint8_t flags )
     {
-        size_t size = container.size();
-        size = CreateArray( static_cast< Type::Type >( Internal::Type::GetEnum< TPrimitive >() ), size, index, flags );
+        const Type::Type type = static_cast< Type::Type >( Internal::Type::GetEnum< TPrimitive >() );
+        const size_t size = CreateArray( type, container.size(), index, flags );
+
         container.resize( size );
 
         if ( mCurrentArray )
@@ -150,7 +151,9 @@ private:
     void ReadHeader( T &index, Internal::Type::Type &type )
     {
         T header;
+
         ReadFromStream( header );
+
         index = Util::GetHeaderIndex( header );
         type = Util::GetHeaderType( header );
     }
@@ -182,11 +185,14 @@ private:
         for ( uint32_t i = 0; i < size; ++i )
         {
             mCurrentObject = CreateTempData< TempObject >();
+
             ReadAll();
+
             temp->PushBack( mCurrentObject );
         }
 
         mCurrentObject = NULL;
+
         FinishObject();
 
         return temp;
@@ -196,8 +202,11 @@ private:
     inline ITempData *ReadTempPrimitiveArray( size_t size )
     {
         TempArray< TPrimitive > *tArray = CreateTempData< TempArray< TPrimitive > >();
+
         tArray->Resize( size );
+
         mStreamBuffer.ReadBytes( tArray->GetData(), size * sizeof( TPrimitive ) );
+
         return tArray;
     }
 
@@ -206,11 +215,16 @@ private:
     inline ITempData *ReadTempObject()
     {
         InitObject();
+
         mCurrentObject = CreateTempData< TempObject >();
+
         ReadAll();
+
         TempObject *obj = mCurrentObject;
         mCurrentObject = NULL;
+
         FinishObject();
+
         return obj;
     }
 
@@ -221,6 +235,7 @@ private:
 
         TPrimitive value;
         ReadFromStream( value );
+
         temp->SetValue( value );
 
         return temp;
@@ -342,7 +357,6 @@ inline void BinaryDeserMessage::ReadFromStream( double &value )
     value = Util::UInt64ToDouble( flexman );
 }
 
-
 template< typename TPrimitive >
 inline void BinaryDeserMessage::ReadValue( TPrimitive &value, uint8_t index )
 {
@@ -377,7 +391,6 @@ inline ITempData *BinaryDeserMessage::ReadTempPrimitiveArray< std::string >( siz
 
     return tArray;
 }
-
 
 inline ITempData *BinaryDeserMessage::ReadTempArray()
 {
@@ -422,8 +435,6 @@ inline ITempData *BinaryDeserMessage::ReadTempArray()
 
     return data;
 }
-
-
 
 template< typename TPrimitive >
 inline void BinaryDeserMessage::StoreArrayItem( TPrimitive &value )
@@ -501,14 +512,13 @@ inline size_t BinaryDeserMessage::CreateArray( Type::Type type, size_t size, uin
 template<>
 inline void BinaryDeserMessage::StoreVector( std::vector< float > &container, uint8_t index, uint8_t flags )
 {
-    size_t size = container.size();
-    size = CreateArray( Type::Float, size, index, flags );
+    const size_t size = CreateArray( Type::Float, container.size(), index, flags );
     container.resize( size );
 
     if ( mCurrentArray )
     {
         float *const firstFloat = &container.at( 0 );
-        uint32_t *const intBuffer = static_cast< TempArray< uint32_t > * >( mCurrentArray )->GetData();
+        const uint32_t *const intBuffer = static_cast< TempArray< uint32_t > * >( mCurrentArray )->GetData();
 
         for ( size_t i = 0; i < size; ++i )
         {
@@ -540,14 +550,13 @@ inline void BinaryDeserMessage::StoreVector( std::vector< float > &container, ui
 template<>
 inline void BinaryDeserMessage::StoreVector( std::vector< double > &container, uint8_t index, uint8_t flags )
 {
-    size_t size = container.size();
-    size = CreateArray( Type::Double, size, index, flags );
+    const size_t size = CreateArray( Type::Double, container.size(), index, flags );
     container.resize( size );
 
     if ( mCurrentArray )
     {
         double *const firstFloat = &container.at( 0 );
-        uint64_t *const intBuffer = static_cast< TempArray< uint64_t > * >( mCurrentArray )->GetData();
+        const uint64_t *const intBuffer = static_cast< TempArray< uint64_t > * >( mCurrentArray )->GetData();
 
         for ( size_t i = 0; i < size; ++i )
         {
@@ -575,9 +584,6 @@ inline void BinaryDeserMessage::StoreVector( std::vector< double > &container, u
 
     mArrayInfo.remainingCount -= size;
 }
-
-
-
 
 inline void BinaryDeserMessage::FinishObject()
 {
@@ -608,15 +614,14 @@ inline void BinaryDeserMessage::FinishObject()
     mTerminatorRead = false;
 }
 
-
 inline bool BinaryDeserMessage::InitObject( uint8_t index )
 {
-
     ITempData *const data = mCurrentObject ? mCurrentObject->TryRemoveData( index ) : NULL;
 
     if ( data )
     {
         InitObject();
+
         mCurrentObject = static_cast< TempObject * >( data );
         mTerminatorRead = true;
     }
@@ -637,6 +642,5 @@ inline bool BinaryDeserMessage::InitObject( uint8_t index )
 
     return true;
 }
-
 
 #endif

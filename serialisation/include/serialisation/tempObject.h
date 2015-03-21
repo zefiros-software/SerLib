@@ -50,8 +50,9 @@ public:
 
     ITempData *TryRemoveData( uint8_t index )
     {
-        for ( std::vector< std::pair< uint8_t, ITempData * > >::iterator it = mTempData.begin(), end = mTempData.end();
-                it != end; ++it )
+        typedef std::vector< std::pair< uint8_t, ITempData * > >::iterator iterator;
+
+        for ( iterator it = mTempData.begin(), end = mTempData.end(); it != end; ++it )
         {
             if ( it->first == index )
             {

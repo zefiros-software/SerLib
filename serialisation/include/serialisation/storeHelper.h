@@ -31,7 +31,8 @@ struct StoreHelper
     template< typename Container, typename TMessage >
     static void StoreContainer( TMessage &message, Container &container, uint8_t index, uint8_t flags = 0x00 )
     {
-        ContainerHelper< Container, typename TMessage, Container::value_type >::StoreContainer( message, container, index, flags );
+        ContainerHelper< Container, typename TMessage, Container::value_type >::StoreContainer( message, container, index,
+                flags );
     }
 
     template< typename Container, typename TMessage, typename TSerialisable >
@@ -126,8 +127,8 @@ struct StoreHelper
     {
         static void StoreContainer( TMessage &message, Container &container, uint8_t index, uint8_t flags )
         {
-            container.resize( message.CreateArray( static_cast< Type::Type >( Internal::Type::GetEnum< Container::value_type >() ),
-                                                   container.size(), index, flags ) );
+            const Type::Type type = static_cast< Type::Type >( Internal::Type::GetEnum< Container::value_type >() );
+            container.resize( message.CreateArray( type, container.size(), index, flags ) );
 
             for ( Container::iterator it = container.begin(), end = container.end(); it != end; ++it )
             {
@@ -141,7 +142,8 @@ struct StoreHelper
     {
         static void StoreContainer( BinarySerMessage &message, Container &container, uint8_t index, uint8_t flags )
         {
-            message.CreateArray( static_cast< Type::Type >( Internal::Type::GetEnum< Primitive >() ), container.size(), index, flags );
+            const Type::Type type = static_cast< Type::Type >( Internal::Type::GetEnum< Container::value_type >() );
+            message.CreateArray( type, container.size(), index, flags );
 
             message.mStreamBuffer.WriteBytes( &container.front(), container.size() * sizeof( Primitive ) );
         }
