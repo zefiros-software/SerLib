@@ -349,7 +349,8 @@ private:
         switch ( format )
         {
         case Format::Binary:
-            iMessage = mode == Mode::Serialise ? CreateInternalMessage< BinarySerMessage >() : CreateInternalMessage< BinaryDeserMessage >();
+            iMessage = mode == Mode::Serialise ? CreateInternalMessage< BinarySerMessage >() :
+                       CreateInternalMessage< BinaryDeserMessage >();
             break;
 
         default:
