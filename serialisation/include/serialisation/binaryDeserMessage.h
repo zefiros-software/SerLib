@@ -89,7 +89,7 @@ public:
         mCurrentArray = mArrayHistory.top();
         mArrayHistory.pop();
 
-        --mArrayInfo.RemainingCount;
+        --mArrayInfo.remainingCount;
     }
 
     template< typename TPrimitive >
@@ -472,7 +472,7 @@ inline size_t BinaryDeserMessage::CreateArray( Type::Type type, size_t size, uin
     {
         mCurrentArray = temp;
         mArrayInfo.type = temp->GetSubType();
-        return mArrayInfo.remainingCount = temp->GetRemainingCount();        
+        return mArrayInfo.remainingCount = temp->GetRemainingCount();
     }
     else
     {
@@ -534,7 +534,7 @@ inline void BinaryDeserMessage::StoreVector( std::vector< float > &container, ui
         }
     }
 
-    mArrayInfo.RemainingCount -= size;
+    mArrayInfo.remainingCount -= size;
 }
 
 template<>
@@ -573,7 +573,7 @@ inline void BinaryDeserMessage::StoreVector( std::vector< double > &container, u
         }
     }
 
-    mArrayInfo.RemainingCount -= size;
+    mArrayInfo.remainingCount -= size;
 }
 
 
