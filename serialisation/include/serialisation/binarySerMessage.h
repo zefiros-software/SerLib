@@ -44,10 +44,10 @@ class BinarySerMessage
 public:
 
     BinarySerMessage( StreamBuffer< SERIALISERS_BUFFERSIZE > &buffer )
-        : mStreamBuffer( buffer ),
-          mArrayInfo( Internal::Type::Terminator, 0 )
+        : mStreamBuffer( buffer )
     {
-
+        mArrayInfo.type = Internal::Type::Terminator;
+        mArrayInfo.remainingCount = 0;
     }
 
     inline void InitObject()
@@ -100,7 +100,9 @@ public:
     {
         const Internal::Type::Type iType = static_cast< Internal::Type::Type >( type );
 
-        mArrayInfo.Set( iType, size );
+        mArrayInfo.type = iType;
+        mArrayInfo.remainingCount = size;
+
         WriteHeader( index, Internal::Type::Array );
         WriteHeader( flags, iType );
         mStreamBuffer.WriteSize( size );

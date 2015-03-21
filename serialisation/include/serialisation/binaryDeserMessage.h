@@ -44,12 +44,12 @@ public:
 
     BinaryDeserMessage( StreamBuffer<SERIALISERS_BUFFERSIZE > &buffer )
         : mStreamBuffer( buffer ),
-          mArrayInfo( Internal::Type::Terminator, 0 ),
           mCurrentArray( NULL ),
           mCurrentObject( NULL ),
           mTerminatorRead( false )
     {
-
+        mArrayInfo.type = Internal::Type::Terminator;
+        mArrayInfo.remainingCount = 0;
     }
 
     inline void InitObject()
@@ -105,7 +105,8 @@ public:
 
         if ( mCurrentArray )
         {
-            memcpy( &container.at( 0 ), static_cast< TempArray< uint32_t > * >( mCurrentArray )->GetData(), size * sizeof( TPrimitive ) );
+            memcpy( &container.at( 0 ), static_cast< TempArray< uint32_t > * >( mCurrentArray )->GetData(),
+                    size * sizeof( TPrimitive ) );
         }
         else
         {
@@ -345,7 +346,8 @@ inline void BinaryDeserMessage::ReadValue( TPrimitive &value, uint8_t index )
     if ( !mCurrentObject || !mCurrentObject->GetTerminatorRead() )
     {
         const Internal::Type::Type expected = Internal::Type::GetEnum< TPrimitive >();
-        assert( Internal::Type::AreCompatible( type, expected ) && "Whoops, seems like you tried to Deserialise with the wrong type" );
+        assert( Internal::Type::AreCompatible( type, expected ) &&
+                "Whoops, seems like you tried to Deserialise with the wrong type" );
 
         ReadFromStream( value );
     }
@@ -458,12 +460,14 @@ inline size_t BinaryDeserMessage::CreateArray( Type::Type type, size_t size, uin
         mCurrentArray = NULL;
     }
 
-    AbstractTempArray *temp = mCurrentObject ? static_cast< AbstractTempArray * >( mCurrentObject->TryRemoveData( index ) ) : NULL;
+    AbstractTempArray *temp = mCurrentObject ? static_cast< AbstractTempArray * >( mCurrentObject->TryRemoveData(
+                                  index ) ) : NULL;
 
     if ( temp )
     {
         mCurrentArray = temp;
-        mArrayInfo.Set( temp->GetSubType(), temp->GetRemainingCount() );
+        mArrayInfo.type = temp->GetSubType();
+        mArrayInfo.remainingCount = temp->GetRemainingCount();
     }
     else
     {
@@ -476,7 +480,9 @@ inline size_t BinaryDeserMessage::CreateArray( Type::Type type, size_t size, uin
             ReadHeader( flags, rType );
             assert( Internal::Type::AreCompatible( rType, static_cast< Internal::Type::Type >( type ) ) );
             size = mStreamBuffer.ReadSize();
-            mArrayInfo.Set( rType, size );
+
+            mArrayInfo.type = rType;
+            mArrayInfo.remainingCount = size;
         }
         else
         {
