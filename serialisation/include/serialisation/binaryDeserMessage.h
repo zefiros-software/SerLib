@@ -437,7 +437,7 @@ inline void BinaryDeserMessage::StoreArrayItem( TPrimitive &value )
         ReadFromStream( value );
     }
 
-    --mArrayInfo.RemainingCount;
+    --mArrayInfo.remainingCount;
 }
 
 template< typename TPrimitive >
