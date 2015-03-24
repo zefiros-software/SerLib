@@ -46,7 +46,7 @@ public:
         return &mValues.front();
     }
 
-    void Resize( const size_t size )
+    void Resize( size_t size )
     {
         mValues.resize( size );
     }

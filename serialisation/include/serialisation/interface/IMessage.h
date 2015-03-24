@@ -24,8 +24,8 @@
 #ifndef __SERIALISATION_IMESSAGE_H__
 #define __SERIALISATION_IMESSAGE_H__
 
-
 #include "serialisation/interface/ISerialisable.h"
+
 #include "serialisation/types.h"
 
 class IMessage

@@ -24,10 +24,10 @@
 #ifndef __SERIALISATION_MESSAGEADAPTER_H__
 #define __SERIALISATION_MESSAGEADAPTER_H__
 
-#include "types.h"
-#include "defines.h"
-#include "streamBuffer.h"
 #include "internalMessage.h"
+#include "streamBuffer.h"
+#include "defines.h"
+#include "types.h"
 
 template< typename TMessage >
 class MessageAdapter
@@ -38,7 +38,6 @@ public:
     MessageAdapter( StreamBuffer< SERIALISERS_BUFFERSIZE > &buffer )
         : mMessage( buffer )
     {
-
     }
 
     void InitObject()
@@ -125,13 +124,11 @@ public:
     {
         mMessage.Store( value, index );
     }
-
-
+    
     size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 )
     {
         return mMessage.CreateArray( type, size, index, flags );
     }
-
 
     void StoreArrayItem( std::string &value )
     {
@@ -157,8 +154,7 @@ public:
     {
         mMessage.StoreArrayItem( value );
     }
-
-
+    
     void StoreArrayItem( int8_t &value )
     {
         mMessage.StoreArrayItem( value );
@@ -179,7 +175,6 @@ public:
         mMessage.StoreArrayItem( value );
     }
 
-
     void StoreArrayItem( float &value )
     {
         mMessage.StoreArrayItem( value );
@@ -189,9 +184,7 @@ public:
     {
         mMessage.StoreArrayItem( value );
     }
-
-
-
+    
     void StoreContainer( std::vector< uint8_t > &container, uint8_t index, uint8_t flags )
     {
         mMessage.StoreVector( container, index, flags );
@@ -212,7 +205,6 @@ public:
         mMessage.StoreVector( container, index, flags );
     }
 
-
     void StoreContainer( std::vector< int8_t > &container, uint8_t index, uint8_t flags )
     {
         mMessage.StoreVector( container, index, flags );
@@ -232,8 +224,7 @@ public:
     {
         mMessage.StoreVector( container, index, flags );
     }
-
-
+    
     void StoreContainer( std::vector< float > &container, uint8_t index, uint8_t flags )
     {
         mMessage.StoreVector( container, index, flags );

@@ -34,7 +34,6 @@ public:
 
     virtual ~InternalMessage()
     {
-
     }
 
     virtual void InitObject() = 0;
