@@ -451,6 +451,22 @@ inline void BinaryDeserMessage::StoreArrayItem( TPrimitive &value )
     --mArrayInfo.remainingCount;
 }
 
+template<>
+inline void BinaryDeserMessage::ReadFromTemp( float &value, ITempData *data )
+{
+	uint32_t flexman;
+	ReadFromTemp( flexman, data );
+	value = Util::UInt32ToFloat( flexman );
+}
+
+template<>
+inline void BinaryDeserMessage::ReadFromTemp( double &value, ITempData *data )
+{
+	uint64_t flexman;
+	ReadFromTemp( flexman, data );
+	value = Util::UInt64ToDouble( flexman );
+}
+
 template< typename TPrimitive >
 void BinaryDeserMessage::Store( TPrimitive &value, uint8_t index )
 {
