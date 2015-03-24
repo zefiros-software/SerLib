@@ -35,6 +35,8 @@
 #include "binaryDeserMessage.h"
 
 #include <assert.h>
+#include "messageHelper.h"
+
 
 class Message
 {
@@ -103,7 +105,7 @@ public:
     {
         mInternalMessage->InitObject();
 
-        serialisable.SERIALISATION_CUSTOM_INTERFACE( *this );
+        MessageHelper::SERIALISATION_CUSTOM_INTERFACE( serialisable, *this );
 
         mInternalMessage->FinishObject();
     }
@@ -118,7 +120,7 @@ public:
     {
         if ( mInternalMessage->InitObject( index ) )
         {
-            serialisable.SERIALISATION_CUSTOM_INTERFACE( *this );
+            MessageHelper::SERIALISATION_CUSTOM_INTERFACE( serialisable, *this );
 
             mInternalMessage->FinishObject( index );
         }
@@ -193,7 +195,9 @@ public:
     void StoreArrayItem( TSerialisable &value )
     {
         mInternalMessage->InitArrayObject();
-        value.SERIALISATION_CUSTOM_INTERFACE( *this );
+
+        MessageHelper::SERIALISATION_CUSTOM_INTERFACE( value, *this );
+
         mInternalMessage->FinishArrayObject();
     }
 
