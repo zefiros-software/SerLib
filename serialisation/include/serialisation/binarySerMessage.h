@@ -120,7 +120,6 @@ public:
         const size_t size = container.size();
 
         CreateArray( static_cast< Type::Type >( Internal::Type::GetEnum< TPrimitive >() ), size, index, flags );
-        assert( size < std::numeric_limits< size_t >::max() / sizeof( TPrimitive ) );
         mStreamBuffer.WriteBlock( &container.at( 0 ), size * sizeof( TPrimitive ) );
     }
 
