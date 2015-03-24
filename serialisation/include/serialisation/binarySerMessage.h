@@ -120,8 +120,8 @@ public:
         const size_t size = container.size();
 
         CreateArray( static_cast< Type::Type >( Internal::Type::GetEnum< TPrimitive >() ), size, index, flags );
-
-        mStreamBuffer.WriteBytes( &container.at( 0 ), size * sizeof( TPrimitive ) );
+        assert( size < std::numeric_limits< size_t >::max() / sizeof( TPrimitive ) );
+        mStreamBuffer.WriteBlock( &container.at( 0 ), size * sizeof( TPrimitive ) );
     }
 
 private:
@@ -209,7 +209,7 @@ inline void BinarySerMessage::StoreVector( std::vector< float > &container, uint
             intBuffer[ k ] = Util::FloatToUInt32( firstFloat[ k ] );
         }
 
-        mStreamBuffer.WriteBytes( intBuffer, blockSize * sizeof( uint32_t ) );
+        mStreamBuffer.WriteBlock( intBuffer, blockSize * sizeof( uint32_t ) );
     }
 }
 
@@ -231,7 +231,7 @@ inline void BinarySerMessage::StoreVector( std::vector< double > &container, uin
             intBuffer[ k ] = Util::DoubleToUInt64( firstFloat[ k ] );
         }
 
-        mStreamBuffer.WriteBytes( intBuffer, blockSize * sizeof( uint64_t ) );
+        mStreamBuffer.WriteBlock( intBuffer, blockSize * sizeof( uint64_t ) );
     }
 }
 

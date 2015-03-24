@@ -116,7 +116,7 @@ public:
         }
         else
         {
-            mStreamBuffer.ReadBytes( &container.at( 0 ), size * sizeof( TPrimitive ) );
+            mStreamBuffer.ReadBlock( &container.at( 0 ), size * sizeof( TPrimitive ) );
         }
 
         mArrayInfo.remainingCount -= size;
@@ -535,7 +535,7 @@ inline void BinaryDeserMessage::StoreVector( std::vector< float > &container, ui
             blockSize = blockSize > 128 ? 128 : blockSize;
             float *firstFloat = &container[ i ];
 
-            mStreamBuffer.ReadBytes( intBuffer, blockSize * sizeof( uint32_t ) );
+            mStreamBuffer.ReadBlock( intBuffer, blockSize * sizeof( uint32_t ) );
 
             for ( size_t k = 0; k < blockSize; ++k )
             {
@@ -573,7 +573,7 @@ inline void BinaryDeserMessage::StoreVector( std::vector< double > &container, u
             blockSize = blockSize > 128 ? 128 : blockSize;
             double *firstFloat = &container[ i ];
 
-            mStreamBuffer.ReadBytes( intBuffer, blockSize * sizeof( uint64_t ) );
+            mStreamBuffer.ReadBlock( intBuffer, blockSize * sizeof( uint64_t ) );
 
             for ( size_t k = 0; k < blockSize; ++k )
             {

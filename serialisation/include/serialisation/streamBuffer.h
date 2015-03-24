@@ -104,6 +104,21 @@ public:
     }
 
     template< typename T >
+    void WriteBlock( const T *const firstByte, size_t byteCount )
+    {
+        if ( byteCount < BufferSize / 2 )
+        {
+            WriteBytes( firstByte, byteCount );
+        }
+        else
+		{
+			const char *const c = reinterpret_cast< const char *const >( firstByte );
+            FlushWriteBuffer();
+            mStream->write( c, byteCount );
+        }
+    }
+
+    template< typename T >
     void ReadBytes( T *const firstByte, size_t byteCount )
     {
         char *const c = reinterpret_cast< char *const >( firstByte );
@@ -127,6 +142,21 @@ public:
 
             char *size = c + diff;
             ReadBytes( size, diff2 );
+        }
+    }
+
+    template< typename T >
+    void ReadBlock( T *const firstByte, size_t byteCount )
+    {
+        if ( byteCount < BufferSize / 2 )
+        {
+            ReadBytes( firstByte, byteCount );
+        }
+        else
+        {
+            char *const c = reinterpret_cast< char *const >( firstByte );
+            ClearReadBuffer();
+            mStream->read( c, byteCount );
         }
     }
 
