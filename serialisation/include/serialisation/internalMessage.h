@@ -42,6 +42,9 @@ public:
     virtual bool InitObject( uint8_t index ) = 0;
     virtual void FinishObject( uint8_t index ) = 0;
 
+	virtual bool InitParent( uint8_t index ) = 0;
+	virtual void FinishParent( uint8_t index ) = 0;
+
     virtual void InitArrayObject() = 0;
     virtual void FinishArrayObject() = 0;
 

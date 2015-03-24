@@ -70,6 +70,16 @@ public:
         FinishObject();
     }
 
+    inline bool InitParent( uint8_t index )
+    {
+        return InitObject( index + 28 );
+    }
+
+    inline void FinishParent( uint8_t index )
+    {
+        FinishObject( index + 28 );
+    }
+
     inline void InitArrayObject()
     {
     }
