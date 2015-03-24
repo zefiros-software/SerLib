@@ -191,9 +191,10 @@ private:
             temp->PushBack( mCurrentObject );
         }
 
-        mCurrentObject = NULL;
+        mCurrentObject = mObjectHistory.top();
+        mObjectHistory.pop();
 
-        FinishObject();
+        mTerminatorRead = mCurrentObject ? mCurrentObject->GetTerminatorRead() : false;
 
         return temp;
     }
@@ -223,7 +224,10 @@ private:
         TempObject *obj = mCurrentObject;
         mCurrentObject = NULL;
 
-        FinishObject();
+        mCurrentObject = mObjectHistory.top();
+        mObjectHistory.pop();
+
+        mTerminatorRead = mCurrentObject ? mCurrentObject->GetTerminatorRead() : false;
 
         return obj;
     }
@@ -310,6 +314,11 @@ inline Internal::Type::Type BinaryDeserMessage::ReadUntil( uint8_t index )
     if ( type == Internal::Type::Terminator )
     {
         mTerminatorRead = true;
+
+        if ( mCurrentObject )
+        {
+            mCurrentObject->SetTerminatorRead();
+        }
     }
 
     return type;
@@ -329,6 +338,11 @@ inline void BinaryDeserMessage::ReadAll()
     }
 
     mTerminatorRead = true;
+
+    if ( mCurrentObject )
+    {
+        mCurrentObject->SetTerminatorRead();
+    }
 }
 
 template<>
@@ -627,7 +641,7 @@ inline void BinaryDeserMessage::FinishObject()
     mCurrentObject = mObjectHistory.top();
     mObjectHistory.pop();
 
-    mTerminatorRead = false;
+    mTerminatorRead = mCurrentObject ? mCurrentObject->GetTerminatorRead() : false;
 }
 
 inline bool BinaryDeserMessage::InitObject( uint8_t index )
