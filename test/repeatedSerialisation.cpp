@@ -29,10 +29,10 @@
 #include <stdio.h>
 #include <vector>
 
-#define TestMeshDataClass( test, name, seed1, seed2, its1, its2, its3, its4 ) \
+#define TestMeshDataClass( test, name, its1, its2, its3, its4 ) \
     TEST( P( test ), name )                                          \
     {                                                                \
-        ZefirosEngineMeshData< its1, its2, its3, its4 > c1( seed1 ), c2( seed2 );            \
+        ZefirosEngineMeshData< its1, its2, its3, its4 > c1, c2;            \
         SimpleSerialiseDeserialiseStream( c1, c2 );                  \
         c1.TestEqual( c2 );                                          \
     }
@@ -162,29 +162,10 @@ namespace TestClasses
             }
         };
 
-        ZefirosEngineMeshData( uint32_t seed = 233232 )
+        ZefirosEngineMeshData( )
         {
-            srand( seed );
-
-            mSubMeshes.reserve( its1 );
-            mPositionVertices.reserve( its2 );
-
-
-            for ( uint32_t i = 0; i < its1; ++i )
-            {
-                Vec3 v1( GetRandom< float > (), GetRandom< float > (), GetRandom< float > () );
-                Vec3 v2( GetRandom< float > (), GetRandom< float > (), GetRandom< float > () );
-                Vec3 v3( GetRandom< float > (), GetRandom< float > (), GetRandom< float > () );
-
-                mSubMeshes.push_back( SubMeshData( v1, v2, v3 ) );
-            }
-
-            for ( uint32_t i = 0; i < its2; ++i )
-            {
-                Vec3 v4( GetRandom< float > (), GetRandom< float > (), GetRandom< float > () );
-                mPositionVertices.push_back( v4 );
-            }
-
+            mSubMeshes.resize( its1 );
+            mPositionVertices.resize( its2 );
             mInterlacedVertices.resize( its3 );
             mIndices.resize( its4 );
         }
@@ -588,5 +569,5 @@ namespace TestClasses
     TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, float );
     TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, double );
 
-    TestMeshDataClass( ZefirosMeshData, randomVals, 343422, 21331, 382, 533055, 29851080, 1573602 );
+    TestMeshDataClass( ZefirosMeshData, randomVals, 382, 533055, 29851080, 1573602 );
 }

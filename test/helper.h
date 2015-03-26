@@ -83,4 +83,6 @@ template<>
 double GetRandom< double >();
 
 
+std::string GenerateRandomString();
+
 #endif
