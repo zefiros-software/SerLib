@@ -45,19 +45,29 @@ public:
         mMessage.InitObject();
     }
 
-    void FinishObject()
-    {
-        mMessage.FinishObject();
-    }
-
     inline bool InitObject( uint8_t index )
     {
         return mMessage.InitObject( index );
     }
 
+    void FinishObject()
+    {
+        mMessage.FinishObject();
+    }
+
     inline void FinishObject( uint8_t index )
     {
         mMessage.FinishObject( index );
+    }
+
+    inline bool InitParent( uint8_t index )
+    {
+        return mMessage.InitParent( index );
+    }
+
+    inline void FinishParent( uint8_t index )
+    {
+        mMessage.FinishParent( index );
     }
 
     inline void InitArrayObject()
@@ -124,7 +134,7 @@ public:
     {
         mMessage.Store( value, index );
     }
-    
+
     size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 )
     {
         return mMessage.CreateArray( type, size, index, flags );
@@ -154,7 +164,7 @@ public:
     {
         mMessage.StoreArrayItem( value );
     }
-    
+
     void StoreArrayItem( int8_t &value )
     {
         mMessage.StoreArrayItem( value );
@@ -184,7 +194,7 @@ public:
     {
         mMessage.StoreArrayItem( value );
     }
-    
+
     void StoreContainer( std::vector< uint8_t > &container, uint8_t index, uint8_t flags )
     {
         mMessage.StoreVector( container, index, flags );
@@ -224,7 +234,7 @@ public:
     {
         mMessage.StoreVector( container, index, flags );
     }
-    
+
     void StoreContainer( std::vector< float > &container, uint8_t index, uint8_t flags )
     {
         mMessage.StoreVector( container, index, flags );

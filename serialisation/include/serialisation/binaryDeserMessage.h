@@ -69,6 +69,16 @@ public:
         FinishObject();
     }
 
+    inline bool InitParent( uint8_t index )
+    {
+        return InitObject( index + 28 );
+    }
+
+    inline void FinishParent( uint8_t index )
+    {
+        FinishObject( index + 28 );
+    }
+
     inline void InitArrayObject()
     {
         InitObject();
@@ -191,9 +201,10 @@ private:
             temp->PushBack( mCurrentObject );
         }
 
-        mCurrentObject = NULL;
+        mCurrentObject = mObjectHistory.top();
+        mObjectHistory.pop();
 
-        FinishObject();
+        mTerminatorRead = mCurrentObject ? mCurrentObject->GetTerminatorRead() : false;
 
         return temp;
     }
@@ -223,7 +234,10 @@ private:
         TempObject *obj = mCurrentObject;
         mCurrentObject = NULL;
 
-        FinishObject();
+        mCurrentObject = mObjectHistory.top();
+        mObjectHistory.pop();
+
+        mTerminatorRead = mCurrentObject ? mCurrentObject->GetTerminatorRead() : false;
 
         return obj;
     }
@@ -310,6 +324,11 @@ inline Internal::Type::Type BinaryDeserMessage::ReadUntil( uint8_t index )
     if ( type == Internal::Type::Terminator )
     {
         mTerminatorRead = true;
+
+        if ( mCurrentObject )
+        {
+            mCurrentObject->SetTerminatorRead();
+        }
     }
 
     return type;
@@ -329,6 +348,11 @@ inline void BinaryDeserMessage::ReadAll()
     }
 
     mTerminatorRead = true;
+
+    if ( mCurrentObject )
+    {
+        mCurrentObject->SetTerminatorRead();
+    }
 }
 
 template<>
@@ -449,6 +473,22 @@ inline void BinaryDeserMessage::StoreArrayItem( TPrimitive &value )
     }
 
     --mArrayInfo.remainingCount;
+}
+
+template<>
+inline void BinaryDeserMessage::ReadFromTemp( float &value, ITempData *data )
+{
+	uint32_t flexman;
+	ReadFromTemp( flexman, data );
+	value = Util::UInt32ToFloat( flexman );
+}
+
+template<>
+inline void BinaryDeserMessage::ReadFromTemp( double &value, ITempData *data )
+{
+	uint64_t flexman;
+	ReadFromTemp( flexman, data );
+	value = Util::UInt64ToDouble( flexman );
 }
 
 template< typename TPrimitive >
@@ -611,7 +651,7 @@ inline void BinaryDeserMessage::FinishObject()
     mCurrentObject = mObjectHistory.top();
     mObjectHistory.pop();
 
-    mTerminatorRead = false;
+    mTerminatorRead = mCurrentObject ? mCurrentObject->GetTerminatorRead() : false;
 }
 
 inline bool BinaryDeserMessage::InitObject( uint8_t index )

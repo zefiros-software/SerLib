@@ -35,6 +35,9 @@
 #include "binaryDeserMessage.h"
 
 #include <assert.h>
+#include "messageHelper.h"
+
+#define ASSERT_INDEX_IN_RANGE() assert( index < 28 && "Index should be less than 28 for members" )
 
 class Message
 {
@@ -103,7 +106,7 @@ public:
     {
         mInternalMessage->InitObject();
 
-        serialisable.SERIALISATION_CUSTOM_INTERFACE( *this );
+        MessageHelper::SERIALISATION_CUSTOM_INTERFACE( serialisable, *this );
 
         mInternalMessage->FinishObject();
     }
@@ -116,11 +119,26 @@ public:
     template< typename TSerialisable >
     void Store( TSerialisable &serialisable, uint8_t index )
     {
+        ASSERT_INDEX_IN_RANGE();
+
         if ( mInternalMessage->InitObject( index ) )
         {
-            serialisable.SERIALISATION_CUSTOM_INTERFACE( *this );
+            MessageHelper::SERIALISATION_CUSTOM_INTERFACE( serialisable, *this );
 
             mInternalMessage->FinishObject( index );
+        }
+    }
+
+    template< typename TParent >
+    void StoreParent( TParent &parent, uint8_t index )
+    {
+		assert( index < 4 && "Index should be less than 4 for StoreParent" );
+
+        if ( mInternalMessage->InitParent( index ) )
+        {
+            MessageHelper::StoreParent( parent, *this );
+
+            mInternalMessage->FinishParent( index );
         }
     }
 
@@ -131,61 +149,85 @@ public:
 
     void Store( std::string &value, uint8_t index )
     {
+        ASSERT_INDEX_IN_RANGE();
+
         mInternalMessage->Store( value, index );
     }
 
     void Store( uint8_t &value, uint8_t index )
     {
+        ASSERT_INDEX_IN_RANGE();
+
         mInternalMessage->Store( value, index );
     }
 
     void Store( uint16_t &value, uint8_t index )
     {
+        ASSERT_INDEX_IN_RANGE();
+
         mInternalMessage->Store( value, index );
     }
 
     void Store( uint32_t &value, uint8_t index )
     {
+        ASSERT_INDEX_IN_RANGE();
+
         mInternalMessage->Store( value, index );
     }
 
     void Store( uint64_t &value, uint8_t index )
     {
+        ASSERT_INDEX_IN_RANGE();
+
         mInternalMessage->Store( value, index );
     }
 
     void Store( int8_t &value, uint8_t index )
     {
+        ASSERT_INDEX_IN_RANGE();
+
         mInternalMessage->Store( value, index );
     }
 
     void Store( int16_t &value, uint8_t index )
     {
+        ASSERT_INDEX_IN_RANGE();
+
         mInternalMessage->Store( value, index );
     }
 
     void Store( int32_t &value, uint8_t index )
     {
+        ASSERT_INDEX_IN_RANGE();
+
         mInternalMessage->Store( value, index );
     }
 
     void Store( int64_t &value, uint8_t index )
     {
+        ASSERT_INDEX_IN_RANGE();
+
         mInternalMessage->Store( value, index );
     }
 
-    virtual void Store( float &value, uint8_t index )
+    void Store( float &value, uint8_t index )
     {
+        ASSERT_INDEX_IN_RANGE();
+
         mInternalMessage->Store( value, index );
     }
 
-    virtual void Store( double &value, uint8_t index )
+    void Store( double &value, uint8_t index )
     {
+        ASSERT_INDEX_IN_RANGE();
+
         mInternalMessage->Store( value, index );
     }
 
     size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 )
     {
+        ASSERT_INDEX_IN_RANGE();
+
         return mInternalMessage->CreateArray( type, size, index, flags );
     }
 
@@ -193,7 +235,9 @@ public:
     void StoreArrayItem( TSerialisable &value )
     {
         mInternalMessage->InitArrayObject();
-        value.SERIALISATION_CUSTOM_INTERFACE( *this );
+
+        MessageHelper::SERIALISATION_CUSTOM_INTERFACE( value, *this );
+
         mInternalMessage->FinishArrayObject();
     }
 
