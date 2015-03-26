@@ -119,14 +119,17 @@ public:
 
         container.resize( size );
 
-        if ( mCurrentArray )
+        if ( size > 0 )
         {
-            memcpy( &container.at( 0 ), static_cast< TempArray< uint32_t > * >( mCurrentArray )->GetData(),
-                    size * sizeof( TPrimitive ) );
-        }
-        else
-        {
-            mStreamBuffer.ReadBlock( &container.at( 0 ), size * sizeof( TPrimitive ) );
+            if ( mCurrentArray )
+            {
+                memcpy( &container.at( 0 ), static_cast< TempArray< uint32_t > * >( mCurrentArray )->GetData(),
+                        size * sizeof( TPrimitive ) );
+            }
+            else
+            {
+                mStreamBuffer.ReadBlock( &container.at( 0 ), size * sizeof( TPrimitive ) );
+            }
         }
 
         mArrayInfo.remainingCount -= size;
@@ -362,7 +365,10 @@ inline void BinaryDeserMessage::ReadFromStream( std::string &value )
 
     value.resize( size, ' ' );
 
-    mStreamBuffer.ReadBytes( &value.at( 0 ), size );
+    if ( size > 0 )
+    {
+        mStreamBuffer.ReadBytes( &value.at( 0 ), size );
+    }
 }
 
 template<>

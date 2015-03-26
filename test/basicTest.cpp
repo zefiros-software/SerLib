@@ -70,7 +70,7 @@ class VectorClass
 {
 public:
 
-    VectorClass( const std::vector< uint8_t > &v ) : vec( v )
+    VectorClass( std::vector< uint8_t > &v ) : vec( v )
     {
     }
 
@@ -79,7 +79,7 @@ public:
         message.StoreContainer( vec, 0 );
     }
 
-    std::vector< uint8_t > vec;
+    std::vector< uint8_t > &vec;
 };
 
 TEST( P( BasicTest ), EmptyContainer )
@@ -114,13 +114,13 @@ class ArrayClass
 {
 public:
 
-    ArrayClass( const std::vector< uint8_t > &v ) : vec( v )
+    ArrayClass( std::vector< uint8_t > &v ) : vec( v )
     {
     }
 
     void OnStore( Message &message )
     {
-        message.CreateArray( Type::UInt8, vec.size(), 0 );
+        vec.resize( message.CreateArray( Type::UInt8, vec.size(), 0 ) );
 
         for ( size_t i = 0, iend = vec.size(); i < iend; ++i )
         {
@@ -128,7 +128,7 @@ public:
         }
     }
 
-    std::vector< uint8_t > vec;
+    std::vector< uint8_t > &vec;
 };
 
 class ArrayFubarClass

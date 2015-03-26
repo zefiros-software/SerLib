@@ -130,12 +130,16 @@ public:
         const size_t size = container.size();
 
         CreateArray( static_cast< Type::Type >( Internal::Type::GetEnum< TPrimitive >() ), size, index, flags );
-        mStreamBuffer.WriteBlock( &container.at( 0 ), size * sizeof( TPrimitive ) );
+
+        if ( size > 0 )
+        {
+            mStreamBuffer.WriteBlock( &container.at( 0 ), size * sizeof( TPrimitive ) );
+        }
     }
 
 private:
 
-    StreamBuffer< SERIALISERS_BUFFERSIZE > &mStreamBuffer;
+    StreamBuffer &mStreamBuffer;
 
     ArrayInfo mArrayInfo;
 
