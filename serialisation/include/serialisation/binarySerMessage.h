@@ -139,7 +139,7 @@ public:
 
 private:
 
-    StreamBuffer &mStreamBuffer;
+    StreamBuffer< SERIALISERS_BUFFERSIZE > &mStreamBuffer;
 
     ArrayInfo mArrayInfo;
 
