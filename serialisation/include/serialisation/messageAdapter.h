@@ -195,54 +195,54 @@ public:
         mMessage.StoreArrayItem( value );
     }
 
-    void StoreContainer( std::vector< uint8_t > &container, uint8_t index, uint8_t flags )
+    void StoreContiguous( uint8_t *begin, size_t size )
     {
-        mMessage.StoreVector( container, index, flags );
+        mMessage.StoreContiguous( begin, size );
     }
 
-    void StoreContainer( std::vector< uint16_t > &container, uint8_t index, uint8_t flags )
+    void StoreContiguous( uint16_t *begin, size_t size )
     {
-        mMessage.StoreVector( container, index, flags );
+        mMessage.StoreContiguous( begin, size );
     }
 
-    void StoreContainer( std::vector< uint32_t > &container, uint8_t index, uint8_t flags )
+    void StoreContiguous( uint32_t *begin, size_t size )
     {
-        mMessage.StoreVector( container, index, flags );
+        mMessage.StoreContiguous( begin, size );
     }
 
-    void StoreContainer( std::vector< uint64_t > &container, uint8_t index, uint8_t flags )
+    void StoreContiguous( uint64_t *begin, size_t size )
     {
-        mMessage.StoreVector( container, index, flags );
+        mMessage.StoreContiguous( begin, size );
     }
 
-    void StoreContainer( std::vector< int8_t > &container, uint8_t index, uint8_t flags )
+    void StoreContiguous( int8_t *begin, size_t size )
     {
-        mMessage.StoreVector( container, index, flags );
+        mMessage.StoreContiguous( begin, size );
     }
 
-    void StoreContainer( std::vector< int16_t > &container, uint8_t index, uint8_t flags )
+    void StoreContiguous( int16_t *begin, size_t size )
     {
-        mMessage.StoreVector( container, index, flags );
+        mMessage.StoreContiguous( begin, size );
     }
 
-    void StoreContainer( std::vector< int32_t > &container, uint8_t index, uint8_t flags )
+    void StoreContiguous( int32_t *begin, size_t size )
     {
-        mMessage.StoreVector( container, index, flags );
+        mMessage.StoreContiguous( begin, size );
     }
 
-    void StoreContainer( std::vector< int64_t > &container, uint8_t index, uint8_t flags )
+    void StoreContiguous( int64_t *begin, size_t size )
     {
-        mMessage.StoreVector( container, index, flags );
+        mMessage.StoreContiguous( begin, size );
     }
 
-    void StoreContainer( std::vector< float > &container, uint8_t index, uint8_t flags )
+    void StoreContiguous( float *begin, size_t size )
     {
-        mMessage.StoreVector( container, index, flags );
+        mMessage.StoreContiguous( begin, size );
     }
 
-    void StoreContainer( std::vector< double > &container, uint8_t index, uint8_t flags )
+    void StoreContiguous( double *begin, size_t size )
     {
-        mMessage.StoreVector( container, index, flags );
+        mMessage.StoreContiguous( begin, size );
     }
 
 private:

@@ -125,16 +125,9 @@ public:
     }
 
     template< typename TPrimitive >
-    void StoreVector( std::vector< TPrimitive > &container, uint8_t index, uint8_t flags )
+    void StoreContiguous( TPrimitive *begin, size_t size )
     {
-        const size_t size = container.size();
-
-        CreateArray( static_cast< Type::Type >( Internal::Type::GetEnum< TPrimitive >() ), size, index, flags );
-
-        if ( size > 0 )
-        {
-            mStreamBuffer.WriteBlock( &container.at( 0 ), size * sizeof( TPrimitive ) );
-        }
+        mStreamBuffer.WriteBlock( begin, size * sizeof( TPrimitive ) );
     }
 
 private:
@@ -142,6 +135,9 @@ private:
     StreamBuffer< SERIALISERS_BUFFERSIZE > &mStreamBuffer;
 
     ArrayInfo mArrayInfo;
+
+    uint32_t mU32Buffer[ 128 ];
+    uint64_t mU64Buffer[ 128 ];
 
     template< typename T >
     void WriteHeader( const T index, Internal::Type::Type type )
@@ -204,47 +200,35 @@ inline void BinarySerMessage::StoreArrayItem( double &value )
 }
 
 template<>
-inline void BinarySerMessage::StoreVector( std::vector< float > &container, uint8_t index, uint8_t flags )
+inline void BinarySerMessage::StoreContiguous( float *begin, size_t size )
 {
-    const size_t size = container.size();
-    CreateArray( Type::Float, size, index, flags );
-
-    uint32_t intBuffer[ 128 ];
-
     for ( size_t i = 0; i < size; i += 128 )
     {
         size_t blockSize = static_cast< size_t >( size - i );
         blockSize = blockSize > 128 ? 128 : blockSize;
-        float *firstFloat = &container[ i ];
 
         for ( size_t k = 0; k < blockSize; ++k )
         {
-            intBuffer[ k ] = Util::FloatToUInt32( firstFloat[ k ] );
+            mU32Buffer[ k ] = Util::FloatToUInt32( begin[ k ] );
         }
 
-        mStreamBuffer.WriteBlock( intBuffer, blockSize * sizeof( uint32_t ) );
+        mStreamBuffer.WriteBlock( mU32Buffer, blockSize * sizeof( uint32_t ) );
     }
 }
 
 template<>
-inline void BinarySerMessage::StoreVector( std::vector< double > &container, uint8_t index, uint8_t flags )
+inline void BinarySerMessage::StoreContiguous( double *begin, size_t size )
 {
-    const size_t size = container.size();
-    CreateArray( Type::Double, size, index, flags );
-
-    uint64_t intBuffer[ 128 ];
-
     for ( size_t i = 0; i < size; i += 128 )
     {
         size_t blockSize = static_cast< size_t >( size - i );
-        double *firstFloat = &container[ i ];
 
         for ( size_t k = 0; k < blockSize; ++k )
         {
-            intBuffer[ k ] = Util::DoubleToUInt64( firstFloat[ k ] );
+            mU64Buffer[ k ] = Util::DoubleToUInt64( begin[ k ] );
         }
 
-        mStreamBuffer.WriteBlock( intBuffer, blockSize * sizeof( uint64_t ) );
+        mStreamBuffer.WriteBlock( mU64Buffer, blockSize * sizeof( uint64_t ) );
     }
 }
 

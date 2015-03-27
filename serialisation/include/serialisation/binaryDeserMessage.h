@@ -109,27 +109,30 @@ public:
     inline size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags );
 
     template< typename TPrimitive >
-    void StoreArrayItem( TPrimitive &value );
+    void StoreArrayItem( TPrimitive &value )
+    {
+        if ( mCurrentArray )
+        {
+            static_cast< TempArray< TPrimitive > * >( mCurrentArray )->PopFront( value );
+        }
+        else
+        {
+            ReadFromStream( value );
+        }
+
+        --mArrayInfo.remainingCount;
+    }
 
     template< typename TPrimitive >
-    void StoreVector( std::vector< TPrimitive > &container, uint8_t index, uint8_t flags )
+    void StoreContiguous( TPrimitive *begin, size_t size )
     {
-        const Type::Type type = static_cast< Type::Type >( Internal::Type::GetEnum< TPrimitive >() );
-        const size_t size = CreateArray( type, container.size(), index, flags );
-
-        container.resize( size );
-
-        if ( size > 0 )
+        if ( mCurrentArray )
         {
-            if ( mCurrentArray )
-            {
-                memcpy( &container.at( 0 ), static_cast< TempArray< uint32_t > * >( mCurrentArray )->GetData(),
-                        size * sizeof( TPrimitive ) );
-            }
-            else
-            {
-                mStreamBuffer.ReadBlock( &container.at( 0 ), size * sizeof( TPrimitive ) );
-            }
+            memcpy( begin, static_cast< TempArray< uint32_t > * >( mCurrentArray )->GetData(), size * sizeof( TPrimitive ) );
+        }
+        else
+        {
+            mStreamBuffer.ReadBlock( begin, size * sizeof( TPrimitive ) );
         }
 
         mArrayInfo.remainingCount -= size;
@@ -466,35 +469,20 @@ inline ITempData *BinaryDeserMessage::ReadTempArray()
     return data;
 }
 
-template< typename TPrimitive >
-inline void BinaryDeserMessage::StoreArrayItem( TPrimitive &value )
-{
-    if ( mCurrentArray )
-    {
-        static_cast< TempArray< TPrimitive > * >( mCurrentArray )->PopFront( value );
-    }
-    else
-    {
-        ReadFromStream( value );
-    }
-
-    --mArrayInfo.remainingCount;
-}
-
 template<>
 inline void BinaryDeserMessage::ReadFromTemp( float &value, ITempData *data )
 {
-	uint32_t flexman;
-	ReadFromTemp( flexman, data );
-	value = Util::UInt32ToFloat( flexman );
+    uint32_t flexman;
+    ReadFromTemp( flexman, data );
+    value = Util::UInt32ToFloat( flexman );
 }
 
 template<>
 inline void BinaryDeserMessage::ReadFromTemp( double &value, ITempData *data )
 {
-	uint64_t flexman;
-	ReadFromTemp( flexman, data );
-	value = Util::UInt64ToDouble( flexman );
+    uint64_t flexman;
+    ReadFromTemp( flexman, data );
+    value = Util::UInt64ToDouble( flexman );
 }
 
 template< typename TPrimitive >
@@ -556,19 +544,15 @@ inline size_t BinaryDeserMessage::CreateArray( Type::Type type, size_t size, uin
 }
 
 template<>
-inline void BinaryDeserMessage::StoreVector( std::vector< float > &container, uint8_t index, uint8_t flags )
+inline void BinaryDeserMessage::StoreContiguous( float *begin, size_t size )
 {
-    const size_t size = CreateArray( Type::Float, container.size(), index, flags );
-    container.resize( size );
-
     if ( mCurrentArray )
     {
-        float *const firstFloat = &container.at( 0 );
         const uint32_t *const intBuffer = static_cast< TempArray< uint32_t > * >( mCurrentArray )->GetData();
 
         for ( size_t i = 0; i < size; ++i )
         {
-            firstFloat[ i ] = Util::UInt32ToFloat( intBuffer[ i ] );
+            begin[ i ] = Util::UInt32ToFloat( intBuffer[ i ] );
         }
     }
     else
@@ -579,13 +563,12 @@ inline void BinaryDeserMessage::StoreVector( std::vector< float > &container, ui
         {
             size_t blockSize = static_cast< size_t >( size - i );
             blockSize = blockSize > 128 ? 128 : blockSize;
-            float *firstFloat = &container[ i ];
 
             mStreamBuffer.ReadBlock( intBuffer, blockSize * sizeof( uint32_t ) );
 
             for ( size_t k = 0; k < blockSize; ++k )
             {
-                firstFloat[ k ] = Util::UInt32ToFloat( intBuffer[ k ] );
+                begin[ k ] = Util::UInt32ToFloat( intBuffer[ k ] );
             }
         }
     }
@@ -594,19 +577,15 @@ inline void BinaryDeserMessage::StoreVector( std::vector< float > &container, ui
 }
 
 template<>
-inline void BinaryDeserMessage::StoreVector( std::vector< double > &container, uint8_t index, uint8_t flags )
+inline void BinaryDeserMessage::StoreContiguous( double *begin, size_t size )
 {
-    const size_t size = CreateArray( Type::Double, container.size(), index, flags );
-    container.resize( size );
-
     if ( mCurrentArray )
     {
-        double *const firstFloat = &container.at( 0 );
         const uint64_t *const intBuffer = static_cast< TempArray< uint64_t > * >( mCurrentArray )->GetData();
 
         for ( size_t i = 0; i < size; ++i )
         {
-            firstFloat[ i ] = Util::UInt64ToDouble( intBuffer[ i ] );
+            begin[ i ] = Util::UInt64ToDouble( intBuffer[ i ] );
         }
     }
     else
@@ -617,13 +596,12 @@ inline void BinaryDeserMessage::StoreVector( std::vector< double > &container, u
         {
             size_t blockSize = static_cast< size_t >( size - i );
             blockSize = blockSize > 128 ? 128 : blockSize;
-            double *firstFloat = &container[ i ];
 
             mStreamBuffer.ReadBlock( intBuffer, blockSize * sizeof( uint64_t ) );
 
             for ( size_t k = 0; k < blockSize; ++k )
             {
-                firstFloat[ k ] = Util::UInt64ToDouble( intBuffer[ k ] );
+                begin[ k ] = Util::UInt64ToDouble( intBuffer[ k ] );
             }
         }
     }

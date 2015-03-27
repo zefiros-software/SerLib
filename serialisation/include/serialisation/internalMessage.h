@@ -42,8 +42,8 @@ public:
     virtual bool InitObject( uint8_t index ) = 0;
     virtual void FinishObject( uint8_t index ) = 0;
 
-	virtual bool InitParent( uint8_t index ) = 0;
-	virtual void FinishParent( uint8_t index ) = 0;
+    virtual bool InitParent( uint8_t index ) = 0;
+    virtual void FinishParent( uint8_t index ) = 0;
 
     virtual void InitArrayObject() = 0;
     virtual void FinishArrayObject() = 0;
@@ -81,18 +81,19 @@ public:
     virtual void StoreArrayItem( double &value ) = 0;
 
 
-    virtual void StoreContainer( std::vector< uint8_t > &container, uint8_t index, uint8_t flags ) = 0;
-    virtual void StoreContainer( std::vector< uint16_t > &container, uint8_t index, uint8_t flags ) = 0;
-    virtual void StoreContainer( std::vector< uint32_t > &container, uint8_t index, uint8_t flags ) = 0;
-    virtual void StoreContainer( std::vector< uint64_t > &container, uint8_t index, uint8_t flags ) = 0;
 
-    virtual void StoreContainer( std::vector< int8_t > &container, uint8_t index, uint8_t flags ) = 0;
-    virtual void StoreContainer( std::vector< int16_t > &container, uint8_t index, uint8_t flags ) = 0;
-    virtual void StoreContainer( std::vector< int32_t > &container, uint8_t index, uint8_t flags ) = 0;
-    virtual void StoreContainer( std::vector< int64_t > &container, uint8_t index, uint8_t flags ) = 0;
+    virtual void StoreContiguous( uint8_t *begin, size_t size ) = 0;
+    virtual void StoreContiguous( uint16_t *begin, size_t size ) = 0;
+    virtual void StoreContiguous( uint32_t *begin, size_t size ) = 0;
+    virtual void StoreContiguous( uint64_t *begin, size_t size ) = 0;
 
-    virtual void StoreContainer( std::vector< float > &container, uint8_t index, uint8_t flags ) = 0;
-    virtual void StoreContainer( std::vector< double > &container, uint8_t index, uint8_t flags ) = 0;
+    virtual void StoreContiguous( int8_t *begin, size_t size ) = 0;
+    virtual void StoreContiguous( int16_t *begin, size_t size ) = 0;
+    virtual void StoreContiguous( int32_t *begin, size_t size ) = 0;
+    virtual void StoreContiguous( int64_t *begin, size_t size ) = 0;
+
+    virtual void StoreContiguous( float *begin, size_t size ) = 0;
+    virtual void StoreContiguous( double *begin, size_t size ) = 0;
 };
 
 #endif

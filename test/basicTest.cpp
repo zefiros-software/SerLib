@@ -80,6 +80,10 @@ public:
     }
 
     std::vector< uint8_t > &vec;
+
+private:
+
+    VectorClass &operator=( const VectorClass & );
 };
 
 TEST( P( BasicTest ), EmptyContainer )
@@ -120,54 +124,54 @@ public:
 
     void OnStore( Message &message )
     {
-        vec.resize( message.CreateArray( Type::UInt8, vec.size(), 0 ) );
-
-        for ( size_t i = 0, iend = vec.size(); i < iend; ++i )
-        {
-            message.StoreArrayItem( vec[i] );
-        }
+        message.StoreContainer( vec, 0 );
     }
 
     std::vector< uint8_t > &vec;
+
+private:
+
+    ArrayClass &operator=( const ArrayClass & );
 };
 
 class ArrayFubarClass
 {
 public:
 
-    ArrayFubarClass( const std::vector< uint8_t > &v ) : vec( v )
+    ArrayFubarClass( std::vector< uint8_t > &v ) : vec( v )
     {
     }
 
     void OnStore( Message &message )
     {
-        message.CreateArray( Type::UInt8, vec.size(), 0 );
+        message.StoreContainer( vec, 0 );
     }
 
-    std::vector< uint8_t > vec;
+    std::vector< uint8_t > &vec;
+
+private:
+
+    ArrayFubarClass &operator=( const ArrayFubarClass & );
 };
 
 class ArrayFubar2Class
 {
 public:
 
-    ArrayFubar2Class( const std::vector< uint8_t > &v ) : vec( v )
+    ArrayFubar2Class( std::vector< uint8_t > &v ) : vec( v )
     {
     }
 
     void OnStore( Message &message )
     {
-        message.CreateArray( Type::UInt8, vec.size(), 0 );
-
-        vec.resize( vec.size() * 2 );
-
-        for ( size_t i = 0, iend = ( vec.size() * 2 ); i < iend; ++i )
-        {
-            message.StoreArrayItem( vec[i] );
-        }
+        message.StoreContainer( vec, 0 );
     }
 
-    std::vector< uint8_t > vec;
+    std::vector< uint8_t > &vec;
+
+private:
+
+    ArrayFubar2Class &operator=( const ArrayFubar2Class & );
 };
 
 TEST( P( BasicTest ), EmptyArray )

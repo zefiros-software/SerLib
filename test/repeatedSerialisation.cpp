@@ -89,10 +89,7 @@ namespace TestClasses
 
             void SERIALISATION_CUSTOM_INTERFACE( Message &message )
             {
-                message.CreateArray( Type::Float, 3, 0 );
-                message.StoreArrayItem( mData[0] );
-                message.StoreArrayItem( mData[1] );
-                message.StoreArrayItem( mData[2] );
+                message.StoreContainer( mData, 0 );
             }
 
             void TestEqual( Vec3 &c2 )
@@ -294,151 +291,6 @@ namespace TestClasses
         std::vector< double > mMemberD;
     };
 
-    template< uint32_t its = 100 >
-    class TestClass3NoHelper
-        : public ISerialisable
-    {
-    public:
-
-        TestClass3NoHelper( uint32_t seed = 233232 )
-        {
-            srand( seed );
-
-            for ( uint32_t i = 0; i < its; ++i )
-            {
-                mMemberT.push_back( GetRandom<uint8_t>() );
-                mMemberS.push_back( GetRandom<uint16_t >() );
-                mMemberR.push_back( GetRandom<uint32_t>() );
-                mMemberG.push_back( GetRandom<uint64_t >() );
-
-                mMemberTs.push_back( GetRandom<int8_t>() );
-                mMemberSs.push_back( GetRandom<int16_t >() );
-                mMemberRs.push_back( GetRandom<int32_t>() );
-                mMemberGs.push_back( GetRandom<int64_t >() );
-
-                mMemberF.push_back( GetRandom< float > () );
-                mMemberD.push_back( GetRandom< double > () );
-
-            }
-
-            name1 = "TestClassTres";
-            name2 = "CouldBeUsedToStoreNames";
-        }
-
-        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
-        {
-            message.CreateArray( Type::UInt8, its, 1 );
-
-            for ( uint32_t i = 0; i < its; ++i )
-            {
-                message.StoreArrayItem( mMemberT[i] );
-            }
-
-            message.CreateArray( Type::SInt8, its, 0 );
-
-            for ( uint32_t i = 0; i < its; ++i )
-            {
-                message.StoreArrayItem( mMemberTs[i] );
-            }
-
-            message.CreateArray( Type::UInt16, its, 2 );
-
-            for ( uint32_t i = 0; i < its; ++i )
-            {
-                message.StoreArrayItem( mMemberS[i] );
-            }
-
-            message.CreateArray( Type::SInt16, its, 3 );
-
-            for ( uint32_t i = 0; i < its; ++i )
-            {
-                message.StoreArrayItem( mMemberSs[i] );
-            }
-
-            message.CreateArray( Type::UInt32, its, 4 );
-
-            for ( uint32_t i = 0; i < its; ++i )
-            {
-                message.StoreArrayItem( mMemberR[i] );
-            }
-
-            message.CreateArray( Type::SInt32, its, 5 );
-
-            for ( uint32_t i = 0; i < its; ++i )
-            {
-                message.StoreArrayItem( mMemberRs[i] );
-            }
-
-            message.CreateArray( Type::UInt64, its, 6 );
-
-            for ( uint32_t i = 0; i < its; ++i )
-            {
-                message.StoreArrayItem( mMemberG[i] );
-            }
-
-            message.CreateArray( Type::SInt64, its, 7 );
-
-            for ( uint32_t i = 0; i < its; ++i )
-            {
-                message.StoreArrayItem( mMemberGs[i] );
-            }
-
-            message.Store( name1, 8 );
-            message.Store( name2, 9 );
-
-            message.CreateArray( Type::Float, its, 10 );
-
-            for ( uint32_t i = 0; i < its; ++i )
-            {
-                message.StoreArrayItem( mMemberF[i] );
-            }
-
-            message.CreateArray( Type::Double, its, 11 );
-
-            for ( uint32_t i = 0; i < its; ++i )
-            {
-                message.StoreArrayItem( mMemberD[i] );
-            }
-
-        }
-
-        void TestEqual( TestClass3NoHelper &c2 )
-        {
-            for ( uint32_t i = 0; i < its; i++ )
-            {
-                EXPECT_EQ( mMemberT[i], c2.mMemberT[i] );
-                EXPECT_EQ( mMemberTs[i], c2.mMemberTs[i] );
-                EXPECT_EQ( mMemberR[i], c2.mMemberR[i] );
-                EXPECT_EQ( mMemberRs[i], c2.mMemberRs[i] );
-                EXPECT_EQ( mMemberG[i], c2.mMemberG[i] );
-                EXPECT_EQ( mMemberGs[i], c2.mMemberGs[i] );
-                EXPECT_EQ( mMemberS[i], c2.mMemberS[i] );
-                EXPECT_EQ( mMemberSs[i], c2.mMemberSs[i] );
-                EXPECT_FLOAT_EQ( mMemberF[i], c2.mMemberF[i] );
-                EXPECT_DOUBLE_EQ( mMemberD[i], c2.mMemberD[i] );
-            }
-
-            EXPECT_EQ( name1.compare( c2.name1 ), 0 );
-            EXPECT_EQ( name2.compare( c2.name2 ), 0 );
-        }
-
-        std::vector< uint8_t > mMemberT;
-        std::vector< uint16_t > mMemberS;
-        std::vector< uint32_t > mMemberR;
-        std::vector< uint64_t > mMemberG;
-
-        std::vector< int8_t > mMemberTs;
-        std::vector< int16_t > mMemberSs;
-        std::vector< int32_t > mMemberRs;
-        std::vector< int64_t > mMemberGs;
-
-        std::string name1;
-        std::string name2;
-
-        std::vector< float > mMemberF;
-        std::vector< double > mMemberD;
-    };
-
 
 
     template< typename TestClass, uint32_t its = 100, typename T = uint32_t >
@@ -459,12 +311,7 @@ namespace TestClasses
 
         void SERIALISATION_CUSTOM_INTERFACE( Message &message )
         {
-            message.CreateArray( Type::Object, its, 0 );
-
-            for ( uint32_t i = 0; i < its; ++i )
-            {
-                message.StoreArrayItem( mMemberTestClasses[ i ] );
-            }
+            message.StoreContainer( mMemberTestClasses, 0 );
         }
 
         void TestEqual( TestClass4 &c2 )
@@ -484,6 +331,12 @@ namespace TestClasses
         : public ISerialisable
     {
     public:
+
+        Primitive()
+            : mMember( T() )
+        {
+
+        }
 
         Primitive( const T &value )
             : mMember( value )
@@ -508,6 +361,12 @@ namespace TestClasses
         : public ISerialisable
     {
     public:
+
+        Primitive()
+            : mMember( float() )
+        {
+
+        }
 
         Primitive( const float &value )
             : mMember( value )
@@ -534,6 +393,12 @@ namespace TestClasses
     {
     public:
 
+        Primitive()
+            : mMember( double() )
+        {
+
+        }
+
         Primitive( const double &value )
             : mMember( value )
         {
@@ -554,7 +419,6 @@ namespace TestClasses
     };
 
     TestEasyRepeatedClass( EasyRepeated, randomVals, 343422, 21331, 5 );
-    TestEasyRepeatedClassNoHelper( EasyRepeatedNoHelper, randomVals, 343422, 21331, 5 );
 
     TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, uint8_t );
     TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, uint16_t );

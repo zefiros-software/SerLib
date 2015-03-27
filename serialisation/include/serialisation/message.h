@@ -132,7 +132,7 @@ public:
     template< typename TParent >
     void StoreParent( TParent &parent, uint8_t index )
     {
-		assert( index < 4 && "Index should be less than 4 for StoreParent" );
+        assert( index < 4 && "Index should be less than 4 for StoreParent" );
 
         if ( mInternalMessage->InitParent( index ) )
         {
@@ -224,11 +224,199 @@ public:
         mInternalMessage->Store( value, index );
     }
 
-    size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 )
-    {
-        ASSERT_INDEX_IN_RANGE();
 
-        return mInternalMessage->CreateArray( type, size, index, flags );
+
+    template< size_t Size, typename TSerialisable >
+    void StoreContainer( TSerialisable( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
+    {
+        const size_t size = CreateArray( Type::Object, Size, index, flags );
+
+        if ( size <= Size )
+        {
+            for ( TSerialisable *it = container, end = it + size; it != end; ++it )
+            {
+                StoreArrayItem( *it );
+            }
+        }
+        else
+        {
+            for ( TSerialisable *it = container, end = it + Size; it != end; ++it )
+            {
+                StoreArrayItem( *it );
+            }
+
+            TSerialisable dummy();
+
+            for ( size_t i = Size; i < size; ++i )
+            {
+                StoreArrayItem( dummy );
+            }
+        }
+	}	  
+
+	template< size_t Size >
+	void StoreContainer( uint8_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
+	{
+		StorePrimitveCArray( container, index, flags );
+	}
+
+	template< size_t Size >
+	void StoreContainer( uint16_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
+	{
+		StorePrimitveCArray( container, index, flags );
+	}
+
+	template< size_t Size >
+	void StoreContainer( uint32_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
+	{
+		StorePrimitveCArray( container, index, flags );
+	}
+
+	template< size_t Size >
+	void StoreContainer( uint64_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
+	{
+		StorePrimitveCArray( container, index, flags );
+	}  
+
+	template< size_t Size >
+	void StoreContainer( int8_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
+	{
+		StorePrimitveCArray( container, index, flags );
+	}
+
+	template< size_t Size >
+	void StoreContainer( int16_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
+	{
+		StorePrimitveCArray( container, index, flags );
+	}
+
+	template< size_t Size >
+	void StoreContainer( int32_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
+	{
+		StorePrimitveCArray( container, index, flags );
+	}
+
+	template< size_t Size >
+	void StoreContainer( int64_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
+	{
+		StorePrimitveCArray( container, index, flags );
+	}
+
+	template< size_t Size >
+	void StoreContainer( float( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
+	{
+		StorePrimitveCArray( container, index, flags );
+	}
+
+	template< size_t Size >
+	void StoreContainer( double( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
+	{
+		StorePrimitveCArray( container, index, flags );
+	}
+
+
+
+    template< typename TContainer >
+    void StoreContainer( TContainer &container, uint8_t index, uint8_t flags = 0x00 )
+    {
+        const Type::Type type = static_cast< Type::Type >( Internal::Type::GetEnum< typename TContainer::value_type >() );
+        const size_t size = CreateArray( type, container.size(), index, flags );
+        container.resize( size );
+
+        for ( typename TContainer::iterator it = container.begin(), end = container.end(); it != end; ++it )
+        {
+            StoreArrayItem( *it );
+        }
+    }
+
+    void StoreContainer( std::vector< uint8_t > &container, uint8_t index, uint8_t flags = 0x00 )
+    {
+        StorePrimitiveVector( container, index, flags );
+    }
+
+    void StoreContainer( std::vector< uint16_t > &container, uint8_t index, uint8_t flags = 0x00 )
+    {
+        StorePrimitiveVector( container, index, flags );
+    }
+
+    void StoreContainer( std::vector< uint32_t > &container, uint8_t index, uint8_t flags = 0x00 )
+    {
+        StorePrimitiveVector( container, index, flags );
+    }
+
+    void StoreContainer( std::vector< uint64_t > &container, uint8_t index, uint8_t flags = 0x00 )
+    {
+        StorePrimitiveVector( container, index, flags );
+    }
+
+    void StoreContainer( std::vector< int8_t > &container, uint8_t index, uint8_t flags = 0x00 )
+    {
+        StorePrimitiveVector( container, index, flags );
+    }
+
+    void StoreContainer( std::vector< int16_t > &container, uint8_t index, uint8_t flags = 0x00 )
+    {
+        StorePrimitiveVector( container, index, flags );
+    }
+
+    void StoreContainer( std::vector< int32_t > &container, uint8_t index, uint8_t flags = 0x00 )
+    {
+        StorePrimitiveVector( container, index, flags );
+    }
+
+    void StoreContainer( std::vector< int64_t > &container, uint8_t index, uint8_t flags = 0x00 )
+    {
+        StorePrimitiveVector( container, index, flags );
+    }
+
+    void StoreContainer( std::vector< float > &container, uint8_t index, uint8_t flags = 0x00 )
+    {
+        StorePrimitiveVector( container, index, flags );
+    }
+
+    void StoreContainer( std::vector< double > &container, uint8_t index, uint8_t flags = 0x00 )
+    {
+        StorePrimitiveVector( container, index, flags );
+    }
+
+private:
+
+    StreamBuffer< SERIALISERS_BUFFERSIZE > mStreamBuffer;
+
+    InternalMessage *mInternalMessage;
+
+    Mode::Mode mMode;
+    Format::Format mFormat;
+
+    InternalMessage *GetInternalMessage( Format::Format format, Mode::Mode mode )
+    {
+        InternalMessage *iMessage = NULL;
+
+        switch ( format )
+        {
+        case Format::Binary:
+            iMessage = mode == Mode::Serialise ? CreateInternalMessage< BinarySerMessage >() :
+                       CreateInternalMessage< BinaryDeserMessage >();
+            break;
+
+        default:
+            assert( false && "Something went terribly haywire..." );
+            break;
+        }
+
+        return iMessage;
+    }
+
+    template< typename TMessage >
+    InternalMessage *CreateInternalMessage()
+    {
+        return new MessageAdapter< TMessage >( mStreamBuffer );
+    }
+
+    template< typename TMessage >
+    void DeleteInternalMessage( TMessage *message )
+    {
+        delete message;
     }
 
     template< typename TSerialisable >
@@ -301,107 +489,47 @@ public:
         mInternalMessage->StoreArrayItem( value );
     }
 
-    template< typename TContainer >
-    void StoreContainer( TContainer &container, uint8_t index, uint8_t flags = 0x00 )
+    size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 )
     {
-        const Type::Type type = static_cast< Type::Type >( Internal::Type::GetEnum< typename TContainer::value_type >() );
-        const size_t size = CreateArray( type, container.size(), index, flags );
+        ASSERT_INDEX_IN_RANGE();
+
+        return mInternalMessage->CreateArray( type, size, index, flags );
+    }
+
+    template< typename TPrimitive >
+    void StorePrimitiveVector( std::vector< TPrimitive > &container, uint8_t index, uint8_t flags )
+    {
+        const Type::Type type = static_cast< Type::Type >( Internal::Type::GetEnum< TPrimitive >() );
+        const size_t size = mInternalMessage->CreateArray( type, container.size(), index, flags );
         container.resize( size );
 
-        for ( typename TContainer::iterator it = container.begin(), end = container.end(); it != end; ++it )
+        if ( size > 0 )
         {
-            StoreArrayItem( *it );
+            mInternalMessage->StoreContiguous( &container.at( 0 ), size );
         }
     }
 
-    void StoreContainer( std::vector< uint8_t > &container, uint8_t index, uint8_t flags = 0x00 )
+    template< size_t Size, typename TPrimitive >
+    void StorePrimitveCArray( TPrimitive( &container )[ Size ], uint8_t index, uint8_t flags )
     {
-        mInternalMessage->StoreContainer( container, index, flags );
-    }
+        const Type::Type type = static_cast< Type::Type >( Internal::Type::GetEnum< TPrimitive >() );
+        const size_t size = CreateArray( type, Size, index, flags );
 
-    void StoreContainer( std::vector< uint16_t > &container, uint8_t index, uint8_t flags = 0x00 )
-    {
-        mInternalMessage->StoreContainer( container, index, flags );
-    }
-
-    void StoreContainer( std::vector< uint32_t > &container, uint8_t index, uint8_t flags = 0x00 )
-    {
-        mInternalMessage->StoreContainer( container, index, flags );
-    }
-
-    void StoreContainer( std::vector< uint64_t > &container, uint8_t index, uint8_t flags = 0x00 )
-    {
-        mInternalMessage->StoreContainer( container, index, flags );
-    }
-
-    void StoreContainer( std::vector< int8_t > &container, uint8_t index, uint8_t flags = 0x00 )
-    {
-        mInternalMessage->StoreContainer( container, index, flags );
-    }
-
-    void StoreContainer( std::vector< int16_t > &container, uint8_t index, uint8_t flags = 0x00 )
-    {
-        mInternalMessage->StoreContainer( container, index, flags );
-    }
-
-    void StoreContainer( std::vector< int32_t > &container, uint8_t index, uint8_t flags = 0x00 )
-    {
-        mInternalMessage->StoreContainer( container, index, flags );
-    }
-
-    void StoreContainer( std::vector< int64_t > &container, uint8_t index, uint8_t flags = 0x00 )
-    {
-        mInternalMessage->StoreContainer( container, index, flags );
-    }
-
-    void StoreContainer( std::vector< float > &container, uint8_t index, uint8_t flags = 0x00 )
-    {
-        mInternalMessage->StoreContainer( container, index, flags );
-    }
-
-    void StoreContainer( std::vector< double > &container, uint8_t index, uint8_t flags = 0x00 )
-    {
-        mInternalMessage->StoreContainer( container, index, flags );
-    }
-
-private:
-
-    StreamBuffer< SERIALISERS_BUFFERSIZE > mStreamBuffer;
-
-    InternalMessage *mInternalMessage;
-
-    Mode::Mode mMode;
-    Format::Format mFormat;
-
-    InternalMessage *GetInternalMessage( Format::Format format, Mode::Mode mode )
-    {
-        InternalMessage *iMessage = NULL;
-
-        switch ( format )
+        if ( size <= Size )
         {
-        case Format::Binary:
-            iMessage = mode == Mode::Serialise ? CreateInternalMessage< BinarySerMessage >() :
-                       CreateInternalMessage< BinaryDeserMessage >();
-            break;
-
-        default:
-            assert( false && "Something went terribly haywire..." );
-            break;
+            mInternalMessage->StoreContiguous( container, size );
         }
+        else
+        {
+            mInternalMessage->StoreContiguous( container, Size );
 
-        return iMessage;
-    }
+            TPrimitive dummy;
 
-    template< typename TMessage >
-    InternalMessage *CreateInternalMessage()
-    {
-        return new MessageAdapter< TMessage >( mStreamBuffer );
-    }
-
-    template< typename TMessage >
-    void DeleteInternalMessage( TMessage *message )
-    {
-        delete message;
+            for ( size_t i = Size; i < size; ++i )
+            {
+                StoreArrayItem( dummy );
+            }
+        }
     }
 };
 
