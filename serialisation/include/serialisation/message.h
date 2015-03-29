@@ -26,21 +26,27 @@
 
 #include "interface/IMessage.h"
 
+#include "binaryDeserMessage.h"
+#include "binarySerMessage.h"
 #include "internalMessage.h"
+#include "messageAdapter.h"
+#include "messageHelper.h"
 #include "streamBuffer.h"
 #include "defines.h"
 #include "types.h"
-#include "messageAdapter.h"
-#include "binarySerMessage.h"
-#include "binaryDeserMessage.h"
 
 #include <assert.h>
-#include "messageHelper.h"
 
-#define ASSERT_INDEX_IN_RANGE() assert( index < 28 && "Index should be less than 28 for members" )
+#if __cplusplus > 199711L || ( defined _MSC_VER && _MSC_VER >= 1700 )
+#define SERIALISATION_SUPPORT_STDARRAY
+#include <array>
+#endif
 
 class Message
 {
+
+#define ASSERT_INDEX_IN_RANGE() assert( index < 28 && "Index should be less than 28 for members" )
+
 public:
 
     enum Flags
@@ -252,67 +258,67 @@ public:
                 StoreArrayItem( dummy );
             }
         }
-	}	  
+    }
 
-	template< size_t Size >
-	void StoreContainer( uint8_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
-	{
-		StorePrimitveCArray( container, index, flags );
-	}
+    template< size_t Size >
+    void StoreContainer( uint8_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
+    {
+        StorePrimitveCArray( container, index, flags );
+    }
 
-	template< size_t Size >
-	void StoreContainer( uint16_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
-	{
-		StorePrimitveCArray( container, index, flags );
-	}
+    template< size_t Size >
+    void StoreContainer( uint16_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
+    {
+        StorePrimitveCArray( container, index, flags );
+    }
 
-	template< size_t Size >
-	void StoreContainer( uint32_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
-	{
-		StorePrimitveCArray( container, index, flags );
-	}
+    template< size_t Size >
+    void StoreContainer( uint32_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
+    {
+        StorePrimitveCArray( container, index, flags );
+    }
 
-	template< size_t Size >
-	void StoreContainer( uint64_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
-	{
-		StorePrimitveCArray( container, index, flags );
-	}  
+    template< size_t Size >
+    void StoreContainer( uint64_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
+    {
+        StorePrimitveCArray( container, index, flags );
+    }
 
-	template< size_t Size >
-	void StoreContainer( int8_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
-	{
-		StorePrimitveCArray( container, index, flags );
-	}
+    template< size_t Size >
+    void StoreContainer( int8_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
+    {
+        StorePrimitveCArray( container, index, flags );
+    }
 
-	template< size_t Size >
-	void StoreContainer( int16_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
-	{
-		StorePrimitveCArray( container, index, flags );
-	}
+    template< size_t Size >
+    void StoreContainer( int16_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
+    {
+        StorePrimitveCArray( container, index, flags );
+    }
 
-	template< size_t Size >
-	void StoreContainer( int32_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
-	{
-		StorePrimitveCArray( container, index, flags );
-	}
+    template< size_t Size >
+    void StoreContainer( int32_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
+    {
+        StorePrimitveCArray( container, index, flags );
+    }
 
-	template< size_t Size >
-	void StoreContainer( int64_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
-	{
-		StorePrimitveCArray( container, index, flags );
-	}
+    template< size_t Size >
+    void StoreContainer( int64_t( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
+    {
+        StorePrimitveCArray( container, index, flags );
+    }
 
-	template< size_t Size >
-	void StoreContainer( float( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
-	{
-		StorePrimitveCArray( container, index, flags );
-	}
+    template< size_t Size >
+    void StoreContainer( float( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
+    {
+        StorePrimitveCArray( container, index, flags );
+    }
 
-	template< size_t Size >
-	void StoreContainer( double( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
-	{
-		StorePrimitveCArray( container, index, flags );
-	}
+    template< size_t Size >
+    void StoreContainer( double( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
+    {
+        StorePrimitveCArray( container, index, flags );
+    }
 
 
 
@@ -378,6 +384,96 @@ public:
     {
         StorePrimitiveVector( container, index, flags );
     }
+
+#if defined SERIALISATION_SUPPORT_STDARRAY
+    template< size_t Size, typename TSerialisable >
+    void StoreContainer( std::array< TSerialisable, Size > &container, uint8_t index, uint8_t flags = 0x00 )
+    {
+        const size_t size = CreateArray( Type::Object, Size, index, flags );
+
+        if ( size <= Size )
+        {
+            for ( TSerialisable *it = container, end = it + size; it != end; ++it )
+            {
+                StoreArrayItem( *it );
+            }
+        }
+        else
+        {
+            for ( TSerialisable *it = container, end = it + Size; it != end; ++it )
+            {
+                StoreArrayItem( *it );
+            }
+
+            TSerialisable dummy();
+
+            for ( size_t i = Size; i < size; ++i )
+            {
+                StoreArrayItem( dummy );
+            }
+        }
+    }
+
+    template< size_t Size >
+    void StoreContainer( std::array< uint8_t, Size > &container, uint8_t index, uint8_t flag = 0x00 )
+    {
+        StoreFixedSize< Size >( container.data(), index, flag );
+    }
+
+    template< size_t Size >
+    void StoreContainer( std::array< uint16_t, Size > &container, uint8_t index, uint8_t flag = 0x00 )
+    {
+        StoreFixedSize< Size >( container.data(), index, flag );
+    }
+
+    template< size_t Size >
+    void StoreContainer( std::array< uint32_t, Size > &container, uint8_t index, uint8_t flag = 0x00 )
+    {
+        StoreFixedSize< Size >( container.data(), index, flag );
+    }
+
+    template< size_t Size >
+    void StoreContainer( std::array< uint64_t, Size > &container, uint8_t index, uint8_t flag = 0x00 )
+    {
+        StoreFixedSize< Size >( container.data(), index, flag );
+    }
+
+    template< size_t Size >
+    void StoreContainer( std::array< int8_t, Size > &container, uint8_t index, uint8_t flag = 0x00 )
+    {
+        StoreFixedSize< Size >( container.data(), index, flag );
+    }
+
+    template< size_t Size >
+    void StoreContainer( std::array< int16_t, Size > &container, uint8_t index, uint8_t flag = 0x00 )
+    {
+        StoreFixedSize< Size >( container.data(), index, flag );
+    }
+
+    template< size_t Size >
+    void StoreContainer( std::array< int32_t, Size > &container, uint8_t index, uint8_t flag = 0x00 )
+    {
+        StoreFixedSize< Size >( container.data(), index, flag );
+    }
+
+    template< size_t Size >
+    void StoreContainer( std::array< int64_t, Size > &container, uint8_t index, uint8_t flag = 0x00 )
+    {
+        StoreFixedSize< Size >( container.data(), index, flag );
+    }
+
+    template< size_t Size >
+    void StoreContainer( std::array< float, Size > &container, uint8_t index, uint8_t flag = 0x00 )
+    {
+        StoreFixedSize< Size >( container.data(), index, flag );
+    }
+
+    template< size_t Size >
+    void StoreContainer( std::array< double, Size > &container, uint8_t index, uint8_t flag = 0x00 )
+    {
+        StoreFixedSize< Size >( container.data(), index, flag );
+    }
+#endif
 
 private:
 
@@ -512,8 +608,19 @@ private:
     template< size_t Size, typename TPrimitive >
     void StorePrimitveCArray( TPrimitive( &container )[ Size ], uint8_t index, uint8_t flags )
     {
+        StoreFixedSize< Size, TPrimitive >( container, index, flags );
+    }
+
+    template< size_t Size, typename TPrimitive >
+    void StoreFixedSize( TPrimitive *container, uint8_t index, uint8_t flags )
+    {
         const Type::Type type = static_cast< Type::Type >( Internal::Type::GetEnum< TPrimitive >() );
         const size_t size = CreateArray( type, Size, index, flags );
+
+#if (SERIALISATION_ASSERT_ON_SIZE_MISMATCH == 1)
+        assert( size == Size && "The array you tried to Deserialise with seems to be the wrong size" );
+        mInternalMessage->StoreContiguous( container, size );
+#else
 
         if ( size <= Size )
         {
@@ -530,6 +637,8 @@ private:
                 StoreArrayItem( dummy );
             }
         }
+
+#endif
     }
 };
 

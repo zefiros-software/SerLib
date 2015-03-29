@@ -37,6 +37,7 @@
 
 #include <assert.h>
 #include <stack>
+#include "util.h"
 
 class BinaryDeserMessage
 {
