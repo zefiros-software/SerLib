@@ -45,6 +45,14 @@
         SimpleSerialiseDeserialiseFile( c1, c2 );                       \
         EXPECT_EQ( c1.mMember, c2.mMember );                            \
         EXPECT_EQ( init1, c1.mMember );                                 \
+    }                                                                   \
+    TEST( P(test), type ## name ## _backwards )                         \
+    {                                                                   \
+        Primitive< type > c1( init1 ), c2( init2 );                     \
+        std::string file = TEST_FILE( test, type ## name);              \
+        SimpleSerialiseDeserialiseBackwards( file, c1, c2 );            \
+        EXPECT_EQ( c1.mMember, c2.mMember );                            \
+        EXPECT_EQ( init1, c1.mMember );                                 \
     }
 
 #define TestFPrimitive( test, name, type, index, init1, init2 )         \
@@ -61,6 +69,14 @@
         SimpleSerialiseDeserialiseFile( c1, c2 );                       \
         ASSERT_FLOAT_EQ( c1.mMember, c2.mMember );                      \
         ASSERT_FLOAT_EQ( init1, c1.mMember );                           \
+    }                                                                   \
+    TEST( P(test), type ## name ## _backwards )                         \
+    {                                                                   \
+        Primitive< type > c1( init1 ), c2( init2 );                     \
+        std::string file = TEST_FILE( test, type ## name);              \
+        SimpleSerialiseDeserialiseBackwards( file, c1, c2 );            \
+        ASSERT_FLOAT_EQ( c1.mMember, c2.mMember );                      \
+        ASSERT_FLOAT_EQ( init1, c1.mMember );                           \
     }
 
 #define TestDPrimitive( test, name, type, index, init1, init2 )         \
@@ -71,10 +87,18 @@
         ASSERT_DOUBLE_EQ( c1.mMember, c2.mMember );                     \
         ASSERT_DOUBLE_EQ( init1, c1.mMember );                          \
     }                                                                   \
-    TEST( P(test), type ## name ## _file)                               \
+    TEST( P(test), type ## name ## _file )                              \
     {                                                                   \
         Primitive< type > c1( init1 ), c2( init2 );                     \
         SimpleSerialiseDeserialiseFile( c1, c2 );                       \
+        ASSERT_DOUBLE_EQ( c1.mMember, c2.mMember );                     \
+        ASSERT_DOUBLE_EQ( init1, c1.mMember );                          \
+    }                                                                   \
+    TEST( P(test), type ## name ## _backwards )                         \
+    {                                                                   \
+        Primitive< type > c1( init1 ), c2( init2 );                     \
+        std::string file = TEST_FILE( test, type ## name);              \
+        SimpleSerialiseDeserialiseBackwards( file, c1, c2 );            \
         ASSERT_DOUBLE_EQ( c1.mMember, c2.mMember );                     \
         ASSERT_DOUBLE_EQ( init1, c1.mMember );                          \
     }
@@ -89,6 +113,12 @@
     {                                                                   \
         ArrayHeader< type > c1, c2;                                     \
         SimpleSerialiseDeserialiseFile( c1, c2 );                       \
+    }                                                                   \
+    TEST( P(test), Type ## name ## _backwards )                         \
+    {                                                                   \
+        ArrayHeader< type > c1, c2;                                     \
+        std::string file = TEST_FILE( test, type ## name);              \
+        SimpleSerialiseDeserialiseBackwards( file, c1, c2 );            \
     }
 
 

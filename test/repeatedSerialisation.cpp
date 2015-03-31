@@ -55,6 +55,13 @@
         TestClass3< its > c1( seed1 ), c2( seed2 );             \
         SimpleSerialiseDeserialiseFile( c1, c2 );               \
         c1.TestEqual( c2 );                                     \
+    }                                                           \
+    TEST( P( test ), name ## _backwards )                       \
+    {                                                           \
+        TestClass3< its > c1( seed1 ), c2( seed2 );             \
+        std::string file = TEST_FILE( test, type ## name);      \
+        SimpleSerialiseDeserialiseBackwards( file, c1, c2 );    \
+        c1.TestEqual( c2 );                                     \
     }
 
 #define TestEasyRepeatedClassNoHelper( test, name, seed1, seed2, its )  \
@@ -69,6 +76,13 @@
         TestClass3NoHelper< its > c1( seed1 ), c2( seed2 );             \
         SimpleSerialiseDeserialiseFile( c1, c2 );                       \
         c1.TestEqual( c2 );                                             \
+    }                                                                   \
+    TEST( P( test ), name ## _backwards )                               \
+    {                                                                   \
+        TestClass3NoHelper< its > c1( seed1 ), c2( seed2 );             \
+        std::string file = TEST_FILE( test, type ## name);              \
+        SimpleSerialiseDeserialiseBackwards( file, c1, c2 );            \
+        c1.TestEqual( c2 );                                             \
     }
 
 #define TestRepeatedPrimitiveMessageClass( test, name, seed1, seed2, its, type )    \
@@ -82,6 +96,13 @@
     {                                                                               \
         TestClass4< Primitive< type >, its, type > c1( seed1 ), c2( seed2 );        \
         SimpleSerialiseDeserialiseFile( c1, c2 );                                   \
+        c1.TestEqual( c2 );                                                         \
+    }                                                                               \
+    TEST( P( test ), type ## name ## _backwards )                                   \
+    {                                                                               \
+        TestClass4< Primitive< type >, its, type > c1( seed1 ), c2( seed2 );        \
+        std::string file = TEST_FILE( test, type ## name);                          \
+        SimpleSerialiseDeserialiseBackwards( file, c1, c2 );                        \
         c1.TestEqual( c2 );                                                         \
     }
 
@@ -236,7 +257,7 @@ namespace TestClasses
 
         TestClass3( uint32_t seed = 233232 )
         {
-            srand( seed );
+            g_seed = seed;
 
             for ( uint32_t i = 0; i < its; ++i )
             {
@@ -325,7 +346,7 @@ namespace TestClasses
 
         TestClass4( uint32_t seed = 233232 )
         {
-            srand( seed );
+            g_seed = seed;
 
             for ( uint32_t i = 0; i < its; ++i )
             {
