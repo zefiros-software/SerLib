@@ -30,38 +30,66 @@
 #include <vector>
 
 #define TestReorderedPrimitive( test, name, seed1, seed2, type1, type2 )  \
-    TEST( P(test), type1 ## type2 ## name )                               \
+    TEST( P(test), type1 ## type2 ## name ## _stream )                    \
     {                                                                     \
         NormalPrimitive< type1, type2 > c1( seed1 );                      \
         ReorderedPrimitive< type1, type2 > c2( seed2 );                   \
         SimpleSerialiseDeserialiseStream( c1, c2 );                       \
         c1.TestEqual( c2 );                                               \
+    }                                                                     \
+    TEST( P(test), type1 ## type2 ## name ## _file )                      \
+    {                                                                     \
+        NormalPrimitive< type1, type2 > c1( seed1 );                      \
+        ReorderedPrimitive< type1, type2 > c2( seed2 );                   \
+        SimpleSerialiseDeserialiseFile( c1, c2 );                         \
+        c1.TestEqual( c2 );                                               \
     }
 
 #define TestReorderedObjectClass( test, name, seed1, seed2, type1, type2 )  \
-    TEST( P(test), type1 ## type2 ## name )                                 \
+    TEST( P(test), type1 ## type2 ## name ## _stream )                      \
     {                                                                       \
         NormalObjectClass< type1, type2 > c1( seed1 );                      \
         ReorderedObjectClass< type1, type2 > c2( seed2 );                   \
         SimpleSerialiseDeserialiseStream( c1, c2 );                         \
         c1.TestEqual( c2 );                                                 \
+    }                                                                       \
+    TEST( P(test), type1 ## type2 ## name ## _file )                        \
+    {                                                                       \
+        NormalObjectClass< type1, type2 > c1( seed1 );                      \
+        ReorderedObjectClass< type1, type2 > c2( seed2 );                   \
+        SimpleSerialiseDeserialiseFile( c1, c2 );                           \
+        c1.TestEqual( c2 );                                                 \
     }
 
 #define TestReorderedRepeatedPrimitive( test, name, seed1, seed2, type1, type2, its ) \
-    TEST( P( test ), type1 ## type2 ## name )                                         \
+    TEST( P( test ), type1 ## type2 ## name ## _stream )                              \
     {                                                                                 \
         NormalRepeatedPrimitive< type1, type2, its > c1( seed1 );                     \
         ReorderedRepeatedPrimitive< type1, type2, its > c2( seed2 );                  \
         SimpleSerialiseDeserialiseStream( c1, c2 );                                   \
         c1.TestEqual( c2 );                                                           \
+    }                                                                                 \
+    TEST( P( test ), type1 ## type2 ## name ## _file )                                \
+    {                                                                                 \
+        NormalRepeatedPrimitive< type1, type2, its > c1( seed1 );                     \
+        ReorderedRepeatedPrimitive< type1, type2, its > c2( seed2 );                  \
+        SimpleSerialiseDeserialiseFile( c1, c2 );                                     \
+        c1.TestEqual( c2 );                                                           \
     }
 
 #define TestReorderedRepeatedObjectClass( test, name, seed1, seed2, type1, type2, its ) \
-    TEST( P( test ), type1 ## type2 ## name )                                           \
+    TEST( P( test ), type1 ## type2 ## name ## _stream )                                \
     {                                                                                   \
         NormalRepeatedObjectClass< type1, type2, its > c1( seed1 );                     \
         ReorderedRepeatedObjectClass< type1, type2, its > c2( seed2 );                  \
         SimpleSerialiseDeserialiseStream( c1, c2 );                                     \
+        c1.TestEqual( c2 );                                                             \
+    }                                                                                   \
+    TEST( P( test ), type1 ## type2 ## name ## _file )                                  \
+    {                                                                                   \
+        NormalRepeatedObjectClass< type1, type2, its > c1( seed1 );                     \
+        ReorderedRepeatedObjectClass< type1, type2, its > c2( seed2 );                  \
+        SimpleSerialiseDeserialiseFile( c1, c2 );                                       \
         c1.TestEqual( c2 );                                                             \
     }
 
@@ -225,9 +253,9 @@ namespace TestClasses
         }
 
         void SERIALISATION_CUSTOM_INTERFACE( Message &message )
-		{
-			message.StoreContainer( NormalRepeatedPrimitive< T1, T2, its >::mMembers2, 1 );
-			message.StoreContainer( NormalRepeatedPrimitive< T1, T2, its >::mMembers1, 0 );
+        {
+            message.StoreContainer( NormalRepeatedPrimitive< T1, T2, its >::mMembers2, 1 );
+            message.StoreContainer( NormalRepeatedPrimitive< T1, T2, its >::mMembers1, 0 );
         }
     };
 
@@ -250,8 +278,8 @@ namespace TestClasses
 
         virtual void SERIALISATION_CUSTOM_INTERFACE( Message &message )
         {
-			message.StoreContainer( mMember1, 0 );
-			message.StoreContainer( mMember2, 1 );
+            message.StoreContainer( mMember1, 0 );
+            message.StoreContainer( mMember2, 1 );
         }
 
         void TestEqual( NormalRepeatedObjectClass< T1, T2, its > &c2 )
@@ -443,75 +471,75 @@ namespace TestClasses
     TestReorderedObjectClass( ReorderedObjectClass, randomVals, 343422, 21331, int64_t, int64_t );
 
 
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint8_t, uint8_t, 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint8_t, uint16_t, 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint8_t, uint32_t, 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint8_t, uint64_t, 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint8_t, int8_t, 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint8_t, int16_t, 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint8_t, int32_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint8_t, int64_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint8_t, uint8_t, 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint8_t, uint16_t, 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint8_t, uint32_t, 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint8_t, uint64_t, 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint8_t, int8_t, 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint8_t, int16_t, 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint8_t, int32_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint8_t, int64_t , 100 );
 
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint16_t, uint8_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint16_t, uint16_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint16_t, uint32_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint16_t, uint64_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint16_t, int8_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint16_t, int16_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint16_t, int32_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint16_t, int64_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint16_t, uint8_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint16_t, uint16_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint16_t, uint32_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint16_t, uint64_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint16_t, int8_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint16_t, int16_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint16_t, int32_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint16_t, int64_t , 100 );
 
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint32_t, uint8_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint32_t, uint16_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint32_t, uint32_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint32_t, uint64_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint32_t, int8_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint32_t, int16_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint32_t, int32_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint32_t, int64_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint32_t, uint8_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint32_t, uint16_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint32_t, uint32_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint32_t, uint64_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint32_t, int8_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint32_t, int16_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint32_t, int32_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint32_t, int64_t , 100 );
 
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint64_t, uint8_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint64_t, uint16_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint64_t, uint32_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint64_t, uint64_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint64_t, int8_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint64_t, int16_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint64_t, int32_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint64_t, int64_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint64_t, uint8_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint64_t, uint16_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint64_t, uint32_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint64_t, uint64_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint64_t, int8_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint64_t, int16_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint64_t, int32_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, uint64_t, int64_t , 100 );
 
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int8_t, uint8_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int8_t, uint16_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int8_t, uint32_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int8_t, uint64_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int8_t, int8_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int8_t, int16_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int8_t, int32_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int8_t, int64_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int8_t, uint8_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int8_t, uint16_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int8_t, uint32_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int8_t, uint64_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int8_t, int8_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int8_t, int16_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int8_t, int32_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int8_t, int64_t , 100 );
 
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int16_t, uint8_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int16_t, uint16_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int16_t, uint32_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int16_t, uint64_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int16_t, int8_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int16_t, int16_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int16_t, int32_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int16_t, int64_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int16_t, uint8_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int16_t, uint16_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int16_t, uint32_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int16_t, uint64_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int16_t, int8_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int16_t, int16_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int16_t, int32_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int16_t, int64_t , 100 );
 
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int32_t, uint8_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int32_t, uint16_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int32_t, uint32_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int32_t, uint64_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int32_t, int8_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int32_t, int16_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int32_t, int32_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int32_t, int64_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int32_t, uint8_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int32_t, uint16_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int32_t, uint32_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int32_t, uint64_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int32_t, int8_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int32_t, int16_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int32_t, int32_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int32_t, int64_t , 100 );
 
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int64_t, uint8_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int64_t, uint16_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int64_t, uint32_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int64_t, uint64_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int64_t, int8_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int64_t, int16_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int64_t, int32_t , 100 );
-	TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int64_t, int64_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int64_t, uint8_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int64_t, uint16_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int64_t, uint32_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int64_t, uint64_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int64_t, int8_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int64_t, int16_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int64_t, int32_t , 100 );
+    TestReorderedRepeatedPrimitive( ReorderedRepeatedPrimitive, randomVals, 343422, 21331, int64_t, int64_t , 100 );
 }

@@ -20,20 +20,41 @@
  * THE SOFTWARE.
  */
 
-#pragma once
-#ifndef __SERIALISATION_DEFINES_H__
-#define __SERIALISATION_DEFINES_H__
+#include "serialisation/serialisation.h"
+#include "helper.h"
 
-#ifndef SERIALISATION_CUSTOM_INTERFACE
-#   define SERIALISATION_CUSTOM_INTERFACE OnStore
-#endif
+#include "gtest/gtest.h"
 
-#ifndef SERIALISERS_BUFFERSIZE
-#   define SERIALISERS_BUFFERSIZE 1
-#endif
+#include <stdlib.h>
+#include <stdio.h>
+#include <vector>
+#include <string>
 
-#ifndef SERIALISATION_ASSERT_ON_SIZE_MISMATCH
-#	define SERIALISATION_ASSERT_ON_SIZE_MISMATCH 0
-#endif
+namespace
+{
+    class SimpleSer
+    {
+    public:
 
-#endif
+        void OnStore( Message &message )
+        {
+            message.Store( integer, 0 );
+        }
+
+        uint32_t integer;
+    };
+
+    TEST( P( Message ), FlushOnStoreExit )
+    {
+        std::stringstream ss1;
+
+        SimpleSer data;
+        Message message1( ss1, Format::Binary, Mode::Serialise );
+        message1.Store( data );
+
+        SimpleSer data2;
+
+        Message message2( ss1, Format::Binary, Mode::Deserialise );
+        message2.Store( data2 );
+    }
+}

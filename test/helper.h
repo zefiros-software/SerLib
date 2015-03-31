@@ -48,6 +48,25 @@ void SimpleSerialiseDeserialiseStream( T1 &c1, T2 &c2 )
     }
 }
 
+template< typename T1, typename T2 >
+void SimpleSerialiseDeserialiseFile( T1 &c1, T2 &c2 )
+{
+    // clear file
+    {
+        std::ofstream ofs;
+        ofs.open( "file.bin", std::ofstream::out | std::ofstream::trunc );
+        ofs.close();
+    }
+    {
+        Message message( "file.bin", Format::Binary, Mode::Serialise );
+        message.Store( c1 );
+    }
+    {
+        Message message( "file.bin", Format::Binary, Mode::Deserialise );
+        message.Store( c2 );
+    }
+}
+
 template< typename T >
 T GenerateZebraValue()
 {

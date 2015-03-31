@@ -29,36 +29,60 @@
 #include <stdio.h>
 #include <vector>
 
-#define TestMeshDataClass( test, name, its1, its2, its3, its4 ) \
-    TEST( P( test ), name )                                          \
-    {                                                                \
-        ZefirosEngineMeshData< its1, its2, its3, its4 > c1, c2;            \
-        SimpleSerialiseDeserialiseStream( c1, c2 );                  \
-        c1.TestEqual( c2 );                                          \
+#define TestMeshDataClass( test, name, its1, its2, its3, its4 )     \
+    TEST( P( test ), name ## _stream )                              \
+    {                                                               \
+        ZefirosEngineMeshData< its1, its2, its3, its4 > c1, c2;     \
+        SimpleSerialiseDeserialiseStream( c1, c2 );                 \
+        c1.TestEqual( c2 );                                         \
+    }                                                               \
+    TEST( P( test ), name ## _file )                                \
+    {                                                               \
+        ZefirosEngineMeshData< its1, its2, its3, its4 > c1, c2;     \
+        SimpleSerialiseDeserialiseFile( c1, c2 );                   \
+        c1.TestEqual( c2 );                                         \
     }
 
-#define TestEasyRepeatedClass( test, name, seed1, seed2, its ) \
-    TEST( P( test ), name )                                          \
-    {                                                                \
-        TestClass3< its > c1( seed1 ), c2( seed2 );            \
-        SimpleSerialiseDeserialiseStream( c1, c2 );                  \
-        c1.TestEqual( c2 );                                          \
+#define TestEasyRepeatedClass( test, name, seed1, seed2, its )  \
+    TEST( P( test ), name ## _stream )                          \
+    {                                                           \
+        TestClass3< its > c1( seed1 ), c2( seed2 );             \
+        SimpleSerialiseDeserialiseStream( c1, c2 );             \
+        c1.TestEqual( c2 );                                     \
+    }                                                           \
+    TEST( P( test ), name ## _file )                            \
+    {                                                           \
+        TestClass3< its > c1( seed1 ), c2( seed2 );             \
+        SimpleSerialiseDeserialiseFile( c1, c2 );               \
+        c1.TestEqual( c2 );                                     \
     }
 
-#define TestEasyRepeatedClassNoHelper( test, name, seed1, seed2, its ) \
-    TEST( P( test ), name )                                          \
-    {                                                                \
-        TestClass3NoHelper< its > c1( seed1 ), c2( seed2 );            \
-        SimpleSerialiseDeserialiseStream( c1, c2 );                  \
-        c1.TestEqual( c2 );                                          \
+#define TestEasyRepeatedClassNoHelper( test, name, seed1, seed2, its )  \
+    TEST( P( test ), name ## _stream )                                  \
+    {                                                                   \
+        TestClass3NoHelper< its > c1( seed1 ), c2( seed2 );             \
+        SimpleSerialiseDeserialiseStream( c1, c2 );                     \
+        c1.TestEqual( c2 );                                             \
+    }                                                                   \
+    TEST( P( test ), name ## _file )                                    \
+    {                                                                   \
+        TestClass3NoHelper< its > c1( seed1 ), c2( seed2 );             \
+        SimpleSerialiseDeserialiseFile( c1, c2 );                       \
+        c1.TestEqual( c2 );                                             \
     }
 
-#define TestRepeatedPrimitiveMessageClass( test, name, seed1, seed2, its, type )      \
-    TEST( P( test ), type ## name )                                                         \
-    {                                                                                       \
-        TestClass4< Primitive< type >, its, type > c1( seed1 ), c2( seed2 );    \
-        SimpleSerialiseDeserialiseStream( c1, c2 );                                         \
-        c1.TestEqual( c2 );                                                                 \
+#define TestRepeatedPrimitiveMessageClass( test, name, seed1, seed2, its, type )    \
+    TEST( P( test ), type ## name ## _stream )                                      \
+    {                                                                               \
+        TestClass4< Primitive< type >, its, type > c1( seed1 ), c2( seed2 );        \
+        SimpleSerialiseDeserialiseStream( c1, c2 );                                 \
+        c1.TestEqual( c2 );                                                         \
+    }                                                                               \
+    TEST( P( test ), type ## name ## _file )                                        \
+    {                                                                               \
+        TestClass4< Primitive< type >, its, type > c1( seed1 ), c2( seed2 );        \
+        SimpleSerialiseDeserialiseFile( c1, c2 );                                   \
+        c1.TestEqual( c2 );                                                         \
     }
 
 namespace TestClasses

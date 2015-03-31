@@ -30,51 +30,87 @@
 #include <vector>
 
 #define TestSerialClass( test, name, type, seed1, seed2, its )      \
-    TEST( P( test ), type ## name )                                       \
-    {                                                                     \
-        TestClass1< type, its > c1( seed1 ), c2( seed2 );           \
-        SimpleSerialiseDeserialiseStream( c1, c2 );                       \
-        c1.TestEqual( c2 );                                               \
-    }
-
-#define TestFSerialClass( test, name, seed1, seed2, its )     \
-    TEST( P( test ), float ## name )                                \
+    TEST( P( test ), type ## name ## _stream )                      \
     {                                                               \
-        TestClass1F< its > c1( seed1 ), c2( seed2 );          \
+        TestClass1< type, its > c1( seed1 ), c2( seed2 );           \
         SimpleSerialiseDeserialiseStream( c1, c2 );                 \
+        c1.TestEqual( c2 );                                         \
+    }                                                               \
+    TEST( P( test ), type ## name ## _file )                        \
+    {                                                               \
+        TestClass1< type, its > c1( seed1 ), c2( seed2 );           \
+        SimpleSerialiseDeserialiseFile( c1, c2 );                   \
         c1.TestEqual( c2 );                                         \
     }
 
-#define TestDSerialClass( test, name, seed1, seed2, its ) \
-    TEST( P( test ), double ## name )                           \
-    {                                                           \
-        TestClass1D< its > c1( seed1 ), c2( seed2 );      \
-        SimpleSerialiseDeserialiseStream( c1, c2 );             \
-        c1.TestEqual( c2 );                                     \
+#define TestFSerialClass( test, name, seed1, seed2, its )   \
+    TEST( P( test ), float ## name ## _stream )             \
+    {                                                       \
+        TestClass1F< its > c1( seed1 ), c2( seed2 );        \
+        SimpleSerialiseDeserialiseStream( c1, c2 );         \
+        c1.TestEqual( c2 );                                 \
+    }                                                       \
+    TEST( P( test ), float ## name ## _file )               \
+    {                                                       \
+        TestClass1F< its > c1( seed1 ), c2( seed2 );        \
+        SimpleSerialiseDeserialiseFile( c1, c2 );           \
+        c1.TestEqual( c2 );                                 \
     }
 
-#define TestIFDMixedSerialClass( test, name, typeI, seed1, seed2, its )   \
-    TEST( P( test ), typeI ## name )                                            \
-    {                                                                           \
-        TestClass2F1< typeI, its > c1( seed1 ), c2( seed2 );              \
-        SimpleSerialiseDeserialiseStream( c1, c2 );                             \
-        c1.TestEqual( c2 );                                                     \
+#define TestDSerialClass( test, name, seed1, seed2, its )   \
+    TEST( P( test ), double ## name ## _stream )            \
+    {                                                       \
+        TestClass1D< its > c1( seed1 ), c2( seed2 );        \
+        SimpleSerialiseDeserialiseStream( c1, c2 );         \
+        c1.TestEqual( c2 );                                 \
+    }                                                       \
+    TEST( P( test ), double ## name ## _file)               \
+    {                                                       \
+        TestClass1D< its > c1( seed1 ), c2( seed2 );        \
+        SimpleSerialiseDeserialiseFile( c1, c2 );           \
+        c1.TestEqual( c2 );                                 \
+    }
+
+#define TestIFDMixedSerialClass( test, name, typeI, seed1, seed2, its ) \
+    TEST( P( test ), typeI ## name ## _stream )                         \
+    {                                                                   \
+        TestClass2F1< typeI, its > c1( seed1 ), c2( seed2 );            \
+        SimpleSerialiseDeserialiseStream( c1, c2 );                     \
+        c1.TestEqual( c2 );                                             \
+    }                                                                   \
+    TEST( P( test ), typeI ## name ## _file )                           \
+    {                                                                   \
+        TestClass2F1< typeI, its > c1( seed1 ), c2( seed2 );            \
+        SimpleSerialiseDeserialiseStream( c1, c2 );                     \
+        c1.TestEqual( c2 );                                             \
     }
 
 #define TestFIDMixedSerialClass( test, name, typeI, seed1, seed2, its )  \
-    TEST( P( test ), typeI ## name )                                           \
-    {                                                                          \
+    TEST( P( test ), typeI ## name ## _stream )                          \
+    {                                                                    \
         TestClass2F2< typeI, its > c1( seed1 ), c2( seed2 );             \
-        SimpleSerialiseDeserialiseStream( c1, c2 );                            \
-        c1.TestEqual( c2 );                                                    \
+        SimpleSerialiseDeserialiseStream( c1, c2 );                      \
+        c1.TestEqual( c2 );                                              \
+    }                                                                    \
+    TEST( P( test ), typeI ## name ## _file )                            \
+    {                                                                    \
+        TestClass2F2< typeI, its > c1( seed1 ), c2( seed2 );             \
+        SimpleSerialiseDeserialiseFile( c1, c2 );                        \
+        c1.TestEqual( c2 );                                              \
     }
 
-#define TestIDIMixedSerialClass( test, name, typeI1, typeI2, seed1, seed2, its )  \
-    TEST( P( test ), typeI1 ## typeI2 ## name )                                         \
-    {                                                                                   \
-        TestClass2F3< typeI1, typeI2, its > c1( seed1 ), c2( seed2 );             \
-        SimpleSerialiseDeserialiseStream( c1, c2 );                                     \
-        c1.TestEqual( c2 )                                                              \
+#define TestIDIMixedSerialClass( test, name, typeI1, typeI2, seed1, seed2, its )    \
+    TEST( P( test ), typeI1 ## typeI2 ## name ## _stream )                          \
+    {                                                                               \
+        TestClass2F3< typeI1, typeI2, its > c1( seed1 ), c2( seed2 );               \
+        SimpleSerialiseDeserialiseStream( c1, c2 );                                 \
+        c1.TestEqual( c2 )                                                          \
+    }                                                                               \
+    TEST( P( test ), typeI1 ## typeI2 ## name ## _file )                            \
+    {                                                                               \
+        TestClass2F3< typeI1, typeI2, its > c1( seed1 ), c2( seed2 );               \
+        SimpleSerialiseDeserialiseFile( c1, c2 );                                   \
+        c1.TestEqual( c2 )                                                          \
     }
 
 namespace TestClasses

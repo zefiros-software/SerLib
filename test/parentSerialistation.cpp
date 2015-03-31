@@ -30,11 +30,18 @@
 #include <vector>
 
 #define TestParent( test, name, seed1, seed2 )       \
-    TEST( P( test ), name )                          \
+    TEST( P( test ), name ## _stream )               \
     {                                                \
         Child c1( seed1 );                           \
         ReorderedChild c2( seed2 );                  \
         SimpleSerialiseDeserialiseStream( c1, c2 );  \
+        c1.TestEqual( c2 );                          \
+    }                                                \
+    TEST( P( test ), name ## _file )                 \
+    {                                                \
+        Child c1( seed1 );                           \
+        ReorderedChild c2( seed2 );                  \
+        SimpleSerialiseDeserialiseFile( c1, c2 );    \
         c1.TestEqual( c2 );                          \
     }
 

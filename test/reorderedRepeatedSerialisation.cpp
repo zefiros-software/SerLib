@@ -30,11 +30,18 @@
 #include <vector>
 
 #define TestReorderedRepeatedObjectClass( test, name, seed1, seed2, type1, type2, its ) \
-    TEST( P( test ), type1 ## type2 ## name )                                           \
+    TEST( P( test ), type1 ## type2 ## name ## _stream )                                \
     {                                                                                   \
         NormalRepeatedObjectClass< type1, type2, its > c1( seed1 );                     \
         ReorderedRepeatedObjectClass< type1, type2, its > c2( seed2 );                  \
         SimpleSerialiseDeserialiseStream( c1, c2 );                                     \
+        c1.TestEqual( c2 );                                                             \
+    }                                                                                   \
+    TEST( P( test ), type1 ## type2 ## name ## _file )                                  \
+    {                                                                                   \
+        NormalRepeatedObjectClass< type1, type2, its > c1( seed1 );                     \
+        ReorderedRepeatedObjectClass< type1, type2, its > c2( seed2 );                  \
+        SimpleSerialiseDeserialiseFile( c1, c2 );                                       \
         c1.TestEqual( c2 );                                                             \
     }
 
