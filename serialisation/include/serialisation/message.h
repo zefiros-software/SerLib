@@ -115,6 +115,8 @@ public:
         MessageHelper::SERIALISATION_CUSTOM_INTERFACE( serialisable, *this );
 
         mInternalMessage->FinishObject();
+
+        ClearBuffers();
     }
 
     void Store( ISerialisable &serialisable )
