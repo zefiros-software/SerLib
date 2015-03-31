@@ -48,7 +48,7 @@
     {                                                                                 \
         NormalRepeatedPrimitive< type1, type2, its > c1( seed1 );                     \
         ReorderedRepeatedPrimitive< type1, type2, its > c2( seed2 );                  \
-        std::string file = TEST_FILE( test, type ## name);                            \
+        std::string file = TEST_FILE( test, type1 ## type2 ## name);                  \
         SimpleSerialiseDeserialiseBackwards( file, c1, c2 );                          \
         c1.TestEqual( c2 );                                                           \
     }

@@ -48,7 +48,7 @@
     {                                                       \
         Child c1( seed1 );                                  \
         ReorderedChild c2( seed2 );                         \
-        std::string file = TEST_FILE( test, type ## name);  \
+        std::string file = TEST_FILE( test, name);          \
         SimpleSerialiseDeserialiseBackwards( file, c1, c2 );\
         c1.TestEqual( c2 );                                 \
     }

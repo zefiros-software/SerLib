@@ -48,7 +48,7 @@
     {                                                                                   \
         NormalRepeatedObjectClass< type1, type2, its > c1( seed1 );                     \
         ReorderedRepeatedObjectClass< type1, type2, its > c2( seed2 );                  \
-        std::string file = TEST_FILE( test, type ## name);                              \
+        std::string file = TEST_FILE( test, type1 ## type2 ## name);                    \
         SimpleSerialiseDeserialiseBackwards( file, c1, c2 );                            \
         c1.TestEqual( c2 );                                                             \
     }
@@ -203,40 +203,40 @@ namespace TestClasses
 
 
 
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint8_t, uint8_t, 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint8_t, uint16_t, 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint8_t, uint32_t, 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint8_t, uint64_t, 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint8_t, int8_t, 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint8_t, int16_t, 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint8_t, int32_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint8_t, int64_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint8_t, uint8_t, 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint8_t, uint16_t, 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint8_t, uint32_t, 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint8_t, uint64_t, 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint8_t, int8_t, 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint8_t, int16_t, 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint8_t, int32_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint8_t, int64_t , 100 );
 
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint16_t, uint8_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint16_t, uint16_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint16_t, uint32_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint16_t, uint64_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint16_t, int8_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint16_t, int16_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint16_t, int32_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint16_t, int64_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint16_t, uint8_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint16_t, uint16_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint16_t, uint32_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint16_t, uint64_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint16_t, int8_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint16_t, int16_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint16_t, int32_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint16_t, int64_t , 100 );
 
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint32_t, uint8_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint32_t, uint16_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint32_t, uint32_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint32_t, uint64_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint32_t, int8_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint32_t, int16_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint32_t, int32_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint32_t, int64_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint32_t, uint8_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint32_t, uint16_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint32_t, uint32_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint32_t, uint64_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint32_t, int8_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint32_t, int16_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint32_t, int32_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint32_t, int64_t , 100 );
 
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint64_t, uint8_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint64_t, uint16_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint64_t, uint32_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint64_t, uint64_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint64_t, int8_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint64_t, int16_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint64_t, int32_t , 100 );
-	TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint64_t, int64_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint64_t, uint8_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint64_t, uint16_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint64_t, uint32_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint64_t, uint64_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint64_t, int8_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint64_t, int16_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint64_t, int32_t , 100 );
+    TestReorderedRepeatedObjectClass( ReorderedRepeatedObjectClass, randomVals, 343422, 21331, uint64_t, int64_t , 100 );
 
 };

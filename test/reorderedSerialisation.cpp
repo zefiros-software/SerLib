@@ -48,7 +48,7 @@
     {                                                                     \
         NormalPrimitive< type1, type2 > c1( seed1 );                      \
         ReorderedPrimitive< type1, type2 > c2( seed2 );                   \
-        std::string file = TEST_FILE( test, type ## name);                \
+        std::string file = TEST_FILE( test, type1 ## type2 ## name);      \
         SimpleSerialiseDeserialiseBackwards( file, c1, c2 );              \
         c1.TestEqual( c2 );                                               \
     }
@@ -72,7 +72,7 @@
     {                                                                       \
         NormalObjectClass< type1, type2 > c1( seed1 );                      \
         ReorderedObjectClass< type1, type2 > c2( seed2 );                   \
-        std::string file = TEST_FILE( test, type ## name);                  \
+        std::string file = TEST_FILE( test, type1 ## type2 ## name);        \
         SimpleSerialiseDeserialiseBackwards( file, c1, c2 );                \
         c1.TestEqual( c2 );                                                 \
     }
@@ -183,7 +183,7 @@ namespace
         NormalPrimitive< T1, T2 > mMember1;
         ReorderedPrimitive< T2, T1 > mMember2;
     };
-    
+
     template< typename T1, typename T2 >
     class ReorderedObjectClass
         : public NormalObjectClass< T1, T2 >

@@ -63,10 +63,10 @@
         SimpleSerialiseDeserialiseFile( c1, c2 );               \
         c1.TestEqual( c2 );                                     \
     }                                                           \
-    TEST( P( test ), type ## name ## _backwards )               \
+    TEST( P( test ), float ## name ## _backwards )              \
     {                                                           \
         TestClass1F< its > c1( seed1 ), c2( seed2 );            \
-        std::string file = TEST_FILE( test, type ## name);      \
+        std::string file = TEST_FILE( test, float ## name);     \
         SimpleSerialiseDeserialiseBackwards( file, c1, c2 );    \
         c1.TestEqual( c2 );                                     \
     }
@@ -87,7 +87,7 @@
     TEST( P( test ), double ## name ## _backwards )         \
     {                                                       \
         TestClass1D< its > c1( seed1 ), c2( seed2 );        \
-        std::string file = TEST_FILE( test, type ## name);  \
+        std::string file = TEST_FILE( test, double ## name);\
         SimpleSerialiseDeserialiseBackwards( file, c1, c2 );\
         c1.TestEqual( c2 );                                 \
     }
@@ -108,7 +108,7 @@
     TEST( P( test ), typeI ## name ## _backwards )                      \
     {                                                                   \
         TestClass2F1< typeI, its > c1( seed1 ), c2( seed2 );            \
-        std::string file = TEST_FILE( test, type ## name);              \
+        std::string file = TEST_FILE( test, typeI ## name);             \
         SimpleSerialiseDeserialiseBackwards( file, c1, c2 );            \
         c1.TestEqual( c2 );                                             \
     }
@@ -129,7 +129,7 @@
     TEST( P( test ), typeI ## name ## _backwards )                       \
     {                                                                    \
         TestClass2F2< typeI, its > c1( seed1 ), c2( seed2 );             \
-        std::string file = TEST_FILE( test, type ## name);               \
+        std::string file = TEST_FILE( test, typeI ## name);              \
         SimpleSerialiseDeserialiseBackwards( file, c1, c2 );             \
         c1.TestEqual( c2 );                                              \
     }
@@ -150,7 +150,7 @@
     TEST( P( test ), typeI1 ## typeI2 ## name ## _backwards )                       \
     {                                                                               \
         TestClass2F3< typeI1, typeI2, its > c1( seed1 ), c2( seed2 );               \
-        std::string file = TEST_FILE( test, type ## name);                          \
+        std::string file = TEST_FILE( test, typeI1 ## typeI2 ## name);              \
         SimpleSerialiseDeserialiseBackwards( file, c1, c2 );                        \
         c1.TestEqual( c2 )                                                          \
     }
