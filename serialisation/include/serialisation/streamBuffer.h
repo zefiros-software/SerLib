@@ -37,7 +37,7 @@ class StreamBuffer
 public:
 
     StreamBuffer( const std::string &fileName )
-        : mFileStream( fileName.c_str() ),
+        : mFileStream( fileName.c_str(), std::ios::binary | std::ios::in | std::ios::out ),
           mStream( &mFileStream ),
           mWriteIndex( 0 ),
           mWriteSize( 0 ),
@@ -49,7 +49,7 @@ public:
             std::fstream ftemp;
             ftemp.open( fileName.c_str(), std::ios::out );
             ftemp.flush();
-            mFileStream.open( fileName.c_str() );
+            mFileStream.open( fileName.c_str(), std::ios::binary | std::ios::in | std::ios::out );
         }
     }
 
