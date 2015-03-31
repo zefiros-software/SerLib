@@ -29,20 +29,28 @@
 #include <stdio.h>
 #include <vector>
 
-#define TestParent( test, name, seed1, seed2 )       \
-    TEST( P( test ), name ## _stream )               \
-    {                                                \
-        Child c1( seed1 );                           \
-        ReorderedChild c2( seed2 );                  \
-        SimpleSerialiseDeserialiseStream( c1, c2 );  \
-        c1.TestEqual( c2 );                          \
-    }                                                \
-    TEST( P( test ), name ## _file )                 \
-    {                                                \
-        Child c1( seed1 );                           \
-        ReorderedChild c2( seed2 );                  \
-        SimpleSerialiseDeserialiseFile( c1, c2 );    \
-        c1.TestEqual( c2 );                          \
+#define TestParent( test, name, seed1, seed2 )              \
+    TEST( P( test ), name ## _stream )                      \
+    {                                                       \
+        Child c1( seed1 );                                  \
+        ReorderedChild c2( seed2 );                         \
+        SimpleSerialiseDeserialiseStream( c1, c2 );         \
+        c1.TestEqual( c2 );                                 \
+    }                                                       \
+    TEST( P( test ), name ## _file )                        \
+    {                                                       \
+        Child c1( seed1 );                                  \
+        ReorderedChild c2( seed2 );                         \
+        SimpleSerialiseDeserialiseFile( c1, c2 );           \
+        c1.TestEqual( c2 );                                 \
+    }                                                       \
+    TEST( P( test ), name ## _backwards )                   \
+    {                                                       \
+        Child c1( seed1 );                                  \
+        ReorderedChild c2( seed2 );                         \
+        std::string file = TEST_FILE( test, type ## name);  \
+        SimpleSerialiseDeserialiseBackwards( file, c1, c2 );\
+        c1.TestEqual( c2 );                                 \
     }
 
 namespace TestClasses
@@ -53,7 +61,7 @@ namespace TestClasses
 
         AbstractParent( uint32_t seed )
         {
-            std::srand( seed );
+            g_seed = seed;
             mMember1 = GetRandom< uint8_t >();
             mMember2 = GetRandom< uint64_t >();
         }
@@ -84,7 +92,7 @@ namespace TestClasses
         Parent( uint32_t seed )
             : AbstractParent( seed + 1 )
         {
-            std::srand( seed );
+            g_seed = seed;
             mMember1 = GetRandom< uint32_t >();
             std::stringstream ss;
             ss << GetRandom< uint64_t >();
@@ -120,7 +128,7 @@ namespace TestClasses
         SecondParent( uint32_t seed )
             : AbstractParent( seed + 2 )
         {
-            std::srand( seed );
+            g_seed = seed;
             mMember1 = GetRandom< uint8_t >();
             mMember2 = GetRandom< float >();
         }
@@ -153,7 +161,7 @@ namespace TestClasses
         Child( uint32_t seed )
             : Parent( seed + 3 ), SecondParent( seed + 4 )
         {
-            std::srand( seed );
+            g_seed = seed;
             mMember1 = GetRandom< uint32_t >();
             mMember2 = GetRandom< double >();
         }

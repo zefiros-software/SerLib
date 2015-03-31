@@ -43,6 +43,14 @@
         ReorderedRepeatedObjectClass< type1, type2, its > c2( seed2 );                  \
         SimpleSerialiseDeserialiseFile( c1, c2 );                                       \
         c1.TestEqual( c2 );                                                             \
+    }                                                                                   \
+    TEST( P( test ), type1 ## type2 ## name ## _backwards )                             \
+    {                                                                                   \
+        NormalRepeatedObjectClass< type1, type2, its > c1( seed1 );                     \
+        ReorderedRepeatedObjectClass< type1, type2, its > c2( seed2 );                  \
+        std::string file = TEST_FILE( test, type ## name);                              \
+        SimpleSerialiseDeserialiseBackwards( file, c1, c2 );                            \
+        c1.TestEqual( c2 );                                                             \
     }
 
 namespace TestClasses
@@ -55,7 +63,7 @@ namespace TestClasses
 
         NormalPrimitive( uint32_t seed = 233232 )
         {
-            std::srand( seed );
+            g_seed = seed;
 
             mMemberT1 = GetRandom< T1 >();
             mMemberT2 = GetRandom< T2 >();
@@ -136,7 +144,7 @@ namespace TestClasses
 
         NormalRepeatedObjectClass( uint32_t seed = 233232 )
         {
-            std::srand( seed );
+            g_seed = seed;
 
             for ( uint32_t i = 0; i < its; ++i )
             {
