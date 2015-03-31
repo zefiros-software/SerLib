@@ -49,6 +49,9 @@ class Message
 
 public:
 
+	template< typename TSerialisable >
+	friend void MessageHelper::Store( Message &message, TSerialisable &serialisable );
+
     enum Flags
     {
         Packed = Internal::Flags::Packed
@@ -104,24 +107,6 @@ public:
     Format::Format GetFormat()
     {
         return mFormat;
-    }
-
-
-    template< typename TSerialisable >
-    void Store( TSerialisable &serialisable )
-    {
-        mInternalMessage->InitObject();
-
-        MessageHelper::SERIALISATION_CUSTOM_INTERFACE( serialisable, *this );
-
-        mInternalMessage->FinishObject();
-
-        ClearBuffers();
-    }
-
-    void Store( ISerialisable &serialisable )
-    {
-        Store< ISerialisable >( serialisable );
     }
 
     template< typename TSerialisable >
@@ -485,6 +470,18 @@ private:
 
     Mode::Mode mMode;
     Format::Format mFormat;
+
+	template< typename TSerialisable >
+	void Store( TSerialisable &serialisable )
+	{
+		mInternalMessage->InitObject();
+
+		MessageHelper::SERIALISATION_CUSTOM_INTERFACE( serialisable, *this );
+
+		mInternalMessage->FinishObject();
+
+		ClearBuffers();
+	}
 
     InternalMessage *GetInternalMessage( Format::Format format, Mode::Mode mode )
     {

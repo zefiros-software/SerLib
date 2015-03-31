@@ -26,17 +26,28 @@
 
 namespace MessageHelper
 {
-	template< typename TSerialisable >
-	void SERIALISATION_CUSTOM_INTERFACE( TSerialisable &serialisable, Message &message )
-	{
-		serialisable.SERIALISATION_CUSTOM_INTERFACE( message );
-	}
+    template< typename TSerialisable >
+    void SERIALISATION_CUSTOM_INTERFACE( TSerialisable &serialisable, Message &message )
+    {
+        serialisable.SERIALISATION_CUSTOM_INTERFACE( message );
+    }
 
-	template< typename TParent >
-	void StoreParent( TParent &parent, Message &message )
-	{
-		parent.TParent::SERIALISATION_CUSTOM_INTERFACE( message );
-	}
+    template< typename TParent >
+    void StoreParent( TParent &parent, Message &message )
+    {
+        parent.TParent::SERIALISATION_CUSTOM_INTERFACE( message );
+    }
+
+    template< typename TSerialisable >
+    void Store( Message &message, TSerialisable &serialisable )
+    {
+        message.Store( serialisable );
+    }
+
+    inline void Store( Message &message, ISerialisable &serialisable )
+    {
+        Store< ISerialisable >( message, serialisable );
+    }
 }
 
 #endif

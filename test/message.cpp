@@ -50,11 +50,11 @@ namespace
 
         SimpleSer data;
         Message message1( ss1, Format::Binary, Mode::Serialise );
-        message1.Store( data );
+        MessageHelper::Store( message1, data );
 
         SimpleSer data2;
 
         Message message2( ss1, Format::Binary, Mode::Deserialise );
-        message2.Store( data2 );
+        MessageHelper::Store( message2, data2 );
     }
 }

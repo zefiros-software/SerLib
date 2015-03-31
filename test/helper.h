@@ -43,11 +43,11 @@ void SimpleSerialiseDeserialiseStream( T1 &c1, T2 &c2 )
     std::stringstream ss;
     {
         Message message( ss, Format::Binary, Mode::Serialise );
-        message.Store( c1 );
+        MessageHelper::Store( message, c1 );
     }
     {
         Message message( ss, Format::Binary, Mode::Deserialise );
-        message.Store( c2 );
+        MessageHelper::Store( message, c2 );
     }
 }
 
@@ -62,13 +62,13 @@ void SimpleSerialiseDeserialiseBackwards( const std::string &file, T1 &c1/**/, T
         ofs.close();
 
         Message message( file, Format::Binary, Mode::Serialise );
-        message.Store( c1 );
+        MessageHelper::Store( message, c1 );
     }
     /// */
 
     {
         Message message( file, Format::Binary, Mode::Deserialise );
-        message.Store( c2 );
+        MessageHelper::Store( message, c2 );
     }
 }
 
@@ -84,11 +84,11 @@ void SimpleSerialiseDeserialiseFile( T1 &c1, T2 &c2 )
     }
     {
         Message message( "file.bin", Format::Binary, Mode::Serialise );
-        message.Store( c1 );
+        MessageHelper::Store( message, c1 );
     }
     {
         Message message( "file.bin", Format::Binary, Mode::Deserialise );
-        message.Store( c2 );
+        MessageHelper::Store( message, c2 );
     }
 }
 
