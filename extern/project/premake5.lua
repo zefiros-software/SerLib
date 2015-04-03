@@ -20,8 +20,6 @@ solution "serialisation"
 
     vectorextensions "SSE2"
 
-    floatingpoint "Fast"
-
     warnings "Extra"
 
     flags "Unicode" 
