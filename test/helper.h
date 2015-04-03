@@ -67,6 +67,7 @@ void SimpleSerialiseDeserialiseBackwards( const std::string &file, T1 &/*c1*/, T
     /// */
 
     {
+        std::cout << file << endl;
         Message message( file, Format::Binary, Mode::Deserialise );
         MessageHelper::Store( message, c2 );
     }
