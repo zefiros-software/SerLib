@@ -466,8 +466,8 @@ private:
         switch ( format )
         {
         case Format::Binary:
-            iMessage = mode == Mode::Serialise ? CreateSerMessageAdapter< BinarySerMessage >( argument )
-                       : CreateDeserMessageAdapter< BinaryDeserMessage >( argument );
+            iMessage = mode == Mode::Serialise ? CreateMessageAdapter< BinarySerMessage >( argument ) :
+                       CreateMessageAdapter< BinaryDeserMessage >( argument );
             break;
 
         default:
@@ -479,15 +479,9 @@ private:
     }
 
     template< typename TMessage, typename TArgument >
-    InternalMessage *CreateSerMessageAdapter( TArgument &stream )
+    InternalMessage *CreateMessageAdapter( TArgument &stream )
     {
-        return new SerMessageAdapter< TMessage >( stream );
-    }
-
-    template< typename TMessage, typename TArgument >
-    InternalMessage *CreateDeserMessageAdapter( TArgument &stream )
-    {
-        return new DeserMessageAdapter< TMessage >( stream );
+        return new MessageAdapter< TMessage >( stream );
     }
 
     template< typename TMessage >
