@@ -22,6 +22,8 @@
 
 #include "helper.h"
 
+uint32_t g_seed = 0;
+
 template<>
 float GetRandom()
 {

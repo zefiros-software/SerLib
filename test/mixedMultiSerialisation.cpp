@@ -170,7 +170,6 @@ namespace
             for ( uint32_t i = 0; i < its; ++i )
             {
                 mMember[i] = GetRandom< T >();
-                std::cout << i << " - " << mMember[i] << std::endl;
             }
         }
 

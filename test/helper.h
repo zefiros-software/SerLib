@@ -112,7 +112,7 @@ T GenerateInvZebraValue()
     return GenerateZebraValue< T >() ^ std::numeric_limits<T>::max();
 }
 
-static uint32_t g_seed = 0;
+extern uint32_t g_seed;
 
 inline int GetFastRand()
 {
