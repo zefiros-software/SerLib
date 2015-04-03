@@ -37,7 +37,7 @@ T VarIntConvert( T value )
 
     WriteBuffer wb( ss );
     wb.WriteSize( value );
-	wb.ClearBuffer();
+    wb.ClearBuffer();
 
     ReadBuffer rb( ss );
     return static_cast< T >( rb.ReadSize() );
@@ -62,13 +62,13 @@ T VarIntConvert( T value )
         ASSERT_EQ( ul, VarIntConvert( ul ) );                   \
     }                                                           \
     \
-    TEST( P( VarIntTest), type ## Random )                      \
-    {                                                           \
-        for(uint32_t i = 0; i < 1000; ++i )                     \
-        {                                                       \
-            const type ul = static_cast< type >( std::rand() ); \
-            ASSERT_EQ( ul, VarIntConvert(ul));                  \
-        }                                                       \
+    TEST( P( VarIntTest), type ## Random )                                  \
+    {                                                                       \
+        for(uint32_t i = 0; i < 1000; ++i )                                 \
+        {                                                                   \
+            const type ul = static_cast< type >( GetRandom< uint32_t >() ); \
+            ASSERT_EQ( ul, VarIntConvert(ul));                              \
+        }                                                                   \
     }
 
 TestVarInt( uint8_t );

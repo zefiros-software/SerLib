@@ -215,8 +215,8 @@ namespace
 
             for ( uint32_t i = 0; i < its; ++i )
             {
-                mMember1.push_back( NormalPrimitive< T1, T2 >( std::rand() ) );
-                mMember2.push_back( NormalObjectClass< T1, T2 >( std::rand() ) );
+                mMember1.push_back( NormalPrimitive< T1, T2 >( GetRandom< uint32_t >() ) );
+                mMember2.push_back( NormalObjectClass< T1, T2 >( GetRandom< uint32_t >() ) );
             }
         }
 
