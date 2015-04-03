@@ -123,7 +123,7 @@ inline int GetFastRand()
 template< typename T >
 T GetRandom()
 {
-    return static_cast< T >( ( ( double )GetFastRand() / RAND_MAX ) * std::numeric_limits< T >::max() );
+    return static_cast< T >( GetFastRand() );
 }
 
 template<>
