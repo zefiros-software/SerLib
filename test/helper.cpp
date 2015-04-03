@@ -35,7 +35,7 @@ template<>
 double GetRandom()
 {
     // return with max an arbitrary number
-    return ( float )GetFastRand() / ( float )( std::numeric_limits< uint32_t >::max() / ( 1e-16 / 3.0f ) );
+    return ( double )GetFastRand() / ( float )( std::numeric_limits< uint32_t >::max() / ( 1e-16 / 3.0f ) );
 }
 
 std::string GenerateRandomString()
