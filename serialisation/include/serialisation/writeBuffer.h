@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#ifndef __WRITEBUFFER_H__
-#define __WRITEBUFFER_H__
+#ifndef __SERIALISATION_WRITEBUFFER_H__
+#define __SERIALISATION_WRITEBUFFER_H__
 
 #include "defines.h"
 #include "types.h"
