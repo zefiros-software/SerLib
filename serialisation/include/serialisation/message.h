@@ -39,7 +39,7 @@
 class Message
 {
 
-#define ASSERT_INDEX_IN_RANGE() assert( index < 28 && "Index should be less than 28 for members" )
+#define ASSERT_INDEX_IN_RANGE( index ) assert( index < 28 && "Index should be less than 28 for members" )
 
 public:
 
@@ -89,7 +89,7 @@ public:
     template< typename TSerialisable >
     void Store( TSerialisable &serialisable, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE();
+        ASSERT_INDEX_IN_RANGE( index );
 
         if ( mInternalMessage->InitObject( index ) )
         {
@@ -119,77 +119,77 @@ public:
 
     void Store( std::string &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE();
+        ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
 
     void Store( uint8_t &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE();
+        ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
 
     void Store( uint16_t &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE();
+        ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
 
     void Store( uint32_t &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE();
+        ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
 
     void Store( uint64_t &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE();
+        ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
 
     void Store( int8_t &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE();
+        ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
 
     void Store( int16_t &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE();
+        ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
 
     void Store( int32_t &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE();
+        ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
 
     void Store( int64_t &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE();
+        ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
 
     void Store( float &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE();
+        ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
 
     void Store( double &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE();
+        ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
@@ -562,7 +562,7 @@ private:
 
     size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 )
     {
-        ASSERT_INDEX_IN_RANGE();
+        ASSERT_INDEX_IN_RANGE( index );
 
         return mInternalMessage->CreateArray( type, size, index, flags );
     }
@@ -592,7 +592,7 @@ private:
         const Type::Type type = static_cast< Type::Type >( Internal::Type::GetEnum< TPrimitive >() );
         const size_t size = CreateArray( type, Size, index, flags );
 
-#if (SERIALISATION_ASSERT_ON_SIZE_MISMATCH == 1)
+#if SERIALISATION_ASSERT_ON_SIZE_MISMATCH
         assert( size == Size && "The array you tried to Deserialise with seems to be the wrong size" );
         mInternalMessage->StoreContiguous( container, size );
 #else

@@ -155,7 +155,7 @@
         c1.TestEqual( c2 )                                                          \
     }
 
-namespace TestClasses
+namespace
 {
     template< typename T, uint32_t its = 32 >
     class TestClass1
@@ -170,6 +170,7 @@ namespace TestClasses
             for ( uint32_t i = 0; i < its; ++i )
             {
                 mMember[i] = GetRandom< T >();
+                std::cout << i << " - " << mMember[i] << std::endl;
             }
         }
 
