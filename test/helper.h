@@ -28,8 +28,8 @@
 #define CONCAT( a, b ) CONCATEXT( a, b )
 #define P( prefix ) CONCAT( PREFIX, prefix )
 
-#define TEST_FILE_DETAIL( file, suite, test ) file #suite #test
-#define TEST_FILE( suite, test ) TEST_FILE_DETAIL("../../test/test-files/", suite, _ ## test ## .bin )
+#define TEST_FILE_DETAIL( file, suite, seperator, test, extension ) file #suite #seperator #test #extension
+#define TEST_FILE( suite, test ) TEST_FILE_DETAIL("../../test/test-files/", suite, _, test, .bin )
 
 #include "serialisation/message.h"
 
@@ -52,7 +52,7 @@ void SimpleSerialiseDeserialiseStream( T1 &c1, T2 &c2 )
 }
 
 template< typename T1, typename T2 >
-void SimpleSerialiseDeserialiseBackwards( const std::string &file, T1 &c1/**/, T2 &c2 )
+void SimpleSerialiseDeserialiseBackwards( const std::string &file, T1 &/*c1/**/, T2 &c2 )
 {
     /* Enable this when you need to regenerate the backwards compatibility files
     {
