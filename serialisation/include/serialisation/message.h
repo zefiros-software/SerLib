@@ -31,16 +31,10 @@
 #include "internalMessage.h"
 #include "messageAdapter.h"
 #include "messageHelper.h"
-#include "streamBuffer.h"
 #include "defines.h"
 #include "types.h"
 
 #include <assert.h>
-
-#if __cplusplus > 199711L || ( defined _MSC_VER && _MSC_VER >= 1700 )
-#define SERIALISATION_SUPPORT_STDARRAY
-#include <array>
-#endif
 
 class Message
 {
@@ -49,8 +43,8 @@ class Message
 
 public:
 
-	template< typename TSerialisable >
-	friend void MessageHelper::Store( Message &message, TSerialisable &serialisable );
+    template< typename TSerialisable >
+    friend void MessageHelper::Store( Message &message, TSerialisable &serialisable );
 
     enum Flags
     {
@@ -58,16 +52,14 @@ public:
     };
 
     Message( const std::string &fileName, Format::Format format, Mode::Mode mode = Mode::Serialise )
-        : mStreamBuffer( fileName ),
-          mInternalMessage( GetInternalMessage( format, mode ) ),
+        : mInternalMessage( CreateInternalMessage( format, mode, fileName ) ),
           mMode( mode ),
           mFormat( format )
     {
     }
 
     Message( std::iostream &stream, Format::Format format, Mode::Mode mode = Mode::Serialise )
-        : mStreamBuffer( stream ),
-          mInternalMessage( GetInternalMessage( format, mode ) ),
+        : mInternalMessage( CreateInternalMessage( format, mode, stream ) ),
           mMode( mode ),
           mFormat( format )
     {
@@ -81,27 +73,12 @@ public:
 
     void ClearBuffers()
     {
-        mStreamBuffer.ClearReadBuffer();
-        mStreamBuffer.FlushWriteBuffer();
-    }
-
-    void SetMode( Mode::Mode mode )
-    {
-        mMode = mode;
-
-        DeleteInternalMessage( mInternalMessage );
-
-        mInternalMessage = GetInternalMessage( mFormat, mMode );
+        mInternalMessage->ClearBuffer();
     }
 
     Mode::Mode GetMode()
     {
         return mMode;
-    }
-
-    void SetFormat( Format::Format format )
-    {
-        mFormat = format;
     }
 
     Format::Format GetFormat()
@@ -464,34 +441,33 @@ public:
 
 private:
 
-    StreamBuffer< SERIALISERS_BUFFERSIZE > mStreamBuffer;
-
     InternalMessage *mInternalMessage;
 
     Mode::Mode mMode;
     Format::Format mFormat;
 
-	template< typename TSerialisable >
-	void Store( TSerialisable &serialisable )
-	{
-		mInternalMessage->InitObject();
+    template< typename TSerialisable >
+    void Store( TSerialisable &serialisable )
+    {
+        mInternalMessage->InitObject();
 
-		MessageHelper::SERIALISATION_CUSTOM_INTERFACE( serialisable, *this );
+        MessageHelper::SERIALISATION_CUSTOM_INTERFACE( serialisable, *this );
 
-		mInternalMessage->FinishObject();
+        mInternalMessage->FinishObject();
 
-		ClearBuffers();
-	}
+        ClearBuffers();
+    }
 
-    InternalMessage *GetInternalMessage( Format::Format format, Mode::Mode mode )
+    template< typename TArgument >
+    InternalMessage *CreateInternalMessage( Format::Format format, Mode::Mode mode, TArgument &argument )
     {
         InternalMessage *iMessage = NULL;
 
         switch ( format )
         {
         case Format::Binary:
-            iMessage = mode == Mode::Serialise ? CreateInternalMessage< BinarySerMessage >() :
-                       CreateInternalMessage< BinaryDeserMessage >();
+            iMessage = mode == Mode::Serialise ? CreateSerMessageAdapter< BinarySerMessage >( argument )
+                       : CreateDeserMessageAdapter< BinaryDeserMessage >( argument );
             break;
 
         default:
@@ -502,10 +478,16 @@ private:
         return iMessage;
     }
 
-    template< typename TMessage >
-    InternalMessage *CreateInternalMessage()
+    template< typename TMessage, typename TArgument >
+    InternalMessage *CreateSerMessageAdapter( TArgument &stream )
     {
-        return new MessageAdapter< TMessage >( mStreamBuffer );
+        return new SerMessageAdapter< TMessage >( stream );
+    }
+
+    template< typename TMessage, typename TArgument >
+    InternalMessage *CreateDeserMessageAdapter( TArgument &stream )
+    {
+        return new DeserMessageAdapter< TMessage >( stream );
     }
 
     template< typename TMessage >
@@ -640,5 +622,11 @@ private:
 #endif
     }
 };
+
+template< typename TSerialisable >
+void MessageHelper::Store( Message &message, TSerialisable &serialisable )
+{
+    message.Store( serialisable );
+}
 
 #endif

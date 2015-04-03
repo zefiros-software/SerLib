@@ -28,7 +28,7 @@
 #include "interface/ISerialisable.h"
 #include "interface/IMessage.h"
 
-#include "streamBuffer.h"
+#include "writeBuffer.h"
 #include "tempObject.h"
 #include "arrayInfo.h"
 #include "types.h"
@@ -43,8 +43,29 @@ class BinarySerMessage
 {
 public:
 
-    BinarySerMessage( StreamBuffer< SERIALISERS_BUFFERSIZE > &buffer )
-        : mStreamBuffer( buffer )
+    BinarySerMessage( const std::string &fileName )
+        : mStreamBuffer( fileName )
+    {
+        mArrayInfo.type = Internal::Type::Terminator;
+        mArrayInfo.remainingCount = 0;
+    }
+
+    BinarySerMessage( std::ofstream &stream )
+        : mStreamBuffer( stream )
+    {
+        mArrayInfo.type = Internal::Type::Terminator;
+        mArrayInfo.remainingCount = 0;
+    }
+
+    BinarySerMessage( std::fstream &stream )
+        : mStreamBuffer( stream )
+    {
+        mArrayInfo.type = Internal::Type::Terminator;
+        mArrayInfo.remainingCount = 0;
+    }
+
+    BinarySerMessage( std::ostream &stream )
+        : mStreamBuffer( stream )
     {
         mArrayInfo.type = Internal::Type::Terminator;
         mArrayInfo.remainingCount = 0;
@@ -89,9 +110,9 @@ public:
         FinishObject();
     }
 
-    inline void ClearBuffers()
+    inline void ClearBuffer()
     {
-        mStreamBuffer.FlushWriteBuffer();
+        mStreamBuffer.ClearBuffer();
     }
 
     template< typename TPrimitive >
@@ -127,12 +148,12 @@ public:
     template< typename TPrimitive >
     void StoreContiguous( TPrimitive *begin, size_t size )
     {
-        mStreamBuffer.WriteBlock( begin, size * sizeof( TPrimitive ) );
+        mStreamBuffer.WritePrimitiveBlock( begin, size );
     }
 
 private:
 
-    StreamBuffer< SERIALISERS_BUFFERSIZE > &mStreamBuffer;
+    WriteBuffer mStreamBuffer;
 
     ArrayInfo mArrayInfo;
 
@@ -170,7 +191,7 @@ private:
     template< typename TPrimitive >
     void WritePrimitive( TPrimitive &value )
     {
-        mStreamBuffer.WriteBytes( &value, sizeof( TPrimitive ) );
+        mStreamBuffer.WritePrimitive( value );
     }
 
     BinarySerMessage &operator=( const BinarySerMessage &bsm );
@@ -212,7 +233,7 @@ inline void BinarySerMessage::StoreContiguous( float *begin, size_t size )
             mU32Buffer[ k ] = Util::FloatToUInt32( begin[ k ] );
         }
 
-        mStreamBuffer.WriteBlock( mU32Buffer, blockSize * sizeof( uint32_t ) );
+        mStreamBuffer.WritePrimitiveBlock( mU32Buffer, blockSize );
     }
 }
 
@@ -228,7 +249,7 @@ inline void BinarySerMessage::StoreContiguous( double *begin, size_t size )
             mU64Buffer[ k ] = Util::DoubleToUInt64( begin[ k ] );
         }
 
-        mStreamBuffer.WriteBlock( mU64Buffer, blockSize * sizeof( uint64_t ) );
+        mStreamBuffer.WritePrimitiveBlock( mU64Buffer, blockSize );
     }
 }
 

@@ -21,7 +21,9 @@
  */
 
 #include "helper.h"
-#include "serialisation/streamBuffer.h"
+
+#include "serialisation/writeBuffer.h"
+#include "serialisation/readBuffer.h"
 
 #include "gtest/gtest.h"
 
@@ -32,9 +34,13 @@ template< typename T >
 T VarIntConvert( T value )
 {
     std::stringstream ss;
-    StreamBuffer< SERIALISERS_BUFFERSIZE > sb( ss );
-    sb.WriteSize( value );
-    return static_cast< T >( sb.ReadSize() );
+
+    WriteBuffer wb( ss );
+    wb.WriteSize( value );
+	wb.ClearBuffer();
+
+    ReadBuffer rb( ss );
+    return static_cast< T >( rb.ReadSize() );
 }
 
 #define TestVarInt( type )                                      \

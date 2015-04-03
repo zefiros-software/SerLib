@@ -132,7 +132,7 @@ namespace TestClasses
         struct SubMeshData
         {
             SubMeshData() : indexOffset( 0 ), indexCount( 1 ), vertexOffset( 2 ), materialIndex( 3 ),
-                aabbMin( 0.0, 0.1, 0.2 ), aabbMax( 0.3, 0.4, 0.5 ), aabbOffset( 0.6, 0.7, 0.8 ),
+                aabbMin( 0.0f, 0.1f, 0.2f ), aabbMax( 0.3f, 0.4f, 0.5f ), aabbOffset( 0.6f, 0.7f, 0.8f ),
                 name( "MAGIC_STRING_1" )
             {
 

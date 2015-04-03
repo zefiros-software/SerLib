@@ -36,6 +36,8 @@ public:
     {
     }
 
+    virtual void ClearBuffer() = 0;
+
     virtual void InitObject() = 0;
     virtual void FinishObject() = 0;
 

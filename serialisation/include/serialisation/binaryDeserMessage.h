@@ -28,29 +28,64 @@
 #include "interface/abstractTempArray.h"
 
 #include "tempPrimitive.h"
-#include "streamBuffer.h"
+#include "readBuffer.h"
 #include "tempObject.h"
 #include "tempArray.h"
 #include "arrayInfo.h"
 #include "defines.h"
 #include "types.h"
+#include "util.h"
 
 #include <assert.h>
 #include <stack>
-#include "util.h"
 
 class BinaryDeserMessage
 {
 public:
 
-    BinaryDeserMessage( StreamBuffer<SERIALISERS_BUFFERSIZE > &buffer )
-        : mStreamBuffer( buffer ),
+    BinaryDeserMessage( const std::string &fileName )
+        : mStreamBuffer( fileName ),
           mCurrentArray( NULL ),
           mCurrentObject( NULL ),
           mTerminatorRead( false )
     {
         mArrayInfo.type = Internal::Type::Terminator;
         mArrayInfo.remainingCount = 0;
+    }
+
+    BinaryDeserMessage( std::ifstream &stream )
+        : mStreamBuffer( stream ),
+          mCurrentArray( NULL ),
+          mCurrentObject( NULL ),
+          mTerminatorRead( false )
+    {
+        mArrayInfo.type = Internal::Type::Terminator;
+        mArrayInfo.remainingCount = 0;
+    }
+
+    BinaryDeserMessage( std::fstream &stream )
+        : mStreamBuffer( stream ),
+          mCurrentArray( NULL ),
+          mCurrentObject( NULL ),
+          mTerminatorRead( false )
+    {
+        mArrayInfo.type = Internal::Type::Terminator;
+        mArrayInfo.remainingCount = 0;
+    }
+
+    BinaryDeserMessage( std::istream &stream )
+        : mStreamBuffer( stream ),
+          mCurrentArray( NULL ),
+          mCurrentObject( NULL ),
+          mTerminatorRead( false )
+    {
+        mArrayInfo.type = Internal::Type::Terminator;
+        mArrayInfo.remainingCount = 0;
+    }
+
+    inline void ClearBuffer()
+    {
+        mStreamBuffer.ClearBuffer();
     }
 
     inline void InitObject()
@@ -133,7 +168,7 @@ public:
         }
         else
         {
-            mStreamBuffer.ReadBlock( begin, size * sizeof( TPrimitive ) );
+            mStreamBuffer.ReadPrimitiveBlock( begin, size );
         }
 
         mArrayInfo.remainingCount -= size;
@@ -141,7 +176,7 @@ public:
 
 private:
 
-    StreamBuffer< SERIALISERS_BUFFERSIZE > &mStreamBuffer;
+    ReadBuffer mStreamBuffer;
 
     std::stack< TempObject * > mObjectHistory;
     std::stack< AbstractTempArray * > mArrayHistory;
@@ -161,7 +196,7 @@ private:
     template< typename TPrimitive >
     void ReadFromStream( TPrimitive &value )
     {
-        mStreamBuffer.ReadBytes( &value, sizeof( TPrimitive ) );
+        mStreamBuffer.ReadPrimitive( value );
     }
 
     template< typename T >
@@ -223,7 +258,7 @@ private:
 
         tArray->Resize( size );
 
-        mStreamBuffer.ReadBytes( tArray->GetData(), size * sizeof( TPrimitive ) );
+        mStreamBuffer.ReadPrimitiveBlock( tArray->GetData(), size );
 
         return tArray;
     }
@@ -379,7 +414,7 @@ template<>
 inline void BinaryDeserMessage::ReadFromStream( float &value )
 {
     uint32_t flexman;
-    mStreamBuffer.ReadBytes( &flexman, sizeof( uint32_t ) );
+    mStreamBuffer.ReadPrimitive( flexman );
     value = Util::UInt32ToFloat( flexman );
 }
 
@@ -387,7 +422,7 @@ template<>
 inline void BinaryDeserMessage::ReadFromStream( double &value )
 {
     uint64_t flexman;
-    mStreamBuffer.ReadBytes( &flexman, sizeof( uint64_t ) );
+    mStreamBuffer.ReadPrimitive( flexman );
     value = Util::UInt64ToDouble( flexman );
 }
 
@@ -418,9 +453,13 @@ inline ITempData *BinaryDeserMessage::ReadTempPrimitiveArray< std::string >( siz
     for ( std::string *it = tArray->GetData(), *end = it + size; it != end; ++it )
     {
         strSize = mStreamBuffer.ReadSize();
-        strVec.resize( strSize );
-        mStreamBuffer.ReadBytes( &strVec[0], strSize );
-        *it = std::string( &strVec[0], strSize );
+
+        it->resize( strSize, ' ' );
+
+        if ( strSize > 0 )
+        {
+            mStreamBuffer.ReadBytes( &it->at( 0 ), strSize );
+        }
     }
 
     return tArray;
@@ -565,7 +604,7 @@ inline void BinaryDeserMessage::StoreContiguous( float *begin, size_t size )
             size_t blockSize = static_cast< size_t >( size - i );
             blockSize = blockSize > 128 ? 128 : blockSize;
 
-            mStreamBuffer.ReadBlock( intBuffer, blockSize * sizeof( uint32_t ) );
+            mStreamBuffer.ReadPrimitiveBlock( intBuffer, blockSize );
 
             for ( size_t k = 0; k < blockSize; ++k )
             {
@@ -598,7 +637,7 @@ inline void BinaryDeserMessage::StoreContiguous( double *begin, size_t size )
             size_t blockSize = static_cast< size_t >( size - i );
             blockSize = blockSize > 128 ? 128 : blockSize;
 
-            mStreamBuffer.ReadBlock( intBuffer, blockSize * sizeof( uint64_t ) );
+            mStreamBuffer.ReadPrimitiveBlock( intBuffer, blockSize );
 
             for ( size_t k = 0; k < blockSize; ++k )
             {

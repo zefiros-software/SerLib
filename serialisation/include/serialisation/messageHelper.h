@@ -39,10 +39,7 @@ namespace MessageHelper
     }
 
     template< typename TSerialisable >
-    void Store( Message &message, TSerialisable &serialisable )
-    {
-        message.Store( serialisable );
-    }
+    void Store( Message &message, TSerialisable &serialisable );
 
     inline void Store( Message &message, ISerialisable &serialisable )
     {

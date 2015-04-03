@@ -25,7 +25,6 @@
 #define __SERIALISATION_MESSAGEADAPTER_H__
 
 #include "internalMessage.h"
-#include "streamBuffer.h"
 #include "defines.h"
 #include "types.h"
 
@@ -35,219 +34,305 @@ class MessageAdapter
 {
 public:
 
-    MessageAdapter( StreamBuffer< SERIALISERS_BUFFERSIZE > &buffer )
-        : mMessage( buffer )
+    MessageAdapter()
+        : mMessage( NULL )
     {
+
     }
 
     void InitObject()
     {
-        mMessage.InitObject();
+        mMessage->InitObject();
     }
 
     inline bool InitObject( uint8_t index )
     {
-        return mMessage.InitObject( index );
+        return mMessage->InitObject( index );
     }
 
     void FinishObject()
     {
-        mMessage.FinishObject();
+        mMessage->FinishObject();
     }
 
     inline void FinishObject( uint8_t index )
     {
-        mMessage.FinishObject( index );
+        mMessage->FinishObject( index );
     }
 
     inline bool InitParent( uint8_t index )
     {
-        return mMessage.InitParent( index );
+        return mMessage->InitParent( index );
     }
 
     inline void FinishParent( uint8_t index )
     {
-        mMessage.FinishParent( index );
+        mMessage->FinishParent( index );
     }
 
     inline void InitArrayObject()
     {
-        mMessage.InitArrayObject();
+        mMessage->InitArrayObject();
     }
 
     inline void FinishArrayObject()
     {
-        mMessage.FinishArrayObject();
+        mMessage->FinishArrayObject();
     }
 
     inline void Store( std::string &value, uint8_t index )
     {
-        mMessage.Store( value, index );
+        mMessage->Store( value, index );
     }
 
     void Store( uint8_t &value, uint8_t index )
     {
-        mMessage.Store( value, index );
+        mMessage->Store( value, index );
     }
 
     void Store( uint16_t &value, uint8_t index )
     {
-        mMessage.Store( value, index );
+        mMessage->Store( value, index );
     }
 
     void Store( uint32_t &value, uint8_t index )
     {
-        mMessage.Store( value, index );
+        mMessage->Store( value, index );
     }
 
     void Store( uint64_t &value, uint8_t index )
     {
-        mMessage.Store( value, index );
+        mMessage->Store( value, index );
     }
 
     void Store( int8_t &value, uint8_t index )
     {
-        mMessage.Store( value, index );
+        mMessage->Store( value, index );
     }
 
     void Store( int16_t &value, uint8_t index )
     {
-        mMessage.Store( value, index );
+        mMessage->Store( value, index );
     }
     void Store( int32_t &value, uint8_t index )
     {
-        mMessage.Store( value, index );
+        mMessage->Store( value, index );
     }
 
     void Store( int64_t &value, uint8_t index )
     {
-        mMessage.Store( value, index );
+        mMessage->Store( value, index );
     }
 
 
     void Store( float &value, uint8_t index )
     {
-        mMessage.Store( value, index );
+        mMessage->Store( value, index );
     }
 
     void Store( double &value, uint8_t index )
     {
-        mMessage.Store( value, index );
+        mMessage->Store( value, index );
     }
 
     size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 )
     {
-        return mMessage.CreateArray( type, size, index, flags );
+        return mMessage->CreateArray( type, size, index, flags );
     }
 
     void StoreArrayItem( std::string &value )
     {
-        mMessage.StoreArrayItem( value );
+        mMessage->StoreArrayItem( value );
     }
 
     void StoreArrayItem( uint8_t &value )
     {
-        mMessage.StoreArrayItem( value );
+        mMessage->StoreArrayItem( value );
     }
 
     void StoreArrayItem( uint16_t &value )
     {
-        mMessage.StoreArrayItem( value );
+        mMessage->StoreArrayItem( value );
     }
 
     void StoreArrayItem( uint32_t &value )
     {
-        mMessage.StoreArrayItem( value );
+        mMessage->StoreArrayItem( value );
     }
 
     void StoreArrayItem( uint64_t &value )
     {
-        mMessage.StoreArrayItem( value );
+        mMessage->StoreArrayItem( value );
     }
 
     void StoreArrayItem( int8_t &value )
     {
-        mMessage.StoreArrayItem( value );
+        mMessage->StoreArrayItem( value );
     }
 
     void StoreArrayItem( int16_t &value )
     {
-        mMessage.StoreArrayItem( value );
+        mMessage->StoreArrayItem( value );
     }
 
     void StoreArrayItem( int32_t &value )
     {
-        mMessage.StoreArrayItem( value );
+        mMessage->StoreArrayItem( value );
     }
 
     void StoreArrayItem( int64_t &value )
     {
-        mMessage.StoreArrayItem( value );
+        mMessage->StoreArrayItem( value );
     }
 
     void StoreArrayItem( float &value )
     {
-        mMessage.StoreArrayItem( value );
+        mMessage->StoreArrayItem( value );
     }
 
     void StoreArrayItem( double &value )
     {
-        mMessage.StoreArrayItem( value );
+        mMessage->StoreArrayItem( value );
     }
 
     void StoreContiguous( uint8_t *begin, size_t size )
     {
-        mMessage.StoreContiguous( begin, size );
+        mMessage->StoreContiguous( begin, size );
     }
 
     void StoreContiguous( uint16_t *begin, size_t size )
     {
-        mMessage.StoreContiguous( begin, size );
+        mMessage->StoreContiguous( begin, size );
     }
 
     void StoreContiguous( uint32_t *begin, size_t size )
     {
-        mMessage.StoreContiguous( begin, size );
+        mMessage->StoreContiguous( begin, size );
     }
 
     void StoreContiguous( uint64_t *begin, size_t size )
     {
-        mMessage.StoreContiguous( begin, size );
+        mMessage->StoreContiguous( begin, size );
     }
 
     void StoreContiguous( int8_t *begin, size_t size )
     {
-        mMessage.StoreContiguous( begin, size );
+        mMessage->StoreContiguous( begin, size );
     }
 
     void StoreContiguous( int16_t *begin, size_t size )
     {
-        mMessage.StoreContiguous( begin, size );
+        mMessage->StoreContiguous( begin, size );
     }
 
     void StoreContiguous( int32_t *begin, size_t size )
     {
-        mMessage.StoreContiguous( begin, size );
+        mMessage->StoreContiguous( begin, size );
     }
 
     void StoreContiguous( int64_t *begin, size_t size )
     {
-        mMessage.StoreContiguous( begin, size );
+        mMessage->StoreContiguous( begin, size );
     }
 
     void StoreContiguous( float *begin, size_t size )
     {
-        mMessage.StoreContiguous( begin, size );
+        mMessage->StoreContiguous( begin, size );
     }
 
     void StoreContiguous( double *begin, size_t size )
     {
-        mMessage.StoreContiguous( begin, size );
+        mMessage->StoreContiguous( begin, size );
+    }
+
+protected:
+
+    TMessage *mMessage;
+
+private:
+
+    MessageAdapter &operator=( const MessageAdapter & );
+};
+
+
+template< typename TMessage >
+class SerMessageAdapter
+    : public MessageAdapter< TMessage >
+{
+public:
+
+    SerMessageAdapter( const std::string &fileName )
+        : mSerMessage( fileName )
+    {
+        MessageAdapter< TMessage >::mMessage = &mSerMessage;
+    }
+
+    SerMessageAdapter( std::ofstream &stream )
+        : mSerMessage( stream )
+    {
+        MessageAdapter< TMessage >::mMessage = &mSerMessage;
+    }
+
+    SerMessageAdapter( std::fstream &stream )
+        : mSerMessage( stream )
+    {
+        MessageAdapter< TMessage >::mMessage = &mSerMessage;
+    }
+
+    SerMessageAdapter( std::ostream &stream )
+        : mSerMessage( stream )
+    {
+        MessageAdapter< TMessage >::mMessage = &mSerMessage;
+    }
+
+    void ClearBuffer()
+    {
+        mSerMessage.ClearBuffer();
     }
 
 private:
 
-    TMessage mMessage;
+    TMessage mSerMessage;
 };
 
+
+template< typename TMessage >
+class DeserMessageAdapter
+    : public MessageAdapter< TMessage >
+{
+public:
+
+    DeserMessageAdapter( const std::string &fileName )
+        : mDeserMessage( fileName )
+    {
+        MessageAdapter< TMessage >::mMessage = &mDeserMessage;
+    }
+
+    DeserMessageAdapter( std::ifstream &stream )
+        : mDeserMessage( stream )
+    {
+        MessageAdapter< TMessage >::mMessage = &mDeserMessage;
+    }
+
+    DeserMessageAdapter( std::fstream &stream )
+        : mDeserMessage( stream )
+    {
+        MessageAdapter< TMessage >::mMessage = &mDeserMessage;
+    }
+
+    DeserMessageAdapter( std::istream &stream )
+        : mDeserMessage( stream )
+    {
+        MessageAdapter< TMessage >::mMessage = &mDeserMessage;
+    }
+
+    void ClearBuffer()
+    {
+        mDeserMessage.ClearBuffer();
+    }
+
+private:
+
+    TMessage mDeserMessage;
+};
 #endif
