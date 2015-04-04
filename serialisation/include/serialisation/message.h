@@ -525,7 +525,7 @@ private:
         mInternalMessage->StoreArrayItem( value );
     }
 
-    inline inline void StoreArrayItem( uint64_t &value )
+    inline void StoreArrayItem( uint64_t &value )
     {
         mInternalMessage->StoreArrayItem( value );
     }
