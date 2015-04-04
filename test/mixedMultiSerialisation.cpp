@@ -30,54 +30,132 @@
 #include <vector>
 
 #define TestSerialClass( test, name, type, seed1, seed2, its )      \
-    TEST( P( test ), type ## name )                                       \
-    {                                                                     \
-        TestClass1< type, its > c1( seed1 ), c2( seed2 );           \
-        SimpleSerialiseDeserialiseStream( c1, c2 );                       \
-        c1.TestEqual( c2 );                                               \
-    }
-
-#define TestFSerialClass( test, name, seed1, seed2, its )     \
-    TEST( P( test ), float ## name )                                \
+    TEST( P( test ), type ## name ## _stream )                      \
     {                                                               \
-        TestClass1F< its > c1( seed1 ), c2( seed2 );          \
+        TestClass1< type, its > c1( seed1 ), c2( seed2 );           \
         SimpleSerialiseDeserialiseStream( c1, c2 );                 \
+        c1.TestEqual( c2 );                                         \
+    }                                                               \
+    TEST( P( test ), type ## name ## _file )                        \
+    {                                                               \
+        TestClass1< type, its > c1( seed1 ), c2( seed2 );           \
+        SimpleSerialiseDeserialiseFile( c1, c2 );                   \
+        c1.TestEqual( c2 );                                         \
+    }                                                               \
+    TEST( P( test ), type ## name ## _backwards )                   \
+    {                                                               \
+        TestClass1< type, its > c1( seed1 ), c2( seed2 );           \
+        std::string file = TEST_FILE( test, type ## name);          \
+        SimpleSerialiseDeserialiseBackwards( file, c1, c2 );        \
         c1.TestEqual( c2 );                                         \
     }
 
-#define TestDSerialClass( test, name, seed1, seed2, its ) \
-    TEST( P( test ), double ## name )                           \
+#define TestFSerialClass( test, name, seed1, seed2, its )       \
+    TEST( P( test ), float ## name ## _stream )                 \
     {                                                           \
-        TestClass1D< its > c1( seed1 ), c2( seed2 );      \
+        TestClass1F< its > c1( seed1 ), c2( seed2 );            \
         SimpleSerialiseDeserialiseStream( c1, c2 );             \
+        c1.TestEqual( c2 );                                     \
+    }                                                           \
+    TEST( P( test ), float ## name ## _file )                   \
+    {                                                           \
+        TestClass1F< its > c1( seed1 ), c2( seed2 );            \
+        SimpleSerialiseDeserialiseFile( c1, c2 );               \
+        c1.TestEqual( c2 );                                     \
+    }                                                           \
+    TEST( P( test ), float ## name ## _backwards )              \
+    {                                                           \
+        TestClass1F< its > c1( seed1 ), c2( seed2 );            \
+        std::string file = TEST_FILE( test, float ## name);     \
+        SimpleSerialiseDeserialiseBackwards( file, c1, c2 );    \
         c1.TestEqual( c2 );                                     \
     }
 
-#define TestIFDMixedSerialClass( test, name, typeI, seed1, seed2, its )   \
-    TEST( P( test ), typeI ## name )                                            \
-    {                                                                           \
-        TestClass2F1< typeI, its > c1( seed1 ), c2( seed2 );              \
-        SimpleSerialiseDeserialiseStream( c1, c2 );                             \
-        c1.TestEqual( c2 );                                                     \
+#define TestDSerialClass( test, name, seed1, seed2, its )   \
+    TEST( P( test ), double ## name ## _stream )            \
+    {                                                       \
+        TestClass1D< its > c1( seed1 ), c2( seed2 );        \
+        SimpleSerialiseDeserialiseStream( c1, c2 );         \
+        c1.TestEqual( c2 );                                 \
+    }                                                       \
+    TEST( P( test ), double ## name ## _file )              \
+    {                                                       \
+        TestClass1D< its > c1( seed1 ), c2( seed2 );        \
+        SimpleSerialiseDeserialiseFile( c1, c2 );           \
+        c1.TestEqual( c2 );                                 \
+    }                                                       \
+    TEST( P( test ), double ## name ## _backwards )         \
+    {                                                       \
+        TestClass1D< its > c1( seed1 ), c2( seed2 );        \
+        std::string file = TEST_FILE( test, double ## name);\
+        SimpleSerialiseDeserialiseBackwards( file, c1, c2 );\
+        c1.TestEqual( c2 );                                 \
+    }
+
+#define TestIFDMixedSerialClass( test, name, typeI, seed1, seed2, its ) \
+    TEST( P( test ), typeI ## name ## _stream )                         \
+    {                                                                   \
+        TestClass2F1< typeI, its > c1( seed1 ), c2( seed2 );            \
+        SimpleSerialiseDeserialiseStream( c1, c2 );                     \
+        c1.TestEqual( c2 );                                             \
+    }                                                                   \
+    TEST( P( test ), typeI ## name ## _file )                           \
+    {                                                                   \
+        TestClass2F1< typeI, its > c1( seed1 ), c2( seed2 );            \
+        SimpleSerialiseDeserialiseStream( c1, c2 );                     \
+        c1.TestEqual( c2 );                                             \
+    }                                                                   \
+    TEST( P( test ), typeI ## name ## _backwards )                      \
+    {                                                                   \
+        TestClass2F1< typeI, its > c1( seed1 ), c2( seed2 );            \
+        std::string file = TEST_FILE( test, typeI ## name);             \
+        SimpleSerialiseDeserialiseBackwards( file, c1, c2 );            \
+        c1.TestEqual( c2 );                                             \
     }
 
 #define TestFIDMixedSerialClass( test, name, typeI, seed1, seed2, its )  \
-    TEST( P( test ), typeI ## name )                                           \
-    {                                                                          \
+    TEST( P( test ), typeI ## name ## _stream )                          \
+    {                                                                    \
         TestClass2F2< typeI, its > c1( seed1 ), c2( seed2 );             \
-        SimpleSerialiseDeserialiseStream( c1, c2 );                            \
-        c1.TestEqual( c2 );                                                    \
+        SimpleSerialiseDeserialiseStream( c1, c2 );                      \
+        c1.TestEqual( c2 );                                              \
+    }                                                                    \
+    TEST( P( test ), typeI ## name ## _file )                            \
+    {                                                                    \
+        TestClass2F2< typeI, its > c1( seed1 ), c2( seed2 );             \
+        SimpleSerialiseDeserialiseFile( c1, c2 );                        \
+        c1.TestEqual( c2 );                                              \
+    }                                                                    \
+    TEST( P( test ), typeI ## name ## _backwards )                       \
+    {                                                                    \
+        TestClass2F2< typeI, its > c1( seed1 ), c2( seed2 );             \
+        std::string file = TEST_FILE( test, typeI ## name);              \
+        SimpleSerialiseDeserialiseBackwards( file, c1, c2 );             \
+        c1.TestEqual( c2 );                                              \
     }
 
-#define TestIDIMixedSerialClass( test, name, typeI1, typeI2, seed1, seed2, its )  \
-    TEST( P( test ), typeI1 ## typeI2 ## name )                                         \
-    {                                                                                   \
-        TestClass2F3< typeI1, typeI2, its > c1( seed1 ), c2( seed2 );             \
-        SimpleSerialiseDeserialiseStream( c1, c2 );                                     \
-        c1.TestEqual( c2 )                                                              \
+#define TestIDIMixedSerialClass( test, name, typeI1, typeI2, seed1, seed2, its )    \
+    TEST( P( test ), typeI1 ## typeI2 ## name ## _stream )                          \
+    {                                                                               \
+        TestClass2F3< typeI1, typeI2, its > c1( seed1 ), c2( seed2 );               \
+        SimpleSerialiseDeserialiseStream( c1, c2 );                                 \
+        c1.TestEqual( c2 )                                                          \
+    }                                                                               \
+    TEST( P( test ), typeI1 ## typeI2 ## name ## _file )                            \
+    {                                                                               \
+        TestClass2F3< typeI1, typeI2, its > c1( seed1 ), c2( seed2 );               \
+        SimpleSerialiseDeserialiseFile( c1, c2 );                                   \
+        c1.TestEqual( c2 )                                                          \
+    }                                                                               \
+    TEST( P( test ), typeI1 ## typeI2 ## name ## _backwards )                       \
+    {                                                                               \
+        TestClass2F3< typeI1, typeI2, its > c1( seed1 ), c2( seed2 );               \
+        std::string file = TEST_FILE( test, typeI1 ## typeI2 ## name);              \
+        SimpleSerialiseDeserialiseBackwards( file, c1, c2 );                        \
+        c1.TestEqual( c2 )                                                          \
     }
 
-namespace TestClasses
+namespace
 {
     template< typename T, uint32_t its = 32 >
     class TestClass1
@@ -87,7 +165,7 @@ namespace TestClasses
 
         TestClass1( uint32_t seed = 233232 )
         {
-            srand( seed );
+            g_seed = seed;
 
             for ( uint32_t i = 0; i < its; ++i )
             {
@@ -163,7 +241,7 @@ namespace TestClasses
 
         TestClass2( uint32_t seed = 233232 )
         {
-            srand( seed );
+            g_seed = seed;
 
             for ( uint32_t i = 0; i < its; ++i )
             {

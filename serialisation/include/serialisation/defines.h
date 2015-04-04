@@ -32,4 +32,9 @@
 #   define SERIALISERS_BUFFERSIZE 1024
 #endif
 
+#if __cplusplus > 199711L || ( defined _MSC_VER && _MSC_VER >= 1700 )
+#define SERIALISATION_SUPPORT_STDARRAY
+#include <array>
+#endif
+
 #endif

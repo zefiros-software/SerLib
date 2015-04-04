@@ -11,96 +11,85 @@ table.insert(premake.fields.flags.allowed, "pthread");
 
 solution "serialisation"
 
-	location( root .. "serialisation/" )
-	objdir( root .. "bin/obj/" )
-	debugdir( root .. "bin/" )
-	
-	configurations { "Debug", "Release" }
+    location( root .. "serialisation/" )
+    objdir( root .. "bin/obj/" )
+    
+    configurations { "Debug", "Release" }
 
-	platforms { "x64", "x32" }
+    platforms { "x64", "x32" }
 
-	vectorextensions "SSE2"
+    vectorextensions "SSE2"
 
-	floatingpoint "Fast"
+    warnings "Extra"
 
-	warnings "Extra"
-
-	flags "Unicode"	
+    flags "Unicode" 
 
     configuration "x32"
-		targetdir( root .. "bin/x32/" )
-		architecture "x32"
+        targetdir( root .. "bin/x32/" )
+        debugdir( root .. "bin/x32/" )
+        architecture "x32"
 
     configuration "x64"
-		targetdir( root .. "bin/x64/" )
-		architecture "x64"
-		
-	configuration "Debug"
-		targetsuffix "d"
-		defines "DEBUG"
-		flags "Symbols"
-		optimize "Off"
+        targetdir( root .. "bin/x64/" )
+        debugdir( root .. "bin/x64/" )
+        architecture "x64"
+        
+    configuration "Debug"
+        targetsuffix "d"
+        defines "DEBUG"
+        flags "Symbols"
+        optimize "Off"
 
-	configuration "Release"		
-		flags "LinkTimeOptimization"
-		optimize "Speed"
-		
-	configuration { "**util_x64-86.asm", "vs*" }
+    configuration "Release"     
+        flags "LinkTimeOptimization"
+        optimize "Speed"
+                
+    configuration {}
+            
+    project "serialisation-test"
+        location(  root .. "test/" )
+                
+        kind "ConsoleApp"
+        flags "WinMain"
+        defines "GTEST_HAS_TR1_TUPLE=0"
+        
+        includedirs {
+            root .. "extern/gtest/include/",
+            root .. "extern/gtest/",
+            
+            root .. "serialisation/include/",
+            root .. "test/"
+            }   
+        
+        files { 
+            root .. "extern/gtest/src/gtest-all.cc",
+            root .. "test/**.h",
+            root .. "test/*.cpp"
+            }
+            
+        configuration "gmake"
+            flags "pthread"
+            
+        configuration { "Debug", "x32" }
+            defines "PREFIX=X32D_"
+        
+        configuration { "Debug", "x64" }
+            defines "PREFIX=X64D_"
+        
+        configuration { "Release", "x32" }
+            defines "PREFIX=X32R_"
+        
+        configuration { "Release", "x64" }
+            defines "PREFIX=X64R_"
+            
+    project "serialisation"
+        targetname "serialisation"   
+        kind "StaticLib"
 
-	buildcommands {
-	   "ml64.exe /c  /nologo /Fo$(OutDir)util_x64-86.obj /W3 /Zi /Ta %(Identity)"
-	}
-
-	buildoutputs {
-	   "$(OutDir)util_x64-86.obj;%(Outputs)"
-	}
-				
-	configuration {}
-			
-	project "serialisation-test"
-		location(  root .. "test/" )
-				
-		kind "ConsoleApp"
-		flags "WinMain"
-		defines "GTEST_HAS_TR1_TUPLE=0"
-		
-		includedirs {
-			root .. "extern/gtest/include/",
-			root .. "extern/gtest/",
-			
-			root .. "serialisation/include/",
-			root .. "test/"
-			}	
-		
-		files { 
-			root .. "extern/gtest/src/gtest-all.cc",
-			root .. "test/**.h",
-			root .. "test/*.cpp"
-			}
-			
-		configuration "gmake"
-			flags "pthread"
-			
-		configuration { "Debug", "x32" }
-			defines "PREFIX=X32D_"
-		
-		configuration { "Debug", "x64" }
-			defines "PREFIX=X64D_"
-		
-		configuration { "Release", "x32" }
-			defines "PREFIX=X32R_"
-		
-		configuration { "Release", "x64" }
-			defines "PREFIX=X64R_"
-			
-	project "serialisation"
-		targetname "serialisation"	 
-		kind "StaticLib"
-
-		includedirs {
-			root .. "serialisation/include/"
-			}	
-			
-		files { 
-			root .. "serialisation/include/serialisation/**.h",
-			}
+        includedirs {
+            root .. "serialisation/include/"
+            }   
+            
+        files { 
+            root .. "serialisation/include/serialisation/**.h",
+            }

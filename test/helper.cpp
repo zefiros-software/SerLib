@@ -22,18 +22,20 @@
 
 #include "helper.h"
 
+uint32_t g_seed = 0;
+
 template<>
 float GetRandom()
 {
     // return with max an arbitrary number
-    return ( float )rand() / ( float )( RAND_MAX / ( 1e-8 / 3.0f ) );
+    return ( float )GetFastRand() / ( float )( std::numeric_limits< uint32_t >::max() / ( 1e-8 / 3.0f ) );
 }
 
 template<>
 double GetRandom()
 {
     // return with max an arbitrary number
-    return ( float )rand() / ( float )( RAND_MAX / ( 1e-16 / 3.0f ) );
+    return ( double )GetFastRand() / ( float )( std::numeric_limits< uint32_t >::max() / ( 1e-16 / 3.0f ) );
 }
 
 std::string GenerateRandomString()
