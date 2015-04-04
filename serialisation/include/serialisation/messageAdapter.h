@@ -34,52 +34,52 @@ class MessageAdapter
 {
 public:
 
-	MessageAdapter( const std::string &fileName )
-		: mMessage( fileName )
-	{
-	}
+    MessageAdapter( const std::string &fileName )
+        : mMessage( fileName )
+    {
+    }
 
-	MessageAdapter( std::stringstream &stream )
-		: mMessage( stream )
-	{
+    MessageAdapter( std::stringstream &stream )
+        : mMessage( stream )
+    {
 
-	}
+    }
 
-	MessageAdapter( std::iostream &stream )
-		: mMessage( stream )
-	{
+    MessageAdapter( std::iostream &stream )
+        : mMessage( stream )
+    {
 
-	}
+    }
 
-	MessageAdapter( std::ifstream &stream )
-		: mMessage( stream )
-	{
-	}
+    MessageAdapter( std::ifstream &stream )
+        : mMessage( stream )
+    {
+    }
 
-	MessageAdapter( std::fstream &stream )
-		: mMessage( stream )
-	{
-	}
+    MessageAdapter( std::fstream &stream )
+        : mMessage( stream )
+    {
+    }
 
-	MessageAdapter( std::istream &stream )
-		: mMessage( stream )
-	{
-	}
+    MessageAdapter( std::istream &stream )
+        : mMessage( stream )
+    {
+    }
 
-	MessageAdapter( std::ofstream &stream )
-		: mMessage( stream )
-	{
-	}
+    MessageAdapter( std::ofstream &stream )
+        : mMessage( stream )
+    {
+    }
 
-	MessageAdapter( std::ostream &stream )
-		: mMessage( stream )
-	{
-	}
+    MessageAdapter( std::ostream &stream )
+        : mMessage( stream )
+    {
+    }
 
-	void ClearBuffer()
-	{
-		mMessage.ClearBuffer();
-	}
+    void ClearBuffer()
+    {
+        mMessage.ClearBuffer();
+    }
 
     void InitObject()
     {
@@ -126,162 +126,162 @@ public:
         mMessage.Store( value, index );
     }
 
-    void Store( uint8_t &value, uint8_t index )
+    inline void Store( uint8_t &value, uint8_t index )
     {
         mMessage.Store( value, index );
     }
 
-    void Store( uint16_t &value, uint8_t index )
+    inline void Store( uint16_t &value, uint8_t index )
     {
         mMessage.Store( value, index );
     }
 
-    void Store( uint32_t &value, uint8_t index )
+    inline void Store( uint32_t &value, uint8_t index )
     {
         mMessage.Store( value, index );
     }
 
-    void Store( uint64_t &value, uint8_t index )
+    inline void Store( uint64_t &value, uint8_t index )
     {
         mMessage.Store( value, index );
     }
 
-    void Store( int8_t &value, uint8_t index )
+    inline void Store( int8_t &value, uint8_t index )
     {
         mMessage.Store( value, index );
     }
 
-    void Store( int16_t &value, uint8_t index )
+    inline void Store( int16_t &value, uint8_t index )
     {
         mMessage.Store( value, index );
     }
-    void Store( int32_t &value, uint8_t index )
-    {
-        mMessage.Store( value, index );
-    }
-
-    void Store( int64_t &value, uint8_t index )
+    inline void Store( int32_t &value, uint8_t index )
     {
         mMessage.Store( value, index );
     }
 
-
-    void Store( float &value, uint8_t index )
+    inline void Store( int64_t &value, uint8_t index )
     {
         mMessage.Store( value, index );
     }
 
-    void Store( double &value, uint8_t index )
+
+    inline void Store( float &value, uint8_t index )
     {
         mMessage.Store( value, index );
     }
 
-    size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 )
+    inline void Store( double &value, uint8_t index )
+    {
+        mMessage.Store( value, index );
+    }
+
+    inline size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 )
     {
         return mMessage.CreateArray( type, size, index, flags );
     }
 
-    void StoreArrayItem( std::string &value )
+    inline void StoreArrayItem( std::string &value )
     {
         mMessage.StoreArrayItem( value );
     }
 
-    void StoreArrayItem( uint8_t &value )
+    inline void StoreArrayItem( uint8_t &value )
     {
         mMessage.StoreArrayItem( value );
     }
 
-    void StoreArrayItem( uint16_t &value )
+    inline void StoreArrayItem( uint16_t &value )
     {
         mMessage.StoreArrayItem( value );
     }
 
-    void StoreArrayItem( uint32_t &value )
+    inline void StoreArrayItem( uint32_t &value )
     {
         mMessage.StoreArrayItem( value );
     }
 
-    void StoreArrayItem( uint64_t &value )
+    inline void StoreArrayItem( uint64_t &value )
     {
         mMessage.StoreArrayItem( value );
     }
 
-    void StoreArrayItem( int8_t &value )
+    inline void StoreArrayItem( int8_t &value )
     {
         mMessage.StoreArrayItem( value );
     }
 
-    void StoreArrayItem( int16_t &value )
+    inline void StoreArrayItem( int16_t &value )
     {
         mMessage.StoreArrayItem( value );
     }
 
-    void StoreArrayItem( int32_t &value )
+    inline void StoreArrayItem( int32_t &value )
     {
         mMessage.StoreArrayItem( value );
     }
 
-    void StoreArrayItem( int64_t &value )
+    inline void StoreArrayItem( int64_t &value )
     {
         mMessage.StoreArrayItem( value );
     }
 
-    void StoreArrayItem( float &value )
+    inline void StoreArrayItem( float &value )
     {
         mMessage.StoreArrayItem( value );
     }
 
-    void StoreArrayItem( double &value )
+    inline void StoreArrayItem( double &value )
     {
         mMessage.StoreArrayItem( value );
     }
 
-    void StoreContiguous( uint8_t *begin, size_t size )
+    inline void StoreContiguous( uint8_t *begin, size_t size )
     {
         mMessage.StoreContiguous( begin, size );
     }
 
-    void StoreContiguous( uint16_t *begin, size_t size )
+    inline void StoreContiguous( uint16_t *begin, size_t size )
     {
         mMessage.StoreContiguous( begin, size );
     }
 
-    void StoreContiguous( uint32_t *begin, size_t size )
+    inline void StoreContiguous( uint32_t *begin, size_t size )
     {
         mMessage.StoreContiguous( begin, size );
     }
 
-    void StoreContiguous( uint64_t *begin, size_t size )
+    inline void StoreContiguous( uint64_t *begin, size_t size )
     {
         mMessage.StoreContiguous( begin, size );
     }
 
-    void StoreContiguous( int8_t *begin, size_t size )
+    inline void StoreContiguous( int8_t *begin, size_t size )
     {
         mMessage.StoreContiguous( begin, size );
     }
 
-    void StoreContiguous( int16_t *begin, size_t size )
+    inline void StoreContiguous( int16_t *begin, size_t size )
     {
         mMessage.StoreContiguous( begin, size );
     }
 
-    void StoreContiguous( int32_t *begin, size_t size )
+    inline void StoreContiguous( int32_t *begin, size_t size )
     {
         mMessage.StoreContiguous( begin, size );
     }
 
-    void StoreContiguous( int64_t *begin, size_t size )
+    inline void StoreContiguous( int64_t *begin, size_t size )
     {
         mMessage.StoreContiguous( begin, size );
     }
 
-    void StoreContiguous( float *begin, size_t size )
+    inline void StoreContiguous( float *begin, size_t size )
     {
         mMessage.StoreContiguous( begin, size );
     }
 
-    void StoreContiguous( double *begin, size_t size )
+    inline void StoreContiguous( double *begin, size_t size )
     {
         mMessage.StoreContiguous( begin, size );
     }

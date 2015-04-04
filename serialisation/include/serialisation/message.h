@@ -491,7 +491,7 @@ private:
     }
 
     template< typename TSerialisable >
-    void StoreArrayItem( TSerialisable &value )
+    inline void StoreArrayItem( TSerialisable &value )
     {
         mInternalMessage->InitArrayObject();
 
@@ -500,67 +500,67 @@ private:
         mInternalMessage->FinishArrayObject();
     }
 
-    void StoreArrayItem( ISerialisable &value )
+    inline void StoreArrayItem( ISerialisable &value )
     {
         StoreArrayItem< ISerialisable >( value );
     }
 
-    void StoreArrayItem( std::string &value )
+    inline void StoreArrayItem( std::string &value )
     {
         mInternalMessage->StoreArrayItem( value );
     }
 
-    void StoreArrayItem( uint8_t &value )
+    inline void StoreArrayItem( uint8_t &value )
     {
         mInternalMessage->StoreArrayItem( value );
     }
 
-    void StoreArrayItem( uint16_t &value )
+    inline void StoreArrayItem( uint16_t &value )
     {
         mInternalMessage->StoreArrayItem( value );
     }
 
-    void StoreArrayItem( uint32_t &value )
+    inline void StoreArrayItem( uint32_t &value )
     {
         mInternalMessage->StoreArrayItem( value );
     }
 
-    void StoreArrayItem( uint64_t &value )
+    inline inline void StoreArrayItem( uint64_t &value )
     {
         mInternalMessage->StoreArrayItem( value );
     }
 
-    void StoreArrayItem( int8_t &value )
+    inline void StoreArrayItem( int8_t &value )
     {
         mInternalMessage->StoreArrayItem( value );
     }
 
-    void StoreArrayItem( int16_t &value )
+    inline void StoreArrayItem( int16_t &value )
     {
         mInternalMessage->StoreArrayItem( value );
     }
 
-    void StoreArrayItem( int32_t &value )
+    inline void StoreArrayItem( int32_t &value )
     {
         mInternalMessage->StoreArrayItem( value );
     }
 
-    void StoreArrayItem( int64_t &value )
+    inline void StoreArrayItem( int64_t &value )
     {
         mInternalMessage->StoreArrayItem( value );
     }
 
-    void StoreArrayItem( float &value )
+    inline void StoreArrayItem( float &value )
     {
         mInternalMessage->StoreArrayItem( value );
     }
 
-    void StoreArrayItem( double &value )
+    inline void StoreArrayItem( double &value )
     {
         mInternalMessage->StoreArrayItem( value );
     }
 
-    size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 )
+    inline size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 )
     {
         ASSERT_INDEX_IN_RANGE( index );
 
