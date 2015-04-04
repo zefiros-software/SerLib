@@ -592,28 +592,8 @@ private:
         const Type::Type type = static_cast< Type::Type >( Internal::Type::GetEnum< TPrimitive >() );
         const size_t size = CreateArray( type, Size, index, flags );
 
-#if SERIALISATION_ASSERT_ON_SIZE_MISMATCH
         assert( size == Size && "The array you tried to Deserialise with seems to be the wrong size" );
         mInternalMessage->StoreContiguous( container, size );
-#else
-
-        if ( size <= Size )
-        {
-            mInternalMessage->StoreContiguous( container, size );
-        }
-        else
-        {
-            mInternalMessage->StoreContiguous( container, Size );
-
-            TPrimitive dummy;
-
-            for ( size_t i = Size; i < size; ++i )
-            {
-                StoreArrayItem( dummy );
-            }
-        }
-
-#endif
     }
 };
 
