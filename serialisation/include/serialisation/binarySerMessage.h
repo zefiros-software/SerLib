@@ -28,7 +28,7 @@
 #include "interface/ISerialisable.h"
 #include "interface/IMessage.h"
 
-#include "writeBuffer.h"
+#include "bufferedStreamWriter.h"
 #include "tempObject.h"
 #include "arrayInfo.h"
 #include "types.h"
@@ -39,33 +39,34 @@
 #include <fstream>
 #include <stack>
 
+template< typename TStreamWriter >
 class BinarySerMessage
 {
 public:
 
     BinarySerMessage( const std::string &fileName )
-        : mStreamBuffer( fileName )
+        : mStreamWriter( fileName )
     {
         mArrayInfo.type = Internal::Type::Terminator;
         mArrayInfo.remainingCount = 0;
     }
 
     BinarySerMessage( std::ofstream &stream )
-        : mStreamBuffer( stream )
+        : mStreamWriter( stream )
     {
         mArrayInfo.type = Internal::Type::Terminator;
         mArrayInfo.remainingCount = 0;
     }
 
     BinarySerMessage( std::fstream &stream )
-        : mStreamBuffer( stream )
+        : mStreamWriter( stream )
     {
         mArrayInfo.type = Internal::Type::Terminator;
         mArrayInfo.remainingCount = 0;
     }
 
     BinarySerMessage( std::ostream &stream )
-        : mStreamBuffer( stream )
+        : mStreamWriter( stream )
     {
         mArrayInfo.type = Internal::Type::Terminator;
         mArrayInfo.remainingCount = 0;
@@ -112,7 +113,7 @@ public:
 
     inline void ClearBuffer()
     {
-        mStreamBuffer.ClearBuffer();
+        mStreamWriter.ClearBuffer();
     }
 
     template< typename TPrimitive >
@@ -122,7 +123,27 @@ public:
 
         WriteHeader( index, type );
         WritePrimitive( value );
-    }
+	}
+
+	inline void Store( std::string &value, uint8_t index )
+	{
+		WriteHeader( index, Internal::Type::String );
+		WritePrimitive( value );
+	}
+
+	inline void Store( float &value, uint8_t index )
+	{
+		uint32_t flexman = Util::FloatToUInt32( value );
+
+		Store( flexman, index );
+	}
+
+	inline void Store( double &value, uint8_t index )
+	{
+		uint64_t flexman = Util::DoubleToUInt64( value );
+
+		Store( flexman, index );
+	}
 
     inline size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 )
     {
@@ -134,7 +155,7 @@ public:
         WriteHeader( index, Internal::Type::Array );
         WriteHeader( flags, iType );
 
-        mStreamBuffer.WriteSize( size );
+        mStreamWriter.WriteSize( size );
 
         return size;
     }
@@ -143,17 +164,62 @@ public:
     void StoreArrayItem( TPrimitive &value )
     {
         WritePrimitive( value );
-    }
+	}
+
+	inline void StoreArrayItem( float &value )
+	{
+		uint32_t flexman = Util::FloatToUInt32( value );
+
+		StoreArrayItem( flexman );
+	}
+
+	inline void StoreArrayItem( double &value )
+	{
+		uint64_t flexman = Util::DoubleToUInt64( value );
+
+		StoreArrayItem( flexman );
+	}
 
     template< typename TPrimitive >
     void StoreContiguous( TPrimitive *begin, size_t size )
     {
-        mStreamBuffer.WritePrimitiveBlock( begin, size );
-    }
+        mStreamWriter.WritePrimitiveBlock( begin, size );
+	}
+
+	inline void StoreContiguous( float *begin, size_t size )
+	{
+		for ( size_t i = 0; i < size; i += 128 )
+		{
+			size_t blockSize = static_cast< size_t >( size - i );
+			blockSize = blockSize > 128 ? 128 : blockSize;
+
+			for ( size_t k = 0; k < blockSize; ++k )
+			{
+				mU32Buffer[ k ] = Util::FloatToUInt32( begin[ k ] );
+			}
+
+			mStreamWriter.WritePrimitiveBlock( mU32Buffer, blockSize );
+		}
+	}
+
+	inline void StoreContiguous( double *begin, size_t size )
+	{
+		for ( size_t i = 0; i < size; i += 128 )
+		{
+			size_t blockSize = static_cast< size_t >( size - i );
+
+			for ( size_t k = 0; k < blockSize; ++k )
+			{
+				mU64Buffer[ k ] = Util::DoubleToUInt64( begin[ k ] );
+			}
+
+			mStreamWriter.WritePrimitiveBlock( mU64Buffer, blockSize );
+		}
+	}
 
 private:
 
-    WriteBuffer mStreamBuffer;
+    TStreamWriter mStreamWriter;
 
     ArrayInfo mArrayInfo;
 
@@ -191,89 +257,16 @@ private:
     template< typename TPrimitive >
     void WritePrimitive( TPrimitive &value )
     {
-        mStreamBuffer.WritePrimitive( value );
+        mStreamWriter.WritePrimitive( value );
     }
+
+	inline void WritePrimitive( std::string &value )
+	{
+		mStreamWriter.WriteSize( value.length() );
+		mStreamWriter.WriteBytes( value.c_str(), value.length() );
+	}
 
     BinarySerMessage &operator=( const BinarySerMessage &bsm );
 };
-
-template<>
-inline void BinarySerMessage::WritePrimitive( std::string &value )
-{
-    mStreamBuffer.WriteSize( value.length() );
-    mStreamBuffer.WriteBytes( value.c_str(), value.length() );
-}
-
-template<>
-inline void BinarySerMessage::StoreArrayItem< float >( float &value )
-{
-    uint32_t flexman = Util::FloatToUInt32( value );
-
-    StoreArrayItem( flexman );
-}
-
-template<>
-inline void BinarySerMessage::StoreArrayItem( double &value )
-{
-    uint64_t flexman = Util::DoubleToUInt64( value );
-
-    StoreArrayItem( flexman );
-}
-
-template<>
-inline void BinarySerMessage::StoreContiguous( float *begin, size_t size )
-{
-    for ( size_t i = 0; i < size; i += 128 )
-    {
-        size_t blockSize = static_cast< size_t >( size - i );
-        blockSize = blockSize > 128 ? 128 : blockSize;
-
-        for ( size_t k = 0; k < blockSize; ++k )
-        {
-            mU32Buffer[ k ] = Util::FloatToUInt32( begin[ k ] );
-        }
-
-        mStreamBuffer.WritePrimitiveBlock( mU32Buffer, blockSize );
-    }
-}
-
-template<>
-inline void BinarySerMessage::StoreContiguous( double *begin, size_t size )
-{
-    for ( size_t i = 0; i < size; i += 128 )
-    {
-        size_t blockSize = static_cast< size_t >( size - i );
-
-        for ( size_t k = 0; k < blockSize; ++k )
-        {
-            mU64Buffer[ k ] = Util::DoubleToUInt64( begin[ k ] );
-        }
-
-        mStreamBuffer.WritePrimitiveBlock( mU64Buffer, blockSize );
-    }
-}
-
-template<>
-inline void BinarySerMessage::Store( std::string &value, uint8_t index )
-{
-    WriteHeader( index, Internal::Type::String );
-    WritePrimitive( value );
-}
-
-template<>
-inline void BinarySerMessage::Store( float &value, uint8_t index )
-{
-    uint32_t flexman = Util::FloatToUInt32( value );
-
-    Store( flexman, index );
-}
-
-template<>
-inline void BinarySerMessage::Store( double &value, uint8_t index )
-{
-    uint64_t flexman = Util::DoubleToUInt64( value );
-
-    Store( flexman, index );
-}
 
 #endif

@@ -22,8 +22,8 @@
 
 #include "helper.h"
 
-#include "serialisation/writeBuffer.h"
-#include "serialisation/readBuffer.h"
+#include "serialisation/bufferedStreamWriter.h"
+#include "serialisation/bufferedStreamReader.h"
 
 #include "gtest/gtest.h"
 
@@ -35,11 +35,11 @@ T VarIntConvert( T value )
 {
     std::stringstream ss;
 
-    WriteBuffer wb( ss );
+    StreamWriter wb( ss );
     wb.WriteSize( value );
     wb.ClearBuffer();
 
-    ReadBuffer rb( ss );
+    StreamReader rb( ss );
     return static_cast< T >( rb.ReadSize() );
 }
 

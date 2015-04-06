@@ -27,8 +27,8 @@
 
 #include "interface/abstractTempArray.h"
 
+#include "bufferedStreamReader.h"
 #include "tempPrimitive.h"
-#include "readBuffer.h"
 #include "tempObject.h"
 #include "tempArray.h"
 #include "arrayInfo.h"
@@ -39,12 +39,13 @@
 #include <assert.h>
 #include <stack>
 
+template< typename TStreamReader >
 class BinaryDeserMessage
 {
 public:
 
     BinaryDeserMessage( const std::string &fileName )
-        : mStreamBuffer( fileName ),
+        : mStreamReader( fileName ),
           mCurrentArray( NULL ),
           mCurrentObject( NULL ),
           mTerminatorRead( false )
@@ -54,7 +55,7 @@ public:
     }
 
     BinaryDeserMessage( std::ifstream &stream )
-        : mStreamBuffer( stream ),
+        : mStreamReader( stream ),
           mCurrentArray( NULL ),
           mCurrentObject( NULL ),
           mTerminatorRead( false )
@@ -64,7 +65,7 @@ public:
     }
 
     BinaryDeserMessage( std::fstream &stream )
-        : mStreamBuffer( stream ),
+        : mStreamReader( stream ),
           mCurrentArray( NULL ),
           mCurrentObject( NULL ),
           mTerminatorRead( false )
@@ -74,7 +75,7 @@ public:
     }
 
     BinaryDeserMessage( std::istream &stream )
-        : mStreamBuffer( stream ),
+        : mStreamReader( stream ),
           mCurrentArray( NULL ),
           mCurrentObject( NULL ),
           mTerminatorRead( false )
@@ -85,7 +86,7 @@ public:
 
     inline void ClearBuffer()
     {
-        mStreamBuffer.ClearBuffer();
+        mStreamReader.ClearBuffer();
     }
 
     inline void InitObject()
@@ -96,9 +97,63 @@ public:
         mTerminatorRead = false;
     }
 
-    inline bool InitObject( uint8_t index );
+	inline bool InitObject( uint8_t index )
+	{
+		ITempData *const data = mCurrentObject ? mCurrentObject->TryRemoveData( index ) : NULL;
 
-    inline void FinishObject();
+		if ( data )
+		{
+			InitObject();
+
+			mCurrentObject = static_cast< TempObject * >( data );
+			mTerminatorRead = true;
+		}
+		else
+		{
+			const Internal::Type::Type type = ReadUntil( index );
+
+			if ( !mTerminatorRead )
+			{
+				assert( type == Internal::Type::Object );
+				InitObject();
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	inline void FinishObject()
+	{
+		if ( !mTerminatorRead )
+		{
+			ReadAll();
+		}
+
+		if ( mCurrentArray )
+		{
+			DeleteTempData( mCurrentArray );
+			mCurrentArray = NULL;
+		}
+
+		if ( mCurrentObject )
+		{
+			for ( size_t i = 0, size = mCurrentObject->GetSize(); i < size; ++i )
+			{
+				DeleteTempData( mCurrentObject->PopBack() );
+			}
+
+			DeleteTempData( mCurrentObject );
+		}
+
+		mCurrentObject = mObjectHistory.top();
+		mObjectHistory.pop();
+
+		mTerminatorRead = mCurrentObject ? mCurrentObject->GetTerminatorRead() : false;
+	}
 
     inline void FinishObject( uint8_t /*index*/ )
     {
@@ -140,7 +195,20 @@ public:
     }
 
     template< typename TPrimitive >
-    void Store( TPrimitive &value, uint8_t index );
+    void Store( TPrimitive &value, uint8_t index )
+    {
+        ITempData *const data = mCurrentObject ? mCurrentObject->TryRemoveData( index ) : NULL;
+
+        if ( data )
+        {
+            ReadFromTemp( value, data );
+            DeleteTempData( data );
+        }
+        else
+        {
+            ReadValue( value, index );
+        }
+    }
 
     inline size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags );
 
@@ -168,15 +236,79 @@ public:
         }
         else
         {
-            mStreamBuffer.ReadPrimitiveBlock( begin, size );
+            mStreamReader.ReadPrimitiveBlock( begin, size );
         }
 
         mArrayInfo.remainingCount -= size;
-    }
+	}
+
+	inline void StoreContiguous( float *begin, size_t size )
+	{
+		if ( mCurrentArray )
+		{
+			const uint32_t *const intBuffer = static_cast< TempArray< uint32_t > * >( mCurrentArray )->GetData();
+
+			for ( size_t i = 0; i < size; ++i )
+			{
+				begin[ i ] = Util::UInt32ToFloat( intBuffer[ i ] );
+			}
+		}
+		else
+		{
+			uint32_t intBuffer[ 128 ];
+
+			for ( size_t i = 0; i < size; i += 128 )
+			{
+				size_t blockSize = static_cast< size_t >( size - i );
+				blockSize = blockSize > 128 ? 128 : blockSize;
+
+				mStreamReader.ReadPrimitiveBlock( intBuffer, blockSize );
+
+				for ( size_t k = 0; k < blockSize; ++k )
+				{
+					begin[ k ] = Util::UInt32ToFloat( intBuffer[ k ] );
+				}
+			}
+		}
+
+		mArrayInfo.remainingCount -= size;
+	}
+
+	inline void StoreContiguous( double *begin, size_t size )
+	{
+		if ( mCurrentArray )
+		{
+			const uint64_t *const intBuffer = static_cast< TempArray< uint64_t > * >( mCurrentArray )->GetData();
+
+			for ( size_t i = 0; i < size; ++i )
+			{
+				begin[ i ] = Util::UInt64ToDouble( intBuffer[ i ] );
+			}
+		}
+		else
+		{
+			uint64_t intBuffer[ 128 ];
+
+			for ( size_t i = 0; i < size; i += 128 )
+			{
+				size_t blockSize = static_cast< size_t >( size - i );
+				blockSize = blockSize > 128 ? 128 : blockSize;
+
+				mStreamReader.ReadPrimitiveBlock( intBuffer, blockSize );
+
+				for ( size_t k = 0; k < blockSize; ++k )
+				{
+					begin[ k ] = Util::UInt64ToDouble( intBuffer[ k ] );
+				}
+			}
+		}
+
+		mArrayInfo.remainingCount -= size;
+	}
 
 private:
 
-    ReadBuffer mStreamBuffer;
+    TStreamReader mStreamReader;
 
     std::stack< TempObject * > mObjectHistory;
     std::stack< AbstractTempArray * > mArrayHistory;
@@ -196,7 +328,33 @@ private:
     template< typename TPrimitive >
     void ReadFromStream( TPrimitive &value )
     {
-        mStreamBuffer.ReadPrimitive( value );
+        mStreamReader.ReadPrimitive( value );
+    }
+
+    inline void ReadFromStream( std::string &value )
+    {
+        size_t size = mStreamReader.ReadSize();
+
+        value.resize( size, ' ' );
+
+        if ( size > 0 )
+        {
+            mStreamReader.ReadBytes( &value.at( 0 ), size );
+        }
+    }
+
+    inline void ReadFromStream( float &value )
+    {
+        uint32_t flexman;
+        mStreamReader.ReadPrimitive( flexman );
+        value = Util::UInt32ToFloat( flexman );
+    }
+
+    inline void ReadFromStream( double &value )
+    {
+        uint64_t flexman;
+        mStreamReader.ReadPrimitive( flexman );
+        value = Util::UInt64ToDouble( flexman );
     }
 
     template< typename T >
@@ -226,6 +384,20 @@ private:
     void ReadFromTemp( TPrimitive &value, ITempData *data )
     {
         value = static_cast< TempPrimitive< TPrimitive > * >( data )->GetValue();
+    }
+
+    inline void ReadFromTemp( float &value, ITempData *data )
+    {
+        uint32_t flexman;
+        ReadFromTemp( flexman, data );
+        value = Util::UInt32ToFloat( flexman );
+    }
+
+    inline void ReadFromTemp( double &value, ITempData *data )
+    {
+        uint64_t flexman;
+        ReadFromTemp( flexman, data );
+        value = Util::UInt64ToDouble( flexman );
     }
 
     inline ITempData *ReadTempObjectArray( size_t size )
@@ -258,10 +430,33 @@ private:
 
         tArray->Resize( size );
 
-        mStreamBuffer.ReadPrimitiveBlock( tArray->GetData(), size );
+        mStreamReader.ReadPrimitiveBlock( tArray->GetData(), size );
 
         return tArray;
-    }
+	}
+
+	ITempData *ReadTempStringArray( size_t size )
+	{
+		TempArray< std::string > *tArray = CreateTempData< TempArray< std::string > >();
+		tArray->Resize( size );
+
+		std::vector< char > strVec;
+		size_t strSize;
+
+		for ( std::string *it = tArray->GetData(), *end = it + size; it != end; ++it )
+		{
+			strSize = mStreamReader.ReadSize();
+
+			it->resize( strSize, ' ' );
+
+			if ( strSize > 0 )
+			{
+				mStreamReader.ReadBytes( &it->at( 0 ), strSize );
+			}
+		}
+
+		return tArray;
+	}
 
     inline ITempData *ReadTempArray();
 
@@ -345,12 +540,25 @@ private:
     }
 
     template< typename TPrimitive >
-    void ReadValue( TPrimitive &value, uint8_t index );
+    inline void ReadValue( TPrimitive &value, uint8_t index )
+    {
+        const Internal::Type::Type type = ReadUntil( index );
+
+        if ( !mTerminatorRead )
+        {
+            const Internal::Type::Type expected = Internal::Type::GetEnum< TPrimitive >();
+            assert( Internal::Type::AreCompatible( type, expected ) &&
+                    "Whoops, seems like you tried to Deserialise with the wrong type" );
+
+            ReadFromStream( value );
+        }
+    }
 
     BinaryDeserMessage &operator=( const BinaryDeserMessage &bdm );
 };
 
-inline Internal::Type::Type BinaryDeserMessage::ReadUntil( uint8_t index )
+template< typename TStreamReader >
+inline Internal::Type::Type BinaryDeserMessage< TStreamReader >::ReadUntil( uint8_t index )
 {
     uint8_t rIndex;
     Internal::Type::Type type;
@@ -376,7 +584,8 @@ inline Internal::Type::Type BinaryDeserMessage::ReadUntil( uint8_t index )
     return type;
 }
 
-inline void BinaryDeserMessage::ReadAll()
+template< typename TStreamReader >
+inline void BinaryDeserMessage< TStreamReader >::ReadAll()
 {
     uint8_t rIndex;
     Internal::Type::Type type;
@@ -397,75 +606,8 @@ inline void BinaryDeserMessage::ReadAll()
     }
 }
 
-template<>
-inline void BinaryDeserMessage::ReadFromStream( std::string &value )
-{
-    size_t size = mStreamBuffer.ReadSize();
-
-    value.resize( size, ' ' );
-
-    if ( size > 0 )
-    {
-        mStreamBuffer.ReadBytes( &value.at( 0 ), size );
-    }
-}
-
-template<>
-inline void BinaryDeserMessage::ReadFromStream( float &value )
-{
-    uint32_t flexman;
-    mStreamBuffer.ReadPrimitive( flexman );
-    value = Util::UInt32ToFloat( flexman );
-}
-
-template<>
-inline void BinaryDeserMessage::ReadFromStream( double &value )
-{
-    uint64_t flexman;
-    mStreamBuffer.ReadPrimitive( flexman );
-    value = Util::UInt64ToDouble( flexman );
-}
-
-template< typename TPrimitive >
-inline void BinaryDeserMessage::ReadValue( TPrimitive &value, uint8_t index )
-{
-    const Internal::Type::Type type = ReadUntil( index );
-
-    if ( !mTerminatorRead )
-    {
-        const Internal::Type::Type expected = Internal::Type::GetEnum< TPrimitive >();
-        assert( Internal::Type::AreCompatible( type, expected ) &&
-                "Whoops, seems like you tried to Deserialise with the wrong type" );
-
-        ReadFromStream( value );
-    }
-}
-
-template<>
-inline ITempData *BinaryDeserMessage::ReadTempPrimitiveArray< std::string >( size_t size )
-{
-    TempArray< std::string > *tArray = CreateTempData< TempArray< std::string > >();
-    tArray->Resize( size );
-
-    std::vector< char > strVec;
-    size_t strSize;
-
-    for ( std::string *it = tArray->GetData(), *end = it + size; it != end; ++it )
-    {
-        strSize = mStreamBuffer.ReadSize();
-
-        it->resize( strSize, ' ' );
-
-        if ( strSize > 0 )
-        {
-            mStreamBuffer.ReadBytes( &it->at( 0 ), strSize );
-        }
-    }
-
-    return tArray;
-}
-
-inline ITempData *BinaryDeserMessage::ReadTempArray()
+template< typename TStreamReader >
+inline ITempData *BinaryDeserMessage< TStreamReader >::ReadTempArray()
 {
     ITempData *data = NULL;
 
@@ -473,7 +615,7 @@ inline ITempData *BinaryDeserMessage::ReadTempArray()
     uint8_t flags;
     ReadHeader( flags, type );
 
-    size_t size = mStreamBuffer.ReadSize();
+    size_t size = mStreamReader.ReadSize();
 
     switch ( type )
     {
@@ -482,7 +624,7 @@ inline ITempData *BinaryDeserMessage::ReadTempArray()
         break;
 
     case Internal::Type::String:
-        data = ReadTempPrimitiveArray< std::string >( size );
+        data = ReadTempStringArray( size );
         break;
 
     case Internal::Type::UInt8:
@@ -509,40 +651,8 @@ inline ITempData *BinaryDeserMessage::ReadTempArray()
     return data;
 }
 
-template<>
-inline void BinaryDeserMessage::ReadFromTemp( float &value, ITempData *data )
-{
-    uint32_t flexman;
-    ReadFromTemp( flexman, data );
-    value = Util::UInt32ToFloat( flexman );
-}
-
-template<>
-inline void BinaryDeserMessage::ReadFromTemp( double &value, ITempData *data )
-{
-    uint64_t flexman;
-    ReadFromTemp( flexman, data );
-    value = Util::UInt64ToDouble( flexman );
-}
-
-template< typename TPrimitive >
-void BinaryDeserMessage::Store( TPrimitive &value, uint8_t index )
-{
-    ITempData *const data = mCurrentObject ? mCurrentObject->TryRemoveData( index ) : NULL;
-
-    if ( data )
-    {
-        ReadFromTemp( value, data );
-        DeleteTempData( data );
-    }
-    else
-    {
-        ReadValue( value, index );
-    }
-}
-
-
-inline size_t BinaryDeserMessage::CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags )
+template< typename TStreamReader >
+inline size_t BinaryDeserMessage< TStreamReader >::CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags )
 {
     if ( mCurrentArray )
     {
@@ -569,7 +679,7 @@ inline size_t BinaryDeserMessage::CreateArray( Type::Type type, size_t size, uin
             Internal::Type::Type rType;
             ReadHeader( flags, rType );
             assert( Internal::Type::AreCompatible( rType, static_cast< Internal::Type::Type >( type ) ) );
-            size = mStreamBuffer.ReadSize();
+            size = mStreamReader.ReadSize();
 
             mArrayInfo.type = rType;
             mArrayInfo.remainingCount = size;
@@ -581,130 +691,6 @@ inline size_t BinaryDeserMessage::CreateArray( Type::Type type, size_t size, uin
     }
 
     return size;
-}
-
-template<>
-inline void BinaryDeserMessage::StoreContiguous( float *begin, size_t size )
-{
-    if ( mCurrentArray )
-    {
-        const uint32_t *const intBuffer = static_cast< TempArray< uint32_t > * >( mCurrentArray )->GetData();
-
-        for ( size_t i = 0; i < size; ++i )
-        {
-            begin[ i ] = Util::UInt32ToFloat( intBuffer[ i ] );
-        }
-    }
-    else
-    {
-        uint32_t intBuffer[ 128 ];
-
-        for ( size_t i = 0; i < size; i += 128 )
-        {
-            size_t blockSize = static_cast< size_t >( size - i );
-            blockSize = blockSize > 128 ? 128 : blockSize;
-
-            mStreamBuffer.ReadPrimitiveBlock( intBuffer, blockSize );
-
-            for ( size_t k = 0; k < blockSize; ++k )
-            {
-                begin[ k ] = Util::UInt32ToFloat( intBuffer[ k ] );
-            }
-        }
-    }
-
-    mArrayInfo.remainingCount -= size;
-}
-
-template<>
-inline void BinaryDeserMessage::StoreContiguous( double *begin, size_t size )
-{
-    if ( mCurrentArray )
-    {
-        const uint64_t *const intBuffer = static_cast< TempArray< uint64_t > * >( mCurrentArray )->GetData();
-
-        for ( size_t i = 0; i < size; ++i )
-        {
-            begin[ i ] = Util::UInt64ToDouble( intBuffer[ i ] );
-        }
-    }
-    else
-    {
-        uint64_t intBuffer[ 128 ];
-
-        for ( size_t i = 0; i < size; i += 128 )
-        {
-            size_t blockSize = static_cast< size_t >( size - i );
-            blockSize = blockSize > 128 ? 128 : blockSize;
-
-            mStreamBuffer.ReadPrimitiveBlock( intBuffer, blockSize );
-
-            for ( size_t k = 0; k < blockSize; ++k )
-            {
-                begin[ k ] = Util::UInt64ToDouble( intBuffer[ k ] );
-            }
-        }
-    }
-
-    mArrayInfo.remainingCount -= size;
-}
-
-inline void BinaryDeserMessage::FinishObject()
-{
-    if ( !mTerminatorRead )
-    {
-        ReadAll();
-    }
-
-    if ( mCurrentArray )
-    {
-        DeleteTempData( mCurrentArray );
-        mCurrentArray = NULL;
-    }
-
-    if ( mCurrentObject )
-    {
-        for ( size_t i = 0, size = mCurrentObject->GetSize(); i < size; ++i )
-        {
-            DeleteTempData( mCurrentObject->PopBack() );
-        }
-
-        DeleteTempData( mCurrentObject );
-    }
-
-    mCurrentObject = mObjectHistory.top();
-    mObjectHistory.pop();
-
-    mTerminatorRead = mCurrentObject ? mCurrentObject->GetTerminatorRead() : false;
-}
-
-inline bool BinaryDeserMessage::InitObject( uint8_t index )
-{
-    ITempData *const data = mCurrentObject ? mCurrentObject->TryRemoveData( index ) : NULL;
-
-    if ( data )
-    {
-        InitObject();
-
-        mCurrentObject = static_cast< TempObject * >( data );
-        mTerminatorRead = true;
-    }
-    else
-    {
-        const Internal::Type::Type type = ReadUntil( index );
-
-        if ( !mTerminatorRead )
-        {
-            assert( type == Internal::Type::Object );
-            InitObject();
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    return true;
 }
 
 #endif

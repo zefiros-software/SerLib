@@ -40,6 +40,18 @@ class Message
 {
 
 #define ASSERT_INDEX_IN_RANGE( index ) assert( index < 28 && "Index should be less than 28 for members" )
+#define CREATEINTERNALMESSAGE( message, mode, useBuffer, argument, TSerMessage, TDeserMessage )     \
+    if( mode == Mode::Serialise )                                                                   \
+    {                                                                                               \
+        message = useBuffer ? new MessageAdapter< TSerMessage, BufferedStreamWriter >( argument )   \
+                  : new MessageAdapter< TSerMessage, StreamWriter >( argument );                    \
+    }                                                                                               \
+    else                                                                                            \
+    {                                                                                               \
+        message = useBuffer ? new MessageAdapter< TDeserMessage, BufferedStreamReader >( argument ) \
+                  : new MessageAdapter< TDeserMessage, StreamReader >( argument );                  \
+    }
+
 
 public:
 
@@ -51,16 +63,60 @@ public:
         Packed = Internal::Flags::Packed
     };
 
-    Message( const std::string &fileName, Format::Format format, Mode::Mode mode = Mode::Serialise )
-        : mInternalMessage( CreateInternalMessage( format, mode, fileName ) ),
+    Message( const std::string &fileName, Format::Format format, Mode::Mode mode = Mode::Serialise, bool useBuffer = true )
+        : mInternalMessage( CreateInternalMessage( format, mode, fileName, useBuffer ) ),
           mMode( mode ),
           mFormat( format )
     {
     }
 
-    Message( std::iostream &stream, Format::Format format, Mode::Mode mode = Mode::Serialise )
-        : mInternalMessage( CreateInternalMessage( format, mode, stream ) ),
+    Message( std::stringstream &stream, Format::Format format, Mode::Mode mode = Mode::Serialise, bool useBuffer = true )
+        : mInternalMessage( CreateInternalMessage( format, mode, stream, useBuffer ) ),
           mMode( mode ),
+          mFormat( format )
+    {
+
+    }
+
+    Message( std::iostream &stream, Format::Format format, Mode::Mode mode = Mode::Serialise, bool useBuffer = true )
+        : mInternalMessage( CreateInternalMessage( format, mode, stream, useBuffer ) ),
+          mMode( mode ),
+          mFormat( format )
+    {
+
+    }
+
+    Message( std::fstream &stream, Format::Format format, Mode::Mode mode = Mode::Serialise, bool useBuffer = true )
+        : mInternalMessage( CreateInternalMessage( format, mode, stream, useBuffer ) ),
+          mMode( mode ),
+          mFormat( format )
+    {
+    }
+
+    Message( std::ifstream &stream, Format::Format format, bool useBuffer = true )
+        : mInternalMessage( CreateDeserMessage( format, stream, useBuffer ) ),
+          mMode( Mode::Deserialise ),
+          mFormat( format )
+    {
+    }
+
+    Message( std::istream &stream, Format::Format format, bool useBuffer = true )
+        : mInternalMessage( CreateDeserMessage( format, stream, useBuffer ) ),
+          mMode( Mode::Deserialise ),
+          mFormat( format )
+    {
+    }
+
+    Message( std::ofstream &stream, Format::Format format, bool useBuffer = true )
+        : mInternalMessage( CreateSerMessage( format, stream, useBuffer ) ),
+          mMode( Mode::Serialise ),
+          mFormat( format )
+    {
+    }
+
+    Message( std::ostream &stream, Format::Format format, bool useBuffer = true )
+        : mInternalMessage( CreateSerMessage( format, stream, useBuffer ) ),
+          mMode( Mode::Serialise ),
           mFormat( format )
     {
     }
@@ -459,30 +515,85 @@ private:
     }
 
     template< typename TArgument >
-    InternalMessage *CreateInternalMessage( Format::Format format, Mode::Mode mode, TArgument &argument )
+    InternalMessage *CreateInternalMessage( Format::Format format, Mode::Mode mode, TArgument &argument, bool useBuffer )
     {
         InternalMessage *iMessage = NULL;
 
-        switch ( format )
+        if ( mode == Mode::Serialise )
         {
-        case Format::Binary:
-            iMessage = mode == Mode::Serialise ? CreateMessageAdapter< BinarySerMessage >( argument ) :
-                       CreateMessageAdapter< BinaryDeserMessage >( argument );
-            break;
-
-        default:
-            assert( false && "Something went terribly haywire..." );
-            break;
+            iMessage = CreateSerMessage( format, argument, useBuffer );
+        }
+        else
+        {
+            iMessage = CreateDeserMessage( format, argument, useBuffer );
         }
 
         return iMessage;
-    }
+	}
 
-    template< typename TMessage, typename TArgument >
-    InternalMessage *CreateMessageAdapter( TArgument &stream )
-    {
-        return new MessageAdapter< TMessage >( stream );
-    }
+	template< typename TArgument >
+	InternalMessage *CreateSerMessage( Format::Format format, TArgument &argument, bool useBuffer )
+	{
+		if( useBuffer )
+		{
+			return CreateSerMessage< BufferedStreamWriter >( format, argument );
+		}
+		else
+		{
+			return CreateSerMessage< StreamWriter >( format, argument );
+		}
+	}
+
+	template< typename TStreamWriter, typename TArgument  >
+	InternalMessage *CreateSerMessage( Format::Format format, TArgument &argument )
+	{
+		InternalMessage *iMessage = NULL;
+
+		switch ( format )
+		{
+		case Format::Binary:
+			iMessage = new MessageAdapter< BinarySerMessage< TStreamWriter > >( argument );
+			break;
+
+		default:
+			assert( false && "Something went terribly haywire..." );
+			break;
+		}
+
+		return iMessage;
+	}
+
+	template< typename TArgument >
+	InternalMessage *CreateDeserMessage( Format::Format format, TArgument &argument, bool useBuffer )
+	{
+		if( useBuffer )
+		{
+			return CreateDeserMessage< BufferedStreamReader >( format, argument );
+		}
+		else
+		{
+			return CreateDeserMessage< StreamReader >( format, argument );
+		}
+	}
+
+	template< typename TStreamReader, typename TArgument  >
+	InternalMessage *CreateDeserMessage( Format::Format format, TArgument &argument )
+	{
+		InternalMessage *iMessage = NULL;
+
+		switch ( format )
+		{
+		case Format::Binary:
+			iMessage = new MessageAdapter< BinaryDeserMessage< TStreamReader > >( argument );
+			break;
+
+		default:
+			assert( false && "Something went terribly haywire..." );
+			break;
+		}
+
+		return iMessage;
+	}
 
     template< typename TMessage >
     void DeleteInternalMessage( TMessage *message )

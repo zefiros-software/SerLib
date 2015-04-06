@@ -24,6 +24,7 @@
 #ifndef __SERIALISATION_READBUFFER_H__
 #define __SERIALISATION_READBUFFER_H__
 
+#include "streamReader.h"
 #include "defines.h"
 #include "types.h"
 
@@ -33,47 +34,41 @@
 #include <fstream>
 #include <limits>
 
-class ReadBuffer
+class BufferedStreamReader
 {
 public:
 
-    ReadBuffer( const std::string &fileName )
-        : mFileStream( fileName.c_str(), std::ifstream::binary | std::ifstream::in ),
-          mStream( &mFileStream ),
+    BufferedStreamReader( const std::string &fileName )
+        : mStreamReader( fileName ),
           mReadIndex( 0 ),
           mReadSize( 0 )
     {
-        assert( mFileStream.is_open() && "File does not exist" );
     }
 
-    ReadBuffer( std::ifstream &stream )
-        : mStream( &stream ),
+    BufferedStreamReader( std::ifstream &stream )
+        : mStreamReader( stream ),
           mReadIndex( 0 ),
           mReadSize( 0 )
     {
-        assert( mStream->flags() & std::ios::binary );
     }
 
-    ReadBuffer( std::fstream &stream )
-        : mStream( &stream ),
+    BufferedStreamReader( std::fstream &stream )
+        : mStreamReader( stream ),
           mReadIndex( 0 ),
           mReadSize( 0 )
     {
-        assert( ( stream.flags() & std::ios::in ) && "Not an input stream" );
-        assert( ( stream.flags() & std::ios::binary ) && "File stream is not in binary mode" );
     }
 
-    ReadBuffer( std::istream &stream )
-        : mStream( &stream ),
+    BufferedStreamReader( std::istream &stream )
+        : mStreamReader( stream ),
           mReadIndex( 0 ),
           mReadSize( 0 )
     {
-
     }
 
     inline void ClearBuffer()
     {
-        mStream->seekg( static_cast<  std::ios::off_type >( mReadIndex - mReadSize ), std::ios::cur );
+        mStreamReader.SeekG( static_cast< std::ios::off_type >( mReadIndex - mReadSize ) );
         mReadIndex = 0;
         mReadSize = 0;
     }
@@ -82,13 +77,10 @@ public:
     {
         ClearBuffer();
 
-        if ( mFileStream.is_open() )
-        {
-            mFileStream.close();
-        }
+        mStreamReader.Close();
     }
 
-    ~ReadBuffer()
+    ~BufferedStreamReader()
     {
         Close();
     }
@@ -136,7 +128,7 @@ public:
             memcpy( firstByte, mReadBuffer + mReadIndex, diff );
             mReadIndex = mReadSize;
 
-            mStream->read( firstByte + diff, byteCount - diff );
+            mStreamReader.ReadBytes( firstByte + diff, byteCount - diff );
         }
     }
 
@@ -182,8 +174,7 @@ private:
 
     char mReadBuffer[ SERIALISERS_BUFFERSIZE ];
 
-    std::ifstream mFileStream;
-    std::istream *mStream;
+    StreamReader mStreamReader;
 
     uint32_t mReadIndex;
     uint32_t mReadSize;
@@ -191,17 +182,14 @@ private:
     inline void FillReadBuffer()
     {
         mReadIndex = 0;
-        mStream->read( mReadBuffer, SERIALISERS_BUFFERSIZE );
-        mReadSize = static_cast< uint32_t >( mStream->gcount() );
+        mStreamReader.ReadBytes( mReadBuffer, SERIALISERS_BUFFERSIZE );
+        mReadSize = static_cast< uint32_t >( mStreamReader.GCount() );
 
-        if ( mStream->eof() )
-        {
-            mStream->clear();
-        }
+        mStreamReader.ClearEOF();
     }
 
-    ReadBuffer &operator=( const ReadBuffer & );
-    ReadBuffer( const ReadBuffer & );
+    BufferedStreamReader &operator=( const BufferedStreamReader & );
+    BufferedStreamReader( const BufferedStreamReader & );
 };
 
 #endif
