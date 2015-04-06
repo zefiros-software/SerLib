@@ -29,7 +29,7 @@
 #endif
 
 #ifndef SERIALISERS_BUFFERSIZE
-#   define SERIALISERS_BUFFERSIZE 1024
+#   define SERIALISERS_BUFFERSIZE 4096
 #endif
 
 #if __cplusplus > 199711L || ( defined _MSC_VER && _MSC_VER >= 1700 )
