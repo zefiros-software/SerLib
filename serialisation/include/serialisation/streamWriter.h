@@ -21,8 +21,8 @@
  */
 
 #pragma once
-#ifndef __SERIALISATION_WRITEBUFFER_H__
-#define __SERIALISATION_WRITEBUFFER_H__
+#ifndef __SERIALISATION_STREAMWRITER_H__
+#define __SERIALISATION_STREAMWRITER_H__
 
 #include "defines.h"
 #include "types.h"
@@ -33,44 +33,39 @@
 #include <fstream>
 #include <limits>
 
-class WriteBuffer
+class StreamWriter
 {
 public:
 
-    WriteBuffer( const std::string &fileName )
+    StreamWriter( const std::string &fileName )
         : mFileStream( fileName.c_str(), std::ifstream::binary | std::ifstream::out ),
-          mStream( &mFileStream ),
-          mWriteIndex( 0 )
+          mStream( &mFileStream )
     {
         assert( mFileStream.is_open() && "File does not exist" );
     }
 
-    WriteBuffer( std::ofstream &stream )
-        : mStream( &stream ),
-          mWriteIndex( 0 )
+    StreamWriter( std::ofstream &stream )
+        : mStream( &stream )
     {
         assert( mStream->flags() & std::ios::binary );
     }
 
-    WriteBuffer( std::fstream &stream )
-        : mStream( &stream ),
-          mWriteIndex( 0 )
+    StreamWriter( std::fstream &stream )
+        : mStream( &stream )
     {
         assert( ( stream.flags() & std::ios::out ) && "Not an input stream" );
         assert( ( stream.flags() & std::ios::binary ) && "File stream is not in binary mode" );
     }
 
-    WriteBuffer( std::ostream &stream )
-        : mStream( &stream ),
-          mWriteIndex( 0 )
+    StreamWriter( std::ostream &stream )
+        : mStream( &stream )
     {
 
     }
 
     inline void ClearBuffer()
     {
-        mStream->write( mWriteBuffer, mWriteIndex );
-        mWriteIndex = 0;
+        mStream->flush();
     }
 
     inline void Close()
@@ -83,32 +78,14 @@ public:
         }
     }
 
-    ~WriteBuffer()
+    ~StreamWriter()
     {
         Close();
     }
 
     inline void WriteBytes( const char *const firstByte, size_t byteCount )
     {
-        uint32_t diff = SERIALISERS_BUFFERSIZE - mWriteIndex;
-
-        const char *c = firstByte;
-
-        while ( diff < byteCount )
-        {
-            memcpy( mWriteBuffer + mWriteIndex, c, diff );
-
-            mWriteIndex += diff;
-            c += diff;
-            byteCount -= diff;
-
-            ClearBuffer();
-
-            diff = SERIALISERS_BUFFERSIZE - mWriteIndex;
-        }
-
-        memcpy( mWriteBuffer  + mWriteIndex, c, byteCount );
-        mWriteIndex += static_cast< uint32_t >( byteCount );
+        mStream->write( firstByte, byteCount );
     }
 
     template< typename TPrimitive >
@@ -119,19 +96,7 @@ public:
 
     inline void WriteBlock( const char *const firstByte, size_t byteCount )
     {
-        uint32_t diff = SERIALISERS_BUFFERSIZE - mWriteIndex;
-
-        if ( byteCount < diff )
-        {
-            memcpy( mWriteBuffer + mWriteIndex, firstByte, byteCount );
-            mWriteIndex += static_cast< uint32_t >( byteCount );
-        }
-        else
-        {
-            ClearBuffer();
-
-            mStream->write( firstByte, byteCount );
-        }
+        WriteBytes( firstByte, byteCount );
     }
 
     template< typename TPrimitive >
@@ -167,17 +132,13 @@ public:
 
 private:
 
-    char mWriteBuffer[ SERIALISERS_BUFFERSIZE ];
-
     uint8_t mVarIntBuffer[ 10 ];
 
     std::ofstream mFileStream;
     std::ostream *mStream;
 
-    uint32_t mWriteIndex;
-
-    WriteBuffer &operator=( const WriteBuffer & );
-    WriteBuffer( const WriteBuffer & );
+    StreamWriter &operator=( const StreamWriter & );
+    StreamWriter( const StreamWriter & );
 };
 
 #endif
