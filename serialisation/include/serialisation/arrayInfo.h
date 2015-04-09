@@ -28,8 +28,8 @@
 
 struct ArrayInfo
 {
-    Internal::Type::Type type;
     size_t remainingCount;
+    Internal::Type::Type type;
 };
 
 #endif

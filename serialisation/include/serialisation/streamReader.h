@@ -37,7 +37,7 @@ class StreamReader
 {
 public:
 
-	friend class BufferedStreamReader;
+    friend class BufferedStreamReader;
 
     StreamReader( const std::string &fileName )
         : mFileStream( fileName.c_str(), std::ifstream::binary | std::ifstream::in ),
@@ -62,12 +62,10 @@ public:
     StreamReader( std::istream &stream )
         : mStream( &stream )
     {
-
     }
 
     inline void ClearBuffer()
     {
-
     }
 
     inline void Close()
@@ -106,11 +104,9 @@ public:
     {
         const size_t maxBlockSize = std::numeric_limits< size_t >::max() / sizeof( TPrimitive );
 
-        size_t readBlockSize;
-
         while ( count > 0 )
         {
-            readBlockSize = count > maxBlockSize ? maxBlockSize : count;
+            const size_t readBlockSize = count > maxBlockSize ? maxBlockSize : count;
 
             ReadBlock( reinterpret_cast< char *const >( first ), readBlockSize * sizeof( TPrimitive ) );
             count -= readBlockSize;

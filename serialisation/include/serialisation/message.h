@@ -38,21 +38,6 @@
 
 class Message
 {
-
-#define ASSERT_INDEX_IN_RANGE( index ) assert( index < 28 && "Index should be less than 28 for members" )
-#define CREATEINTERNALMESSAGE( message, mode, useBuffer, argument, TSerMessage, TDeserMessage )     \
-    if( mode == Mode::Serialise )                                                                   \
-    {                                                                                               \
-        message = useBuffer ? new MessageAdapter< TSerMessage, BufferedStreamWriter >( argument )   \
-                  : new MessageAdapter< TSerMessage, StreamWriter >( argument );                    \
-    }                                                                                               \
-    else                                                                                            \
-    {                                                                                               \
-        message = useBuffer ? new MessageAdapter< TDeserMessage, BufferedStreamReader >( argument ) \
-                  : new MessageAdapter< TDeserMessage, StreamReader >( argument );                  \
-    }
-
-
 public:
 
     template< typename TSerialisable >
@@ -145,7 +130,7 @@ public:
     template< typename TSerialisable >
     void Store( TSerialisable &serialisable, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE( index );
+        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
 
         if ( mInternalMessage->InitObject( index ) )
         {
@@ -158,7 +143,7 @@ public:
     template< typename TParent >
     void StoreParent( TParent &parent, uint8_t index )
     {
-        assert( index < 4 && "Index should be less than 4 for StoreParent" );
+        SERIALISATION_ASSERT_PARENT_INDEX_IN_RANGE( index );
 
         if ( mInternalMessage->InitParent( index ) )
         {
@@ -175,77 +160,77 @@ public:
 
     void Store( std::string &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE( index );
+        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
 
     void Store( uint8_t &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE( index );
+        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
 
     void Store( uint16_t &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE( index );
+        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
 
     void Store( uint32_t &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE( index );
+        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
 
     void Store( uint64_t &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE( index );
+        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
 
     void Store( int8_t &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE( index );
+        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
 
     void Store( int16_t &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE( index );
+        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
 
     void Store( int32_t &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE( index );
+        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
 
     void Store( int64_t &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE( index );
+        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
 
     void Store( float &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE( index );
+        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
 
     void Store( double &value, uint8_t index )
     {
-        ASSERT_INDEX_IN_RANGE( index );
+        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
 
         mInternalMessage->Store( value, index );
     }
@@ -529,71 +514,71 @@ private:
         }
 
         return iMessage;
-	}
+    }
 
-	template< typename TArgument >
-	InternalMessage *CreateSerMessage( Format::Format format, TArgument &argument, bool useBuffer )
-	{
-		if( useBuffer )
-		{
-			return CreateSerMessage< BufferedStreamWriter >( format, argument );
-		}
-		else
-		{
-			return CreateSerMessage< StreamWriter >( format, argument );
-		}
-	}
+    template< typename TArgument >
+    InternalMessage *CreateSerMessage( Format::Format format, TArgument &argument, bool useBuffer )
+    {
+        if ( useBuffer )
+        {
+            return CreateSerMessage< BufferedStreamWriter >( format, argument );
+        }
+        else
+        {
+            return CreateSerMessage< StreamWriter >( format, argument );
+        }
+    }
 
-	template< typename TStreamWriter, typename TArgument  >
-	InternalMessage *CreateSerMessage( Format::Format format, TArgument &argument )
-	{
-		InternalMessage *iMessage = NULL;
+    template< typename TStreamWriter, typename TArgument  >
+    InternalMessage *CreateSerMessage( Format::Format format, TArgument &argument )
+    {
+        InternalMessage *iMessage = NULL;
 
-		switch ( format )
-		{
-		case Format::Binary:
-			iMessage = new MessageAdapter< BinarySerMessage< TStreamWriter > >( argument );
-			break;
+        switch ( format )
+        {
+        case Format::Binary:
+            iMessage = new MessageAdapter< BinarySerMessage< TStreamWriter > >( argument );
+            break;
 
-		default:
-			assert( false && "Something went terribly haywire..." );
-			break;
-		}
+        default:
+            assert( false && "Something went terribly haywire..." );
+            break;
+        }
 
-		return iMessage;
-	}
+        return iMessage;
+    }
 
-	template< typename TArgument >
-	InternalMessage *CreateDeserMessage( Format::Format format, TArgument &argument, bool useBuffer )
-	{
-		if( useBuffer )
-		{
-			return CreateDeserMessage< BufferedStreamReader >( format, argument );
-		}
-		else
-		{
-			return CreateDeserMessage< StreamReader >( format, argument );
-		}
-	}
+    template< typename TArgument >
+    InternalMessage *CreateDeserMessage( Format::Format format, TArgument &argument, bool useBuffer )
+    {
+        if ( useBuffer )
+        {
+            return CreateDeserMessage< BufferedStreamReader >( format, argument );
+        }
+        else
+        {
+            return CreateDeserMessage< StreamReader >( format, argument );
+        }
+    }
 
-	template< typename TStreamReader, typename TArgument  >
-	InternalMessage *CreateDeserMessage( Format::Format format, TArgument &argument )
-	{
-		InternalMessage *iMessage = NULL;
+    template< typename TStreamReader, typename TArgument  >
+    InternalMessage *CreateDeserMessage( Format::Format format, TArgument &argument )
+    {
+        InternalMessage *iMessage = NULL;
 
-		switch ( format )
-		{
-		case Format::Binary:
-			iMessage = new MessageAdapter< BinaryDeserMessage< TStreamReader > >( argument );
-			break;
+        switch ( format )
+        {
+        case Format::Binary:
+            iMessage = new MessageAdapter< BinaryDeserMessage< TStreamReader > >( argument );
+            break;
 
-		default:
-			assert( false && "Something went terribly haywire..." );
-			break;
-		}
+        default:
+            assert( false && "Something went terribly haywire..." );
+            break;
+        }
 
-		return iMessage;
-	}
+        return iMessage;
+    }
 
     template< typename TMessage >
     void DeleteInternalMessage( TMessage *message )
@@ -673,7 +658,7 @@ private:
 
     inline size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 )
     {
-        ASSERT_INDEX_IN_RANGE( index );
+        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
 
         return mInternalMessage->CreateArray( type, size, index, flags );
     }
@@ -687,7 +672,7 @@ private:
 
         if ( size > 0 )
         {
-            mInternalMessage->StoreContiguous( &container.at( 0 ), size );
+            mInternalMessage->StoreContiguous( &container[0], size );
         }
     }
 

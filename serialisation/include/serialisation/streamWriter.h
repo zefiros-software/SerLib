@@ -104,11 +104,9 @@ public:
     {
         const size_t maxBlockSize = std::numeric_limits< size_t >::max() / sizeof( TPrimitive );
 
-        size_t writeBlockSize;
-
         while ( count > 0 )
         {
-            writeBlockSize = count > maxBlockSize ? maxBlockSize : count;
+            const size_t writeBlockSize = count > maxBlockSize ? maxBlockSize : count;
 
             WriteBlock( reinterpret_cast< const char *const >( first ), writeBlockSize * sizeof( TPrimitive ) );
             count -= writeBlockSize;

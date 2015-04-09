@@ -137,11 +137,9 @@ public:
     {
         const size_t maxBlockSize = std::numeric_limits< size_t >::max() / sizeof( TPrimitive );
 
-        size_t readBlockSize;
-
         while ( count > 0 )
         {
-            readBlockSize = count > maxBlockSize ? maxBlockSize : count;
+            const size_t readBlockSize = count > maxBlockSize ? maxBlockSize : count;
 
             ReadBlock( reinterpret_cast< char *const >( first ), readBlockSize * sizeof( TPrimitive ) );
             count -= readBlockSize;
@@ -172,7 +170,7 @@ public:
 
 private:
 
-    char mReadBuffer[ SERIALISERS_BUFFERSIZE ];
+    char mReadBuffer[ SERIALISATION_SERIALISERS_BUFFERSIZE ];
 
     StreamReader mStreamReader;
 
@@ -182,7 +180,7 @@ private:
     inline void FillReadBuffer()
     {
         mReadIndex = 0;
-        mStreamReader.ReadBytes( mReadBuffer, SERIALISERS_BUFFERSIZE );
+        mStreamReader.ReadBytes( mReadBuffer, SERIALISATION_SERIALISERS_BUFFERSIZE );
         mReadSize = static_cast< uint32_t >( mStreamReader.GCount() );
 
         mStreamReader.ClearEOF();

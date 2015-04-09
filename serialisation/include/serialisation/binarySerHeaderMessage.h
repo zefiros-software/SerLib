@@ -28,7 +28,7 @@
 #include "interface/ISerialisable.h"
 #include "interface/IMessage.h"
 
-#include "writeBuffer.h"
+#include "bufferedStreamWriter.h"
 #include "tempObject.h"
 #include "arrayInfo.h"
 #include "types.h"
@@ -136,12 +136,12 @@ public:
 
 private:
 
+    uint64_t mU64Buffer[ 128 ];
+    uint32_t mU32Buffer[ 128 ];
+
     BufferedStreamWriter mStreamBuffer;
 
     ArrayInfo mArrayInfo;
-
-    uint32_t mU32Buffer[ 128 ];
-    uint64_t mU64Buffer[ 128 ];
 
     template< typename T >
     void WriteHeader( const T index, Internal::Type::Type type )

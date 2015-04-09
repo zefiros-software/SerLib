@@ -28,13 +28,16 @@
 #   define SERIALISATION_CUSTOM_INTERFACE OnStore
 #endif
 
-#ifndef SERIALISERS_BUFFERSIZE
-#   define SERIALISERS_BUFFERSIZE 4096
+#ifndef SERIALISATION_SERIALISERS_BUFFERSIZE
+#   define SERIALISATION_SERIALISERS_BUFFERSIZE 4096
 #endif
 
 #if __cplusplus > 199711L || ( defined _MSC_VER && _MSC_VER >= 1700 )
 #define SERIALISATION_SUPPORT_STDARRAY
 #include <array>
 #endif
+
+#define SERIALISATION_ASSERT_INDEX_IN_RANGE( index ) assert( index < 28 && "Index should be less than 28 for members" )
+#define SERIALISATION_ASSERT_PARENT_INDEX_IN_RANGE( index ) assert( index < 4 && "Index should be less than 4 for StoreParent" );
 
 #endif
