@@ -37,7 +37,7 @@ class StreamReader
 {
 public:
 
-	friend class BufferedStreamReader;
+    friend class BufferedStreamReader;
 
     StreamReader( const std::string &fileName )
         : mFileStream( fileName.c_str(), std::ifstream::binary | std::ifstream::in ),

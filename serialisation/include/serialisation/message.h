@@ -35,6 +35,7 @@
 #include "types.h"
 
 #include <assert.h>
+#include <sstream>
 
 class Message
 {
@@ -529,71 +530,71 @@ private:
         }
 
         return iMessage;
-	}
+    }
 
-	template< typename TArgument >
-	InternalMessage *CreateSerMessage( Format::Format format, TArgument &argument, bool useBuffer )
-	{
-		if( useBuffer )
-		{
-			return CreateSerMessage< BufferedStreamWriter >( format, argument );
-		}
-		else
-		{
-			return CreateSerMessage< StreamWriter >( format, argument );
-		}
-	}
+    template< typename TArgument >
+    InternalMessage *CreateSerMessage( Format::Format format, TArgument &argument, bool useBuffer )
+    {
+        if ( useBuffer )
+        {
+            return CreateSerMessage< BufferedStreamWriter >( format, argument );
+        }
+        else
+        {
+            return CreateSerMessage< StreamWriter >( format, argument );
+        }
+    }
 
-	template< typename TStreamWriter, typename TArgument  >
-	InternalMessage *CreateSerMessage( Format::Format format, TArgument &argument )
-	{
-		InternalMessage *iMessage = NULL;
+    template< typename TStreamWriter, typename TArgument  >
+    InternalMessage *CreateSerMessage( Format::Format format, TArgument &argument )
+    {
+        InternalMessage *iMessage = NULL;
 
-		switch ( format )
-		{
-		case Format::Binary:
-			iMessage = new MessageAdapter< BinarySerMessage< TStreamWriter > >( argument );
-			break;
+        switch ( format )
+        {
+        case Format::Binary:
+            iMessage = new MessageAdapter< BinarySerMessage< TStreamWriter > >( argument );
+            break;
 
-		default:
-			assert( false && "Something went terribly haywire..." );
-			break;
-		}
+        default:
+            assert( false && "Something went terribly haywire..." );
+            break;
+        }
 
-		return iMessage;
-	}
+        return iMessage;
+    }
 
-	template< typename TArgument >
-	InternalMessage *CreateDeserMessage( Format::Format format, TArgument &argument, bool useBuffer )
-	{
-		if( useBuffer )
-		{
-			return CreateDeserMessage< BufferedStreamReader >( format, argument );
-		}
-		else
-		{
-			return CreateDeserMessage< StreamReader >( format, argument );
-		}
-	}
+    template< typename TArgument >
+    InternalMessage *CreateDeserMessage( Format::Format format, TArgument &argument, bool useBuffer )
+    {
+        if ( useBuffer )
+        {
+            return CreateDeserMessage< BufferedStreamReader >( format, argument );
+        }
+        else
+        {
+            return CreateDeserMessage< StreamReader >( format, argument );
+        }
+    }
 
-	template< typename TStreamReader, typename TArgument  >
-	InternalMessage *CreateDeserMessage( Format::Format format, TArgument &argument )
-	{
-		InternalMessage *iMessage = NULL;
+    template< typename TStreamReader, typename TArgument  >
+    InternalMessage *CreateDeserMessage( Format::Format format, TArgument &argument )
+    {
+        InternalMessage *iMessage = NULL;
 
-		switch ( format )
-		{
-		case Format::Binary:
-			iMessage = new MessageAdapter< BinaryDeserMessage< TStreamReader > >( argument );
-			break;
+        switch ( format )
+        {
+        case Format::Binary:
+            iMessage = new MessageAdapter< BinaryDeserMessage< TStreamReader > >( argument );
+            break;
 
-		default:
-			assert( false && "Something went terribly haywire..." );
-			break;
-		}
+        default:
+            assert( false && "Something went terribly haywire..." );
+            break;
+        }
 
-		return iMessage;
-	}
+        return iMessage;
+    }
 
     template< typename TMessage >
     void DeleteInternalMessage( TMessage *message )
