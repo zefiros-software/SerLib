@@ -36,7 +36,7 @@ public:
     {
     }
 
-    Internal::Type::Type GetSubType() const
+    virtual Internal::Type::Type GetSubType() const
     {
         return Internal::Type::GetEnum< T >();
     }
@@ -46,7 +46,7 @@ public:
         return &mValues.front();
     }
 
-    void Resize( size_t size )
+    virtual void Resize( size_t size )
     {
         mValues.resize( size );
     }
@@ -62,7 +62,7 @@ public:
         mValues.erase( mValues.begin() );
     }
 
-    size_t GetRemainingCount() const
+    virtual size_t GetRemainingCount() const
     {
         return mValues.size();
     }

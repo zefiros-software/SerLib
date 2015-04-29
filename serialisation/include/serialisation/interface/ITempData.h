@@ -24,7 +24,6 @@
 #ifndef __SERIALISATION_ITEMPDATA_H__
 #define __SERIALISATION_ITEMPDATA_H__
 
-#include "serialisation/defines.h"
 #include "serialisation/types.h"
 
 class ITempData

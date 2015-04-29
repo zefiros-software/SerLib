@@ -24,47 +24,39 @@
 #ifndef __SERIALISATION_BINARYSERVALUEMESSAGE_H__
 #define __SERIALISATION_BINARYSERVALUEMESSAGE_H__
 
-#include "interface/abstractTempArray.h"
-#include "interface/ISerialisable.h"
-#include "interface/IMessage.h"
-
 #include "bufferedStreamWriter.h"
-#include "tempObject.h"
 #include "arrayInfo.h"
 #include "types.h"
 #include "util.h"
 
-#include <assert.h>
-#include <iostream>
 #include <fstream>
-#include <stack>
 
 class BinarySerValueMessage
 {
 public:
 
-    BinarySerValueMessage( const std::string &fileName )
+    explicit BinarySerValueMessage( const std::string &fileName )
         : mStreamBuffer( fileName )
     {
         mArrayInfo.type = Internal::Type::Terminator;
         mArrayInfo.remainingCount = 0;
     }
 
-    BinarySerValueMessage( std::ofstream &stream )
+    explicit BinarySerValueMessage( std::ofstream &stream )
         : mStreamBuffer( stream )
     {
         mArrayInfo.type = Internal::Type::Terminator;
         mArrayInfo.remainingCount = 0;
     }
 
-    BinarySerValueMessage( std::fstream &stream )
+    explicit BinarySerValueMessage( std::fstream &stream )
         : mStreamBuffer( stream )
     {
         mArrayInfo.type = Internal::Type::Terminator;
         mArrayInfo.remainingCount = 0;
     }
 
-    BinarySerValueMessage( std::ostream &stream )
+    explicit BinarySerValueMessage( std::ostream &stream )
         : mStreamBuffer( stream )
     {
         mArrayInfo.type = Internal::Type::Terminator;

@@ -26,10 +26,7 @@
 
 #include "serialisation/interface/ITempData.h"
 
-#include "serialisation/defines.h"
 #include "serialisation/types.h"
-
-#include <vector>
 
 template< typename T >
 class TempPrimitive
@@ -37,7 +34,7 @@ class TempPrimitive
 {
 public:
 
-    Internal::Type::Type GetType() const
+    virtual Internal::Type::Type GetType() const
     {
         return Internal::Type::GetEnum< T >();
     }

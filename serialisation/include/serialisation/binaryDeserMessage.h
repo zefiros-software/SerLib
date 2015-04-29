@@ -45,7 +45,7 @@ class BinaryDeserMessage
 {
 public:
 
-    BinaryDeserMessage( const std::string &fileName )
+    explicit BinaryDeserMessage( const std::string &fileName )
         : mStreamReader( fileName ),
           mCurrentArray( NULL ),
           mCurrentObject( NULL ),
@@ -55,7 +55,7 @@ public:
         mArrayInfo.remainingCount = 0;
     }
 
-    BinaryDeserMessage( std::ifstream &stream )
+    explicit BinaryDeserMessage( std::ifstream &stream )
         : mStreamReader( stream ),
           mCurrentArray( NULL ),
           mCurrentObject( NULL ),
@@ -65,7 +65,7 @@ public:
         mArrayInfo.remainingCount = 0;
     }
 
-    BinaryDeserMessage( std::fstream &stream )
+    explicit BinaryDeserMessage( std::fstream &stream )
         : mStreamReader( stream ),
           mCurrentArray( NULL ),
           mCurrentObject( NULL ),
@@ -75,7 +75,7 @@ public:
         mArrayInfo.remainingCount = 0;
     }
 
-    BinaryDeserMessage( std::istream &stream )
+    explicit BinaryDeserMessage( std::istream &stream )
         : mStreamReader( stream ),
           mCurrentArray( NULL ),
           mCurrentObject( NULL ),

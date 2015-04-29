@@ -28,9 +28,6 @@
 #include "defines.h"
 #include "types.h"
 
-#include <assert.h>
-#include <iostream>
-#include <string.h>
 #include <fstream>
 #include <limits>
 
@@ -38,25 +35,25 @@ class BufferedStreamWriter
 {
 public:
 
-    BufferedStreamWriter( const std::string &fileName )
+    explicit BufferedStreamWriter( const std::string &fileName )
         : mStreamWriter( fileName ),
           mWriteIndex( 0 )
     {
     }
 
-    BufferedStreamWriter( std::ofstream &stream )
+    explicit BufferedStreamWriter( std::ofstream &stream )
         : mStreamWriter( stream ),
           mWriteIndex( 0 )
     {
     }
 
-    BufferedStreamWriter( std::fstream &stream )
+    explicit BufferedStreamWriter( std::fstream &stream )
         : mStreamWriter( stream ),
           mWriteIndex( 0 )
     {
     }
 
-    BufferedStreamWriter( std::ostream &stream )
+    explicit BufferedStreamWriter( std::ostream &stream )
         : mStreamWriter( stream ),
           mWriteIndex( 0 )
     {

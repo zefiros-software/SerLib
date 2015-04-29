@@ -24,12 +24,9 @@
 #ifndef __SERIALISATION_STREAMREADER_H__
 #define __SERIALISATION_STREAMREADER_H__
 
-#include "defines.h"
 #include "types.h"
 
 #include <assert.h>
-#include <iostream>
-#include <string.h>
 #include <fstream>
 #include <limits>
 
@@ -39,27 +36,27 @@ public:
 
     friend class BufferedStreamReader;
 
-    StreamReader( const std::string &fileName )
+    explicit StreamReader( const std::string &fileName )
         : mFileStream( fileName.c_str(), std::ifstream::binary | std::ifstream::in ),
           mStream( &mFileStream )
     {
         assert( mFileStream.is_open() && "File does not exist" );
     }
 
-    StreamReader( std::ifstream &stream )
+    explicit StreamReader( std::ifstream &stream )
         : mStream( &stream )
     {
         assert( mStream->flags() & std::ios::binary );
     }
 
-    StreamReader( std::fstream &stream )
+    explicit StreamReader( std::fstream &stream )
         : mStream( &stream )
     {
         assert( ( stream.flags() & std::ios::in ) && "Not an input stream" );
         assert( ( stream.flags() & std::ios::binary ) && "File stream is not in binary mode" );
     }
 
-    StreamReader( std::istream &stream )
+    explicit StreamReader( std::istream &stream )
         : mStream( &stream )
     {
     }

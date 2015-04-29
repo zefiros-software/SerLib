@@ -24,8 +24,6 @@
 #ifndef __SERIALISATION_MESSAGE_H__
 #define __SERIALISATION_MESSAGE_H__
 
-#include "interface/IMessage.h"
-
 #include "binaryDeserMessage.h"
 #include "binarySerMessage.h"
 #include "internalMessage.h"
@@ -256,7 +254,7 @@ public:
                 StoreArrayItem( *it );
             }
 
-            TSerialisable dummy();
+            TSerialisable dummy{};
 
             for ( size_t i = Size; i < size; ++i )
             {
@@ -410,7 +408,7 @@ public:
                 StoreArrayItem( *it );
             }
 
-            TSerialisable dummy();
+            TSerialisable dummy{};
 
             for ( size_t i = Size; i < size; ++i )
             {

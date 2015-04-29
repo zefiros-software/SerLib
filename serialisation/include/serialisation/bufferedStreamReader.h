@@ -28,9 +28,6 @@
 #include "defines.h"
 #include "types.h"
 
-#include <assert.h>
-#include <iostream>
-#include <string.h>
 #include <fstream>
 #include <limits>
 
@@ -38,28 +35,28 @@ class BufferedStreamReader
 {
 public:
 
-    BufferedStreamReader( const std::string &fileName )
+    explicit BufferedStreamReader( const std::string &fileName )
         : mStreamReader( fileName ),
           mReadIndex( 0 ),
           mReadSize( 0 )
     {
     }
 
-    BufferedStreamReader( std::ifstream &stream )
+    explicit BufferedStreamReader( std::ifstream &stream )
         : mStreamReader( stream ),
           mReadIndex( 0 ),
           mReadSize( 0 )
     {
     }
 
-    BufferedStreamReader( std::fstream &stream )
+    explicit BufferedStreamReader( std::fstream &stream )
         : mStreamReader( stream ),
           mReadIndex( 0 ),
           mReadSize( 0 )
     {
     }
 
-    BufferedStreamReader( std::istream &stream )
+    explicit BufferedStreamReader( std::istream &stream )
         : mStreamReader( stream ),
           mReadIndex( 0 ),
           mReadSize( 0 )

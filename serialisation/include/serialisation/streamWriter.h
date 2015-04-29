@@ -28,8 +28,6 @@
 #include "types.h"
 
 #include <assert.h>
-#include <iostream>
-#include <string.h>
 #include <fstream>
 #include <limits>
 
@@ -37,27 +35,27 @@ class StreamWriter
 {
 public:
 
-    StreamWriter( const std::string &fileName )
+    explicit StreamWriter( const std::string &fileName )
         : mFileStream( fileName.c_str(), std::ifstream::binary | std::ifstream::out ),
           mStream( &mFileStream )
     {
         assert( mFileStream.is_open() && "File does not exist" );
     }
 
-    StreamWriter( std::ofstream &stream )
+    explicit StreamWriter( std::ofstream &stream )
         : mStream( &stream )
     {
         assert( mStream->flags() & std::ios::binary );
     }
 
-    StreamWriter( std::fstream &stream )
+    explicit StreamWriter( std::fstream &stream )
         : mStream( &stream )
     {
         assert( ( stream.flags() & std::ios::out ) && "Not an input stream" );
         assert( ( stream.flags() & std::ios::binary ) && "File stream is not in binary mode" );
     }
 
-    StreamWriter( std::ostream &stream )
+    explicit StreamWriter( std::ostream &stream )
         : mStream( &stream )
     {
 
