@@ -255,7 +255,7 @@ public:
                 StoreArrayItem( *it );
             }
 
-            TSerialisable dummy{};
+            TSerialisable dummy();
 
             for ( size_t i = Size; i < size; ++i )
             {
