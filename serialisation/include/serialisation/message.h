@@ -33,6 +33,7 @@
 #include "types.h"
 
 #include <assert.h>
+#include <sstream>
 
 class Message
 {
