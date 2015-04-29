@@ -37,6 +37,7 @@
 #include "util.h"
 
 #include <assert.h>
+#include <cstring>
 #include <stack>
 
 

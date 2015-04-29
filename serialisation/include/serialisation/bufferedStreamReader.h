@@ -29,6 +29,7 @@
 #include "types.h"
 
 #include <fstream>
+#include <cstring>
 #include <limits>
 
 class BufferedStreamReader
