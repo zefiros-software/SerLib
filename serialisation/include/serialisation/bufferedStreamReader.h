@@ -28,38 +28,36 @@
 #include "defines.h"
 #include "types.h"
 
-#include <assert.h>
-#include <iostream>
-#include <string.h>
 #include <fstream>
+#include <cstring>
 #include <limits>
 
 class BufferedStreamReader
 {
 public:
 
-    BufferedStreamReader( const std::string &fileName )
+    explicit BufferedStreamReader( const std::string &fileName )
         : mStreamReader( fileName ),
           mReadIndex( 0 ),
           mReadSize( 0 )
     {
     }
 
-    BufferedStreamReader( std::ifstream &stream )
+    explicit BufferedStreamReader( std::ifstream &stream )
         : mStreamReader( stream ),
           mReadIndex( 0 ),
           mReadSize( 0 )
     {
     }
 
-    BufferedStreamReader( std::fstream &stream )
+    explicit BufferedStreamReader( std::fstream &stream )
         : mStreamReader( stream ),
           mReadIndex( 0 ),
           mReadSize( 0 )
     {
     }
 
-    BufferedStreamReader( std::istream &stream )
+    explicit BufferedStreamReader( std::istream &stream )
         : mStreamReader( stream ),
           mReadIndex( 0 ),
           mReadSize( 0 )
@@ -137,11 +135,9 @@ public:
     {
         const size_t maxBlockSize = std::numeric_limits< size_t >::max() / sizeof( TPrimitive );
 
-        size_t readBlockSize;
-
         while ( count > 0 )
         {
-            readBlockSize = count > maxBlockSize ? maxBlockSize : count;
+            const size_t readBlockSize = count > maxBlockSize ? maxBlockSize : count;
 
             ReadBlock( reinterpret_cast< char *const >( first ), readBlockSize * sizeof( TPrimitive ) );
             count -= readBlockSize;
@@ -172,7 +168,7 @@ public:
 
 private:
 
-    char mReadBuffer[ SERIALISERS_BUFFERSIZE ];
+    char mReadBuffer[ SERIALISATION_SERIALISERS_BUFFERSIZE ];
 
     StreamReader mStreamReader;
 
@@ -182,7 +178,7 @@ private:
     inline void FillReadBuffer()
     {
         mReadIndex = 0;
-        mStreamReader.ReadBytes( mReadBuffer, SERIALISERS_BUFFERSIZE );
+        mStreamReader.ReadBytes( mReadBuffer, SERIALISATION_SERIALISERS_BUFFERSIZE );
         mReadSize = static_cast< uint32_t >( mStreamReader.GCount() );
 
         mStreamReader.ClearEOF();

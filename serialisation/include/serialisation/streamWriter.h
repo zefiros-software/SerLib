@@ -28,8 +28,6 @@
 #include "types.h"
 
 #include <assert.h>
-#include <iostream>
-#include <string.h>
 #include <fstream>
 #include <limits>
 
@@ -37,27 +35,27 @@ class StreamWriter
 {
 public:
 
-    StreamWriter( const std::string &fileName )
+    explicit StreamWriter( const std::string &fileName )
         : mFileStream( fileName.c_str(), std::ifstream::binary | std::ifstream::out ),
           mStream( &mFileStream )
     {
         assert( mFileStream.is_open() && "File does not exist" );
     }
 
-    StreamWriter( std::ofstream &stream )
+    explicit StreamWriter( std::ofstream &stream )
         : mStream( &stream )
     {
         assert( mStream->flags() & std::ios::binary );
     }
 
-    StreamWriter( std::fstream &stream )
+    explicit StreamWriter( std::fstream &stream )
         : mStream( &stream )
     {
         assert( ( stream.flags() & std::ios::out ) && "Not an input stream" );
         assert( ( stream.flags() & std::ios::binary ) && "File stream is not in binary mode" );
     }
 
-    StreamWriter( std::ostream &stream )
+    explicit StreamWriter( std::ostream &stream )
         : mStream( &stream )
     {
 
@@ -104,11 +102,9 @@ public:
     {
         const size_t maxBlockSize = std::numeric_limits< size_t >::max() / sizeof( TPrimitive );
 
-        size_t writeBlockSize;
-
         while ( count > 0 )
         {
-            writeBlockSize = count > maxBlockSize ? maxBlockSize : count;
+            const size_t writeBlockSize = count > maxBlockSize ? maxBlockSize : count;
 
             WriteBlock( reinterpret_cast< const char *const >( first ), writeBlockSize * sizeof( TPrimitive ) );
             count -= writeBlockSize;

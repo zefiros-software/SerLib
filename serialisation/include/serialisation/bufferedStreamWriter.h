@@ -28,39 +28,36 @@
 #include "defines.h"
 #include "types.h"
 
-#include <assert.h>
-#include <iostream>
-#include <string.h>
 #include <fstream>
+#include <cstring>
 #include <limits>
 
 class BufferedStreamWriter
 {
 public:
 
-    BufferedStreamWriter( const std::string &fileName )
+    explicit BufferedStreamWriter( const std::string &fileName )
         : mStreamWriter( fileName ),
           mWriteIndex( 0 )
     {
     }
 
-    BufferedStreamWriter( std::ofstream &stream )
+    explicit BufferedStreamWriter( std::ofstream &stream )
         : mStreamWriter( stream ),
           mWriteIndex( 0 )
     {
     }
 
-    BufferedStreamWriter( std::fstream &stream )
+    explicit BufferedStreamWriter( std::fstream &stream )
         : mStreamWriter( stream ),
           mWriteIndex( 0 )
     {
     }
 
-    BufferedStreamWriter( std::ostream &stream )
+    explicit BufferedStreamWriter( std::ostream &stream )
         : mStreamWriter( stream ),
           mWriteIndex( 0 )
     {
-
     }
 
     inline void ClearBuffer()
@@ -68,7 +65,7 @@ public:
         mStreamWriter.WriteBytes( mWriteBuffer, mWriteIndex );
         mWriteIndex = 0;
 
-		mStreamWriter.ClearBuffer();
+        mStreamWriter.ClearBuffer();
     }
 
     inline void Close()
@@ -85,7 +82,7 @@ public:
 
     inline void WriteBytes( const char *const firstByte, size_t byteCount )
     {
-        uint32_t diff = SERIALISERS_BUFFERSIZE - mWriteIndex;
+        uint32_t diff = SERIALISATION_SERIALISERS_BUFFERSIZE - mWriteIndex;
 
         const char *c = firstByte;
 
@@ -99,7 +96,7 @@ public:
 
             ClearBuffer();
 
-            diff = SERIALISERS_BUFFERSIZE - mWriteIndex;
+            diff = SERIALISATION_SERIALISERS_BUFFERSIZE - mWriteIndex;
         }
 
         memcpy( mWriteBuffer  + mWriteIndex, c, byteCount );
@@ -114,7 +111,7 @@ public:
 
     inline void WriteBlock( const char *const firstByte, size_t byteCount )
     {
-        uint32_t diff = SERIALISERS_BUFFERSIZE - mWriteIndex;
+        uint32_t diff = SERIALISATION_SERIALISERS_BUFFERSIZE - mWriteIndex;
 
         if ( byteCount < diff )
         {
@@ -134,11 +131,9 @@ public:
     {
         const size_t maxBlockSize = std::numeric_limits< size_t >::max() / sizeof( TPrimitive );
 
-        size_t writeBlockSize;
-
         while ( count > 0 )
         {
-            writeBlockSize = count > maxBlockSize ? maxBlockSize : count;
+            const size_t writeBlockSize = count > maxBlockSize ? maxBlockSize : count;
 
             WriteBlock( reinterpret_cast< const char *const >( first ), writeBlockSize * sizeof( TPrimitive ) );
             count -= writeBlockSize;
@@ -162,11 +157,11 @@ public:
 
 private:
 
-    char mWriteBuffer[ SERIALISERS_BUFFERSIZE ];
-
-    uint8_t mVarIntBuffer[ 10 ];
+    char mWriteBuffer[ SERIALISATION_SERIALISERS_BUFFERSIZE ];
 
     StreamWriter mStreamWriter;
+
+    uint8_t mVarIntBuffer[ 10 ];
 
     uint32_t mWriteIndex;
 

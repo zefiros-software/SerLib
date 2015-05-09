@@ -38,7 +38,7 @@ public:
     {
     }
 
-    Internal::Type::Type GetType() const
+    virtual Internal::Type::Type GetType() const
     {
         return Internal::Type::Object;
     }

@@ -26,15 +26,9 @@
 
 #include "serialisation/types.h"
 
-#if defined( _MSC_VER )
-#   include <intrin.h>
-#endif
-
 #include <stdlib.h>
 #include <stdint.h>
-#include <float.h>
 #include <math.h>
-
 
 namespace Util
 {
@@ -47,7 +41,7 @@ namespace Util
     template< typename U, typename S >
     S ZagZig( const U u )
     {
-        return ( u >> 1 ) ^ ( -( ( S )u & 1 ) );
+        return ( u >> 1 ) ^ ( -( static_cast< S >( u ) & 1 ) );
     }
 
     inline uint32_t FloatToUInt32( const float f )
@@ -82,7 +76,7 @@ namespace Util
 
         const int32_t sign = exp < 0 ? 1 : 0;
 
-        uint64_t result = ( uint64_t )( abs( exp ) & 0x7FF ) << 1;
+        uint64_t result = static_cast< uint64_t >( abs( exp ) & 0x7FF ) << 1;
         result |= ZigZag< int64_t, uint64_t >( static_cast< int64_t >( ldexp( fi, 51 ) ) ) << 12;
         result |= sign;
 
@@ -116,19 +110,19 @@ namespace Util
     template< typename T >
     T CreateHeader( const T index, const Internal::Type::Type t )
     {
-        return ( index << 3 ) | ( ( T )t & 0x07 );
+        return ( index << 3 ) | ( static_cast< T >( t ) & 0x07 );
     }
 
     template< typename T >
     Internal::Type::Type GetHeaderType( const T header )
     {
-        return ( Internal::Type::Type )( header & 0x07 );
+        return static_cast< Internal::Type::Type >( header & 0x07 );
     }
 
     template< typename T >
     T GetHeaderIndex( const T header )
     {
-        return ( T )( header >> 3 );
+        return static_cast< T >( header >> 3 );
     }
 }
 

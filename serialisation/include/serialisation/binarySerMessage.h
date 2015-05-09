@@ -123,27 +123,27 @@ public:
 
         WriteHeader( index, type );
         WritePrimitive( value );
-	}
+    }
 
-	inline void Store( std::string &value, uint8_t index )
-	{
-		WriteHeader( index, Internal::Type::String );
-		WritePrimitive( value );
-	}
+    inline void Store( std::string &value, uint8_t index )
+    {
+        WriteHeader( index, Internal::Type::String );
+        WritePrimitive( value );
+    }
 
-	inline void Store( float &value, uint8_t index )
-	{
-		uint32_t flexman = Util::FloatToUInt32( value );
+    inline void Store( float &value, uint8_t index )
+    {
+        uint32_t flexman = Util::FloatToUInt32( value );
 
-		Store( flexman, index );
-	}
+        Store( flexman, index );
+    }
 
-	inline void Store( double &value, uint8_t index )
-	{
-		uint64_t flexman = Util::DoubleToUInt64( value );
+    inline void Store( double &value, uint8_t index )
+    {
+        uint64_t flexman = Util::DoubleToUInt64( value );
 
-		Store( flexman, index );
-	}
+        Store( flexman, index );
+    }
 
     inline size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 )
     {
@@ -164,67 +164,71 @@ public:
     void StoreArrayItem( TPrimitive &value )
     {
         WritePrimitive( value );
-	}
+    }
 
-	inline void StoreArrayItem( float &value )
-	{
-		uint32_t flexman = Util::FloatToUInt32( value );
+    inline void StoreArrayItem( float &value )
+    {
+        uint32_t flexman = Util::FloatToUInt32( value );
 
-		StoreArrayItem( flexman );
-	}
+        StoreArrayItem( flexman );
+    }
 
-	inline void StoreArrayItem( double &value )
-	{
-		uint64_t flexman = Util::DoubleToUInt64( value );
+    inline void StoreArrayItem( double &value )
+    {
+        uint64_t flexman = Util::DoubleToUInt64( value );
 
-		StoreArrayItem( flexman );
-	}
+        StoreArrayItem( flexman );
+    }
 
     template< typename TPrimitive >
     void StoreContiguous( TPrimitive *begin, size_t size )
     {
         mStreamWriter.WritePrimitiveBlock( begin, size );
-	}
+    }
 
-	inline void StoreContiguous( float *begin, size_t size )
-	{
-		for ( size_t i = 0; i < size; i += 128 )
-		{
-			size_t blockSize = static_cast< size_t >( size - i );
-			blockSize = blockSize > 128 ? 128 : blockSize;
+    inline void StoreContiguous( float *begin, size_t size )
+    {
+        for ( size_t i = 0; i < size; i += 128 )
+        {
+            size_t blockSize = static_cast< size_t >( size - i );
+            blockSize = blockSize > 128 ? 128 : blockSize;
 
-			for ( size_t k = 0; k < blockSize; ++k )
-			{
-				mU32Buffer[ k ] = Util::FloatToUInt32( begin[ k ] );
-			}
+            for ( size_t k = 0; k < blockSize; ++k )
+            {
+                mU32Buffer[ k ] = Util::FloatToUInt32( begin[ k ] );
+            }
 
-			mStreamWriter.WritePrimitiveBlock( mU32Buffer, blockSize );
-		}
-	}
+            mStreamWriter.WritePrimitiveBlock( mU32Buffer, blockSize );
+        }
+    }
 
-	inline void StoreContiguous( double *begin, size_t size )
-	{
-		for ( size_t i = 0; i < size; i += 128 )
-		{
-			size_t blockSize = static_cast< size_t >( size - i );
+    inline void StoreContiguous( double *begin, size_t size )
+    {
+        for ( size_t i = 0; i < size; i += 128 )
+        {
+            size_t blockSize = static_cast< size_t >( size - i );
 
-			for ( size_t k = 0; k < blockSize; ++k )
-			{
-				mU64Buffer[ k ] = Util::DoubleToUInt64( begin[ k ] );
-			}
+            for ( size_t k = 0; k < blockSize; ++k )
+            {
+                mU64Buffer[ k ] = Util::DoubleToUInt64( begin[ k ] );
+            }
 
-			mStreamWriter.WritePrimitiveBlock( mU64Buffer, blockSize );
-		}
-	}
+            mStreamWriter.WritePrimitiveBlock( mU64Buffer, blockSize );
+        }
+    }
 
 private:
 
     TStreamWriter mStreamWriter;
 
+    uint64_t mU64Buffer[ 128 ];
+    uint32_t mU32Buffer[ 128 ];
+
     ArrayInfo mArrayInfo;
 
-    uint32_t mU32Buffer[ 128 ];
-    uint64_t mU64Buffer[ 128 ];
+    BinarySerMessage( BinarySerMessage & );
+
+    BinarySerMessage &operator=( const BinarySerMessage &bsm );
 
     template< typename T >
     void WriteHeader( const T index, Internal::Type::Type type )
@@ -260,13 +264,11 @@ private:
         mStreamWriter.WritePrimitive( value );
     }
 
-	inline void WritePrimitive( std::string &value )
-	{
-		mStreamWriter.WriteSize( value.length() );
-		mStreamWriter.WriteBytes( value.c_str(), value.length() );
-	}
-
-    BinarySerMessage &operator=( const BinarySerMessage &bsm );
+    inline void WritePrimitive( std::string &value )
+    {
+        mStreamWriter.WriteSize( value.length() );
+        mStreamWriter.WriteBytes( value.c_str(), value.length() );
+    }
 };
 
 #endif

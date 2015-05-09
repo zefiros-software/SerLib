@@ -26,7 +26,6 @@
 
 #include "serialisation/interface/ISerialisable.h"
 #include "serialisation/types.h"
-#include <vector>
 
 class InternalMessage
 {

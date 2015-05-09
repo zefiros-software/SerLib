@@ -32,6 +32,10 @@ class IMessage
 {
 public:
 
+    virtual ~IMessage()
+    {
+    }
+
     virtual void Store( ISerialisable &serialisable, uint8_t index ) = 0;
     virtual void Store( std::string &value, uint8_t index ) = 0;
 

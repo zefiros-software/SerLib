@@ -24,256 +24,249 @@
 #ifndef __SERIALISATION_BINARYSERVALUEMESSAGE_H__
 #define __SERIALISATION_BINARYSERVALUEMESSAGE_H__
 
-#include "interface/abstractTempArray.h"
-#include "interface/ISerialisable.h"
-#include "interface/IMessage.h"
-
-#include "writeBuffer.h"
-#include "tempObject.h"
+#include "bufferedStreamWriter.h"
 #include "arrayInfo.h"
 #include "types.h"
 #include "util.h"
 
-#include <assert.h>
-#include <iostream>
 #include <fstream>
-#include <stack>
 
 class BinarySerValueMessage
 {
 public:
 
-	BinarySerValueMessage( const std::string &fileName )
-		: mStreamBuffer( fileName )
-	{
-		mArrayInfo.type = Internal::Type::Terminator;
-		mArrayInfo.remainingCount = 0;
-	}
+    explicit BinarySerValueMessage( const std::string &fileName )
+        : mStreamBuffer( fileName )
+    {
+        mArrayInfo.type = Internal::Type::Terminator;
+        mArrayInfo.remainingCount = 0;
+    }
 
-	BinarySerValueMessage( std::ofstream &stream )
-		: mStreamBuffer( stream )
-	{
-		mArrayInfo.type = Internal::Type::Terminator;
-		mArrayInfo.remainingCount = 0;
-	}
+    explicit BinarySerValueMessage( std::ofstream &stream )
+        : mStreamBuffer( stream )
+    {
+        mArrayInfo.type = Internal::Type::Terminator;
+        mArrayInfo.remainingCount = 0;
+    }
 
-	BinarySerValueMessage( std::fstream &stream )
-		: mStreamBuffer( stream )
-	{
-		mArrayInfo.type = Internal::Type::Terminator;
-		mArrayInfo.remainingCount = 0;
-	}
+    explicit BinarySerValueMessage( std::fstream &stream )
+        : mStreamBuffer( stream )
+    {
+        mArrayInfo.type = Internal::Type::Terminator;
+        mArrayInfo.remainingCount = 0;
+    }
 
-	BinarySerValueMessage( std::ostream &stream )
-		: mStreamBuffer( stream )
-	{
-		mArrayInfo.type = Internal::Type::Terminator;
-		mArrayInfo.remainingCount = 0;
-	}
+    explicit BinarySerValueMessage( std::ostream &stream )
+        : mStreamBuffer( stream )
+    {
+        mArrayInfo.type = Internal::Type::Terminator;
+        mArrayInfo.remainingCount = 0;
+    }
 
-	inline void InitObject()
-	{
-	}
+    inline void InitObject()
+    {
+    }
 
-	inline void FinishObject()
-	{
-		WriteHeader( static_cast<  uint8_t >( 0 ), Internal::Type::Terminator );
-	}
+    inline void FinishObject()
+    {
+        WriteHeader( static_cast<  uint8_t >( 0 ), Internal::Type::Terminator );
+    }
 
-	inline bool InitObject( uint8_t index )
-	{
-		WriteHeader( index, Internal::Type::Object );
-		return true;
-	}
+    inline bool InitObject( uint8_t index )
+    {
+        WriteHeader( index, Internal::Type::Object );
+        return true;
+    }
 
-	inline void FinishObject( uint8_t /*index*/ )
-	{
-		FinishObject();
-	}
+    inline void FinishObject( uint8_t /*index*/ )
+    {
+        FinishObject();
+    }
 
-	inline bool InitParent( uint8_t index )
-	{
-		return InitObject( index + 28 );
-	}
+    inline bool InitParent( uint8_t index )
+    {
+        return InitObject( index + 28 );
+    }
 
-	inline void FinishParent( uint8_t index )
-	{
-		FinishObject( index + 28 );
-	}
+    inline void FinishParent( uint8_t index )
+    {
+        FinishObject( index + 28 );
+    }
 
-	inline void InitArrayObject()
-	{
-	}
+    inline void InitArrayObject()
+    {
+    }
 
-	inline void FinishArrayObject()
-	{
-		FinishObject();
-	}
+    inline void FinishArrayObject()
+    {
+        FinishObject();
+    }
 
-	inline void ClearBuffer()
-	{
-		mStreamBuffer.ClearBuffer();
-	}
+    inline void ClearBuffer()
+    {
+        mStreamBuffer.ClearBuffer();
+    }
 
-	template< typename TPrimitive >
-	void Store( TPrimitive &value, uint8_t index )
-	{
-		const Internal::Type::Type type = Internal::Type::GetEnum< TPrimitive >();
+    template< typename TPrimitive >
+    void Store( TPrimitive &value, uint8_t index )
+    {
+        const Internal::Type::Type type = Internal::Type::GetEnum< TPrimitive >();
 
-		WriteHeader( index, type );
-		WritePrimitive( value );
-	}
+        WriteHeader( index, type );
+        WritePrimitive( value );
+    }
 
-	inline size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 )
-	{
-		const Internal::Type::Type iType = static_cast< Internal::Type::Type >( type );
+    inline size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 )
+    {
+        const Internal::Type::Type iType = static_cast< Internal::Type::Type >( type );
 
-		mArrayInfo.type = iType;
-		mArrayInfo.remainingCount = size;
+        mArrayInfo.type = iType;
+        mArrayInfo.remainingCount = size;
 
-		WriteHeader( index, Internal::Type::Array );
-		WriteHeader( flags, iType );
+        WriteHeader( index, Internal::Type::Array );
+        WriteHeader( flags, iType );
 
-		mStreamBuffer.WriteSize( size );
+        mStreamBuffer.WriteSize( size );
 
-		return size;
-	}
+        return size;
+    }
 
-	template< typename TPrimitive >
-	void StoreArrayItem( TPrimitive &value )
-	{
-		WritePrimitive( value );
-	}
+    template< typename TPrimitive >
+    void StoreArrayItem( TPrimitive &value )
+    {
+        WritePrimitive( value );
+    }
 
-	template< typename TPrimitive >
-	void StoreContiguous( TPrimitive *begin, size_t size )
-	{
-		mStreamBuffer.WritePrimitiveBlock( begin, size );
-	}
+    template< typename TPrimitive >
+    void StoreContiguous( TPrimitive *begin, size_t size )
+    {
+        mStreamBuffer.WritePrimitiveBlock( begin, size );
+    }
 
 private:
 
-	BufferedStreamWriter mStreamBuffer;
+    uint64_t mU64Buffer[ 128 ];
+    uint32_t mU32Buffer[ 128 ];
 
-	ArrayInfo mArrayInfo;
+    BufferedStreamWriter mStreamBuffer;
 
-	uint32_t mU32Buffer[ 128 ];
-	uint64_t mU64Buffer[ 128 ];
+    ArrayInfo mArrayInfo;
 
-	template< typename T >
-	void WriteHeader( const T index, Internal::Type::Type type )
-	{
-		const T header = Util::CreateHeader( index, ToBinaryType( type ) );
 
-		WritePrimitive( header );
-	}
+    template< typename T >
+    void WriteHeader( const T index, Internal::Type::Type type )
+    {
+        const T header = Util::CreateHeader( index, ToBinaryType( type ) );
 
-	inline Internal::Type::Type ToBinaryType( const Internal::Type::Type type )
-	{
-		Internal::Type::Type binaryType = type;
+        WritePrimitive( header );
+    }
 
-		if ( Internal::Type::IsSignedInt( type ) )
-		{
-			binaryType = static_cast< Internal::Type::Type >( type - Internal::Type::SInt8 + Internal::Type::UInt8 );
-		}
-		else if ( type == Internal::Type::Float )
-		{
-			binaryType = Internal::Type::UInt32;
-		}
-		else if ( type == Internal::Type::Double )
-		{
-			binaryType = Internal::Type::UInt64;
-		}
+    inline Internal::Type::Type ToBinaryType( const Internal::Type::Type type )
+    {
+        Internal::Type::Type binaryType = type;
 
-		return binaryType;
-	}
+        if ( Internal::Type::IsSignedInt( type ) )
+        {
+            binaryType = static_cast< Internal::Type::Type >( type - Internal::Type::SInt8 + Internal::Type::UInt8 );
+        }
+        else if ( type == Internal::Type::Float )
+        {
+            binaryType = Internal::Type::UInt32;
+        }
+        else if ( type == Internal::Type::Double )
+        {
+            binaryType = Internal::Type::UInt64;
+        }
 
-	template< typename TPrimitive >
-	void WritePrimitive( TPrimitive &value )
-	{
-		mStreamBuffer.WritePrimitive( value );
-	}
+        return binaryType;
+    }
 
-	BinarySerValueMessage &operator=( const BinarySerValueMessage &bsm );
+    template< typename TPrimitive >
+    void WritePrimitive( TPrimitive &value )
+    {
+        mStreamBuffer.WritePrimitive( value );
+    }
+
+    BinarySerValueMessage &operator=( const BinarySerValueMessage &bsm );
 };
 
 template<>
 inline void BinarySerValueMessage::WritePrimitive( std::string &value )
 {
-	mStreamBuffer.WriteSize( value.length() );
-	mStreamBuffer.WriteBytes( value.c_str(), value.length() );
+    mStreamBuffer.WriteSize( value.length() );
+    mStreamBuffer.WriteBytes( value.c_str(), value.length() );
 }
 
 template<>
 inline void BinarySerValueMessage::StoreArrayItem< float >( float &value )
 {
-	uint32_t flexman = Util::FloatToUInt32( value );
+    uint32_t flexman = Util::FloatToUInt32( value );
 
-	StoreArrayItem( flexman );
+    StoreArrayItem( flexman );
 }
 
 template<>
 inline void BinarySerValueMessage::StoreArrayItem( double &value )
 {
-	uint64_t flexman = Util::DoubleToUInt64( value );
+    uint64_t flexman = Util::DoubleToUInt64( value );
 
-	StoreArrayItem( flexman );
+    StoreArrayItem( flexman );
 }
 
 template<>
 inline void BinarySerValueMessage::StoreContiguous( float *begin, size_t size )
 {
-	for ( size_t i = 0; i < size; i += 128 )
-	{
-		size_t blockSize = static_cast< size_t >( size - i );
-		blockSize = blockSize > 128 ? 128 : blockSize;
+    for ( size_t i = 0; i < size; i += 128 )
+    {
+        size_t blockSize = static_cast< size_t >( size - i );
+        blockSize = blockSize > 128 ? 128 : blockSize;
 
-		for ( size_t k = 0; k < blockSize; ++k )
-		{
-			mU32Buffer[ k ] = Util::FloatToUInt32( begin[ k ] );
-		}
+        for ( size_t k = 0; k < blockSize; ++k )
+        {
+            mU32Buffer[ k ] = Util::FloatToUInt32( begin[ k ] );
+        }
 
-		mStreamBuffer.WritePrimitiveBlock( mU32Buffer, blockSize );
-	}
+        mStreamBuffer.WritePrimitiveBlock( mU32Buffer, blockSize );
+    }
 }
 
 template<>
 inline void BinarySerValueMessage::StoreContiguous( double *begin, size_t size )
 {
-	for ( size_t i = 0; i < size; i += 128 )
-	{
-		size_t blockSize = static_cast< size_t >( size - i );
+    for ( size_t i = 0; i < size; i += 128 )
+    {
+        size_t blockSize = static_cast< size_t >( size - i );
 
-		for ( size_t k = 0; k < blockSize; ++k )
-		{
-			mU64Buffer[ k ] = Util::DoubleToUInt64( begin[ k ] );
-		}
+        for ( size_t k = 0; k < blockSize; ++k )
+        {
+            mU64Buffer[ k ] = Util::DoubleToUInt64( begin[ k ] );
+        }
 
-		mStreamBuffer.WritePrimitiveBlock( mU64Buffer, blockSize );
-	}
+        mStreamBuffer.WritePrimitiveBlock( mU64Buffer, blockSize );
+    }
 }
 
 template<>
 inline void BinarySerValueMessage::Store( std::string &value, uint8_t index )
 {
-	WriteHeader( index, Internal::Type::String );
-	WritePrimitive( value );
+    WriteHeader( index, Internal::Type::String );
+    WritePrimitive( value );
 }
 
 template<>
 inline void BinarySerValueMessage::Store( float &value, uint8_t index )
 {
-	uint32_t flexman = Util::FloatToUInt32( value );
+    uint32_t flexman = Util::FloatToUInt32( value );
 
-	Store( flexman, index );
+    Store( flexman, index );
 }
 
 template<>
 inline void BinarySerValueMessage::Store( double &value, uint8_t index )
 {
-	uint64_t flexman = Util::DoubleToUInt64( value );
+    uint64_t flexman = Util::DoubleToUInt64( value );
 
-	Store( flexman, index );
+    Store( flexman, index );
 }
 
 #endif

@@ -25,19 +25,14 @@
 #define __SERIALISATION_BINARYSERHEADERMESSAGE_H__
 
 #include "interface/abstractTempArray.h"
-#include "interface/ISerialisable.h"
-#include "interface/IMessage.h"
 
-#include "writeBuffer.h"
-#include "tempObject.h"
+#include "bufferedStreamWriter.h"
 #include "arrayInfo.h"
 #include "types.h"
 #include "util.h"
 
 #include <assert.h>
-#include <iostream>
 #include <fstream>
-#include <stack>
 
 class BinarySerMessage;
 
@@ -45,22 +40,22 @@ class BinarySerHeaderMessage
 {
 public:
 
-    BinarySerHeaderMessage( const std::string &fileName )
+    explicit BinarySerHeaderMessage( const std::string &fileName )
         : mStreamBuffer( fileName )
     {
     }
 
-    BinarySerHeaderMessage( std::ofstream &stream )
+    explicit BinarySerHeaderMessage( std::ofstream &stream )
         : mStreamBuffer( stream )
     {
     }
 
-    BinarySerHeaderMessage( std::fstream &stream )
+    explicit BinarySerHeaderMessage( std::fstream &stream )
         : mStreamBuffer( stream )
     {
     }
 
-    BinarySerHeaderMessage( std::ostream &stream )
+    explicit BinarySerHeaderMessage( std::ostream &stream )
         : mStreamBuffer( stream )
     {
     }
@@ -136,12 +131,12 @@ public:
 
 private:
 
+    uint64_t mU64Buffer[ 128 ];
+    uint32_t mU32Buffer[ 128 ];
+
     BufferedStreamWriter mStreamBuffer;
 
     ArrayInfo mArrayInfo;
-
-    uint32_t mU32Buffer[ 128 ];
-    uint64_t mU64Buffer[ 128 ];
 
     template< typename T >
     void WriteHeader( const T index, Internal::Type::Type type )
