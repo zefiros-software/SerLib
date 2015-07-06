@@ -24,7 +24,7 @@
 #ifndef __SERIALISATION_ARRAYINFO_H__
 #define __SERIALISATION_ARRAYINFO_H__
 
-#include "types.h"
+#include "serialisation/types.h"
 
 struct ArrayInfo
 {

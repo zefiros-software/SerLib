@@ -24,15 +24,15 @@
 #ifndef __SERIALISATION_MESSAGE_H__
 #define __SERIALISATION_MESSAGE_H__
 
-#include "binaryDeserMessage.h"
-#include "binarySerMessage.h"
-#include "internalMessage.h"
-#include "messageAdapter.h"
-#include "messageHelper.h"
-#include "defines.h"
-#include "types.h"
+#include "serialisation/bufferedStreamWriter.h"
+#include "serialisation/binaryDeserMessage.h"
+#include "serialisation/binarySerMessage.h"
+#include "serialisation/internalMessage.h"
+#include "serialisation/messageAdapter.h"
+#include "serialisation/messageHelper.h"
+#include "serialisation/defines.h"
+#include "serialisation/types.h"
 
-#include <assert.h>
 #include <sstream>
 
 class Message
@@ -389,7 +389,7 @@ public:
         StorePrimitiveVector( container, index, flags );
     }
 
-#if defined SERIALISATION_SUPPORT_STDARRAY
+    #if defined SERIALISATION_SUPPORT_STDARRAY
     template< size_t Size, typename TSerialisable >
     void StoreContainer( std::array< TSerialisable, Size > &container, uint8_t index, uint8_t flags = 0x00 )
     {
@@ -477,7 +477,7 @@ public:
     {
         StoreFixedSize< Size >( container.data(), index, flag );
     }
-#endif
+    #endif
 
 private:
 

@@ -24,9 +24,7 @@
 #ifndef __SERIALISATION_MESSAGEADAPTER_H__
 #define __SERIALISATION_MESSAGEADAPTER_H__
 
-#include "internalMessage.h"
-#include "defines.h"
-#include "types.h"
+#include "serialisation/internalMessage.h"
 
 template< typename TMessage >
 class MessageAdapter

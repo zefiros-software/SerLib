@@ -24,13 +24,8 @@
 #ifndef __SERIALISATION_WRITEBUFFER_H__
 #define __SERIALISATION_WRITEBUFFER_H__
 
-#include "streamWriter.h"
-#include "defines.h"
-#include "types.h"
-
-#include <fstream>
-#include <cstring>
-#include <limits>
+#include "serialisation/streamWriter.h"
+#include "serialisation/defines.h"
 
 class BufferedStreamWriter
 {

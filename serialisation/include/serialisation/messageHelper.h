@@ -24,6 +24,8 @@
 #ifndef __SERIALISATION_MESSAGEHELPER_H__
 #define __SERIALISATION_MESSAGEHELPER_H__
 
+#include "serialisation/interface/ISerialisable.h"
+
 namespace MessageHelper
 {
     template< typename TSerialisable >

@@ -24,7 +24,7 @@
 #ifndef __SERIALISATION_TEMPOBJECT_H__
 #define __SERIALISATION_TEMPOBJECT_H__
 
-#include "interface/ITempData.h"
+#include "serialisation/interface/ITempData.h"
 
 #include <vector>
 

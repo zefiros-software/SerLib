@@ -24,8 +24,8 @@
 #ifndef __SERIALISATION_SERIALISATION_H__
 #define __SERIALISATION_SERIALISATION_H__
 
-#include "interface/ISerialisable.h"
+#include "serialisation/interface/ISerialisable.h"
 
-#include "message.h"
+#include "serialisation/message.h"
 
 #endif

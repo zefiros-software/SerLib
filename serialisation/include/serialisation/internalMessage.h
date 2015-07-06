@@ -24,7 +24,6 @@
 #ifndef __SERIALISATION_INTERNALMESSAGE_H__
 #define __SERIALISATION_INTERNALMESSAGE_H__
 
-#include "serialisation/interface/ISerialisable.h"
 #include "serialisation/types.h"
 
 class InternalMessage

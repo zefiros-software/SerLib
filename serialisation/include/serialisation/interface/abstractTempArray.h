@@ -24,7 +24,7 @@
 #ifndef __SERIALISATION_ABSTRACTTEMPARRAY_H__
 #define __SERIALISATION_ABSTRACTTEMPARRAY_H__
 
-#include "ITempData.h"
+#include "serialisation/interface/ITempData.h"
 
 class AbstractTempArray
     : public ITempData

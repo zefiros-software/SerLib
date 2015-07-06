@@ -24,13 +24,8 @@
 #ifndef __SERIALISATION_READBUFFER_H__
 #define __SERIALISATION_READBUFFER_H__
 
-#include "streamReader.h"
-#include "defines.h"
-#include "types.h"
-
-#include <fstream>
-#include <cstring>
-#include <limits>
+#include "serialisation/streamReader.h"
+#include "serialisation/defines.h"
 
 class BufferedStreamReader
 {

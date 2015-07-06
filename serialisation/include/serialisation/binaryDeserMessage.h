@@ -24,22 +24,16 @@
 #ifndef __SERIALISATION_BINARYDESERMESSAGE_H__
 #define __SERIALISATION_BINARYDESERMESSAGE_H__
 
+#include "serialisation/bufferedStreamReader.h"
+#include "serialisation/tempPrimitive.h"
+#include "serialisation/tempObject.h"
+#include "serialisation/tempArray.h"
+#include "serialisation/arrayInfo.h"
+#include "serialisation/types.h"
+#include "serialisation/util.h"
 
-#include "interface/abstractTempArray.h"
-
-#include "bufferedStreamReader.h"
-#include "tempPrimitive.h"
-#include "tempObject.h"
-#include "tempArray.h"
-#include "arrayInfo.h"
-#include "defines.h"
-#include "types.h"
-#include "util.h"
-
-#include <assert.h>
 #include <cstring>
 #include <stack>
-
 
 template< typename TStreamReader >
 class BinaryDeserMessage
@@ -653,7 +647,7 @@ inline ITempData *BinaryDeserMessage< TStreamReader >::ReadTempArray()
 
 template< typename TStreamReader >
 inline size_t BinaryDeserMessage< TStreamReader >::CreateArray( Type::Type type, size_t size, uint8_t index,
-        uint8_t flags )
+                                                                uint8_t flags )
 {
     if ( mCurrentArray )
     {
@@ -662,7 +656,7 @@ inline size_t BinaryDeserMessage< TStreamReader >::CreateArray( Type::Type type,
     }
 
     AbstractTempArray *temp = mCurrentObject ? static_cast< AbstractTempArray * >( mCurrentObject->TryRemoveData(
-                                  index ) ) : NULL;
+                                                                                       index ) ) : NULL;
 
     if ( temp )
     {

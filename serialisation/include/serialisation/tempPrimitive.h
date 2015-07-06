@@ -26,8 +26,6 @@
 
 #include "serialisation/interface/ITempData.h"
 
-#include "serialisation/types.h"
-
 template< typename T >
 class TempPrimitive
     : public ITempData

@@ -24,20 +24,10 @@
 #ifndef __SERIALISATION_BINARYSERMESSAGE_H__
 #define __SERIALISATION_BINARYSERMESSAGE_H__
 
-#include "interface/abstractTempArray.h"
-#include "interface/ISerialisable.h"
-#include "interface/IMessage.h"
+#include "serialisation/arrayInfo.h"
+#include "serialisation/util.h"
 
-#include "bufferedStreamWriter.h"
-#include "tempObject.h"
-#include "arrayInfo.h"
-#include "types.h"
-#include "util.h"
-
-#include <assert.h>
-#include <iostream>
 #include <fstream>
-#include <stack>
 
 template< typename TStreamWriter >
 class BinarySerMessage

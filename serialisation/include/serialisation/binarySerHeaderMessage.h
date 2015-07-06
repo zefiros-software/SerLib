@@ -24,15 +24,11 @@
 #ifndef __SERIALISATION_BINARYSERHEADERMESSAGE_H__
 #define __SERIALISATION_BINARYSERHEADERMESSAGE_H__
 
-#include "interface/abstractTempArray.h"
+#include "serialisation/interface/abstractTempArray.h"
 
-#include "bufferedStreamWriter.h"
-#include "arrayInfo.h"
-#include "types.h"
-#include "util.h"
-
-#include <assert.h>
-#include <fstream>
+#include "serialisation/bufferedStreamWriter.h"
+#include "serialisation/arrayInfo.h"
+#include "serialisation/util.h"
 
 class BinarySerMessage;
 

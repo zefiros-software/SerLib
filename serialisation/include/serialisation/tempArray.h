@@ -24,7 +24,7 @@
 #ifndef __SERIALISATION_TEMPARRAY_H__
 #define __SERIALISATION_TEMPARRAY_H__
 
-#include "interface/abstractTempArray.h"
+#include "serialisation/interface/abstractTempArray.h"
 
 template< typename T >
 class TempArray

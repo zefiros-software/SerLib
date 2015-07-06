@@ -24,8 +24,7 @@
 #ifndef __SERIALISATION_STREAMWRITER_H__
 #define __SERIALISATION_STREAMWRITER_H__
 
-#include "defines.h"
-#include "types.h"
+#include "serialisation/types.h"
 
 #include <assert.h>
 #include <fstream>

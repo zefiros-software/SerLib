@@ -24,12 +24,9 @@
 #ifndef __SERIALISATION_BINARYSERVALUEMESSAGE_H__
 #define __SERIALISATION_BINARYSERVALUEMESSAGE_H__
 
-#include "bufferedStreamWriter.h"
-#include "arrayInfo.h"
-#include "types.h"
-#include "util.h"
-
-#include <fstream>
+#include "serialisation/bufferedStreamWriter.h"
+#include "serialisation/arrayInfo.h"
+#include "serialisation/util.h"
 
 class BinarySerValueMessage
 {
