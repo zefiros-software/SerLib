@@ -27,6 +27,8 @@
 #include "serialisation/streamReader.h"
 #include "serialisation/defines.h"
 
+#include <cstring>
+
 class BufferedStreamReader
 {
 public:

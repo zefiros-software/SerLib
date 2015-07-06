@@ -27,6 +27,8 @@
 #include "serialisation/streamWriter.h"
 #include "serialisation/defines.h"
 
+#include <cstring>
+
 class BufferedStreamWriter
 {
 public:

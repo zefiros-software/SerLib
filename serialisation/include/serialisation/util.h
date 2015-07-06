@@ -26,6 +26,7 @@
 
 #include "serialisation/types.h"
 
+#include <stdint.h>
 #include <math.h>
 
 namespace Util
