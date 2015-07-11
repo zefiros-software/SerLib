@@ -29,10 +29,8 @@
 #include "serialisation/tempObject.h"
 #include "serialisation/tempArray.h"
 #include "serialisation/arrayInfo.h"
-#include "serialisation/types.h"
 #include "serialisation/util.h"
 
-#include <cstring>
 #include <stack>
 
 template< typename TStreamReader >
