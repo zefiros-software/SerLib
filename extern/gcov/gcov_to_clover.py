@@ -458,7 +458,10 @@ class gcov_to_clover():
         if not isinstance(file_paths, list):
             file_paths = [file_paths]
         for file_path in file_paths:
-            self.parse_file(file_path, excludes)
+            try:
+                self.parse_file(file_path, excludes)
+            except:
+                print( "Skipping file {0}".format(file_path) )
 
     ##
     # @~english
