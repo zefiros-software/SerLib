@@ -343,7 +343,6 @@ class gcov_to_clover():
             for l in f.readlines():
                 # Get the line number
                 line = re.findall(r':(.*?):',l)[0].strip()
-                print(line)
                 line_number = int(line)
                 if line_number > 0:
                     # Anything with a valid line number is a line of code
