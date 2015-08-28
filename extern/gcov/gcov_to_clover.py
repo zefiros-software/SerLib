@@ -341,7 +341,9 @@ class gcov_to_clover():
         with open(file_path, 'r') as f:
             for l in f.readlines():
                 # Get the line number
-                line_number = int(l[10:15].strip())
+                line = l[10:15].strip()
+                print(line)
+                line_number = int(line)
                 if line_number > 0:
                     # Anything with a valid line number is a line of code
                     file_metrics_attr_dict['loc'] += 1
