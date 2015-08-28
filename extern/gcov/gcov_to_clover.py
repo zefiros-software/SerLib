@@ -43,6 +43,7 @@ from xml.dom import NotFoundErr
 import xml.dom.minidom as xmldom
 import re
 import glob, os
+import traceback
 
 ##
 # @~english
@@ -460,8 +461,8 @@ class gcov_to_clover():
         for file_path in file_paths:
             try:
                 self.parse_file(file_path, excludes)
-            except Exception as e:
-                print( "Skipping file {0} - {1}".format(file_path, e ))
+            except:
+                print( "Skipping file {0} - {1}".format(file_path, traceback.format_exc() ))
 
     ##
     # @~english
