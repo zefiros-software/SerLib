@@ -501,6 +501,8 @@ if __name__ == '__main__':
         else:
             file_paths = args.file_paths
 
+        print(file_paths)
+
         gtc.process(file_paths, args.output, args.exclude)
 
     main()
