@@ -42,6 +42,7 @@ import time
 from xml.dom import NotFoundErr
 import xml.dom.minidom as xmldom
 import re
+import glob, os
 
 ##
 # @~english
@@ -493,7 +494,14 @@ if __name__ == '__main__':
             type=str, nargs='+', help='file paths to gcov output files (.gcov)')
         args = parser.parse_args()
         gtc = gcov_to_clover()
-        gtc.process(args.file_paths, args.output, args.exclude)
+
+
+        if not isinstance(args.file_paths, list):
+            file_paths = glob.glob(args.file_paths)
+        else:
+            file_paths = args.file_paths
+
+        gtc.process(file_paths, args.output, args.exclude)
 
     main()
 
