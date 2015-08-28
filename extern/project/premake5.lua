@@ -1,20 +1,11 @@
 local root      = "../../"
-local getldflags = premake.tools.gcc.getldflags;
-function premake.tools.gcc.getldflags(cfg)
-    local ldflags = { pthread = "-pthread" }
-    local r = getldflags(cfg);
-    local r2 = table.translate(cfg.flags, ldflags);
-    for _,v in ipairs(r2) do table.insert(r, v) end
-    return r;
-end
-table.insert(premake.fields.flags.allowed, "pthread");
 
 solution "serialisation"
 
     location( root .. "serialisation/" )
     objdir( root .. "bin/obj/" )
     
-    configurations { "Debug", "Release" }
+    configurations { "Debug", "Release", "Coverage" }
 
     platforms { "x64", "x32" }
 
@@ -43,6 +34,12 @@ solution "serialisation"
     configuration "Release"     
         flags "LinkTimeOptimization"
         optimize "Speed"
+        
+    configuration "Coverage"
+        targetsuffix "cd"
+        flags "Symbols"
+        links "gcov"
+        buildoptions "-coverage"
                 
     configuration {}
             
@@ -65,10 +62,10 @@ solution "serialisation"
             root .. "extern/gtest/src/gtest-all.cc",
             root .. "test/**.h",
             root .. "test/*.cpp"
-            }
-            
-        configuration "gmake"
-            flags "pthread"
+            }            
+			
+		configuration "gmake"
+			links "pthread"
             
         configuration { "Debug", "x32" }
             defines "PREFIX=X32D_"
