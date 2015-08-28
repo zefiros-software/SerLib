@@ -44,6 +44,7 @@ import xml.dom.minidom as xmldom
 import re
 import glob, os
 import traceback
+import re
 
 ##
 # @~english
@@ -341,7 +342,7 @@ class gcov_to_clover():
         with open(file_path, 'r') as f:
             for l in f.readlines():
                 # Get the line number
-                line = l[10:15].strip()
+                line = re.findall(r':(.*?):',l)[0].strip()
                 print(line)
                 line_number = int(line)
                 if line_number > 0:
