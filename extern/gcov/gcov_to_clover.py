@@ -461,7 +461,7 @@ class gcov_to_clover():
             try:
                 self.parse_file(file_path, excludes)
             except:
-                print( "Skipping file {0}".format(file_path) )
+                print( "Skipping file {0} - {1}".format(file_path, sys.exc_info()[0] ))
 
     ##
     # @~english
