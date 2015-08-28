@@ -335,6 +335,7 @@ class gcov_to_clover():
             'coveredconditionals': 0
         }
 
+        print( "Processing file {0}".format(file_path) )
         # Parse the file
         with open(file_path, 'r') as f:
             for l in f.readlines():
@@ -500,8 +501,6 @@ if __name__ == '__main__':
             file_paths = glob.glob(args.file_paths)
         else:
             file_paths = args.file_paths
-
-        print(file_paths)
 
         gtc.process(file_paths, args.output, args.exclude)
 
