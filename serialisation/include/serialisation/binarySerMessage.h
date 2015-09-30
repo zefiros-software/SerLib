@@ -68,7 +68,8 @@ public:
 
     inline void FinishObject()
     {
-        WriteHeader( static_cast<  uint8_t >( 0 ), Internal::Type::Terminator );
+        const uint8_t terminator = ( uint8_t )Internal::Type::Terminator & 0x07;
+        WritePrimitive( terminator );
     }
 
     inline bool InitObject( uint8_t index )
