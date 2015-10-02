@@ -77,7 +77,7 @@ public:
         Close();
     }
 
-    inline void WriteBytes( const char *const firstByte, size_t byteCount )
+    SERIALISATION_FORCEINLINE void WriteBytes( const char *const firstByte, size_t byteCount )
     {
         uint32_t diff = SERIALISATION_SERIALISERS_BUFFERSIZE - mWriteIndex;
 
@@ -101,12 +101,12 @@ public:
     }
 
     template< typename TPrimitive >
-    void WritePrimitive( const TPrimitive &value )
+    SERIALISATION_FORCEINLINE void WritePrimitive( const TPrimitive &value )
     {
         WriteBytes( reinterpret_cast< const char *const >( &value ), sizeof( TPrimitive ) );
     }
 
-    inline void WriteBlock( const char *const firstByte, size_t byteCount )
+    SERIALISATION_FORCEINLINE void WriteBlock( const char *const firstByte, size_t byteCount )
     {
         uint32_t diff = SERIALISATION_SERIALISERS_BUFFERSIZE - mWriteIndex;
 
@@ -124,7 +124,7 @@ public:
     }
 
     template< typename TPrimitive >
-    void WritePrimitiveBlock( const TPrimitive *first, size_t count )
+    SERIALISATION_FORCEINLINE void WritePrimitiveBlock( const TPrimitive *first, size_t count )
     {
         const size_t maxBlockSize = std::numeric_limits< size_t >::max() / sizeof( TPrimitive );
 
@@ -138,7 +138,7 @@ public:
         }
     }
 
-    void WriteSize( size_t size )
+    SERIALISATION_FORCEINLINE void WriteSize( size_t size )
     {
         uint8_t bufferIndex;
 
