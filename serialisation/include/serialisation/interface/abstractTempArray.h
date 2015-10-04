@@ -31,6 +31,8 @@ class AbstractTempArray
 {
 public:
 
+    virtual ~AbstractTempArray() {}
+
     virtual Internal::Type::Type GetSubType() const = 0;
 
     virtual size_t GetRemainingCount() const = 0;
