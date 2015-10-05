@@ -179,7 +179,7 @@ public:
 
     inline void StoreContiguous( float *begin, size_t size )
     {
-        for ( size_t i = 0; i < size; i += 128 )
+        for ( size_t i = 0; i < size; i += 128, begin += 128 )
         {
             size_t blockSize = static_cast< size_t >( size - i );
             blockSize = blockSize > 128 ? 128 : blockSize;
@@ -195,9 +195,10 @@ public:
 
     inline void StoreContiguous( double *begin, size_t size )
     {
-        for ( size_t i = 0; i < size; i += 128 )
+        for ( size_t i = 0; i < size; i += 128, begin += 128 )
         {
-            size_t blockSize = static_cast< size_t >( size - i );
+            size_t blockSize = static_cast<size_t>( size - i );
+            blockSize = blockSize > 128 ? 128 : blockSize;
 
             for ( size_t k = 0; k < blockSize; ++k )
             {

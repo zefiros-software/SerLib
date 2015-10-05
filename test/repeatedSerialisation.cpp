@@ -442,7 +442,8 @@ namespace TestClasses
 
     };
 
-    TestEasyRepeatedClass( EasyRepeated, randomVals, 343422, 21331, 5 );
+    TestEasyRepeatedClass( EasyRepeated, randomVals5, 343422, 21331, 5 );
+    TestEasyRepeatedClass( EasyRepeated, randomVals1280, 343422, 21331, 1280 );
 
     TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, uint8_t );
     TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, uint16_t );
