@@ -63,7 +63,10 @@ public:
 
     inline void ClearBuffer()
     {
-        mStreamReader.SeekG( static_cast< std::ios::off_type >( mReadIndex - mReadSize ) );
+        std::streamsize gCount = mStreamReader.GCount();
+
+        mStreamReader.SeekG( gCount + mReadIndex - mReadSize );
+
         mReadIndex = 0;
         mReadSize = 0;
     }
