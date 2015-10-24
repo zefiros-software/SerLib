@@ -37,7 +37,7 @@ class Message
 public:
 
     template< typename TSerialisable >
-    friend void MessageHelper::Store( Message &message, TSerialisable &serialisable );
+    friend void MessageHelper::Store( Message &message, TSerialisable &serialisable, bool clearBuffers );
 
     enum Flags
     {
@@ -491,8 +491,6 @@ private:
         MessageHelper::SERIALISATION_CUSTOM_INTERFACE( serialisable, *this );
 
         mInternalMessage->FinishObject();
-
-        ClearBuffers();
     }
 
     template< typename TArgument >
@@ -690,9 +688,14 @@ private:
 };
 
 template< typename TSerialisable >
-void MessageHelper::Store( Message &message, TSerialisable &serialisable )
+void MessageHelper::Store( Message &message, TSerialisable &serialisable, bool clearBuffers /*= true*/ )
 {
     message.Store( serialisable );
+
+    if ( clearBuffers )
+    {
+        message.ClearBuffers();
+    }
 }
 
 #endif
