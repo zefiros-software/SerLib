@@ -98,9 +98,10 @@ The following types are considered primitives:
 
 ### Objects
 There are serveral ways to store objects:
-* Using templates;
-* Using interfaces;
-* Using template specialisation;
+
+ - Using templates;
+ - Using interfaces;
+ - Using template specialisation;
 
 The following are all equivalent:
 
