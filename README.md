@@ -28,7 +28,7 @@ is removed, or added, this induces no problems. Note that each index in the clas
 
 #### Example
 Say we start with:
-```
+
 	class Foo
 	{
 	public:
@@ -43,11 +43,9 @@ Say we start with:
 		uint32_t mVar1, mVar2;
 		double mVar3;
 	};
-```
 
 But then we decide `mVar2` is not needed, and we need an extra `double` we can add it as such:
 
-```
 	class Foo
 	{
 	public:
@@ -64,7 +62,7 @@ But then we decide `mVar2` is not needed, and we need an extra `double` we can a
 		uint32_t mVar1;
 		double mVar3, mVar4;
 	};
-```
+
 A good practice would be to uncomment deleted Stores, so the index does not get reused on accident!
 
 ### Primitives
