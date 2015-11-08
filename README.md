@@ -76,8 +76,6 @@ The following types are considered primitives:
  - double
 
 #### Example
-
-	#include "serialisation/serialisation.h"
 	
 	class Foo
 	{
@@ -167,86 +165,81 @@ The following are all equivalent:
 
 #### Example
 Storing an object from another object:
-```
-#include "serialisation/serialisation.h"
-
-class Vec3
-{
-public:
-	
-	void OnStore( Message &message )
+		
+	class Vec3
 	{
-		message.Store(mX, 0);
-		message.Store(mY, 1);
-		message.Store(mZ, 2);
+	public:
+		
+		void OnStore( Message &message )
+		{
+			message.Store(mX, 0);
+			message.Store(mY, 1);
+			message.Store(mZ, 2);
+		}
+		
+	private:
+		
+		double mX, mY, mZ;
 	}
 	
-private:
-	
-	double mX, mY, mZ;
-}
-
-class Foo
-{
-public:
-
-	void OnStore( Message &message )
+	class Foo
 	{
-		message.Store(mVar1, 0);
-		message.Store(mVar2, 1);
-	}
+	public:
 	
-private:
-	Vec3 mVar1, mVar2;
-};
-```
+		void OnStore( Message &message )
+		{
+			message.Store(mVar1, 0);
+			message.Store(mVar2, 1);
+		}
+		
+	private:
+		Vec3 mVar1, mVar2;
+	};
+
 
 ### Containers
 Containers use the `StoreContainer` interface, and can store both primitives and objects. Currently the following containers are supported:
-* std::vector<>;
-* std::array<> (c++11 only);
-* c-arrays;
-* Any std-iterator compatible container format;
+
+ - std::vector<>;
+ - std::array<> (c++11 only);
+ - c-arrays;
+ - Any std-iterator compatible container format;
 
 Currently not yet supported:
-* Associative containers; (st::set<>, std::map<>)
-* Unordered associative containers;
 
-```
-#include "serialisation/serialisation.h"
+ - Associative containers; (st::set<>, std::map<>)
+ - Unordered associative containers;
 
-#include <vector>
-
-class Vec3
-{
-public:
-	
-	void OnStore( Message &message )
+	class Vec3
 	{
-		message.Store(mX, 0);
-		message.Store(mY, 1);
-		message.Store(mZ, 2);
+	public:
+		
+		void OnStore( Message &message )
+		{
+			message.Store(mX, 0);
+			message.Store(mY, 1);
+			message.Store(mZ, 2);
+		}
+		
+	private:
+		
+		double mX, mY, mZ;
 	}
 	
-private:
-	
-	double mX, mY, mZ;
-}
-
-class Foo
-{
-public:
-
-	void OnStore( Message &message )
+	class Foo
 	{
-		message.StoreContainer(mVar1, 0);
-		message.StoreContainer(mVar2, 1);
-	}
+	public:
 	
-private:
-	std::vector< Vec3 > mVar1, mVar2;
-};
-```
+		void OnStore( Message &message )
+		{
+			message.StoreContainer(mVar1, 0);
+			message.StoreContainer(mVar2, 1);
+		}
+		
+	private:
+		std::vector< Vec3 > mVar1, mVar2;
+	};
+
 
 ### Inherritance
 As you may have noticed we haven't touched the topic of inherritance yet. To be able to effectively use
@@ -254,117 +247,110 @@ inherritance, without having to spend your precious variable indices, we can use
 use their own index system.
 
 #### Example
-```
-#include "serialisation/serialisation.h"
 
-#include <vector>
-
-class Vec3
-{
-public:
-	
-	void OnStore( Message &message )
+	class Vec3
 	{
-		message.Store(mX, 0);
-		message.Store(mY, 1);
-		message.Store(mZ, 2);
+	public:
+		
+		void OnStore( Message &message )
+		{
+			message.Store(mX, 0);
+			message.Store(mY, 1);
+			message.Store(mZ, 2);
+		}
+		
+	private:
+		
+		double mX, mY, mZ;
 	}
 	
-private:
-	
-	double mX, mY, mZ;
-}
-
-class Vec4
-	: public Vec3
-{
-public:
-	
-	void OnStore( Message &message )
+	class Vec4
+		: public Vec3
 	{
-		message.StoreParent<Vec3>(*this, 0);
-		message.Store(mW, 0);
+	public:
+		
+		void OnStore( Message &message )
+		{
+			message.StoreParent<Vec3>(*this, 0);
+			message.Store(mW, 0);
+		}
+		
+	private:
+		
+		double mW;
 	}
 	
-private:
-	
-	double mW;
-}
-
-class Foo
-{
-public:
-
-	void OnStore( Message &message )
+	class Foo
 	{
-		message.StoreContainer(mVar1, 0);
-		message.StoreContainer(mVar2, 1);
-	}
+	public:
 	
-private:
-	std::vector< Vec4 > mVar1, mVar2;
-};
-```
+		void OnStore( Message &message )
+		{
+			message.StoreContainer(mVar1, 0);
+			message.StoreContainer(mVar2, 1);
+		}
+		
+	private:
+		std::vector< Vec4 > mVar1, mVar2;
+	};
 
 ### Messages
 Our message both serialises, and deserialises so we need to contruct the message object correctly.
-```
-class Vec3
-{
-public:
 	
-	void OnStore( Message &message )
+	class Vec3
 	{
-		message.Store(mX, 0);
-		message.Store(mY, 1);
-		message.Store(mZ, 2);
+	public:
+		
+		void OnStore( Message &message )
+		{
+			message.Store(mX, 0);
+			message.Store(mY, 1);
+			message.Store(mZ, 2);
+		}
+		
+	private:
+		
+		double mX, mY, mZ;
 	}
 	
-private:
-	
-	double mX, mY, mZ;
-}
+	void main()
+	{
+		Vec3 vec;
+		std::stringstream ss;
+		
+		Message serMessage( ss, Format::Binary, Mode::Serialise );
+		
+		MessageHelper::Store( serMessage, vec );
+		
+		Message deserMessage( ss, Format::Binary, Mode::Deserialise );
+		MessageHelper::Store( deserMessage, vec );
+	}
 
-void main()
-{
-	Vec3 vec;
-	std::stringstream ss;
-	
-	Message serMessage( ss, Format::Binary, Mode::Serialise );
-	
-	MessageHelper::Store( serMessage, vec );
-	
-	Message deserMessage( ss, Format::Binary, Mode::Deserialise );
-	MessageHelper::Store( deserMessage, vec );
-}
-```
 
 ### Flexibility
 
 #### Don't like OnStore?
 If you dislike the name or if it is not in your style, you can change it to your needs.
-```
-#define SERIALISATION_CUSTOM_INTERFACE on_store
-```
+
+	#define SERIALISATION_CUSTOM_INTERFACE on_store
+
 
 After this we changed the usage of the library to:
 
-```
-#include "serialisation/serialisation.h"
-
-class Foo
-{
-public:
-
-	void on_store( Message &message )
-	{
-		message.Store(mVar1, 0);
-	}
+	#include "serialisation/serialisation.h"
 	
-private:
-	uint32_t mVar1;
-};
-```
+	class Foo
+	{
+	public:
+	
+		void on_store( Message &message )
+		{
+			message.Store(mVar1, 0);
+		}
+		
+	private:
+		uint32_t mVar1;
+	};
 
 #### SerLib Limits
 * Each class can use up to 27 indices; So we can store 27 seperate variables max.
