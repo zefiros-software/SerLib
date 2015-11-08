@@ -67,6 +67,7 @@ A good practice would be to uncomment deleted Stores, so the index does not get 
 
 ### Primitives
 The following types are considered primitives:
+
  * (u)int8_t
  * (u)int16_t
  * (u)int32_t
