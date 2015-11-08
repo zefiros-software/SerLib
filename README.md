@@ -103,66 +103,66 @@ There are serveral ways to store objects:
 * Using template specialisation;
 
 The following are all equivalent:
-```
-class Vec3Impl1
-{
-public:
-	
-	void OnStore( Message &message )
+
+	class Vec3Impl1
 	{
-		message.Store(mX, 0);
-		message.Store(mY, 1);
-		message.Store(mZ, 2);
+	public:
+		
+		void OnStore( Message &message )
+		{
+			message.Store(mX, 0);
+			message.Store(mY, 1);
+			message.Store(mZ, 2);
+		}
+		
+	private:
+		
+		double mX, mY, mZ;
 	}
 	
-private:
 	
-	double mX, mY, mZ;
-}
-
-
-class Vec3Impl2
-	: public ISerialisable
-{
-public:
-	
-	void OnStore( Message &message )
+	class Vec3Impl2
+		: public ISerialisable
 	{
-		message.Store(mX, 0);
-		message.Store(mY, 1);
-		message.Store(mZ, 2);
+	public:
+		
+		void OnStore( Message &message )
+		{
+			message.Store(mX, 0);
+			message.Store(mY, 1);
+			message.Store(mZ, 2);
+		}
+		
+	private:
+		
+		double mX, mY, mZ;
 	}
 	
-private:
 	
-	double mX, mY, mZ;
-}
-
-
-class Vec3Impl3
-{
-public:
-	
-	void OnStore( Message &message )
+	class Vec3Impl3
 	{
-		message.Store(mX, 0);
-		message.Store(mY, 1);
-		message.Store(mZ, 2);
+	public:
+		
+		void OnStore( Message &message )
+		{
+			message.Store(mX, 0);
+			message.Store(mY, 1);
+			message.Store(mZ, 2);
+		}
+		
+	private:
+		
+		double mX, mY, mZ;
 	}
 	
-private:
-	
-	double mX, mY, mZ;
-}
+	template<>
+	void MessageHelper::OnStore( Vec3Impl3 &serialisable, Message &message )
+	{
+		message.Store( mX, 0 );
+		message.Store( mY, 1 );
+		message.Store( mZ, 2 );
+	}
 
-template<>
-void MessageHelper::OnStore( Vec3Impl3 &serialisable, Message &message )
-{
-    message.Store( mX, 0 );
-    message.Store( mY, 1 );
-    message.Store( mZ, 2 );
-}
-```
 
 #### Example
 Storing an object from another object:
