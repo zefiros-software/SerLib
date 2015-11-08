@@ -18,10 +18,11 @@ After this you can use the include `#include "serialisation/serialisation.h"` in
 
 ## Usage
 The library interface only uses 4 functions, each with a different purpose:
-* Message::Store([reference], [index]); Stores primitives and objects.
-* Message::StoreParent([reference], [index]); Stores the variables from the given inherrited class.
-* Message::StoreContainer([reference], [index]); Stores container formats.
-* MessageHelper::Store([message], [reference]); Begins a store or load sequence.
+
+ - Message::Store([reference], [index]); Stores primitives and objects.
+ - Message::StoreParent([reference], [index]); Stores the variables from the given inherrited class.
+ - Message::StoreContainer([reference], [index]); Stores container formats.
+ - MessageHelper::Store([message], [reference]); Begins a store or load sequence.
 
 To ensure backward and forward compatibility, each Store should be accompanied with a variable index. So when a variable
 is removed, or added, this induces no problems. Note that each index in the classes should be unique.
