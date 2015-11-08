@@ -24,6 +24,7 @@
 #ifndef __SERIALISATION_STREAMWRITER_H__
 #define __SERIALISATION_STREAMWRITER_H__
 
+#include "serialisation/defines.h"
 #include "serialisation/types.h"
 
 #include <assert.h>
@@ -80,7 +81,7 @@ public:
         Close();
     }
 
-    inline void WriteBytes( const char *const firstByte, size_t byteCount )
+    SERIALISATION_FORCEINLINE void WriteBytes( const char *const firstByte, size_t byteCount )
     {
         mStream->write( firstByte, byteCount );
     }

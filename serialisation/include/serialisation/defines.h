@@ -29,7 +29,7 @@
 #endif
 
 #ifndef SERIALISATION_SERIALISERS_BUFFERSIZE
-#   define SERIALISATION_SERIALISERS_BUFFERSIZE 4096
+#   define SERIALISATION_SERIALISERS_BUFFERSIZE 8192
 #endif
 
 #if __cplusplus > 199711L || ( defined _MSC_VER && _MSC_VER >= 1700 )
@@ -39,5 +39,17 @@
 
 #define SERIALISATION_ASSERT_INDEX_IN_RANGE( index ) assert( index < 28 && "Index should be less than 28 for members" )
 #define SERIALISATION_ASSERT_PARENT_INDEX_IN_RANGE( index ) assert( index < 4 && "Index should be less than 4 for StoreParent" );
+
+// From boost
+#if !defined(SERIALISATION_FORCEINLINE)
+#  if defined(_MSC_VER)
+#    define SERIALISATION_FORCEINLINE __forceinline
+#  elif defined(__GNUC__) && __GNUC__ > 3
+// Clang also defines __GNUC__ (as 4)
+#    define SERIALISATION_FORCEINLINE inline __attribute__ ((__always_inline__))
+#  else
+#    define SERIALISATION_FORCEINLINE inline
+#  endif
+#endif
 
 #endif

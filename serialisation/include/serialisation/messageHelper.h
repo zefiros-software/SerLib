@@ -41,7 +41,7 @@ namespace MessageHelper
     }
 
     template< typename TSerialisable >
-    void Store( Message &message, TSerialisable &serialisable );
+    void Store( Message &message, TSerialisable &serialisable, bool clearBuffers = true );
 
     inline void Store( Message &message, ISerialisable &serialisable )
     {

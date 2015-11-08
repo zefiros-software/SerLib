@@ -142,7 +142,7 @@ private:
 
     void SeekG( std::ios::off_type count )
     {
-        mStream->seekg( count, std::ios::cur );
+        mStream->seekg( count, std::ios_base::beg );
     }
 
     std::streamsize GCount()
