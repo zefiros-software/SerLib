@@ -29,40 +29,41 @@ is removed, or added, this induces no problems. Note that each index in the clas
 #### Example
 Say we start with:
 ```
-class Foo
-{
-public:
-
-	void OnStore( Message &message )
+	class Foo
 	{
-		message.Store(mVar1, 1);
-		message.Store(mVar2, 2);
-		message.Store(mVar3, 3);
-	}
-	
-private:
-	uint32_t mVar1, mVar2;
-	double mVar3;
-};
+	public:
+		void OnStore( Message &message )
+		{
+			message.Store(mVar1, 1);
+			message.Store(mVar2, 2);
+			message.Store(mVar3, 3);
+		}
+		
+	private:
+		uint32_t mVar1, mVar2;
+		double mVar3;
+	};
 ```
+
 But then we decide `mVar2` is not needed, and we need an extra `double` we can add it as such:
-```
-class Foo
-{
-public:
 
-	void OnStore( Message &message )
+```
+	class Foo
 	{
-		message.Store(mVar1, 1);
-		//message.Store(mVar2, 2);
-		message.Store(mVar3, 3);
-		message.Store(mVar4, 3);
-	}
+	public:
 	
-private:
-	uint32_t mVar1;
-	double mVar3, mVar4;
-};
+		void OnStore( Message &message )
+		{
+			message.Store(mVar1, 1);
+			//message.Store(mVar2, 2);
+			message.Store(mVar3, 3);
+			message.Store(mVar4, 3);
+		}
+		
+	private:
+		uint32_t mVar1;
+		double mVar3, mVar4;
+	};
 ```
 A good practice would be to uncomment deleted Stores, so the index does not get reused on accident!
 
