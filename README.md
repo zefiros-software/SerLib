@@ -68,33 +68,33 @@ A good practice would be to uncomment deleted Stores, so the index does not get 
 ### Primitives
 The following types are considered primitives:
 
- * (u)int8_t
- * (u)int16_t
- * (u)int32_t
- * (u)int64_t
- * float
- * double
+ - (u)int8_t
+ - (u)int16_t
+ - (u)int32_t
+ - (u)int64_t
+ - float
+ - double
 
 #### Example
-```
-#include "serialisation/serialisation.h"
 
-class Foo
-{
-public:
-
-	void OnStore( Message &message )
-	{
-		message.Store(mVar1, 0);
-		message.Store(mVar2, 1);
-		message.Store(mVar3, 2);
-	}
+	#include "serialisation/serialisation.h"
 	
-private:
-	uint32_t mVar1, mVar2;
-	double mVar3;
-};
-```
+	class Foo
+	{
+	public:
+	
+		void OnStore( Message &message )
+		{
+			message.Store(mVar1, 0);
+			message.Store(mVar2, 1);
+			message.Store(mVar3, 2);
+		}
+		
+	private:
+		uint32_t mVar1, mVar2;
+		double mVar3;
+	};
+
 
 ### Objects
 There are serveral ways to store objects:
