@@ -11,6 +11,7 @@ SerLib is a fast, and easy to use serialisation c++ library. The whole library i
 * Format is backward and forward compatible, using variable indexes.
 * Message usage can be completely streamed, and does not require the full message to start reading.
 * Compact; The binary format is very small, even when no compression is used.
+* Warning free, compiled on the highest warning level.
 
 ## Installation
 The whole library is header only, so for usage in your own code you should clone the repository. And add `serialisation/include/` as include path.
@@ -370,6 +371,7 @@ After this we changed the usage of the library to:
 * Reflection based serialisation; Define the outlay of your classes using a reflection library, which then can be used
   for serialisation.
 * XML and JSON serialisation, based on reflection. No need for adjustments, and also makes conversion between binary and text formats possible.
+* Extensive custom error handling.
 
 
 ## Alternatives
