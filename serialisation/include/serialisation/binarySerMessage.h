@@ -24,7 +24,6 @@
 #ifndef __SERIALISATION_BINARYSERMESSAGE_H__
 #define __SERIALISATION_BINARYSERMESSAGE_H__
 
-#include "serialisation/arrayInfo.h"
 #include "serialisation/util.h"
 
 #include <fstream>
@@ -37,29 +36,21 @@ public:
     BinarySerMessage( const std::string &fileName )
         : mStreamWriter( fileName )
     {
-        mArrayInfo.type = Internal::Type::Terminator;
-        mArrayInfo.remainingCount = 0;
     }
 
     BinarySerMessage( std::ofstream &stream )
         : mStreamWriter( stream )
     {
-        mArrayInfo.type = Internal::Type::Terminator;
-        mArrayInfo.remainingCount = 0;
     }
 
     BinarySerMessage( std::fstream &stream )
         : mStreamWriter( stream )
     {
-        mArrayInfo.type = Internal::Type::Terminator;
-        mArrayInfo.remainingCount = 0;
     }
 
     BinarySerMessage( std::ostream &stream )
         : mStreamWriter( stream )
     {
-        mArrayInfo.type = Internal::Type::Terminator;
-        mArrayInfo.remainingCount = 0;
     }
 
     SERIALISATION_FORCEINLINE void InitObject()
@@ -140,9 +131,6 @@ public:
     {
         const Internal::Type::Type iType = static_cast< Internal::Type::Type >( type );
 
-        mArrayInfo.type = iType;
-        mArrayInfo.remainingCount = size;
-
         WriteHeader( index, Internal::Type::Array );
         WriteHeader( flags, iType );
 
@@ -215,8 +203,6 @@ private:
 
     uint64_t mU64Buffer[ 128 ];
     uint32_t mU32Buffer[ 128 ];
-
-    ArrayInfo mArrayInfo;
 
     BinarySerMessage( BinarySerMessage & );
 
