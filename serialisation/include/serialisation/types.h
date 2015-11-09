@@ -98,7 +98,8 @@ namespace Internal
                 return true;
             }
 
-            if ( ( IsSignedInt( type ) && type - SInt8 == type2 - UInt8 ) || ( IsSignedInt( type2 ) && type2 - SInt8 == type - UInt8 ) )
+            if ( ( IsSignedInt( type ) && type - SInt8 == type2 - UInt8 ) || ( IsSignedInt( type2 ) &&
+                                                                               type2 - SInt8 == type - UInt8 ) )
             {
                 return true;
             }
@@ -110,6 +111,11 @@ namespace Internal
             }
 
             if ( ( type == Double && type2 == UInt64 ) || ( type2 == Double && type == UInt64 ) )
+            {
+                return true;
+            }
+
+            if ( IsInteger( type ) && IsInteger( type2 ) )
             {
                 return true;
             }
