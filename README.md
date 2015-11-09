@@ -212,11 +212,9 @@ Currently not yet supported:
  - Associative containers; (st::set<>, std::map<>)
  - Unordered associative containers;
 
-
 	class Vec3
 	{
 	public:
-		
 		void OnStore( Message &message )
 		{
 			message.Store(mX, 0);
@@ -232,7 +230,6 @@ Currently not yet supported:
 	class Foo
 	{
 	public:
-	
 		void OnStore( Message &message )
 		{
 			message.StoreContainer(mVar1, 0);
