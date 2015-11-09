@@ -392,8 +392,8 @@ our requirements.
 * Boost takes over your classes to work; SerLib can use already existing classes.
 
 ### SerLib vs Protocol Buffers
-* Protocol Buffers use a precompiler. SerLib is dynamic and header only.
-* Protocol Buffers have issues on non unix systems. SerLib is simple c++2003, and is cross-platform.
+* Protocol Buffers uses a precompiler. SerLib is dynamic and header only.
+* Protocol Buffers has issues on non unix systems. SerLib is simple c++2003, and is cross-platform.
 
 ## Bugs
 When a bug is found please insert it in the issue tracker, so we can resolve it as quickly as we can.
