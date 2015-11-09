@@ -2,15 +2,15 @@
 SerLib is a fast, and easy to use serialisation c++ library. The whole library is designed with performance, and ease of use in mind.
 
 ## Features
-* Fast; We run our benchmarks on every build to ensure the maximum performance.
-* Reliable; We have an extensive testing suite, making sure we do not break forward and backward compatiblity.
-* Easy to use; The library is completely header only, and does not require extra compile steps nor does it take over
+* Fast: We run our benchmarks on every build to ensure the maximum performance.
+* Reliable: We have an extensive testing suite, making sure we do not break forward and backward compatiblity.
+* Easy to use: The library is completely header only, and does not require extra compile steps nor does it take over
   your classes before you can use it.
-* Bindable; The whole library is designed to be used from a c-interface, so when needed, it can be called from other languages.
-* Cross platform; Designed to only use c++2003, with no external dependecies.
+* Bindable: The whole library is designed to be used from a c-interface, so when needed, it can be called from other languages.
+* Cross platform: Designed to only use c++2003, with no external dependecies.
 * Format is backward and forward compatible, using variable indexes.
 * Message usage can be completely streamed, and does not require the full message to start reading.
-* Compact; The binary format is very small, even when no compression is used.
+* Compact: The binary format is very small, even when no compression is used.
 
 ## Installation
 The whole library is header only, so for usage in your own code you should clone the repository. And add `serialisation/include/` as include path.
@@ -98,9 +98,9 @@ The following types are considered primitives:
 ### Objects
 There are serveral ways to store objects:
 
- - Using templates;
- - Using interfaces;
- - Using template specialisation;
+ - Using templates
+ - Using interfaces
+ - Using template specialisation
 
 The following are all equivalent:
 
@@ -201,15 +201,15 @@ Storing an object from another object:
 ### Containers
 Containers use the `StoreContainer` interface, and can store both primitives and objects. Currently the following containers are supported:
 
- - std::vector<>;
- - std::array<> (c++11 only);
- - c-arrays;
- - Any std-iterator compatible container format;
+ - std::vector<>
+ - std::array<> (c++11 only)
+ - c-arrays
+ - Any std-iterator compatible container format
 
 Currently not yet supported:
 
  - Associative containers; (st::set<>, std::map<>)
- - Unordered associative containers;
+ - Unordered associative containers
 
 
 	class Vec3
@@ -355,8 +355,8 @@ After this we changed the usage of the library to:
 	};
 
 #### SerLib Limits
-* Each class can use up to 27 indices; So we can store 27 seperate variables max.
-* Each class can have up to 3 parents; So we can only use 3 indices for parents.
+* Each class can use up to 27 indices, so we can store 27 seperate variables max.
+* Each class can have up to 3 parents, we can only use 3 indices for parents.
 
 ## Planned Features
 * Compression, based on array type and with delta encoding.
@@ -366,8 +366,8 @@ After this we changed the usage of the library to:
   but doing so will improve the size and serialisation speed. All types will be stored and grouped by their own types.
 * Message migrations, migriting your old message format to your new message formats with nice abstraction.
 * Big endian platform support. (Only the runtime is not yet compatible)
-* Pointer Patching; Creating objects based off reflection, and make sure references are kept between sessions.
-* Reflection based serialisation; Define the outlay of your classes using a reflection library, which then can be used
+* Pointer Patching: Creating objects based off reflection, and make sure references are kept between sessions.
+* Reflection based serialisation: Define the outlay of your classes using a reflection library, which then can be used
   for serialisation.
 * XML and JSON serialisation, based on reflection. No need for adjustments, and also makes conversion between binary and text formats possible.
 
