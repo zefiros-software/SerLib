@@ -212,6 +212,8 @@ Currently not yet supported:
  - Associative containers; (st::set<>, std::map<>)
  - Unordered associative containers;
 
+
+
 	class Vec3
 	{
 	public:
