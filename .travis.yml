@@ -11,7 +11,7 @@ install:
 - sudo apt-get install build-essential
 
 script:
-- sh ./generateProjectGmake.sh
+- sudo sh ./generateProjectGmake.sh
 - cd serialisation
 - make config=debug_x32
 - make config=debug_x64
