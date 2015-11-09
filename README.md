@@ -368,7 +368,7 @@ private:
 	* FFPFOR for floating point compression.
 * Static container serialisation. This feature will disable backward and forward compatibility on static containers,
   but doing so will improve the size and serialisation speed. All types will be stored and grouped by their own types.
-* Message migrations, migriting your old message format to your new message formats with nice abstraction.
+* Message migrations, migrating your old message format to your new message formats with nice abstraction.
 * Big endian platform support. (Only the runtime is not yet compatible)
 * Pointer Patching; Creating objects based off reflection, and make sure references are kept between sessions.
 * Reflection based serialisation; Define the outlay of your classes using a reflection library, which then can be used
