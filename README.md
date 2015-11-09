@@ -37,9 +37,9 @@ Say we start with:
 	public:
 		void OnStore( Message &message )
 		{
-			message.Store(mVar1, 1);
-			message.Store(mVar2, 2);
-			message.Store(mVar3, 3);
+			message.Store(mVar1, 0);
+			message.Store(mVar2, 1);
+			message.Store(mVar3, 2);
 		}
 		
 	private:
@@ -50,15 +50,16 @@ Say we start with:
 
 But then we decide `mVar2` is not needed, and we need an extra `double` we can add it as such:
 
+```C++
 	class Foo
 	{
 	public:
 	
 		void OnStore( Message &message )
 		{
-			message.Store(mVar1, 1);
-			//message.Store(mVar2, 2);
-			message.Store(mVar3, 3);
+			message.Store(mVar1, 0);
+			//message.Store(mVar2, 1);
+			message.Store(mVar3, 2);
 			message.Store(mVar4, 3);
 		}
 		
@@ -66,6 +67,7 @@ But then we decide `mVar2` is not needed, and we need an extra `double` we can a
 		uint32_t mVar1;
 		double mVar3, mVar4;
 	};
+```
 
 A good practice would be to uncomment deleted Stores, so the index does not get reused on accident!
 
