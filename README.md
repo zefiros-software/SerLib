@@ -32,41 +32,41 @@ is removed, or added, this induces no problems. Note that each index in the clas
 Say we start with:
 
 ```C++
-	class Foo
+class Foo
+{
+public:
+	void OnStore( Message &message )
 	{
-	public:
-		void OnStore( Message &message )
-		{
-			message.Store(mVar1, 0);
-			message.Store(mVar2, 1);
-			message.Store(mVar3, 2);
-		}
-		
-	private:
-		uint32_t mVar1, mVar2;
-		double mVar3;
-	};
+		message.Store(mVar1, 0);
+		message.Store(mVar2, 1);
+		message.Store(mVar3, 2);
+	}
+	
+private:
+	uint32_t mVar1, mVar2;
+	double mVar3;
+};
 ```
 
 But then we decide `mVar2` is not needed, and we need an extra `double` we can add it as such:
 
 ```C++
-	class Foo
+class Foo
+{
+public:
+
+	void OnStore( Message &message )
 	{
-	public:
+		message.Store(mVar1, 0);
+		//message.Store(mVar2, 1);
+		message.Store(mVar3, 2);
+		message.Store(mVar4, 3);
+	}
 	
-		void OnStore( Message &message )
-		{
-			message.Store(mVar1, 0);
-			//message.Store(mVar2, 1);
-			message.Store(mVar3, 2);
-			message.Store(mVar4, 3);
-		}
-		
-	private:
-		uint32_t mVar1;
-		double mVar3, mVar4;
-	};
+private:
+	uint32_t mVar1;
+	double mVar3, mVar4;
+};
 ```
 
 A good practice would be to uncomment deleted Stores, so the index does not get reused on accident!
@@ -85,21 +85,21 @@ The following types are considered primitives:
 #### Example
 
 ```C++	
-	class Foo
+class Foo
+{
+public:
+
+	void OnStore( Message &message )
 	{
-	public:
+		message.Store(mVar1, 0);
+		message.Store(mVar2, 1);
+		message.Store(mVar3, 2);
+	}
 	
-		void OnStore( Message &message )
-		{
-			message.Store(mVar1, 0);
-			message.Store(mVar2, 1);
-			message.Store(mVar3, 2);
-		}
-		
-	private:
-		uint32_t mVar1, mVar2;
-		double mVar3;
-	};
+private:
+	uint32_t mVar1, mVar2;
+	double mVar3;
+};
 ```
 
 ### Objects
@@ -112,99 +112,88 @@ There are serveral ways to store objects:
 The following are all equivalent:
 
 ```C++
-	class Vec3Impl1
+class Vec3Impl1
+{
+public:
+	
+	void OnStore( Message &message )
 	{
-	public:
-		
-		void OnStore( Message &message )
-		{
-			message.Store(mX, 0);
-			message.Store(mY, 1);
-			message.Store(mZ, 2);
-		}
-		
-	private:
-		
-		double mX, mY, mZ;
+		message.Store(mX, 0);
+		message.Store(mY, 1);
+		message.Store(mZ, 2);
 	}
 	
+private:
 	
-	class Vec3Impl2
-		: public ISerialisable
+	double mX, mY, mZ;
+}
+
+
+class Vec3Impl2
+	: public ISerialisable
+{
+public:
+	
+	void OnStore( Message &message )
 	{
-	public:
-		
-		void OnStore( Message &message )
-		{
-			message.Store(mX, 0);
-			message.Store(mY, 1);
-			message.Store(mZ, 2);
-		}
-		
-	private:
-		
-		double mX, mY, mZ;
+		message.Store(mX, 0);
+		message.Store(mY, 1);
+		message.Store(mZ, 2);
 	}
 	
+private:
 	
-	class Vec3Impl3
-	{
-	public:
-		
-		void OnStore( Message &message )
-		{
-			message.Store(mX, 0);
-			message.Store(mY, 1);
-			message.Store(mZ, 2);
-		}
-		
-	private:
-		
-		double mX, mY, mZ;
-	}
-	
-	template<>
-	void MessageHelper::OnStore( Vec3Impl3 &serialisable, Message &message )
-	{
-		message.Store( mX, 0 );
-		message.Store( mY, 1 );
-		message.Store( mZ, 2 );
-	}
+	double mX, mY, mZ;
+}
+
+
+struct Vec3Impl3
+{
+	double mX, mY, mZ;
+}
+
+template<>
+void MessageHelper::OnStore( Vec3Impl3 &serialisable, Message &message )
+{
+	message.Store( mX, 0 );
+	message.Store( mY, 1 );
+	message.Store( mZ, 2 );
+}
 ```
 
 #### Example
 Storing an object from another object:
 
 ```C++		
-	class Vec3
+class Vec3
+{
+public:
+	
+	void OnStore( Message &message )
 	{
-	public:
-		
-		void OnStore( Message &message )
-		{
-			message.Store(mX, 0);
-			message.Store(mY, 1);
-			message.Store(mZ, 2);
-		}
-		
-	private:
-		
-		double mX, mY, mZ;
+		message.Store(mX, 0);
+		message.Store(mY, 1);
+		message.Store(mZ, 2);
 	}
 	
-	class Foo
-	{
-	public:
+private:
 	
-		void OnStore( Message &message )
-		{
-			message.Store(mVar1, 0);
-			message.Store(mVar2, 1);
-		}
-		
-	private:
-		Vec3 mVar1, mVar2;
-	};
+	double mX, mY, mZ;
+}
+
+class Foo
+{
+public:
+
+	void OnStore( Message &message )
+	{
+		message.Store(mVar1, 0);
+		message.Store(mVar2, 1);
+	}
+	
+private:
+	Vec3 mVar1, mVar2;
+};
 ```
 
 ### Containers
@@ -222,33 +211,33 @@ Currently not yet supported:
 
 
 ```C++
-	class Vec3
+class Vec3
+{
+public:
+	void OnStore( Message &message )
 	{
-	public:
-		void OnStore( Message &message )
-		{
-			message.Store(mX, 0);
-			message.Store(mY, 1);
-			message.Store(mZ, 2);
-		}
-		
-	private:
-		
-		double mX, mY, mZ;
+		message.Store(mX, 0);
+		message.Store(mY, 1);
+		message.Store(mZ, 2);
 	}
 	
-	class Foo
+private:
+	
+	double mX, mY, mZ;
+}
+
+class Foo
+{
+public:
+	void OnStore( Message &message )
 	{
-	public:
-		void OnStore( Message &message )
-		{
-			message.StoreContainer(mVar1, 0);
-			message.StoreContainer(mVar2, 1);
-		}
-		
-	private:
-		std::vector< Vec3 > mVar1, mVar2;
-	};
+		message.StoreContainer(mVar1, 0);
+		message.StoreContainer(mVar2, 1);
+	}
+	
+private:
+	std::vector< Vec3 > mVar1, mVar2;
+};
 ```
 
 ### Inherritance
@@ -259,85 +248,85 @@ use their own index system.
 #### Example
 
 ```C++
-	class Vec3
+class Vec3
+{
+public:
+	
+	void OnStore( Message &message )
 	{
-	public:
-		
-		void OnStore( Message &message )
-		{
-			message.Store(mX, 0);
-			message.Store(mY, 1);
-			message.Store(mZ, 2);
-		}
-		
-	private:
-		
-		double mX, mY, mZ;
+		message.Store(mX, 0);
+		message.Store(mY, 1);
+		message.Store(mZ, 2);
 	}
 	
-	class Vec4
-		: public Vec3
+private:
+	
+	double mX, mY, mZ;
+}
+
+class Vec4
+	: public Vec3
+{
+public:
+	
+	void OnStore( Message &message )
 	{
-	public:
-		
-		void OnStore( Message &message )
-		{
-			message.StoreParent<Vec3>(*this, 0);
-			message.Store(mW, 0);
-		}
-		
-	private:
-		
-		double mW;
+		message.StoreParent<Vec3>(*this, 0);
+		message.Store(mW, 0);
 	}
 	
-	class Foo
-	{
-	public:
+private:
 	
-		void OnStore( Message &message )
-		{
-			message.StoreContainer(mVar1, 0);
-			message.StoreContainer(mVar2, 1);
-		}
-		
-	private:
-		std::vector< Vec4 > mVar1, mVar2;
-	};
+	double mW;
+}
+
+class Foo
+{
+public:
+
+	void OnStore( Message &message )
+	{
+		message.StoreContainer(mVar1, 0);
+		message.StoreContainer(mVar2, 1);
+	}
+	
+private:
+	std::vector< Vec4 > mVar1, mVar2;
+};
 ```
 
 ### Messages
 Our message both serialises, and deserialises so we need to contruct the message object correctly.
 
 ```C++	
-	class Vec3
+class Vec3
+{
+public:
+	
+	void OnStore( Message &message )
 	{
-	public:
-		
-		void OnStore( Message &message )
-		{
-			message.Store(mX, 0);
-			message.Store(mY, 1);
-			message.Store(mZ, 2);
-		}
-		
-	private:
-		
-		double mX, mY, mZ;
+		message.Store(mX, 0);
+		message.Store(mY, 1);
+		message.Store(mZ, 2);
 	}
 	
-	void main()
-	{
-		Vec3 vec;
-		std::stringstream ss;
-		
-		Message serMessage( ss, Format::Binary, Mode::Serialise );
-		
-		MessageHelper::Store( serMessage, vec );
-		
-		Message deserMessage( ss, Format::Binary, Mode::Deserialise );
-		MessageHelper::Store( deserMessage, vec );
-	}
+private:
+	
+	double mX, mY, mZ;
+}
+
+void main()
+{
+	Vec3 vec;
+	std::stringstream ss;
+	
+	Message serMessage( ss, Format::Binary, Mode::Serialise );
+	
+	MessageHelper::Store( serMessage, vec );
+	
+	Message deserMessage( ss, Format::Binary, Mode::Deserialise );
+	MessageHelper::Store( deserMessage, vec );
+}
 ```
 
 ### Flexibility
@@ -346,26 +335,26 @@ Our message both serialises, and deserialises so we need to contruct the message
 If you dislike the name or if it is not in your style, you can change it to your needs.
 
 ```C++
-	#define SERIALISATION_CUSTOM_INTERFACE on_store
+#define SERIALISATION_CUSTOM_INTERFACE on_store
 ```
 
 After this we changed the usage of the library to:
 
 ```C++
-	#include "serialisation/serialisation.h"
-	
-	class Foo
+#include "serialisation/serialisation.h"
+
+class Foo
+{
+public:
+
+	void on_store( Message &message )
 	{
-	public:
+		message.Store(mVar1, 0);
+	}
 	
-		void on_store( Message &message )
-		{
-			message.Store(mVar1, 0);
-		}
-		
-	private:
-		uint32_t mVar1;
-	};
+private:
+	uint32_t mVar1;
+};
 ```
 
 #### SerLib Limits
