@@ -11,7 +11,10 @@ install:
 - sudo apt-get install build-essential
 
 script:
-- sudo sh ./generateProjectGmake.sh
+- cd ./extern/project
+- chmod a+x ./premake5
+- ./premake5 gmake
+- cd ../../
 - cd serialisation
 - make config=debug_x32
 - make config=debug_x64
