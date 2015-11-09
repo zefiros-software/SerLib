@@ -53,6 +53,30 @@
         c1.TestEqual( c2 );                                 \
     }
 
+#define TestInterfacedParent( test, name, seed1, seed2 )    \
+    TEST( P( test ), name ## _stream )                      \
+    {                                                       \
+        InterfacedChild c1( seed1 );                        \
+        InterfacedReorderedChild c2( seed2 );               \
+        SimpleSerialiseDeserialiseStream( c1, c2 );         \
+        c1.TestEqual( c2 );                                 \
+    }                                                       \
+    TEST( P( test ), name ## _file )                        \
+    {                                                       \
+        InterfacedChild c1( seed1 );                        \
+        InterfacedReorderedChild c2( seed2 );               \
+        SimpleSerialiseDeserialiseFile( c1, c2 );           \
+        c1.TestEqual( c2 );                                 \
+    }                                                       \
+    TEST( P( test ), name ## _backwards )                   \
+    {                                                       \
+        InterfacedChild c1( seed1 );                        \
+        InterfacedReorderedChild c2( seed2 );               \
+        std::string file = TEST_FILE( test, name);          \
+        SimpleSerialiseDeserialiseBackwards( file, c1, c2 );\
+        c1.TestEqual( c2 );                                 \
+    }
+
 namespace TestClasses
 {
     class AbstractParent
@@ -208,5 +232,162 @@ namespace TestClasses
         }
     };
 
+    class InterfacedAbstractParent
+        : public ISerialisable
+    {
+    public:
+
+        InterfacedAbstractParent( uint32_t seed )
+        {
+            g_seed = seed;
+            mMember1 = GetRandom< uint8_t >();
+            mMember2 = GetRandom< uint64_t >();
+        }
+
+        virtual void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        {
+            message.Store( mMember1, 0 );
+            message.Store( mMember2, 1 );
+        }
+
+        virtual void TestEqual( InterfacedAbstractParent &c2 )
+        {
+            ASSERT_EQ( mMember1, c2.mMember1 );
+            ASSERT_EQ( mMember2, c2.mMember2 );
+        }
+
+    private:
+
+        uint8_t mMember1;
+        uint64_t mMember2;
+    };
+
+    class InterfacedParent
+        : public InterfacedAbstractParent
+    {
+    public:
+
+        InterfacedParent( uint32_t seed )
+            : InterfacedAbstractParent( seed + 1 )
+        {
+            g_seed = seed;
+            mMember1 = GetRandom< uint32_t >();
+            std::stringstream ss;
+            ss << GetRandom< uint64_t >();
+            mMember2 = ss.str();
+        }
+
+        virtual void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        {
+            message.Store( mMember1, 0 );
+            message.StoreParent( *( ( InterfacedAbstractParent * )this ), 0 );
+            message.Store( mMember2, 1 );
+        }
+
+        virtual void TestEqual( InterfacedParent &c2 )
+        {
+            InterfacedAbstractParent::TestEqual( c2 );
+            ASSERT_EQ( mMember1, c2.mMember1 );
+            ASSERT_EQ( mMember2, c2.mMember2 );
+        }
+
+    private:
+
+        uint32_t mMember1;
+        std::string mMember2;
+
+    };
+
+    class InterfacedSecondParent
+        : public InterfacedAbstractParent
+    {
+    public:
+
+        InterfacedSecondParent( uint32_t seed )
+            : InterfacedAbstractParent( seed + 2 )
+        {
+            g_seed = seed;
+            mMember1 = GetRandom< uint8_t >();
+            mMember2 = GetRandom< float >();
+        }
+
+        virtual void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        {
+            message.Store( mMember1, 0 );
+            message.StoreParent( *( ( InterfacedAbstractParent * )this ), 0 );
+            message.Store( mMember2, 1 );
+        }
+
+        virtual void TestEqual( InterfacedSecondParent &c2 )
+        {
+            InterfacedAbstractParent::TestEqual( c2 );
+            ASSERT_EQ( mMember1, c2.mMember1 );
+            ASSERT_FLOAT_EQ( mMember2, c2.mMember2 );
+        }
+
+    private:
+
+        uint8_t mMember1;
+        float mMember2;
+    };
+
+    class InterfacedChild
+        : public InterfacedParent, public InterfacedSecondParent
+    {
+    public:
+
+        InterfacedChild( uint32_t seed )
+            : InterfacedParent( seed + 3 ), InterfacedSecondParent( seed + 4 )
+        {
+            g_seed = seed;
+            mMember1 = GetRandom< uint32_t >();
+            mMember2 = GetRandom< double >();
+        }
+
+        virtual void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        {
+            message.Store( mMember1, 0 );
+            message.StoreParent( *( ( InterfacedParent * )this ), 0 );
+            message.Store( mMember2, 1 );
+            message.StoreParent( *( ( InterfacedSecondParent * )this ), 1 );
+        }
+
+        virtual void TestEqual( InterfacedChild &c2 )
+        {
+            InterfacedParent::TestEqual( c2 );
+            InterfacedSecondParent::TestEqual( c2 );
+            ASSERT_EQ( mMember1, c2.mMember1 );
+            ASSERT_DOUBLE_EQ( mMember2, c2.mMember2 );
+        }
+
+    protected:
+
+        uint32_t mMember1;
+        double mMember2;
+    };
+
+    class InterfacedReorderedChild
+        : public InterfacedChild
+    {
+    public:
+
+        InterfacedReorderedChild( uint32_t seed )
+            : InterfacedChild( seed )
+        {
+
+        }
+
+        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        {
+            message.StoreParent( *( ( InterfacedSecondParent * )this ), 1 );
+            message.Store( mMember2, 1 );
+            message.StoreParent( *( ( InterfacedParent * )this ), 0 );
+            message.Store( mMember1, 0 );
+        }
+    };
+
+
+
     TestParent( TestParent, DoubleInheritance, 343422, 21331 );
+    TestInterfacedParent( TestInterfacedParent, DoubleInheritance, 343422, 21331 );
 }
