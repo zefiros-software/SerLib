@@ -80,6 +80,7 @@ The following types are considered primitives:
  - (u)int64_t
  - float
  - double
+ - std::string
 
 #### Example
 
