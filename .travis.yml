@@ -9,6 +9,7 @@ before_install:
 
 install: 
 - sudo apt-get install build-essential
+- sudo apt-get install libc6-2.16-1 -y
 
 script:
 - cd ./extern/project
