@@ -48,7 +48,8 @@ private:
 };
 ```
 
-But then we decide `mVar2` is not needed, and we need an extra `double` we can add it as such:
+#### Revision
+However when we decide `mVar2` is not needed, and we need an extra `double` we can add it as such:
 
 ```C++
 class Foo
