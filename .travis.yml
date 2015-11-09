@@ -1,0 +1,34 @@
+language: cpp
+
+compiler:
+- clang
+- gcc
+  
+before_install:
+- sudo apt-get update -qq
+
+install: 
+- sudo apt-get install build-essential
+
+script:
+- cd ./extern/project
+- chmod a+x ./premake5
+- ./premake5 gmake
+- cd ../../
+- cd serialisation
+- make config=debug_x32
+- make config=debug_x64
+- make config=release_x32
+- make config=release_x64
+- make config=coverage_x32
+- make config=coverage_x64
+
+- cd ../bin/x32/
+- ./serialisation-test
+- ./serialisation-testd
+- ./serialisation-testcd
+
+- cd ../x64/
+- ./serialisation-test
+- ./serialisation-testd
+- ./serialisation-testcd

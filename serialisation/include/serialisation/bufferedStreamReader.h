@@ -182,6 +182,8 @@ private:
         mReadSize = static_cast< uint32_t >( mStreamReader.GCount() );
 
         mStreamReader.ClearEOF();
+
+        assert( mReadSize > mReadIndex );
     }
 
     BufferedStreamReader &operator=( const BufferedStreamReader & );

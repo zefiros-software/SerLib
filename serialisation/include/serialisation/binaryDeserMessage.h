@@ -28,7 +28,6 @@
 #include "serialisation/tempPrimitive.h"
 #include "serialisation/tempObject.h"
 #include "serialisation/tempArray.h"
-#include "serialisation/arrayInfo.h"
 #include "serialisation/util.h"
 
 #include <stack>
@@ -301,6 +300,12 @@ public:
     }
 
 private:
+
+    struct ArrayInfo
+    {
+        size_t remainingCount;
+        Internal::Type::Type type;
+    };
 
     TStreamReader mStreamReader;
 
