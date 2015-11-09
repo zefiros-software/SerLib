@@ -31,6 +31,7 @@ is removed, or added, this induces no problems. Note that each index in the clas
 #### Example
 Say we start with:
 
+```C++
 	class Foo
 	{
 	public:
@@ -45,6 +46,7 @@ Say we start with:
 		uint32_t mVar1, mVar2;
 		double mVar3;
 	};
+```
 
 But then we decide `mVar2` is not needed, and we need an extra `double` we can add it as such:
 
@@ -78,7 +80,8 @@ The following types are considered primitives:
  - double
 
 #### Example
-	
+
+```C++	
 	class Foo
 	{
 	public:
@@ -94,7 +97,7 @@ The following types are considered primitives:
 		uint32_t mVar1, mVar2;
 		double mVar3;
 	};
-
+```
 
 ### Objects
 There are serveral ways to store objects:
@@ -105,6 +108,7 @@ There are serveral ways to store objects:
 
 The following are all equivalent:
 
+```C++
 	class Vec3Impl1
 	{
 	public:
@@ -163,11 +167,12 @@ The following are all equivalent:
 		message.Store( mY, 1 );
 		message.Store( mZ, 2 );
 	}
-
+```
 
 #### Example
 Storing an object from another object:
-		
+
+```C++		
 	class Vec3
 	{
 	public:
@@ -197,7 +202,7 @@ Storing an object from another object:
 	private:
 		Vec3 mVar1, mVar2;
 	};
-
+```
 
 ### Containers
 Containers use the `StoreContainer` interface, and can store both primitives and objects. Currently the following containers are supported:
@@ -213,7 +218,7 @@ Currently not yet supported:
  - Unordered associative containers;
 
 
-
+```C++
 	class Vec3
 	{
 	public:
@@ -241,7 +246,7 @@ Currently not yet supported:
 	private:
 		std::vector< Vec3 > mVar1, mVar2;
 	};
-
+```
 
 ### Inherritance
 As you may have noticed we haven't touched the topic of inherritance yet. To be able to effectively use
@@ -250,6 +255,7 @@ use their own index system.
 
 #### Example
 
+```C++
 	class Vec3
 	{
 	public:
@@ -295,10 +301,12 @@ use their own index system.
 	private:
 		std::vector< Vec4 > mVar1, mVar2;
 	};
+```
 
 ### Messages
 Our message both serialises, and deserialises so we need to contruct the message object correctly.
-	
+
+```C++	
 	class Vec3
 	{
 	public:
@@ -327,18 +335,20 @@ Our message both serialises, and deserialises so we need to contruct the message
 		Message deserMessage( ss, Format::Binary, Mode::Deserialise );
 		MessageHelper::Store( deserMessage, vec );
 	}
-
+```
 
 ### Flexibility
 
 #### Don't like OnStore?
 If you dislike the name or if it is not in your style, you can change it to your needs.
 
+```C++
 	#define SERIALISATION_CUSTOM_INTERFACE on_store
-
+```
 
 After this we changed the usage of the library to:
 
+```C++
 	#include "serialisation/serialisation.h"
 	
 	class Foo
@@ -353,6 +363,7 @@ After this we changed the usage of the library to:
 	private:
 		uint32_t mVar1;
 	};
+```
 
 #### SerLib Limits
 * Each class can use up to 27 indices; So we can store 27 seperate variables max.
