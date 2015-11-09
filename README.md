@@ -360,6 +360,7 @@ After this we changed the usage of the library to:
 * Each class can have up to 3 parents; So we can only use 3 indices for parents.
 
 ## Planned Features
+* Extensive documentation, on both design and useage.
 * Compression, based on array type and with delta encoding.
 	* FastPFOR integer compression.
 	* FFPFOR for floating point compression.
