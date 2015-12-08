@@ -1,5 +1,9 @@
 language: cpp
 
+os:
+  - linux
+  - osx
+  
 compiler:
 - clang
 - gcc
@@ -12,6 +16,12 @@ install:
 - sudo apt-get install libc6-2.16-1 -y
 
 script:
+
+- git clone https://github.com/premake/premake-core.wiki.git premake
+- cd premake
+- make -f Bootstrap.mak $TRAVIS_OS_NAME
+- mv premake/bin/release/premake5 ./extern/project/
+ 
 - cd ./extern/project
 - chmod a+x ./premake5
 - ./premake5 gmake
