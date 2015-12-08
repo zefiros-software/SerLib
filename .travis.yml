@@ -13,7 +13,7 @@ before_install:
 - sudo apt-get install build-essential
 - echo $TRAVIS_OS_NAME
 
-- git clone https://github.com/premake/premake-core.git premake
+- git clone --recursive https://github.com/premake/premake-core.git premake
 - cd premake
 - make -f Bootstrap.mak $TRAVIS_OS_NAME
 - mv premake/bin/release/premake5 ./extern/project/
