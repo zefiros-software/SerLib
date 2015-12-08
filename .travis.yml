@@ -16,7 +16,7 @@ before_install:
 - git clone --recursive https://github.com/premake/premake-core.git premake
 - cd premake
 - make -f Bootstrap.mak $TRAVIS_OS_NAME
-- mv premake/bin/release/premake5 ./extern/project/
+- mv bin/release/premake5 ./extern/project/premake5
 
 script:
  
