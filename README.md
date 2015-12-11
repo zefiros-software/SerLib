@@ -150,15 +150,15 @@ private:
 
 struct Vec3Impl3
 {
-	double mX, mY, mZ;
+	double x, y, z;
 }
 
 template<>
 void MessageHelper::OnStore( Vec3Impl3 &serialisable, Message &message )
 {
-	message.Store( mX, 0 );
-	message.Store( mY, 1 );
-	message.Store( mZ, 2 );
+	message.Store( serialisable.x, 0 );
+	message.Store( serialisable.y, 1 );
+	message.Store( serialisable.z, 2 );
 }
 ```
 
