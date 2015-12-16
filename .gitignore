@@ -11,3 +11,4 @@ build/
 *.user
 test/lib/
 *.orig
+Makefile

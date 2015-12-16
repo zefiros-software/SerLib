@@ -47,25 +47,19 @@ namespace Util
     {
         int32_t exp;
         float fi = frexp( f, &exp );
+        --exp;
 
-        const int32_t sign = exp < 0 ? 1 : 0;
-
-        uint32_t result = ( abs( exp ) & 0xff ) << 1;
-        result |= ZigZag< int32_t, uint32_t >( static_cast< int32_t >( ldexp( fi, 22 ) ) ) << 9;
-        result |= sign;
+        uint32_t result = ZigZag< int32_t, uint32_t >( exp );
+        result |= ZigZag< int32_t, uint32_t >( static_cast< int32_t >( ldexp( fi, 23 ) ) ) << 8;
 
         return result;
     }
 
     inline float UInt32ToFloat( const uint32_t i )
     {
-        int32_t exp = ( i & 0x1ff ) >> 1;
-
-        int32_t sign = ( i & 0x01 );
-
-        exp = ( sign == 1 ) ? -exp : exp;
-
-        return ldexp( ldexp( static_cast< float >( ZagZig< uint32_t, int32_t >( i >> 9 ) ), -22 ), exp );
+        int32_t exp = ZagZig< uint32_t, int32_t >( i & 0xff );
+        ++exp;
+        return ldexp( ldexp( static_cast< float >( ZagZig< uint32_t, int32_t >( i >> 8 ) ), -23 ), exp );
     }
 
     inline uint64_t DoubleToUInt64( const double f )
