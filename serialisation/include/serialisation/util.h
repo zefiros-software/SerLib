@@ -66,25 +66,19 @@ namespace Util
     {
         int32_t exp;
         double fi = frexp( f, &exp );
+        --exp;
 
-        const int32_t sign = exp < 0 ? 1 : 0;
-
-        uint64_t result = static_cast< uint64_t >( abs( exp ) & 0x7FF ) << 1;
-        result |= ZigZag< int64_t, uint64_t >( static_cast< int64_t >( ldexp( fi, 51 ) ) ) << 12;
-        result |= sign;
+        uint64_t result = ZigZag< int64_t, uint64_t >( exp );
+        result |= ZigZag< int64_t, uint64_t >( static_cast< int64_t >( ldexp( fi, 52 ) ) ) << 11;
 
         return result;
     }
 
     inline double UInt64ToDouble( const uint64_t i )
     {
-        int32_t exp = ( i & 0xfff ) >> 1;
-
-        const int32_t sign = ( i & 0x01 );
-
-        exp = ( sign == 1 ) ? -exp : exp;
-
-        return ldexp( ldexp( static_cast< double >( ZagZig< uint64_t, int64_t >( i >> 12 ) ), -51 ), exp );
+        int32_t exp = ZagZig< uint32_t, int32_t >( i & 0x7ff );
+        ++exp;
+        return ldexp( ldexp( static_cast< double >( ZagZig< uint64_t, int64_t >( i >> 11 ) ), -52 ), exp );
     }
 
     template< typename T >
