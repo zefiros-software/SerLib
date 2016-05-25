@@ -1,5 +1,5 @@
 # SerLib
-SerLib is a fast, and easy to use serialisation c++ library. The whole library is designed with performance, and ease of use in mind.
+SerLib is a fast, and easy to use serialisation C++ library. The whole library is designed with performance, and ease of use in mind.
 
 ## Features
 * Fast: We run our benchmarks on every build to ensure the maximum performance.
