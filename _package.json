@@ -1,5 +1,4 @@
 {
-    "name": "Zefiros-Software/SerLib",
     "description": "SerLib is a fast, and easy to use serialisation c++ library. The whole library is designed with performance, and ease of use in mind.",
     "keywords": ["C++", "Serialisation", "easy", "fast"],
     "website": "http://serlib.eu/",
