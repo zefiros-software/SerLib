@@ -32,11 +32,7 @@
 
 #include <sstream>
 
-namespace MessageHelper
-{
-    template< typename TSerialisable >
-    void Store( Message &, TSerialisable &, bool );
-}
+namespace MessageHelper {};
 
 class Message
 {
@@ -510,6 +506,20 @@ private:
         mInternalMessage->StoreContiguous( container, size );
     }
 };
+
+namespace MessageHelper
+{
+    template< typename TSerialisable >
+    void Store( Message &message, TSerialisable &serialisable, bool clearBuffers /*= true*/ )
+    {
+        message.Store( serialisable );
+
+        if ( clearBuffers )
+        {
+            message.ClearBuffers();
+        }
+    }
+}
 
 #ifndef SERIALISATION_NO_HEADER_ONLY
 #   include "../../src/message.cpp"

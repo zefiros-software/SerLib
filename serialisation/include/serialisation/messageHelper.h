@@ -25,7 +25,6 @@
 #define __SERIALISATION_MESSAGEHELPER_H__
 
 #include "serialisation/interface/ISerialisable.h"
-#include "serialisation/message.h"
 
 namespace MessageHelper
 {
@@ -42,15 +41,7 @@ namespace MessageHelper
     }
 
     template< typename TSerialisable >
-    void Store( Message &message, TSerialisable &serialisable, bool clearBuffers = true )
-    {
-        message.Store( serialisable );
-
-        if ( clearBuffers )
-        {
-            message.ClearBuffers();
-        }
-    }
+    void Store( Message &message, TSerialisable &serialisable, bool clearBuffers = true );
 
     void Store( Message &message, ISerialisable &serialisable );
 }
