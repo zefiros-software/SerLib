@@ -33,49 +33,19 @@ class BufferedStreamWriter
 {
 public:
 
-    explicit BufferedStreamWriter( const std::string &fileName )
-        : mStreamWriter( fileName ),
-          mWriteIndex( 0 )
-    {
-    }
+    explicit BufferedStreamWriter( const std::string &fileName );
 
-    explicit BufferedStreamWriter( std::ofstream &stream )
-        : mStreamWriter( stream ),
-          mWriteIndex( 0 )
-    {
-    }
+    explicit BufferedStreamWriter( std::ofstream &stream );
 
-    explicit BufferedStreamWriter( std::fstream &stream )
-        : mStreamWriter( stream ),
-          mWriteIndex( 0 )
-    {
-    }
+    explicit BufferedStreamWriter( std::fstream &stream );
 
-    explicit BufferedStreamWriter( std::ostream &stream )
-        : mStreamWriter( stream ),
-          mWriteIndex( 0 )
-    {
-    }
+    explicit BufferedStreamWriter( std::ostream &stream );
 
-    inline void ClearBuffer()
-    {
-        mStreamWriter.WriteBytes( mWriteBuffer, mWriteIndex );
-        mWriteIndex = 0;
+    ~BufferedStreamWriter();
 
-        mStreamWriter.ClearBuffer();
-    }
+    void ClearBuffer();
 
-    inline void Close()
-    {
-        ClearBuffer();
-
-        mStreamWriter.Close();
-    }
-
-    ~BufferedStreamWriter()
-    {
-        Close();
-    }
+    void Close();
 
     SERIALISATION_FORCEINLINE void WriteBytes( const char *const firstByte, size_t byteCount )
     {
@@ -96,14 +66,8 @@ public:
             diff = SERIALISATION_SERIALISERS_BUFFERSIZE - mWriteIndex;
         }
 
-        memcpy( mWriteBuffer  + mWriteIndex, c, byteCount );
-        mWriteIndex += static_cast< uint32_t >( byteCount );
-    }
-
-    template< typename TPrimitive >
-    SERIALISATION_FORCEINLINE void WritePrimitive( const TPrimitive &value )
-    {
-        WriteBytes( reinterpret_cast< const char *const >( &value ), sizeof( TPrimitive ) );
+        memcpy( mWriteBuffer + mWriteIndex, c, byteCount );
+        mWriteIndex += static_cast<uint32_t>( byteCount );
     }
 
     SERIALISATION_FORCEINLINE void WriteBlock( const char *const firstByte, size_t byteCount )
@@ -113,7 +77,7 @@ public:
         if ( byteCount < diff )
         {
             memcpy( mWriteBuffer + mWriteIndex, firstByte, byteCount );
-            mWriteIndex += static_cast< uint32_t >( byteCount );
+            mWriteIndex += static_cast<uint32_t>( byteCount );
         }
         else
         {
@@ -121,6 +85,26 @@ public:
 
             mStreamWriter.WriteBytes( firstByte, byteCount );
         }
+    }
+
+    SERIALISATION_FORCEINLINE void WriteSize( size_t size )
+    {
+        uint8_t bufferIndex;
+
+        for ( bufferIndex = 0; size >= 0x80; size >>= 7, bufferIndex++ )
+        {
+            mVarIntBuffer[bufferIndex] = static_cast<uint8_t>( ( size & 0x7F ) | 0x80 );
+        }
+
+        mVarIntBuffer[bufferIndex] = static_cast<uint8_t>( size );
+
+        WriteBytes( reinterpret_cast<char *>( mVarIntBuffer ), ++bufferIndex );
+    }
+
+    template< typename TPrimitive >
+    SERIALISATION_FORCEINLINE void WritePrimitive( const TPrimitive &value )
+    {
+        WriteBytes( reinterpret_cast< const char *const >( &value ), sizeof( TPrimitive ) );
     }
 
     template< typename TPrimitive >
@@ -138,20 +122,6 @@ public:
         }
     }
 
-    SERIALISATION_FORCEINLINE void WriteSize( size_t size )
-    {
-        uint8_t bufferIndex;
-
-        for ( bufferIndex = 0; size >= 0x80; size >>= 7, bufferIndex++ )
-        {
-            mVarIntBuffer[ bufferIndex ] = static_cast< uint8_t >( ( size & 0x7F ) | 0x80 );
-        }
-
-        mVarIntBuffer[ bufferIndex ] = static_cast< uint8_t >( size );
-
-        WriteBytes( reinterpret_cast< char * >( mVarIntBuffer ), ++bufferIndex );
-    }
-
 private:
 
     char mWriteBuffer[ SERIALISATION_SERIALISERS_BUFFERSIZE ];
@@ -165,5 +135,9 @@ private:
     BufferedStreamWriter &operator=( const BufferedStreamWriter & );
     BufferedStreamWriter( const BufferedStreamWriter & );
 };
+
+#ifndef SERIALISATION_NO_HEADER_ONLY
+#   include "../../src/bufferedStreamWriter.cpp"
+#endif
 
 #endif

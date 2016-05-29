@@ -81,47 +81,11 @@ namespace Internal
             Double     = 0x0D
         };
 
-        inline bool IsInteger( Type type )
-        {
-            return ( type >= Type::UInt8 ) && ( type <= SInt64 );
-        }
+        bool IsInteger( Type type );
 
-        inline bool IsSignedInt( Type type )
-        {
-            return ( type >= Type::SInt8 ) && ( type <= Type::SInt64 );
-        }
+        bool IsSignedInt( Type type );
 
-        inline bool AreCompatible( const Type type, const Type type2 )
-        {
-            if ( type == type2 )
-            {
-                return true;
-            }
-
-            if ( ( IsSignedInt( type ) && type - SInt8 == type2 - UInt8 ) || ( IsSignedInt( type2 ) &&
-                                                                               type2 - SInt8 == type - UInt8 ) )
-            {
-                return true;
-            }
-
-
-            if ( ( type == Float && type2 == UInt32 ) || ( type2 == Float && type == UInt32 ) )
-            {
-                return true;
-            }
-
-            if ( ( type == Double && type2 == UInt64 ) || ( type2 == Double && type == UInt64 ) )
-            {
-                return true;
-            }
-
-            if ( IsInteger( type ) && IsInteger( type2 ) )
-            {
-                return true;
-            }
-
-            return false;
-        }
+        bool AreCompatible( const Type type, const Type type2 );
 
         template< typename T >
         inline Type GetEnum()
@@ -238,5 +202,9 @@ namespace Format
         Binary = Internal::Format::Binary
     };
 }
+
+#ifndef SERIALISATION_NO_HEADER_ONLY
+#   include "../../src/types.cpp"
+#endif
 
 #endif

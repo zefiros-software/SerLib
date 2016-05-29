@@ -36,64 +36,30 @@ public:
 
     friend class BufferedStreamReader;
 
-    explicit StreamReader( const std::string &fileName )
-        : mFileStream( fileName.c_str(), std::ifstream::binary | std::ifstream::in ),
-          mStream( &mFileStream )
-    {
-        assert( mFileStream.is_open() && "File does not exist" );
-    }
+    explicit StreamReader( const std::string &fileName );
 
-    explicit StreamReader( std::ifstream &stream )
-        : mStream( &stream )
-    {
-        assert( mStream->flags() & std::ios::binary );
-    }
+    explicit StreamReader( std::ifstream &stream );
 
-    explicit StreamReader( std::fstream &stream )
-        : mStream( &stream )
-    {
-        assert( ( stream.flags() & std::ios::in ) && "Not an input stream" );
-        assert( ( stream.flags() & std::ios::binary ) && "File stream is not in binary mode" );
-    }
+    explicit StreamReader( std::fstream &stream );
 
-    explicit StreamReader( std::istream &stream )
-        : mStream( &stream )
-    {
-    }
+    explicit StreamReader( std::istream &stream );
 
-    inline void ClearBuffer()
-    {
-    }
+    ~StreamReader();
 
-    inline void Close()
-    {
-        ClearBuffer();
+    void ClearBuffer();
 
-        if ( mFileStream.is_open() )
-        {
-            mFileStream.close();
-        }
-    }
+    void Close();
 
-    ~StreamReader()
-    {
-        Close();
-    }
+    void ReadBytes( char *const firstByte, size_t byteCount );
 
-    inline void ReadBytes( char *const firstByte, size_t byteCount )
-    {
-        mStream->read( firstByte, byteCount );
-    }
+    void ReadBlock( char *const firstByte, size_t byteCount );
+
+    size_t ReadSize();
 
     template< typename TPrimitive >
     void ReadPrimitive( TPrimitive &value )
     {
         ReadBytes( reinterpret_cast< char *const >( &value ), sizeof( TPrimitive ) );
-    }
-
-    inline void ReadBlock( char *const firstByte, size_t byteCount )
-    {
-        ReadBytes( firstByte, byteCount );
     }
 
     template< typename TPrimitive >
@@ -111,27 +77,6 @@ public:
         }
     }
 
-    size_t ReadSize()
-    {
-        size_t size = 0;
-        uint8_t shift = 0;
-
-        uint8_t byte;
-
-        ReadPrimitive( byte );
-
-        while ( byte & 0x80 )
-        {
-            size |= static_cast< size_t >( byte & 0x7F ) << shift;
-            ReadPrimitive( byte );
-            shift += 7;
-        }
-
-        size |= static_cast< size_t >( byte ) << shift;
-
-        return size;
-    }
-
 private:
 
     std::ifstream mFileStream;
@@ -140,23 +85,15 @@ private:
     StreamReader &operator=( const StreamReader & );
     StreamReader( const StreamReader & );
 
-    void SeekG( std::ios::off_type count )
-    {
-        mStream->seekg( count, std::ios_base::beg );
-    }
+    void SeekG( std::ios::off_type count );
 
-    std::streamsize GCount()
-    {
-        return mStream->gcount();
-    }
+    std::streamsize GCount();
 
-    void ClearEOF()
-    {
-        if ( mStream->eof() )
-        {
-            mStream->clear();
-        }
-    }
+    void ClearEOF();
 };
+
+#ifndef SERIALISATION_NO_HEADER_ONLY
+#   include "../../src/streamReader.cpp"
+#endif
 
 #endif

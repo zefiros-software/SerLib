@@ -33,101 +33,30 @@ class BufferedStreamReader
 {
 public:
 
-    explicit BufferedStreamReader( const std::string &fileName )
-        : mStreamReader( fileName ),
-          mReadIndex( 0 ),
-          mReadSize( 0 )
-    {
-    }
+    explicit BufferedStreamReader( const std::string &fileName );
 
-    explicit BufferedStreamReader( std::ifstream &stream )
-        : mStreamReader( stream ),
-          mReadIndex( 0 ),
-          mReadSize( 0 )
-    {
-    }
+    explicit BufferedStreamReader( std::ifstream &stream );
 
-    explicit BufferedStreamReader( std::fstream &stream )
-        : mStreamReader( stream ),
-          mReadIndex( 0 ),
-          mReadSize( 0 )
-    {
-    }
+    explicit BufferedStreamReader( std::fstream &stream );
 
-    explicit BufferedStreamReader( std::istream &stream )
-        : mStreamReader( stream ),
-          mReadIndex( 0 ),
-          mReadSize( 0 )
-    {
-    }
+    explicit BufferedStreamReader( std::istream &stream );
 
-    inline void ClearBuffer()
-    {
-        std::streamsize gCount = mStreamReader.GCount();
+    ~BufferedStreamReader();
 
-        mStreamReader.SeekG( gCount + mReadIndex - mReadSize );
+    void ClearBuffer();
 
-        mReadIndex = 0;
-        mReadSize = 0;
-    }
+    void Close();
 
-    inline void Close()
-    {
-        ClearBuffer();
+    void ReadBytes( char *const firstByte, size_t byteCount );
 
-        mStreamReader.Close();
-    }
+    void ReadBlock( char *const firstByte, size_t byteCount );
 
-    ~BufferedStreamReader()
-    {
-        Close();
-    }
-
-    inline void ReadBytes( char *const firstByte, size_t byteCount )
-    {
-        uint32_t diff = mReadSize - mReadIndex;
-
-        char *c = firstByte;
-
-        while ( diff < byteCount )
-        {
-            memcpy( c, mReadBuffer + mReadIndex, diff );
-
-            mReadIndex += diff;
-            c += diff;
-            byteCount -= diff;
-
-            FillReadBuffer();
-
-            diff = mReadSize - mReadIndex;
-        }
-
-        memcpy( c, mReadBuffer  + mReadIndex, byteCount );
-        mReadIndex += static_cast< uint32_t >( byteCount );
-    }
+    size_t ReadSize();
 
     template< typename TPrimitive >
     void ReadPrimitive( TPrimitive &value )
     {
         ReadBytes( reinterpret_cast< char *const >( &value ), sizeof( TPrimitive ) );
-    }
-
-    inline void ReadBlock( char *const firstByte, size_t byteCount )
-    {
-        uint32_t diff = mReadSize - mReadIndex;
-
-        if ( byteCount < diff )
-        {
-            memcpy( firstByte, mReadBuffer + mReadIndex, byteCount );
-            mReadIndex += static_cast< uint32_t >( byteCount );
-        }
-        else
-        {
-            memcpy( firstByte, mReadBuffer + mReadIndex, diff );
-            mReadIndex = mReadSize;
-
-            mStreamReader.ReadBytes( firstByte + diff, byteCount - diff );
-        }
     }
 
     template< typename TPrimitive >
@@ -145,27 +74,6 @@ public:
         }
     }
 
-    size_t ReadSize()
-    {
-        size_t size = 0;
-        uint8_t shift = 0;
-
-        uint8_t byte;
-
-        ReadPrimitive( byte );
-
-        while ( byte & 0x80 )
-        {
-            size |= static_cast< size_t >( byte & 0x7F ) << shift;
-            ReadPrimitive( byte );
-            shift += 7;
-        }
-
-        size |= static_cast< size_t >( byte ) << shift;
-
-        return size;
-    }
-
 private:
 
     char mReadBuffer[ SERIALISATION_SERIALISERS_BUFFERSIZE ];
@@ -175,19 +83,14 @@ private:
     uint32_t mReadIndex;
     uint32_t mReadSize;
 
-    inline void FillReadBuffer()
-    {
-        mReadIndex = 0;
-        mStreamReader.ReadBytes( mReadBuffer, SERIALISATION_SERIALISERS_BUFFERSIZE );
-        mReadSize = static_cast< uint32_t >( mStreamReader.GCount() );
-
-        mStreamReader.ClearEOF();
-
-        assert( mReadSize > mReadIndex );
-    }
+    void FillReadBuffer();
 
     BufferedStreamReader &operator=( const BufferedStreamReader & );
     BufferedStreamReader( const BufferedStreamReader & );
 };
+
+#ifndef SERIALISATION_NO_HEADER_ONLY
+#   include "../../src/bufferedStreamReader.cpp"
+#endif
 
 #endif

@@ -33,64 +33,23 @@ class TempObject
 {
 public:
 
-    TempObject()
-        : mTerminatorRead( false )
-    {
-    }
+    TempObject();
 
-    virtual Internal::Type::Type GetType() const
-    {
-        return Internal::Type::Object;
-    }
+    virtual Internal::Type::Type GetType() const;
 
-    void AddData( uint8_t index, ITempData *data )
-    {
-        mTempData.push_back( std::pair< uint8_t, ITempData * >( index, data ) );
-    }
+    void AddData( uint8_t index, ITempData *data );
 
-    ITempData *TryRemoveData( uint8_t index )
-    {
-        typedef std::vector< std::pair< uint8_t, ITempData * > >::iterator iterator;
+    ITempData *TryRemoveData( uint8_t index );
 
-        for ( iterator it = mTempData.begin(), end = mTempData.end(); it != end; ++it )
-        {
-            if ( it->first == index )
-            {
-                ITempData *data = it->second;
-                mTempData.erase( it );
-                return data;
-            }
-        }
+    size_t GetSize();
 
-        return NULL;
-    }
+    ITempData *PopBack();
 
-    size_t GetSize()
-    {
-        return mTempData.size();
-    }
+    bool GetTerminatorRead() const;
 
-    ITempData *PopBack()
-    {
-        ITempData *temp = mTempData.back().second;
-        mTempData.pop_back();
-        return temp;
-    }
+    void SetTerminatorRead();
 
-    bool GetTerminatorRead() const
-    {
-        return mTerminatorRead;
-    }
-
-    void SetTerminatorRead()
-    {
-        mTerminatorRead = true;
-    }
-
-    bool IsNonEmpty() const
-    {
-        return !mTempData.empty();
-    }
+    bool IsNonEmpty() const;
 
 private:
 
@@ -98,5 +57,9 @@ private:
 
     bool mTerminatorRead;
 };
+
+#ifndef SERIALISATION_NO_HEADER_ONLY
+#   include "../../src/tempObject.cpp"
+#endif
 
 #endif

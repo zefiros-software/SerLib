@@ -32,6 +32,12 @@
 
 #include <sstream>
 
+namespace MessageHelper
+{
+    template< typename TSerialisable >
+    void Store( Message &, TSerialisable &, bool );
+}
+
 class Message
 {
 public:
@@ -44,84 +50,33 @@ public:
         Packed = Internal::Flags::Packed
     };
 
-    Message( const std::string &fileName, Format::Format format, Mode::Mode mode = Mode::Serialise, bool useBuffer = true )
-        : mInternalMessage( CreateInternalMessage( format, mode, fileName, useBuffer ) ),
-          mMode( mode ),
-          mFormat( format )
-    {
-    }
+    explicit Message( const std::string &fileName, Format::Format format, Mode::Mode mode = Mode::Serialise,
+                      bool useBuffer = true );
 
-    Message( std::stringstream &stream, Format::Format format, Mode::Mode mode = Mode::Serialise, bool useBuffer = true )
-        : mInternalMessage( CreateInternalMessage( format, mode, stream, useBuffer ) ),
-          mMode( mode ),
-          mFormat( format )
-    {
+    explicit Message( std::stringstream &stream, Format::Format format, Mode::Mode mode = Mode::Serialise,
+                      bool useBuffer = true );
 
-    }
+    explicit Message( std::iostream &stream, Format::Format format, Mode::Mode mode = Mode::Serialise,
+                      bool useBuffer = true );
 
-    Message( std::iostream &stream, Format::Format format, Mode::Mode mode = Mode::Serialise, bool useBuffer = true )
-        : mInternalMessage( CreateInternalMessage( format, mode, stream, useBuffer ) ),
-          mMode( mode ),
-          mFormat( format )
-    {
+    explicit Message( std::fstream &stream, Format::Format format, Mode::Mode mode = Mode::Serialise,
+                      bool useBuffer = true );
 
-    }
+    explicit Message( std::ifstream &stream, Format::Format format, bool useBuffer = true );
 
-    Message( std::fstream &stream, Format::Format format, Mode::Mode mode = Mode::Serialise, bool useBuffer = true )
-        : mInternalMessage( CreateInternalMessage( format, mode, stream, useBuffer ) ),
-          mMode( mode ),
-          mFormat( format )
-    {
-    }
+    explicit Message( std::istream &stream, Format::Format format, bool useBuffer = true );
 
-    Message( std::ifstream &stream, Format::Format format, bool useBuffer = true )
-        : mInternalMessage( CreateDeserMessage( format, stream, useBuffer ) ),
-          mMode( Mode::Deserialise ),
-          mFormat( format )
-    {
-    }
+    explicit Message( std::ofstream &stream, Format::Format format, bool useBuffer = true );
 
-    Message( std::istream &stream, Format::Format format, bool useBuffer = true )
-        : mInternalMessage( CreateDeserMessage( format, stream, useBuffer ) ),
-          mMode( Mode::Deserialise ),
-          mFormat( format )
-    {
-    }
+    explicit Message( std::ostream &stream, Format::Format format, bool useBuffer = true );
 
-    Message( std::ofstream &stream, Format::Format format, bool useBuffer = true )
-        : mInternalMessage( CreateSerMessage( format, stream, useBuffer ) ),
-          mMode( Mode::Serialise ),
-          mFormat( format )
-    {
-    }
+    ~Message();
 
-    Message( std::ostream &stream, Format::Format format, bool useBuffer = true )
-        : mInternalMessage( CreateSerMessage( format, stream, useBuffer ) ),
-          mMode( Mode::Serialise ),
-          mFormat( format )
-    {
-    }
+    void ClearBuffers();
 
-    ~Message()
-    {
-        ClearBuffers();
-        DeleteInternalMessage( mInternalMessage );
-    }
+    Mode::Mode GetMode();
 
-    void ClearBuffers()
-    {
-        mInternalMessage->ClearBuffer();
-    }
-
-    Mode::Mode GetMode()
-    {
-        return mMode;
-    }
-
-    Format::Format GetFormat()
-    {
-        return mFormat;
-    }
+    Format::Format GetFormat();
 
     template< typename TSerialisable >
     void Store( TSerialisable &serialisable, uint8_t index )
@@ -149,89 +104,29 @@ public:
         }
     }
 
-    void Store( ISerialisable &serialisable, uint8_t index )
-    {
-        Store< ISerialisable >( serialisable, index );
-    }
+    void Store( ISerialisable &serialisable, uint8_t index );
 
-    void Store( std::string &value, uint8_t index )
-    {
-        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
+    void Store( std::string &value, uint8_t index );
 
-        mInternalMessage->Store( value, index );
-    }
+    void Store( uint8_t &value, uint8_t index );
 
-    void Store( uint8_t &value, uint8_t index )
-    {
-        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
+    void Store( uint16_t &value, uint8_t index );
 
-        mInternalMessage->Store( value, index );
-    }
+    void Store( uint32_t &value, uint8_t index );
 
-    void Store( uint16_t &value, uint8_t index )
-    {
-        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
+    void Store( uint64_t &value, uint8_t index );
 
-        mInternalMessage->Store( value, index );
-    }
+    void Store( int8_t &value, uint8_t index );
 
-    void Store( uint32_t &value, uint8_t index )
-    {
-        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
+    void Store( int16_t &value, uint8_t index );
 
-        mInternalMessage->Store( value, index );
-    }
+    void Store( int32_t &value, uint8_t index );
 
-    void Store( uint64_t &value, uint8_t index )
-    {
-        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
+    void Store( int64_t &value, uint8_t index );
 
-        mInternalMessage->Store( value, index );
-    }
+    void Store( float &value, uint8_t index );
 
-    void Store( int8_t &value, uint8_t index )
-    {
-        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
-
-        mInternalMessage->Store( value, index );
-    }
-
-    void Store( int16_t &value, uint8_t index )
-    {
-        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
-
-        mInternalMessage->Store( value, index );
-    }
-
-    void Store( int32_t &value, uint8_t index )
-    {
-        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
-
-        mInternalMessage->Store( value, index );
-    }
-
-    void Store( int64_t &value, uint8_t index )
-    {
-        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
-
-        mInternalMessage->Store( value, index );
-    }
-
-    void Store( float &value, uint8_t index )
-    {
-        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
-
-        mInternalMessage->Store( value, index );
-    }
-
-    void Store( double &value, uint8_t index )
-    {
-        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
-
-        mInternalMessage->Store( value, index );
-    }
-
-
+    void Store( double &value, uint8_t index );
 
     template< size_t Size, typename TSerialisable >
     void StoreContainer( TSerialisable( &container )[ Size ], uint8_t index, uint8_t flags = 0x00 )
@@ -336,55 +231,25 @@ public:
         }
     }
 
-    void StoreContainer( std::vector< uint8_t > &container, uint8_t index, uint8_t flags = 0x00 )
-    {
-        StorePrimitiveVector( container, index, flags );
-    }
+    void StoreContainer( std::vector< uint8_t > &container, uint8_t index, uint8_t flags = 0x00 );
 
-    void StoreContainer( std::vector< uint16_t > &container, uint8_t index, uint8_t flags = 0x00 )
-    {
-        StorePrimitiveVector( container, index, flags );
-    }
+    void StoreContainer( std::vector< uint16_t > &container, uint8_t index, uint8_t flags = 0x00 );
 
-    void StoreContainer( std::vector< uint32_t > &container, uint8_t index, uint8_t flags = 0x00 )
-    {
-        StorePrimitiveVector( container, index, flags );
-    }
+    void StoreContainer( std::vector< uint32_t > &container, uint8_t index, uint8_t flags = 0x00 );
 
-    void StoreContainer( std::vector< uint64_t > &container, uint8_t index, uint8_t flags = 0x00 )
-    {
-        StorePrimitiveVector( container, index, flags );
-    }
+    void StoreContainer( std::vector< uint64_t > &container, uint8_t index, uint8_t flags = 0x00 );
 
-    void StoreContainer( std::vector< int8_t > &container, uint8_t index, uint8_t flags = 0x00 )
-    {
-        StorePrimitiveVector( container, index, flags );
-    }
+    void StoreContainer( std::vector< int8_t > &container, uint8_t index, uint8_t flags = 0x00 );
 
-    void StoreContainer( std::vector< int16_t > &container, uint8_t index, uint8_t flags = 0x00 )
-    {
-        StorePrimitiveVector( container, index, flags );
-    }
+    void StoreContainer( std::vector< int16_t > &container, uint8_t index, uint8_t flags = 0x00 );
 
-    void StoreContainer( std::vector< int32_t > &container, uint8_t index, uint8_t flags = 0x00 )
-    {
-        StorePrimitiveVector( container, index, flags );
-    }
+    void StoreContainer( std::vector< int32_t > &container, uint8_t index, uint8_t flags = 0x00 );
 
-    void StoreContainer( std::vector< int64_t > &container, uint8_t index, uint8_t flags = 0x00 )
-    {
-        StorePrimitiveVector( container, index, flags );
-    }
+    void StoreContainer( std::vector< int64_t > &container, uint8_t index, uint8_t flags = 0x00 );
 
-    void StoreContainer( std::vector< float > &container, uint8_t index, uint8_t flags = 0x00 )
-    {
-        StorePrimitiveVector( container, index, flags );
-    }
+    void StoreContainer( std::vector< float > &container, uint8_t index, uint8_t flags = 0x00 );
 
-    void StoreContainer( std::vector< double > &container, uint8_t index, uint8_t flags = 0x00 )
-    {
-        StorePrimitiveVector( container, index, flags );
-    }
+    void StoreContainer( std::vector< double > &container, uint8_t index, uint8_t flags = 0x00 );
 
 #if defined SERIALISATION_SUPPORT_STDARRAY
     template< size_t Size, typename TSerialisable >
@@ -590,72 +455,31 @@ private:
         mInternalMessage->FinishArrayObject();
     }
 
-    inline void StoreArrayItem( ISerialisable &value )
-    {
-        StoreArrayItem< ISerialisable >( value );
-    }
+    void StoreArrayItem( ISerialisable &value );
 
-    inline void StoreArrayItem( std::string &value )
-    {
-        mInternalMessage->StoreArrayItem( value );
-    }
+    void StoreArrayItem( std::string &value );
 
-    inline void StoreArrayItem( uint8_t &value )
-    {
-        mInternalMessage->StoreArrayItem( value );
-    }
+    void StoreArrayItem( uint8_t &value );
 
-    inline void StoreArrayItem( uint16_t &value )
-    {
-        mInternalMessage->StoreArrayItem( value );
-    }
+    void StoreArrayItem( uint16_t &value );
 
-    inline void StoreArrayItem( uint32_t &value )
-    {
-        mInternalMessage->StoreArrayItem( value );
-    }
+    void StoreArrayItem( uint32_t &value );
 
-    inline void StoreArrayItem( uint64_t &value )
-    {
-        mInternalMessage->StoreArrayItem( value );
-    }
+    void StoreArrayItem( uint64_t &value );
 
-    inline void StoreArrayItem( int8_t &value )
-    {
-        mInternalMessage->StoreArrayItem( value );
-    }
+    void StoreArrayItem( int8_t &value );
 
-    inline void StoreArrayItem( int16_t &value )
-    {
-        mInternalMessage->StoreArrayItem( value );
-    }
+    void StoreArrayItem( int16_t &value );
 
-    inline void StoreArrayItem( int32_t &value )
-    {
-        mInternalMessage->StoreArrayItem( value );
-    }
+    void StoreArrayItem( int32_t &value );
 
-    inline void StoreArrayItem( int64_t &value )
-    {
-        mInternalMessage->StoreArrayItem( value );
-    }
+    void StoreArrayItem( int64_t &value );
 
-    inline void StoreArrayItem( float &value )
-    {
-        mInternalMessage->StoreArrayItem( value );
-    }
+    void StoreArrayItem( float &value );
 
-    inline void StoreArrayItem( double &value )
-    {
-        mInternalMessage->StoreArrayItem( value );
-    }
+    void StoreArrayItem( double &value );
 
-    inline size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 )
-    {
-        SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
-
-        return mInternalMessage->CreateArray( type, size, index, flags );
-    }
+    size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 );
 
     template< typename TPrimitive >
     void StorePrimitiveVector( std::vector< TPrimitive > &container, uint8_t index, uint8_t flags )
@@ -687,15 +511,8 @@ private:
     }
 };
 
-template< typename TSerialisable >
-void MessageHelper::Store( Message &message, TSerialisable &serialisable, bool clearBuffers /*= true*/ )
-{
-    message.Store( serialisable );
-
-    if ( clearBuffers )
-    {
-        message.ClearBuffers();
-    }
-}
+#ifndef SERIALISATION_NO_HEADER_ONLY
+#   include "../../src/message.cpp"
+#endif
 
 #endif

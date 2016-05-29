@@ -1,14 +1,21 @@
-serialisation/Serialisation.sdf
-serialisation/Serialisation.sln
-serialisation/Serialisation.v11.suo
-serialisation/Serialisation.vcxproj.filters
-serialisation/Serialisation.vcxproj.user
+-- artifacts
 bin/*
-build/
-*.opensdf
-*.vcxproj
-*.filters
-*.user
-test/lib/
+
+-- zpm
+._config.json
+
+-- git
 *.orig
+
+-- make
 Makefile
+
+-- visual studio code
+*/.vs/*
+
+-- visual studio
+*.sdf
+*.sln
+*.suo
+*.VC.*
+*.vcxproj*

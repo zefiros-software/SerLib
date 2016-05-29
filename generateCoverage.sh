@@ -2,7 +2,7 @@ rm -rf gcov
 rm -rf target/site/clover
 mkdir gcov
 cd gcov/
-gcov --object-directory ../bin/obj/x32/Coverage/serialisation-test/* ../test
+gcov --object-directory ../bin/obj/x86/Coverage/serialisation-test/* ../test
 lcov --capture --base-directory ../test --directory .. --directory ../test/ --directory ../serialisation/include/ --output-file coverage.info --no-external
 genhtml coverage.info --output-directory ../target/site/clover
-python  ../extern/gcov/gcov_to_clover.py *.gcov
+python  ../python/gcov/gcov_to_clover.py *.gcov

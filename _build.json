@@ -1,0 +1,20 @@
+[
+    {
+        "project": "SerLib",
+        "do":
+        [
+            {"kind": "StaticLib"},
+            {"configurations": ["NoHeaderOnly", "HeaderOnly"]},
+            {"language": "C++"},
+            {"exportincludedirs": [
+                "serialisation/include/"                        
+            ]},
+            {"filter": "configurations:NoHeaderOnly",
+            "do":
+            [
+                {"defines": "SERIALISATION_NO_HEADER_ONLY"},
+                {"files": [ "serialisation/src" ] }
+            ]}
+        ]
+    }
+]    

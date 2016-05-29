@@ -17,6 +17,9 @@ SerLib is a fast, and easy to use serialisation C++ library. The whole library i
 The whole library is header only, so for usage in your own code you should clone the repository. And add `serialisation/include/` as include path.
 After this you can use the include `#include "serialisation/serialisation.h"` in your code to start using the library.
 
+Alternatively if you thinks your projects compiles too slow using this header only library, you can define `SERIALISATION_NO_HEADER_ONLY` and
+add the C++ files in `serialisation/src` to your compile files, along the above stated include directory.
+
 ## Usage
 The library interface only uses 4 functions, each with a different purpose:
 
