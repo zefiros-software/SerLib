@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014 Mick van Duijn, Koen Visscher and Paul Visscher
+ * Copyright (c) 2016 Mick van Duijn, Koen Visscher and Paul Visscher
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,7 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 #pragma once
 #ifndef __SERIALISATION_BINARYDESERMESSAGE_H__
 #define __SERIALISATION_BINARYDESERMESSAGE_H__
