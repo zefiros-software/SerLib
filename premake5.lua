@@ -1,7 +1,7 @@
 
 workspace "SerLib"
     
-    configurations { "Debug", "Release", "NoHeaderOnly", "Coverage" }
+    configurations { "Debug", "Release", "HeaderOnlyDebug", "HeaderOnlyRelease", "Coverage" }
     platforms { "x86_64", "x86" }
     flags { "Unicode", "Symbols" } 
 
@@ -22,21 +22,21 @@ workspace "SerLib"
         debugdir "bin/x86_64/"
         architecture "x86_64"
         
-    filter "configurations:Debug"
+    filter "*Debug"
         targetsuffix "d"
         defines "DEBUG"
         optimize "Off"
 
-    filter "configurations:Release or configurations:NoHeaderOnly"
+    filter "*Release"
         flags "LinkTimeOptimization"
         optimize "Speed"
         
-    filter "configurations:Coverage"
+    filter "Coverage"
         targetsuffix "cd"
         links "gcov"
         buildoptions "-coverage"
         
-    filter "configurations:NoHeaderOnly"
+    filter "not HeaderOnly*"
         defines "SERIALISATION_NO_HEADER_ONLY"
         
     zpm.buildLibraries()
@@ -62,22 +62,22 @@ workspace "SerLib"
             "test/**.cpp"
             }     
             
-        filter "configurations:NoHeaderOnly"
+        filter "not HeaderOnly*"
             links "serialisation"
 			
 		filter "action:gmake"
 			links "pthread"
             
-        filter { "configurations:Debug", "platforms:x86" }
+        filter { "*Debug", "platforms:x86" }
             defines "PREFIX=X86D_"
         
-        filter { "configurations:Debug", "platforms:x86_64" }
+        filter { "*Debug", "platforms:x86_64" }
             defines "PREFIX=X86_64D_"
         
-        filter { "configurations:Release", "platforms:x86" }
+        filter { "*Release", "platforms:x86" }
             defines "PREFIX=X86R_"
         
-        filter { "configurations:Release", "platforms:x86_64" }
+        filter { "*Release", "platforms:x86_64" }
             defines "PREFIX=X86_64R_"
             
     project "serialisation"
@@ -92,7 +92,7 @@ workspace "SerLib"
             "serialisation/include/**.h",
             }
             
-        filter "configurations:NoHeaderOnly"                
+        filter "not HeaderOnly*"                
             files { 
                 "serialisation/src/**.cpp",
                 }
