@@ -9,7 +9,7 @@
             {"exportincludedirs": [
                 "serialisation/include/"                        
             ]},
-            {"filter": "not configurations:HeaderOnly",
+            {"filter": "not HeaderOnly",
             "do":
             [
                 {"defines": "SERIALISATION_NO_HEADER_ONLY"},
