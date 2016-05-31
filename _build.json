@@ -4,12 +4,12 @@
         "do":
         [
             {"kind": "StaticLib"},
-            {"configurations": ["NoHeaderOnly", "HeaderOnly"]},
+            {"configurations": ["HeaderOnly"]},
             {"language": "C++"},
             {"exportincludedirs": [
                 "serialisation/include/"                        
             ]},
-            {"filter": "configurations:NoHeaderOnly",
+            {"filter": "not configurations:HeaderOnly",
             "do":
             [
                 {"defines": "SERIALISATION_NO_HEADER_ONLY"},
