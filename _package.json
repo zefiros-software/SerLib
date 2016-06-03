@@ -1,5 +1,5 @@
 {
-    "name": "Zefiros-Software/SerLib-Dev",
+    "name": "Zefiros-Software/SerLib",
     "description": "SerLib is a fast, and easy to use serialisation c++ library. The whole library is designed with performance, and ease of use in mind.",
     "keywords": ["C++", "Serialisation", "easy", "fast"],
     "website": "http://serlib.eu/",
@@ -21,16 +21,18 @@
             "website": "https://zefiros.eu/"
         }
     ],
-    "assets": [
-        {
-            "name": "Zefiros-Software/gcov2clover",
-            "version": "@head"            
-        }
-    ],
-    "requires": [
+    "dev": {
+        "assets": [
             {
-                "name": "Zefiros-Software/GoogleTest",
-                "version": "@head"
+                "name": "Zefiros-Software/gcov2clover",
+                "version": ">=1.0.0"            
             }
-        ]
+        ],
+        "requires": [
+                {
+                    "name": "Zefiros-Software/GoogleTest",
+                    "version": "@head"
+                }
+            ]
+    }
 }
