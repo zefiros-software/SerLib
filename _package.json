@@ -12,13 +12,19 @@
         },
         {
             "name": "Paul Visscher",
-            "email": "paul.pev@zefiros.eu",
+            "email": "p.e.visscher@zefiros.eu",
             "website": "https://zefiros.eu/"
         },
         {
             "name": "Koen Visscher",
             "email": "koen.visscher@zefiros.eu",
             "website": "https://zefiros.eu/"
+        }
+    ],
+    "assets": [
+        {
+            "name": "Zefiros-Software/gcov2clover",
+            "version": "@head"            
         }
     ],
     "requires": [
