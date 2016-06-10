@@ -79,6 +79,8 @@ workspace "SerLib"
         
         filter { "*Release", "platforms:x86_64" }
             defines "PREFIX=X86_64R_"
+
+        filter {}
             
     project "serialisation"
     
