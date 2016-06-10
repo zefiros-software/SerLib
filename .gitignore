@@ -1,6 +1,9 @@
 -- artifacts
 bin/*
 
+-- make
+*.make
+
 -- zpm
 ._config.json
 
