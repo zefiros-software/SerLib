@@ -410,9 +410,9 @@ When a bug is found please insert it in the issue tracker, so we can resolve it 
 5. Submit a pull request
 
 ## Authors
-* Mick van Duijn <mick.v.duijn@zefiros.eu>
+* Mick van Duijn <m.vanduijn@zefiros.eu>
 * Paul Visscher <paul.pev@zefiros.eu>
-* Koen Visscher <koen.visscher@zefiros.eu>
+* Koen Visscher <k.m.visscher@zefiros.eu>
 
 ## Used By
 We are interested to find out what projects use SerLib. We would love it to include your projects here, 
