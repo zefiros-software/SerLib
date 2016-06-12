@@ -22,6 +22,9 @@
         }
     ],
     "dev": {
+        "modules": [
+            "Zefiros-Software/Zefiros-Defaults"
+        ],
         "assets": [
             {
                 "name": "Zefiros-Software/gcov2clover",
