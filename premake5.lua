@@ -3,7 +3,8 @@ local zefiros = require( "Zefiros-Software/Zefiros-Defaults", "@head" )
 workspace "SerLib"
 
 	zefiros.setDefaults( "serialisation", {
-        configurations = { "HeaderOnlyDebug", "HeaderOnlyRelease" }
+        configurations = { "HeaderOnlyDebug", "HeaderOnlyRelease" },
+		headerOnly = true
     } )
 
     filter "not HeaderOnly*"
