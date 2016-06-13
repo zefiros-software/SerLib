@@ -32,10 +32,10 @@
             }
         ],
         "requires": [
-                {
-                    "name": "Zefiros-Software/GoogleTest",
-                    "version": "@head"
-                }
-            ]
+            {
+                "name": "Zefiros-Software/GoogleTest",
+                "version": "@head"
+            }
+        ]
     }
 }
