@@ -2,7 +2,7 @@
     {
         "project": "SerLib",
         "options": {
-            "HeaderOnly": true
+            "HeaderOnly": false
         },
         "do":
         [
