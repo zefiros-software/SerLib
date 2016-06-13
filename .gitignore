@@ -1,9 +1,6 @@
 -- artifacts
 bin/*
 
--- make
-*.make
-
 -- zpm
 ._config.json
 
@@ -12,6 +9,7 @@ bin/*
 
 -- make
 Makefile
+*.make
 
 -- visual studio code
 */.vs/*
@@ -23,3 +21,6 @@ Makefile
 *.VC.*
 *.opensdf
 *.vcxproj*
+
+-- Intel Tools
+*Amplifier*
