@@ -8,9 +8,6 @@
         [
             {"kind": "StaticLib"},
             {"language": "C++"},
-            {"exportincludedirs": [
-                "serialisation/include/"                        
-            ]},
             {
                 "filter-options": {
                     "HeaderOnly": false
@@ -24,7 +21,10 @@
                 [                    
                     {"headeronly": true}
                 ]
-            }
+            },
+            {"export":[
+                {"includedirs": "serialisation/include/"}                     
+            ]}
         ]
     }
 ]    
