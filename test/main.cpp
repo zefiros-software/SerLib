@@ -140,9 +140,10 @@ int main( int argc, char **argv )
 
     testing::InitGoogleTest( &argc, argv );
 
-    int result = RUN_ALL_TESTS();
+    int32_t result = RUN_ALL_TESTS();
+    ( void * )result;
 
-    system( "pause" );
+    //system( "pause" );
 
     return 0;
 }
