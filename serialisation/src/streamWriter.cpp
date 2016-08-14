@@ -25,7 +25,10 @@ SERIALISATION_INLINE StreamWriter::StreamWriter( const std::string &fileName )
     : mFileStream( fileName.c_str(), std::ifstream::binary | std::ifstream::out ),
       mStream( &mFileStream )
 {
-    assert( mFileStream.is_open() && "File does not exist" );
+    if ( !mFileStream.is_open() )
+    {
+        throw std::string( "File does not exist" );
+    }
 }
 
 SERIALISATION_INLINE StreamWriter::StreamWriter( std::ofstream &stream )

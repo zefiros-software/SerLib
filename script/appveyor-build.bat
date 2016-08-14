@@ -9,10 +9,13 @@ cd test/
 premake5 vs2015 || exit /b
 msbuild zpm/SerLib-ZPM.sln || exit /b
 
-..\bin\x86\serialisation-test.exe || exit /b
-::..\bin\x86\serialisation-testd.exe || exit /b
+cd ..\bin\x86\
+serialisation-test.exe || exit /b
+::serialisation-testd.exe || exit /b
 
-..\bin\x86_64\serialisation-test.exe || exit /b
-::..\bin\x86_64\serialisation-testd.exe || exit /b
+cd ..\x86_64\
+serialisation-test.exe || exit /b
+::serialisation-testd.exe || exit /b
 
-bin\x86\serialisation-zpm-test.exe || exit /b
+cd ..\..\test\bin\x86\
+erialisation-zpm-test.exe || exit /b

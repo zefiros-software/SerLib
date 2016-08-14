@@ -26,7 +26,10 @@ SERIALISATION_INLINE StreamReader::StreamReader( const std::string &fileName )
     : mFileStream( fileName.c_str(), std::ifstream::binary | std::ifstream::in ),
       mStream( &mFileStream )
 {
-    assert( mFileStream.is_open() && "File does not exist" );
+    if ( !mFileStream.is_open() )
+    {
+        throw std::string( "File does not exist" );
+    }
 }
 
 SERIALISATION_INLINE StreamReader::StreamReader( std::ifstream &stream )
