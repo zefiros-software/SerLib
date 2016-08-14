@@ -1,8 +1,15 @@
 {
     "name": "Zefiros-Software/SerLib-Dev",
+    "modules": [
+        "Zefiros-Software/Zefiros-Defaults"
+    ],
     "requires": [
         {
             "name": "Zefiros-Software/GoogleTest",
+            "version": "@head"
+        },
+        {
+            "name": "Zefiros-Software/SerLib",
             "version": "@head"
         }
     ]
