@@ -93,12 +93,6 @@ namespace Internal
         }
 
         template<>
-        inline Type GetEnum< class ISerialisable >()
-        {
-            return Type::Object;
-        }
-
-        template<>
         inline Type GetEnum< std::string >()
         {
             return Type::String;

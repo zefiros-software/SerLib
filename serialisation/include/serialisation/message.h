@@ -30,6 +30,7 @@
 #include "serialisation/messageHelper.h"
 
 #include <sstream>
+#include <functional>
 
 namespace MessageHelper {};
 
@@ -99,6 +100,8 @@ public:
         }
     }
 
+    void Store( std::function< void() > func, uint8_t index );
+
     void Store( ISerialisable &serialisable, uint8_t index );
 
     void Store( std::string &value, uint8_t index );
@@ -130,14 +133,14 @@ public:
 
         if ( size <= Size )
         {
-            for ( TSerialisable *it = container, end = it + size; it != end; ++it )
+            for ( auto it = std::begin( container ), end = it + size; it != end; ++it )
             {
                 StoreArrayItem( *it );
             }
         }
         else
         {
-            for ( TSerialisable *it = container, end = it + Size; it != end; ++it )
+            for ( auto it = std::begin( container ), end = it + Size; it != end; ++it )
             {
                 StoreArrayItem( *it );
             }
@@ -254,14 +257,14 @@ public:
 
         if ( size <= Size )
         {
-            for ( TSerialisable *it = container, end = it + size; it != end; ++it )
+            for ( auto it = container.begin(), end = it + size; it != end; ++it )
             {
                 StoreArrayItem( *it );
             }
         }
         else
         {
-            for ( TSerialisable *it = container, end = it + Size; it != end; ++it )
+            for ( auto it = container.begin(), end = it + Size; it != end; ++it )
             {
                 StoreArrayItem( *it );
             }

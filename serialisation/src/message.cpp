@@ -200,6 +200,18 @@ SERIALISATION_INLINE void Message::Store( double &value, uint8_t index )
     mInternalMessage->Store( value, index );
 }
 
+SERIALISATION_INLINE void Message::Store( std::function< void() > func, uint8_t index )
+{
+    SERIALISATION_ASSERT_INDEX_IN_RANGE( index );
+
+    if ( mInternalMessage->InitObject( index ) )
+    {
+        func();
+
+        mInternalMessage->FinishObject( index );
+    }
+}
+
 SERIALISATION_INLINE void Message::StoreContainer( std::vector< uint8_t > &container, uint8_t index,
                                                    uint8_t flags /*= 0x00 */ )
 {

@@ -33,7 +33,12 @@ class StringClass
 {
 public:
 
-    StringClass( const std::string &ss ) : str( ss )
+    StringClass()
+    {
+    }
+
+    StringClass( const std::string &ss )
+        : str( ss )
     {
     }
 
@@ -256,3 +261,121 @@ TEST( P( BasicTest ), FullArrayFubar2 )
 
     EXPECT_EQ( v1, v2 );
 }
+
+class IStringClass2
+    : public ISerialisable
+{
+public:
+
+    IStringClass2( const std::string &ss )
+        : str( ss )
+    {
+    }
+
+    void OnStore( Message &message )
+    {
+        message.Store( str, 0 );
+    }
+
+    std::string str;
+};
+
+class IStringClass
+    : public ISerialisable
+{
+public:
+
+    IStringClass( const std::string &ss )
+        : str( ss )
+    {
+    }
+
+    void OnStore( Message &message )
+    {
+        message.Store( str, 0 );
+    }
+
+    IStringClass2 str;
+};
+
+TEST( P( BasicTest ), ISerialisable )
+{
+    IStringClass ss1( "" );
+    IStringClass ss2( GenerateRandomString() );
+
+    SimpleSerialiseDeserialiseStream( ss1, ss2 );
+
+    EXPECT_EQ( ss1.str.str, ss2.str.str );
+}
+
+class TestArrayClass
+{
+public:
+
+    void OnStore( Message &message )
+    {
+        message.StoreContainer( arr, 0 );
+    }
+
+    uint8_t arr[2];
+};
+
+TEST( P( BasicTest ), ArrayClass )
+{
+    TestArrayClass ss1;
+    ss1.arr[1] = 4;
+    TestArrayClass ss2;
+
+    SimpleSerialiseDeserialiseStream( ss1, ss2 );
+
+    EXPECT_EQ( ss1.arr[1], ss2.arr[1] );
+    EXPECT_EQ( ss1.arr[0], ss2.arr[0] );
+}
+
+class TestArrayClass2
+{
+public:
+
+    void OnStore( Message &message )
+    {
+        message.StoreContainer( arr, 0 );
+    }
+
+    std::array< StringClass, 2 > arr;
+};
+
+TEST( P( BasicTest ), ArrayClass2 )
+{
+    TestArrayClass2 ss1;
+    ss1.arr[1].str = GenerateRandomString();
+    TestArrayClass2 ss2;
+
+    SimpleSerialiseDeserialiseStream( ss1, ss2 );
+
+    EXPECT_EQ( ss1.arr[1].str, ss2.arr[1].str );
+    EXPECT_EQ( ss1.arr[0].str, ss2.arr[0].str );
+}
+/*
+class TestArrayClass3
+{
+public:
+
+    void OnStore( Message &message )
+    {
+        message.StoreContainer( arr, 0 );
+    }
+
+    StringClass arr[2];
+};
+
+TEST( P( BasicTest ), ArrayClass3 )
+{
+    TestArrayClass3 ss1;
+    ss1.arr[1].str = GenerateRandomString();
+    TestArrayClass3 ss2;
+
+    SimpleSerialiseDeserialiseStream( ss1, ss2 );
+
+    EXPECT_EQ( ss1.arr[1].str, ss2.arr[1].str );
+    EXPECT_EQ( ss1.arr[0].str, ss2.arr[0].str );
+}*/
