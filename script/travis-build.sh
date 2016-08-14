@@ -18,14 +18,14 @@ cd zpm/
 make
 cd ../../bin/x86/
 
-serialisation-test
-serialisation-testd
-#serialisation-testcd
+./serialisation-test
+./serialisation-testd
+#./serialisation-testcd
 
 cd ../x86_64/
-serialisation-test
-serialisation-testd
-#serialisation-testcd
+./serialisation-test
+./serialisation-testd
+#./serialisation-testcd
 
 cd ../../test/bin/x86/
-bin/x86/serialisation-zpm-test
+serialisation-zpm-test
