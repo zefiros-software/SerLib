@@ -28,4 +28,4 @@ cd ../x86_64/
 #./serialisation-testcd
 
 cd ../../test/bin/x86/
-serialisation-zpm-test
+./serialisation-zpm-test
