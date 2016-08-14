@@ -1,43 +1,18 @@
-language: cpp
-
-os:
-  - linux
-  - osx
-  
-compiler:
-- clang
-- gcc
-  
-before_install:
-- sudo apt-get update -qq
-- sudo apt-get install build-essential
-- echo $TRAVIS_OS_NAME
-
-- git clone --recursive https://github.com/premake/premake-core.git premake
-- cd premake
-- make -f Bootstrap.mak $TRAVIS_OS_NAME
-- mv bin/release/premake5 ./extern/project/premake5
-
+sudo: required
+language: generic
+matrix:
+    include:
+        # Use the built in venv for linux builds
+        - os: linux
+          dist: trusty
+        # Use generic language for osx
+        # disabled due to premake bug
+        #- os: osx
+        #  osx_image: xcode8
+        #  language: generic
+install:
+    - wget -O - https://raw.githubusercontent.com/Zefiros-Software/ZPM/master/script/install-zpm-travis.sh | bash
+    # annoying pip fix
+    - export BOTO_CONFIG=/tmp/bogusvalue
 script:
- 
-- cd ./extern/project
-- chmod a+x ./premake5
-- ./premake5 gmake
-- cd ../../
-- cd serialisation
-- make config=debug_x32
-- make config=debug_x64
-- make config=release_x32
-- make config=release_x64
-- make config=coverage_x32
-- make config=coverage_x64
-
-- cd ../bin/x32/
-- ./serialisation-test
-- ./serialisation-testd
-- ./serialisation-testcd
-
-- cd ../x64/
-- ./serialisation-test
-- ./serialisation-testd
-- ./serialisation-testcd
+    - bash script/travis-build.sh
