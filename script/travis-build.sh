@@ -27,5 +27,5 @@ cd ../x86_64/
 ./serialisation-testd
 #./serialisation-testcd
 
-cd ../../test/bin/x86/
-./serialisation-zpm-test
+cd ../../test/bin/
+./x86/serialisation-zpm-test

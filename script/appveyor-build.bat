@@ -17,5 +17,5 @@ cd ..\x86_64\
 .\serialisation-test.exe || exit /b
 ::.\serialisation-testd.exe || exit /b
 
-cd ..\..\test\bin\x86\
-.\serialisation-zpm-test.exe || exit /b
+cd ..\..\test\bin\
+.\x86\serialisation-zpm-test.exe || exit /b
