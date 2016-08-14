@@ -1,13 +1,9 @@
 {
     "name": "Zefiros-Software/SerLib-Dev",
     "requires": [
-            {
-                "name": "Zefiros-Software/GoogleTest",
-                "version": "@head"
-            },
-            {
-                "name": "Zefiros-Software/ArmadilloExt",
-                "version": "@head"
-            }
+        {
+            "name": "Zefiros-Software/GoogleTest",
+            "version": "@head"
+        }
     ]
 }
