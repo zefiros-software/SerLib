@@ -21,6 +21,9 @@
             "website": "https://zefiros.eu/"
         }
     ],
+    "options": {
+        "HeaderOnly": false
+    },
     "dev": {
         "modules": [
             "Zefiros-Software/Zefiros-Defaults"
