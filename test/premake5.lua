@@ -29,3 +29,9 @@ workspace "SerLib-ZPM"
 	zefiros.setTestZPMDefaults( "serialisation", {
         mayLink = false
     } )
+    
+	project "serialisation-zpm-test"
+
+		zpm.uses {
+            "Zefiros-Software/SerLib"
+        }
