@@ -16,14 +16,14 @@ premake5 gmake
 
 cd zpm/
 make
-cd ../
+cd ../test
 
-../../bin/x86/serialisation-test
-../../bin/x86/serialisation-testd
-#../../bin/x86/serialisation-testcd
+../bin/x86/serialisation-test
+../bin/x86/serialisation-testd
+#../bin/x86/serialisation-testcd
 
-../../bin/x86_64/serialisation-test
-../../bin/x86_64/serialisation-testd
-#../../bin/x86_64/serialisation-testcd
+../bin/x86_64/serialisation-test
+../bin/x86_64/serialisation-testd
+#../bin/x86_64/serialisation-testcd
 
-../../test/bin/x86/serialisation-zpm-test
+bin/x86/serialisation-zpm-test

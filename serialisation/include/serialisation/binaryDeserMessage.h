@@ -544,8 +544,7 @@ private:
 
         if ( !mTerminatorRead )
         {
-            const Internal::Type::Type expected = Internal::Type::GetEnum< TPrimitive >();
-            assert( Internal::Type::AreCompatible( type, expected ) &&
+            assert( Internal::Type::AreCompatible( type, Internal::Type::GetEnum< TPrimitive >() ) &&
                     "Whoops, seems like you tried to Deserialise with the wrong type" );
 
             ReadFromStream( value );
