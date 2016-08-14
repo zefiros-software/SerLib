@@ -16,7 +16,7 @@ premake5 gmake
 
 cd zpm/
 make
-cd ../test
+cd ../
 
 ../bin/x86/serialisation-test
 ../bin/x86/serialisation-testd
