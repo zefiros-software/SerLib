@@ -10,11 +10,11 @@ Windows     | [![Build status](https://ci.appveyor.com/api/projects/status/brtho
 
 ## Features
 * Fast: We run our benchmarks on every build to ensure the maximum performance.
-* Reliable: We have an extensive testing suite, making sure we do not break forward and backward compatiblity.
+* Reliable: We have an extensive testing suite, making sure we do not break forward and backward compatibility.
 * Easy to use: The library is completely header only, and does not require extra compile steps nor does it take over
   your classes before you can use it.
 * Bindable: The whole library is designed to be used from a c-interface, so when needed, it can be called from other languages.
-* Cross platform: Designed to only use c++2003, with no external dependecies.
+* Cross platform: Designed to only use c++2003, with no external dependencies.
 * Format is backward and forward compatible, using variable indexes.
 * Message usage can be completely streamed, and does not require the full message to start reading.
 * Compact: The binary format is very small, even when no compression is used.
@@ -48,7 +48,7 @@ add the C++ files in `serialisation/src` to your compile files, along the above 
 The library interface only uses 4 functions, each with a different purpose:
 
  - Message::Store([reference], [index]); Stores primitives and objects.
- - Message::StoreParent([reference], [index]); Stores the variables from the given inherrited class.
+ - Message::StoreParent([reference], [index]); Stores the variables from the given inherited class.
  - Message::StoreContainer([reference], [index]); Stores container formats.
  - MessageHelper::Store([message], [reference]); Begins a store or load sequence.
 
@@ -97,7 +97,7 @@ private:
 };
 ```
 
-A good practice would be to uncomment deleted Stores, so the index does not get reused on accident!
+A good practice would be to un-comment deleted Stores, so the index does not get reused on accident!
 
 ### Primitives
 The following types are considered primitives:
@@ -131,7 +131,7 @@ private:
 ```
 
 ### Objects
-There are serveral ways to store objects:
+There are several ways to store objects:
 
  - Using templates
  - Using interfaces
@@ -269,7 +269,7 @@ private:
 ```
 
 ### Inherritance
-As you may have noticed we haven't touched the topic of inherritance yet. To be able to effectively use
+As you may have noticed we haven't touched the topic of inheritance yet. To be able to effectively use
 inherritance, without having to spend your precious variable indices, we can use the `StoreParent` interface. The parents
 use their own index system.
 
@@ -324,7 +324,7 @@ private:
 ```
 
 ### Messages
-Our message both serialises, and deserialises so we need to contruct the message object correctly.
+Our message both serialises, and deserialises so we need to construct the message object correctly.
 
 ```C++	
 class Vec3
@@ -386,11 +386,11 @@ private:
 ```
 
 #### SerLib Limits
-* Each class can use up to 27 indices, so we can store 27 seperate variables max.
+* Each class can use up to 27 indices, so we can store 27 separate variables max.
 * Each class can have up to 3 parents, we can only use 3 indices for parents.
 
 ## Planned Features
-* Extensive documentation, on both design and useage.
+* Extensive documentation, on both design and usage.
 * Compression, based on array type and with delta encoding.
 	* FastPFOR integer compression.
 	* FFPFOR for floating point compression.
@@ -420,7 +420,7 @@ our requirements.
 * Boost takes over your classes to work; SerLib can use already existing classes.
 
 ### SerLib vs Protocol Buffers
-* Protocol Buffers uses a precompiler. SerLib is dynamic and header only.
+* Protocol Buffers uses a pre-compiler. SerLib is dynamic and header only.
 * Protocol Buffers has issues on non unix systems. SerLib is simple c++2003, and is cross-platform.
 
 ## Bugs
@@ -447,7 +447,8 @@ just shoot us a mail. :)
 ## License
 This project is licensed under the MIT license.
 
-Copyright (c) 2015 Mick van Duijn, Koen Visscher and Paul Visscher
+```
+Copyright (c) 2016 Mick van Duijn, Koen Visscher and Paul Visscher
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -466,3 +467,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+```
