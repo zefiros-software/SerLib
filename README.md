@@ -1,6 +1,13 @@
 # SerLib
 SerLib is a fast, and easy to use serialisation C++ library. The whole library is designed with performance, and ease of use in mind.
 
+# Status
+OS          | Status
+----------- | -------
+Linux & OSX | [![Build Status](https://travis-ci.org/Zefiros-Software/SerLib.svg?branch=master)](https://travis-ci.org/Zefiros-Software/SerLib)
+Windows     | [![Build status](https://ci.appveyor.com/api/projects/status/brthol35tgeon6wu?svg=true)](https://ci.appveyor.com/project/PaulVisscher/serlib)
+
+
 ## Features
 * Fast: We run our benchmarks on every build to ensure the maximum performance.
 * Reliable: We have an extensive testing suite, making sure we do not break forward and backward compatiblity.
@@ -13,7 +20,24 @@ SerLib is a fast, and easy to use serialisation C++ library. The whole library i
 * Compact: The binary format is very small, even when no compression is used.
 * Warning free, compiled on the highest warning level.
 
-## Installation
+#[ZPM](zpm.zefiros.eu) Installation
+
+In `.package.json`
+```json
+"requires": [
+		{
+			"name": "Zefiros-Software/SerLib",
+			"version": "^1.0.0"
+		}
+]
+```
+
+In `premake5.lua`
+```lua
+zpm.uses "Zefiros-Software/SerLib"
+```
+
+## Manual Installation
 The whole library is header only, so for usage in your own code you should clone the repository. And add `serialisation/include/` as include path.
 After this you can use the include `#include "serialisation/serialisation.h"` in your code to start using the library.
 
