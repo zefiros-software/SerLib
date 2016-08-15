@@ -20,7 +20,7 @@ Windows     | [![Build status](https://ci.appveyor.com/api/projects/status/brtho
 * Compact: The binary format is very small, even when no compression is used.
 * Warning free, compiled on the highest warning level.
 
-#[ZPM](zpm.zefiros.eu) Installation
+#[ZPM](http://zpm.zefiros.eu) Installation
 
 In `.package.json`
 ```json
