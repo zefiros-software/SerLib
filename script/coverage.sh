@@ -8,4 +8,4 @@ cd ../bin/x86/
 
 cd ../../
 
-coveralls --exclude test  --exclude extern -i serialisation --gcov-options '\-lp'
+coveralls --exclude test --exclude extern -i extern -i test --build-root serialisation --gcov-options '\-lp'
