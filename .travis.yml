@@ -17,4 +17,4 @@ install:
     - export BOTO_CONFIG=/tmp/bogusvalue
 script:
     - bash script/travis-build.sh
-     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./script/coverage.sh; fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./script/coverage.sh; fi
