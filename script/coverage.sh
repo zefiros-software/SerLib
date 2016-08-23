@@ -1,6 +1,6 @@
 set -e
 
-cd bsp
+cd serialisation
 make config=coverage_x86
 cd ../
 

@@ -11,10 +11,10 @@ matrix:
         #  osx_image: xcode8
         #  language: generic
 install:
-    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip install --user cpp-coveralls && chmod a+x ./script/coverage.sh; fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip install --user cpp-coveralls; fi
     - wget -O - https://raw.githubusercontent.com/Zefiros-Software/ZPM/master/script/install-zpm-travis.sh | bash
     # annoying pip fix
     - export BOTO_CONFIG=/tmp/bogusvalue
 script:
     - bash script/travis-build.sh
-    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./script/coverage.sh; fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then bash ./script/coverage.sh; fi
