@@ -2,6 +2,10 @@ set -e
 
 cd serialisation
 make config=coverage_x86
-cd ../
+cd ../bin/x86/
 
-coveralls --verbose --root bin/obj/x86/Coverage/ --exclude test --exclude extern --gcov-options '\-lp'
+./serialisation-testcd
+
+cd ../../
+
+coveralls --exclude test --exclude extern -i extern -i test --build-root serialisation --gcov-options '\-lp'
