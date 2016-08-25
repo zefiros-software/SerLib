@@ -6,4 +6,6 @@ cd ../
 
 ./serialisation-testcd
 
+ls
+
 codecov --gcov-root serialisation
