@@ -445,7 +445,7 @@ just shoot us a mail. :)
 * Zefiros Engine 
 
 ## License
-This project is licensed under the MIT license.
+This project is licensed under the MIT license by [Zefiros Software](https://zefiros.eu).
 
 ```
 Copyright (c) 2016 Mick van Duijn, Koen Visscher and Paul Visscher
