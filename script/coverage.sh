@@ -6,6 +6,4 @@ cd ../
 
 ./serialisation-testcd
 
-ls
-
 codecov
