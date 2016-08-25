@@ -2,11 +2,11 @@
 SerLib is a fast, and easy to use serialisation C++ library. The whole library is designed with performance, and ease of use in mind.
 
 # Status
-OS          | Status
+Type        | Status
 ----------- | -------
 Linux & OSX | [![Build Status](https://travis-ci.org/Zefiros-Software/SerLib.svg?branch=master)](https://travis-ci.org/Zefiros-Software/SerLib)
 Windows     | [![Build status](https://ci.appveyor.com/api/projects/status/brthol35tgeon6wu?svg=true)](https://ci.appveyor.com/project/PaulVisscher/serlib)
-
+Coverage	| [![codecov](https://codecov.io/gh/Zefiros-Software/SerLib/branch/master/graph/badge.svg)](https://codecov.io/gh/Zefiros-Software/SerLib)
 
 ## Features
 * Fast: We run our benchmarks on every build to ensure the maximum performance.
