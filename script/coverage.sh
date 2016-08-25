@@ -8,4 +8,4 @@ cd ../bin/x86/
 
 cd ../../
 
-codecov --gcov-root serialisation
+codecov --gcov-root bin/obj/x86/Coverage/serialisation-test/
