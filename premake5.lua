@@ -35,6 +35,9 @@ workspace "SerLib"
         defines "SERIALISATION_NO_HEADER_ONLY"
 
     project "serialisation-test"
+
+        filter "Coverage"
+            defines "TEST_FILES_DIR=\"test/test-files/\""
             
         filter "not HeaderOnly*"
             links "serialisation"

@@ -27,8 +27,12 @@
 #define CONCAT( a, b ) CONCATEXT( a, b )
 #define P( prefix ) CONCAT( PREFIX, prefix )
 
+#ifndef TEST_FILES_DIR
+#   define TEST_FILES_DIR "../../test/test-files/"
+#endif
+
 #define TEST_FILE_DETAIL( file, suite, seperator, test, extension ) file #suite #seperator #test #extension
-#define TEST_FILE( suite, test ) TEST_FILE_DETAIL("../../test/test-files/", suite, _, test, .bin )
+#define TEST_FILE( suite, test ) TEST_FILE_DETAIL(TEST_FILES_DIR, suite, _, test, .bin )
 
 #include "serialisation/message.h"
 
