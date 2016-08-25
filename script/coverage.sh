@@ -8,4 +8,4 @@ cd ../
 
 ls
 
-codecov --gcov-root serialisation
+codecov
