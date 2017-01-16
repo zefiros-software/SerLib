@@ -1,31 +1,32 @@
+#!/bin/bash
 set -e
 
-premake5 install-package --allow-install --allow-module
-premake5 gmake
-cd serialisation
-make config=debug_x86
-make config=debug_x86_64
-make config=release_x86
-make config=release_x86_64
-#make config=coverage_x86
-#make config=coverage_x86_64
+if [ "$TYPE" == "zpm" ]; then
+    cd test
+    
+    zpm install-package --allow-install --allow-module
+    zpm gmake --allow-install
 
-cd ../test/
+    cd zpm/
+    make
+    cd ../../
 
-premake5 gmake
+    test/bin/x86/serialisation-zpm-test
 
-cd zpm/
-make
-cd ../../bin/x86/
+else
+    zpm install-package --allow-install --allow-module
+    zpm gmake --allow-install
+    cd serialisation
+    make config=${TYPE}_${ARCH}
+    cd ../
 
-./serialisation-test
-./serialisation-testd
-#./serialisation-testcd
 
-cd ../x86_64/
-./serialisation-test
-./serialisation-testd
-#./serialisation-testcd
+    if [ "$TYPE" == "debug" ]; then
+        bin/${ARCH}/serialisation-testd
 
-cd ../../test/bin/
-./x86/serialisation-zpm-test
+    elif [ "$TYPE" == "coverage" ]; then
+        ./serialisation-testcd
+    else
+        bin/${ARCH}/serialisation-test
+    fi
+fi

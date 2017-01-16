@@ -10,7 +10,7 @@
         },
         {
             "name": "Zefiros-Software/SerLib",
-            "version": "@head"
+            "path": "../"
         }
     ]
 }
