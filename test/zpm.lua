@@ -26,9 +26,11 @@
 
 workspace "SerLib-ZPM"
 
-	zefiros.setTestZPMDefaults( "serialisation", {
+    zefiros.setTestZPMDefaults( "serialisation", {
         mayLink = false
     } )
     
-	project "serialisation-zpm-test"
-		zpm.uses "Zefiros-Software/SerLib"
+    project "serialisation-zpm-test"
+        zpm.uses "Zefiros-Software/SerLib"
+
+        defines "TEST_FILES_DIR=\"../../test-files/\""

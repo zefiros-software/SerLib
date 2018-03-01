@@ -26,8 +26,8 @@
 
 workspace "SerLib"
 
-	zefiros.setDefaults( "serialisation", {
-		mayLink = false
+    zefiros.setDefaults( "serialisation", {
+        mayLink = false
     } )
 
     project "serialisation-test"
