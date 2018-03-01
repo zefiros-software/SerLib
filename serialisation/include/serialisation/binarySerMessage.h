@@ -1,5 +1,7 @@
 /**
- * Copyright (c) 2017 Zefiros Software.
+ * @cond ___LICENSE___
+ *
+ * Copyright (c) 2016-2018 Zefiros Software.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +20,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
+ * @endcond
  */
 #pragma once
 #ifndef __SERIALISATION_BINARYSERMESSAGE_H__
@@ -32,23 +36,23 @@ class BinarySerMessage
 {
 public:
 
-    BinarySerMessage( const std::string &fileName )
-        : mStreamWriter( fileName )
+    BinarySerMessage(const std::string &fileName)
+        : mStreamWriter(fileName)
     {
     }
 
-    BinarySerMessage( std::ofstream &stream )
-        : mStreamWriter( stream )
+    BinarySerMessage(std::ofstream &stream)
+        : mStreamWriter(stream)
     {
     }
 
-    BinarySerMessage( std::fstream &stream )
-        : mStreamWriter( stream )
+    BinarySerMessage(std::fstream &stream)
+        : mStreamWriter(stream)
     {
     }
 
-    BinarySerMessage( std::ostream &stream )
-        : mStreamWriter( stream )
+    BinarySerMessage(std::ostream &stream)
+        : mStreamWriter(stream)
     {
     }
 
@@ -58,29 +62,29 @@ public:
 
     SERIALISATION_FORCEINLINE void FinishObject()
     {
-        const uint8_t terminator = ( uint8_t )Internal::Type::Terminator & 0x07;
-        WritePrimitive( terminator );
+        const uint8_t terminator = (uint8_t)Internal::Type::Terminator & 0x07;
+        WritePrimitive(terminator);
     }
 
-    SERIALISATION_FORCEINLINE bool InitObject( uint8_t index )
+    SERIALISATION_FORCEINLINE bool InitObject(uint8_t index)
     {
-        WriteHeader( index, Internal::Type::Object );
+        WriteHeader(index, Internal::Type::Object);
         return true;
     }
 
-    SERIALISATION_FORCEINLINE void FinishObject( uint8_t /*index*/ )
+    SERIALISATION_FORCEINLINE void FinishObject(uint8_t /*index*/)
     {
         FinishObject();
     }
 
-    SERIALISATION_FORCEINLINE bool InitParent( uint8_t index )
+    SERIALISATION_FORCEINLINE bool InitParent(uint8_t index)
     {
-        return InitObject( index + 28 );
+        return InitObject(index + 28);
     }
 
-    SERIALISATION_FORCEINLINE void FinishParent( uint8_t index )
+    SERIALISATION_FORCEINLINE void FinishParent(uint8_t index)
     {
-        FinishObject( index + 28 );
+        FinishObject(index + 28);
     }
 
     SERIALISATION_FORCEINLINE void InitArrayObject()
@@ -98,101 +102,101 @@ public:
     }
 
     template< typename TPrimitive >
-    SERIALISATION_FORCEINLINE void Store( TPrimitive &value, uint8_t index )
+    SERIALISATION_FORCEINLINE void Store(TPrimitive &value, uint8_t index)
     {
         const Internal::Type::Type type = Internal::Type::GetEnum< TPrimitive >();
 
-        WriteHeader( index, type );
-        WritePrimitive( value );
+        WriteHeader(index, type);
+        WritePrimitive(value);
     }
 
-    SERIALISATION_FORCEINLINE void Store( std::string &value, uint8_t index )
+    SERIALISATION_FORCEINLINE void Store(std::string &value, uint8_t index)
     {
-        WriteHeader( index, Internal::Type::String );
-        WritePrimitive( value );
+        WriteHeader(index, Internal::Type::String);
+        WritePrimitive(value);
     }
 
-    SERIALISATION_FORCEINLINE void Store( float &value, uint8_t index )
+    SERIALISATION_FORCEINLINE void Store(float &value, uint8_t index)
     {
-        uint32_t flexman = Util::FloatToUInt32( value );
+        uint32_t flexman = Util::FloatToUInt32(value);
 
-        Store( flexman, index );
+        Store(flexman, index);
     }
 
-    SERIALISATION_FORCEINLINE void Store( double &value, uint8_t index )
+    SERIALISATION_FORCEINLINE void Store(double &value, uint8_t index)
     {
-        uint64_t flexman = Util::DoubleToUInt64( value );
+        uint64_t flexman = Util::DoubleToUInt64(value);
 
-        Store( flexman, index );
+        Store(flexman, index);
     }
 
-    SERIALISATION_FORCEINLINE size_t CreateArray( Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00 )
+    SERIALISATION_FORCEINLINE size_t CreateArray(Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00)
     {
-        const Internal::Type::Type iType = static_cast< Internal::Type::Type >( type );
+        const Internal::Type::Type iType = static_cast< Internal::Type::Type >(type);
 
-        WriteHeader( index, Internal::Type::Array );
-        WriteHeader( flags, iType );
+        WriteHeader(index, Internal::Type::Array);
+        WriteHeader(flags, iType);
 
-        mStreamWriter.WriteSize( size );
+        mStreamWriter.WriteSize(size);
 
         return size;
     }
 
     template< typename TPrimitive >
-    SERIALISATION_FORCEINLINE void StoreArrayItem( TPrimitive &value )
+    SERIALISATION_FORCEINLINE void StoreArrayItem(TPrimitive &value)
     {
-        WritePrimitive( value );
+        WritePrimitive(value);
     }
 
-    SERIALISATION_FORCEINLINE void StoreArrayItem( float &value )
+    SERIALISATION_FORCEINLINE void StoreArrayItem(float &value)
     {
-        uint32_t flexman = Util::FloatToUInt32( value );
+        uint32_t flexman = Util::FloatToUInt32(value);
 
-        StoreArrayItem( flexman );
+        StoreArrayItem(flexman);
     }
 
-    SERIALISATION_FORCEINLINE void StoreArrayItem( double &value )
+    SERIALISATION_FORCEINLINE void StoreArrayItem(double &value)
     {
-        uint64_t flexman = Util::DoubleToUInt64( value );
+        uint64_t flexman = Util::DoubleToUInt64(value);
 
-        StoreArrayItem( flexman );
+        StoreArrayItem(flexman);
     }
 
     template< typename TPrimitive >
-    SERIALISATION_FORCEINLINE void StoreContiguous( TPrimitive *begin, size_t size )
+    SERIALISATION_FORCEINLINE void StoreContiguous(TPrimitive *begin, size_t size)
     {
-        mStreamWriter.WritePrimitiveBlock( begin, size );
+        mStreamWriter.WritePrimitiveBlock(begin, size);
     }
 
-    inline void StoreContiguous( float *begin, size_t size )
+    inline void StoreContiguous(float *begin, size_t size)
     {
-        for ( size_t i = 0; i < size; i += 128, begin += 128 )
+        for (size_t i = 0; i < size; i += 128, begin += 128)
         {
-            size_t blockSize = static_cast< size_t >( size - i );
+            size_t blockSize = static_cast< size_t >(size - i);
             blockSize = blockSize > 128 ? 128 : blockSize;
 
-            for ( size_t k = 0; k < blockSize; ++k )
+            for (size_t k = 0; k < blockSize; ++k)
             {
-                mU32Buffer[ k ] = Util::FloatToUInt32( begin[ k ] );
+                mU32Buffer[ k ] = Util::FloatToUInt32(begin[ k ]);
             }
 
-            mStreamWriter.WritePrimitiveBlock( mU32Buffer, blockSize );
+            mStreamWriter.WritePrimitiveBlock(mU32Buffer, blockSize);
         }
     }
 
-    inline void StoreContiguous( double *begin, size_t size )
+    inline void StoreContiguous(double *begin, size_t size)
     {
-        for ( size_t i = 0; i < size; i += 128, begin += 128 )
+        for (size_t i = 0; i < size; i += 128, begin += 128)
         {
-            size_t blockSize = static_cast<size_t>( size - i );
+            size_t blockSize = static_cast<size_t>(size - i);
             blockSize = blockSize > 128 ? 128 : blockSize;
 
-            for ( size_t k = 0; k < blockSize; ++k )
+            for (size_t k = 0; k < blockSize; ++k)
             {
-                mU64Buffer[ k ] = Util::DoubleToUInt64( begin[ k ] );
+                mU64Buffer[ k ] = Util::DoubleToUInt64(begin[ k ]);
             }
 
-            mStreamWriter.WritePrimitiveBlock( mU64Buffer, blockSize );
+            mStreamWriter.WritePrimitiveBlock(mU64Buffer, blockSize);
         }
     }
 
@@ -203,31 +207,31 @@ private:
     uint64_t mU64Buffer[ 128 ];
     uint32_t mU32Buffer[ 128 ];
 
-    BinarySerMessage( BinarySerMessage & );
+    BinarySerMessage(BinarySerMessage &);
 
-    BinarySerMessage &operator=( const BinarySerMessage &bsm );
+    BinarySerMessage &operator=(const BinarySerMessage &bsm);
 
     template< typename T >
-    SERIALISATION_FORCEINLINE void WriteHeader( const T index, Internal::Type::Type type )
+    SERIALISATION_FORCEINLINE void WriteHeader(const T index, Internal::Type::Type type)
     {
-        const T header = Util::CreateHeader( index, ToBinaryType( type ) );
+        const T header = Util::CreateHeader(index, ToBinaryType(type));
 
-        WritePrimitive( header );
+        WritePrimitive(header);
     }
 
-    inline Internal::Type::Type ToBinaryType( const Internal::Type::Type type )
+    inline Internal::Type::Type ToBinaryType(const Internal::Type::Type type)
     {
         Internal::Type::Type binaryType = type;
 
-        if ( Internal::Type::IsSignedInt( type ) )
+        if (Internal::Type::IsSignedInt(type))
         {
-            binaryType = static_cast< Internal::Type::Type >( type - Internal::Type::SInt8 + Internal::Type::UInt8 );
+            binaryType = static_cast< Internal::Type::Type >(type - Internal::Type::SInt8 + Internal::Type::UInt8);
         }
-        else if ( type == Internal::Type::Float )
+        else if (type == Internal::Type::Float)
         {
             binaryType = Internal::Type::UInt32;
         }
-        else if ( type == Internal::Type::Double )
+        else if (type == Internal::Type::Double)
         {
             binaryType = Internal::Type::UInt64;
         }
@@ -236,15 +240,15 @@ private:
     }
 
     template< typename TPrimitive >
-    SERIALISATION_FORCEINLINE void WritePrimitive( TPrimitive &value )
+    SERIALISATION_FORCEINLINE void WritePrimitive(TPrimitive &value)
     {
-        mStreamWriter.WritePrimitive( value );
+        mStreamWriter.WritePrimitive(value);
     }
 
-    SERIALISATION_FORCEINLINE void WritePrimitive( std::string &value )
+    SERIALISATION_FORCEINLINE void WritePrimitive(std::string &value)
     {
-        mStreamWriter.WriteSize( value.length() );
-        mStreamWriter.WriteBytes( value.c_str(), value.length() );
+        mStreamWriter.WriteSize(value.length());
+        mStreamWriter.WriteBytes(value.c_str(), value.length());
     }
 };
 

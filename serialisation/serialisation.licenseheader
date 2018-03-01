@@ -1,7 +1,8 @@
+extensions: .h .cpp .cc .hpp
 /**
  * @cond ___LICENSE___
  *
- * Copyright (c) 2016-2018 Zefiros Software.
+ * Copyright (c) %CurrentYear% Zefiros Software.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,47 +23,5 @@
  * THE SOFTWARE.
  *
  * @endcond
+ *
  */
-#pragma once
-#ifndef __SERIALISATION_TEMPOBJECT_H__
-#define __SERIALISATION_TEMPOBJECT_H__
-
-#include "serialisation/interface/ITempData.h"
-
-#include <vector>
-
-class TempObject
-    : public ITempData
-{
-public:
-
-    TempObject();
-
-    virtual Internal::Type::Type GetType() const;
-
-    void AddData(uint8_t index, ITempData *data);
-
-    ITempData *TryRemoveData(uint8_t index);
-
-    size_t GetSize();
-
-    ITempData *PopBack();
-
-    bool GetTerminatorRead() const;
-
-    void SetTerminatorRead();
-
-    bool IsNonEmpty() const;
-
-private:
-
-    std::vector< std::pair< uint8_t, ITempData * >> mTempData;
-
-    bool mTerminatorRead;
-};
-
-#ifndef SERIALISATION_NO_HEADER_ONLY
-#   include "../../src/tempObject.cpp"
-#endif
-
-#endif

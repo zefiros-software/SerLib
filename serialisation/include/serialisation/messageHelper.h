@@ -1,5 +1,7 @@
 /**
- * Copyright (c) 2017 Zefiros Software.
+ * @cond ___LICENSE___
+ *
+ * Copyright (c) 2016-2018 Zefiros Software.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +20,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
+ * @endcond
  */
 #pragma once
 #ifndef __SERIALISATION_MESSAGEHELPER_H__
@@ -28,21 +32,21 @@
 namespace MessageHelper
 {
     template< typename TSerialisable >
-    void SERIALISATION_CUSTOM_INTERFACE( TSerialisable &serialisable, Message &message )
+    void SERIALISATION_CUSTOM_INTERFACE(TSerialisable &serialisable, Message &message)
     {
-        serialisable.SERIALISATION_CUSTOM_INTERFACE( message );
+        serialisable.SERIALISATION_CUSTOM_INTERFACE(message);
     }
 
     template< typename TParent >
-    void StoreParent( TParent &parent, Message &message )
+    void StoreParent(TParent &parent, Message &message)
     {
-        parent.TParent::SERIALISATION_CUSTOM_INTERFACE( message );
+        parent.TParent::SERIALISATION_CUSTOM_INTERFACE(message);
     }
 
     template< typename TSerialisable >
-    void Store( Message &message, TSerialisable &serialisable, bool clearBuffers = true );
+    void Store(Message &message, TSerialisable &serialisable, bool clearBuffers = true);
 
-    void Store( Message &message, ISerialisable &serialisable );
+    void Store(Message &message, ISerialisable &serialisable);
 }
 
 #ifndef SERIALISATION_NO_HEADER_ONLY

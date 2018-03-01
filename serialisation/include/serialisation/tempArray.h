@@ -1,5 +1,7 @@
 /**
- * Copyright (c) 2017 Zefiros Software.
+ * @cond ___LICENSE___
+ *
+ * Copyright (c) 2016-2018 Zefiros Software.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +20,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
+ * @endcond
  */
 #pragma once
 #ifndef __SERIALISATION_TEMPARRAY_H__
@@ -45,20 +49,20 @@ public:
         return &mValues.front();
     }
 
-    virtual void Resize( size_t size )
+    virtual void Resize(size_t size)
     {
-        mValues.resize( size );
+        mValues.resize(size);
     }
 
-    void PushBack( const T &value )
+    void PushBack(const T &value)
     {
-        mValues.push_back( value );
+        mValues.push_back(value);
     }
 
-    void PopFront( T &dest )
+    void PopFront(T &dest)
     {
         dest = mValues.front();
-        mValues.erase( mValues.begin() );
+        mValues.erase(mValues.begin());
     }
 
     virtual size_t GetRemainingCount() const
@@ -74,7 +78,7 @@ private:
 template<>
 inline TempArray< TempObject * >::~TempArray()
 {
-    for ( std::vector<TempObject *>::iterator it = mValues.begin(), end = mValues.end(); it != end; ++it )
+    for (std::vector<TempObject *>::iterator it = mValues.begin(), end = mValues.end(); it != end; ++it)
     {
         delete *it;
     }

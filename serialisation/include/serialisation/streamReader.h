@@ -1,5 +1,7 @@
 /**
- * Copyright (c) 2017 Zefiros Software.
+ * @cond ___LICENSE___
+ *
+ * Copyright (c) 2016-2018 Zefiros Software.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +20,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
+ * @endcond
  */
 #pragma once
 #ifndef __SERIALISATION_STREAMREADER_H__
@@ -35,13 +39,13 @@ public:
 
     friend class BufferedStreamReader;
 
-    explicit StreamReader( const std::string &fileName );
+    explicit StreamReader(const std::string &fileName);
 
-    explicit StreamReader( std::ifstream &stream );
+    explicit StreamReader(std::ifstream &stream);
 
-    explicit StreamReader( std::fstream &stream );
+    explicit StreamReader(std::fstream &stream);
 
-    explicit StreamReader( std::istream &stream );
+    explicit StreamReader(std::istream &stream);
 
     ~StreamReader();
 
@@ -49,28 +53,28 @@ public:
 
     void Close();
 
-    void ReadBytes( char *const firstByte, size_t byteCount );
+    void ReadBytes(char *const firstByte, size_t byteCount);
 
-    void ReadBlock( char *const firstByte, size_t byteCount );
+    void ReadBlock(char *const firstByte, size_t byteCount);
 
     size_t ReadSize();
 
     template< typename TPrimitive >
-    void ReadPrimitive( TPrimitive &value )
+    void ReadPrimitive(TPrimitive &value)
     {
-        ReadBytes( reinterpret_cast< char *const >( &value ), sizeof( TPrimitive ) );
+        ReadBytes(reinterpret_cast< char *const >(&value), sizeof(TPrimitive));
     }
 
     template< typename TPrimitive >
-    void ReadPrimitiveBlock( TPrimitive *first, size_t count )
+    void ReadPrimitiveBlock(TPrimitive *first, size_t count)
     {
-        const size_t maxBlockSize = std::numeric_limits< size_t >::max() / sizeof( TPrimitive );
+        const size_t maxBlockSize = std::numeric_limits< size_t >::max() / sizeof(TPrimitive);
 
-        while ( count > 0 )
+        while (count > 0)
         {
             const size_t readBlockSize = count > maxBlockSize ? maxBlockSize : count;
 
-            ReadBlock( reinterpret_cast< char *const >( first ), readBlockSize * sizeof( TPrimitive ) );
+            ReadBlock(reinterpret_cast< char *const >(first), readBlockSize * sizeof(TPrimitive));
             count -= readBlockSize;
             first += readBlockSize;
         }
@@ -81,10 +85,10 @@ private:
     std::ifstream mFileStream;
     std::istream *mStream;
 
-    StreamReader &operator=( const StreamReader & );
-    StreamReader( const StreamReader & );
+    StreamReader &operator=(const StreamReader &);
+    StreamReader(const StreamReader &);
 
-    void SeekG( std::ios::off_type count );
+    void SeekG(std::ios::off_type count);
 
     std::streamsize GCount();
 

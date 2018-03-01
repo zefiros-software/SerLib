@@ -1,5 +1,7 @@
 /**
- * Copyright (c) 2017 Zefiros Software.
+ * @cond ___LICENSE___
+ *
+ * Copyright (c) 2016-2018 Zefiros Software.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +20,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
+ * @endcond
  */
 #include "serialisation/messageAdapter.h"
 #include "serialisation/message.h"
@@ -42,16 +46,16 @@ public:
 
         mValue1 = rand();
 
-        while ( ( mValue2 = Util::UInt32ToFloat( rand() ) ) == std::numeric_limits< float >::infinity() );
+        while ((mValue2 = Util::UInt32ToFloat(rand())) == std::numeric_limits< float >::infinity());
 
         mValue3 = ss.str();
     }
 
-    void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+    void SERIALISATION_CUSTOM_INTERFACE(Message &message)
     {
-        message.Store( mValue1, 0 );
-        message.Store( mValue2, 1 );
-        message.Store( mValue3, 2 );
+        message.Store(mValue1, 0);
+        message.Store(mValue2, 1);
+        message.Store(mValue3, 2);
     }
 
 private:
@@ -73,17 +77,17 @@ public:
 
         mValue1 = rand();
 
-        while ( ( mValue2 = Util::UInt32ToFloat( rand() ) ) == std::numeric_limits< float >::infinity() );
+        while ((mValue2 = Util::UInt32ToFloat(rand())) == std::numeric_limits< float >::infinity());
 
         mValue3 = ss.str();
     }
 
-    void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+    void SERIALISATION_CUSTOM_INTERFACE(Message &message)
     {
-        message.Store( mValue4, 3 );
-        message.Store( mValue3, 2 );
-        message.Store( mValue2, 1 );
-        message.Store( mValue1, 0 );
+        message.Store(mValue4, 3);
+        message.Store(mValue3, 2);
+        message.Store(mValue2, 1);
+        message.Store(mValue1, 0);
     }
 
 private:
@@ -106,17 +110,17 @@ public:
 
         mValue1 = rand();
 
-        while ( ( mValue2 = Util::UInt32ToFloat( rand() ) ) == std::numeric_limits< float >::infinity() );
+        while ((mValue2 = Util::UInt32ToFloat(rand())) == std::numeric_limits< float >::infinity());
 
         mValue3 = ss.str();
     }
 
-    void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+    void SERIALISATION_CUSTOM_INTERFACE(Message &message)
     {
-        message.Store( mValue3, 2 );
-        message.Store( mValue2, 1 );
-        message.Store( mValue1, 0 );
-        message.Store( mValue4, 3 );
+        message.Store(mValue3, 2);
+        message.Store(mValue2, 1);
+        message.Store(mValue1, 0);
+        message.Store(mValue4, 3);
     }
 
 private:
@@ -128,17 +132,17 @@ private:
 };
 
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
 
 #ifdef _WIN32
-    _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-    _CrtSetReportMode( _CRT_ASSERT, _CRTDBG_MODE_FILE );
-    _CrtSetReportFile( _CRT_ASSERT, _CRTDBG_FILE_STDERR );
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
+    _CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);
     //_crtBreakAlloc = 4885;
 #endif
 
-    testing::InitGoogleTest( &argc, argv );
+    testing::InitGoogleTest(&argc, argv);
 
     int32_t result = RUN_ALL_TESTS();
 

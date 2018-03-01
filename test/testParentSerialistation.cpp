@@ -1,5 +1,7 @@
 /**
- * Copyright (c) 2017 Zefiros Software.
+ * @cond ___LICENSE___
+ *
+ * Copyright (c) 2016-2018 Zefiros Software.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +20,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
+ * @endcond
  */
 #include "serialisation/serialisation.h"
 #include "helper.h"
@@ -82,23 +86,23 @@ namespace TestClasses
     {
     public:
 
-        AbstractParent( uint32_t seed )
+        AbstractParent(uint32_t seed)
         {
             g_seed = seed;
             mMember1 = GetRandom< uint8_t >();
             mMember2 = GetRandom< uint64_t >();
         }
 
-        virtual void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        virtual void SERIALISATION_CUSTOM_INTERFACE(Message &message)
         {
-            message.Store( mMember1, 0 );
-            message.Store( mMember2, 1 );
+            message.Store(mMember1, 0);
+            message.Store(mMember2, 1);
         }
 
-        virtual void TestEqual( AbstractParent &c2 )
+        virtual void TestEqual(AbstractParent &c2)
         {
-            ASSERT_EQ( mMember1, c2.mMember1 );
-            ASSERT_EQ( mMember2, c2.mMember2 );
+            ASSERT_EQ(mMember1, c2.mMember1);
+            ASSERT_EQ(mMember2, c2.mMember2);
         }
 
     private:
@@ -112,8 +116,8 @@ namespace TestClasses
     {
     public:
 
-        Parent( uint32_t seed )
-            : AbstractParent( seed + 1 )
+        Parent(uint32_t seed)
+            : AbstractParent(seed + 1)
         {
             g_seed = seed;
             mMember1 = GetRandom< uint32_t >();
@@ -122,18 +126,18 @@ namespace TestClasses
             mMember2 = ss.str();
         }
 
-        virtual void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        virtual void SERIALISATION_CUSTOM_INTERFACE(Message &message)
         {
-            message.Store( mMember1, 0 );
-            message.StoreParent< AbstractParent >( *this, 0 );
-            message.Store( mMember2, 1 );
+            message.Store(mMember1, 0);
+            message.StoreParent< AbstractParent >(*this, 0);
+            message.Store(mMember2, 1);
         }
 
-        virtual void TestEqual( Parent &c2 )
+        virtual void TestEqual(Parent &c2)
         {
-            AbstractParent::TestEqual( c2 );
-            ASSERT_EQ( mMember1, c2.mMember1 );
-            ASSERT_EQ( mMember2, c2.mMember2 );
+            AbstractParent::TestEqual(c2);
+            ASSERT_EQ(mMember1, c2.mMember1);
+            ASSERT_EQ(mMember2, c2.mMember2);
         }
 
     private:
@@ -148,26 +152,26 @@ namespace TestClasses
     {
     public:
 
-        SecondParent( uint32_t seed )
-            : AbstractParent( seed + 2 )
+        SecondParent(uint32_t seed)
+            : AbstractParent(seed + 2)
         {
             g_seed = seed;
             mMember1 = GetRandom< uint8_t >();
             mMember2 = GetRandom< float >();
         }
 
-        virtual void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        virtual void SERIALISATION_CUSTOM_INTERFACE(Message &message)
         {
-            message.Store( mMember1, 0 );
-            message.StoreParent< AbstractParent >( *this, 0 );
-            message.Store( mMember2, 1 );
+            message.Store(mMember1, 0);
+            message.StoreParent< AbstractParent >(*this, 0);
+            message.Store(mMember2, 1);
         }
 
-        virtual void TestEqual( SecondParent &c2 )
+        virtual void TestEqual(SecondParent &c2)
         {
-            AbstractParent::TestEqual( c2 );
-            ASSERT_EQ( mMember1, c2.mMember1 );
-            ASSERT_FLOAT_EQ( mMember2, c2.mMember2 );
+            AbstractParent::TestEqual(c2);
+            ASSERT_EQ(mMember1, c2.mMember1);
+            ASSERT_FLOAT_EQ(mMember2, c2.mMember2);
         }
 
     private:
@@ -181,28 +185,28 @@ namespace TestClasses
     {
     public:
 
-        Child( uint32_t seed )
-            : Parent( seed + 3 ), SecondParent( seed + 4 )
+        Child(uint32_t seed)
+            : Parent(seed + 3), SecondParent(seed + 4)
         {
             g_seed = seed;
             mMember1 = GetRandom< uint32_t >();
             mMember2 = GetRandom< double >();
         }
 
-        virtual void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        virtual void SERIALISATION_CUSTOM_INTERFACE(Message &message)
         {
-            message.Store( mMember1, 0 );
-            message.StoreParent< Parent >( *this, 0 );
-            message.Store( mMember2, 1 );
-            message.StoreParent< SecondParent >( *this, 1 );
+            message.Store(mMember1, 0);
+            message.StoreParent< Parent >(*this, 0);
+            message.Store(mMember2, 1);
+            message.StoreParent< SecondParent >(*this, 1);
         }
 
-        virtual void TestEqual( Child &c2 )
+        virtual void TestEqual(Child &c2)
         {
-            Parent::TestEqual( c2 );
-            SecondParent::TestEqual( c2 );
-            ASSERT_EQ( mMember1, c2.mMember1 );
-            ASSERT_DOUBLE_EQ( mMember2, c2.mMember2 );
+            Parent::TestEqual(c2);
+            SecondParent::TestEqual(c2);
+            ASSERT_EQ(mMember1, c2.mMember1);
+            ASSERT_DOUBLE_EQ(mMember2, c2.mMember2);
         }
 
     protected:
@@ -216,18 +220,18 @@ namespace TestClasses
     {
     public:
 
-        ReorderedChild( uint32_t seed )
-            : Child( seed )
+        ReorderedChild(uint32_t seed)
+            : Child(seed)
         {
 
         }
 
-        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        void SERIALISATION_CUSTOM_INTERFACE(Message &message)
         {
-            message.StoreParent< SecondParent >( *this, 1 );
-            message.Store( mMember2, 1 );
-            message.StoreParent< Parent >( *this, 0 );
-            message.Store( mMember1, 0 );
+            message.StoreParent< SecondParent >(*this, 1);
+            message.Store(mMember2, 1);
+            message.StoreParent< Parent >(*this, 0);
+            message.Store(mMember1, 0);
         }
     };
 
@@ -236,23 +240,23 @@ namespace TestClasses
     {
     public:
 
-        InterfacedAbstractParent( uint32_t seed )
+        InterfacedAbstractParent(uint32_t seed)
         {
             g_seed = seed;
             mMember1 = GetRandom< uint8_t >();
             mMember2 = GetRandom< uint64_t >();
         }
 
-        virtual void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        virtual void SERIALISATION_CUSTOM_INTERFACE(Message &message)
         {
-            message.Store( mMember1, 0 );
-            message.Store( mMember2, 1 );
+            message.Store(mMember1, 0);
+            message.Store(mMember2, 1);
         }
 
-        virtual void TestEqual( InterfacedAbstractParent &c2 )
+        virtual void TestEqual(InterfacedAbstractParent &c2)
         {
-            ASSERT_EQ( mMember1, c2.mMember1 );
-            ASSERT_EQ( mMember2, c2.mMember2 );
+            ASSERT_EQ(mMember1, c2.mMember1);
+            ASSERT_EQ(mMember2, c2.mMember2);
         }
 
     private:
@@ -266,8 +270,8 @@ namespace TestClasses
     {
     public:
 
-        InterfacedParent( uint32_t seed )
-            : InterfacedAbstractParent( seed + 1 )
+        InterfacedParent(uint32_t seed)
+            : InterfacedAbstractParent(seed + 1)
         {
             g_seed = seed;
             mMember1 = GetRandom< uint32_t >();
@@ -276,18 +280,18 @@ namespace TestClasses
             mMember2 = ss.str();
         }
 
-        virtual void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        virtual void SERIALISATION_CUSTOM_INTERFACE(Message &message)
         {
-            message.Store( mMember1, 0 );
-            message.StoreParent( *( ( InterfacedAbstractParent * )this ), 0 );
-            message.Store( mMember2, 1 );
+            message.Store(mMember1, 0);
+            message.StoreParent(*((InterfacedAbstractParent *)this), 0);
+            message.Store(mMember2, 1);
         }
 
-        virtual void TestEqual( InterfacedParent &c2 )
+        virtual void TestEqual(InterfacedParent &c2)
         {
-            InterfacedAbstractParent::TestEqual( c2 );
-            ASSERT_EQ( mMember1, c2.mMember1 );
-            ASSERT_EQ( mMember2, c2.mMember2 );
+            InterfacedAbstractParent::TestEqual(c2);
+            ASSERT_EQ(mMember1, c2.mMember1);
+            ASSERT_EQ(mMember2, c2.mMember2);
         }
 
     private:
@@ -302,26 +306,26 @@ namespace TestClasses
     {
     public:
 
-        InterfacedSecondParent( uint32_t seed )
-            : InterfacedAbstractParent( seed + 2 )
+        InterfacedSecondParent(uint32_t seed)
+            : InterfacedAbstractParent(seed + 2)
         {
             g_seed = seed;
             mMember1 = GetRandom< uint8_t >();
             mMember2 = GetRandom< float >();
         }
 
-        virtual void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        virtual void SERIALISATION_CUSTOM_INTERFACE(Message &message)
         {
-            message.Store( mMember1, 0 );
-            message.StoreParent( *( ( InterfacedAbstractParent * )this ), 0 );
-            message.Store( mMember2, 1 );
+            message.Store(mMember1, 0);
+            message.StoreParent(*((InterfacedAbstractParent *)this), 0);
+            message.Store(mMember2, 1);
         }
 
-        virtual void TestEqual( InterfacedSecondParent &c2 )
+        virtual void TestEqual(InterfacedSecondParent &c2)
         {
-            InterfacedAbstractParent::TestEqual( c2 );
-            ASSERT_EQ( mMember1, c2.mMember1 );
-            ASSERT_FLOAT_EQ( mMember2, c2.mMember2 );
+            InterfacedAbstractParent::TestEqual(c2);
+            ASSERT_EQ(mMember1, c2.mMember1);
+            ASSERT_FLOAT_EQ(mMember2, c2.mMember2);
         }
 
     private:
@@ -335,28 +339,28 @@ namespace TestClasses
     {
     public:
 
-        InterfacedChild( uint32_t seed )
-            : InterfacedParent( seed + 3 ), InterfacedSecondParent( seed + 4 )
+        InterfacedChild(uint32_t seed)
+            : InterfacedParent(seed + 3), InterfacedSecondParent(seed + 4)
         {
             g_seed = seed;
             mMember1 = GetRandom< uint32_t >();
             mMember2 = GetRandom< double >();
         }
 
-        virtual void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        virtual void SERIALISATION_CUSTOM_INTERFACE(Message &message)
         {
-            message.Store( mMember1, 0 );
-            message.StoreParent( *( ( InterfacedParent * )this ), 0 );
-            message.Store( mMember2, 1 );
-            message.StoreParent( *( ( InterfacedSecondParent * )this ), 1 );
+            message.Store(mMember1, 0);
+            message.StoreParent(*((InterfacedParent *)this), 0);
+            message.Store(mMember2, 1);
+            message.StoreParent(*((InterfacedSecondParent *)this), 1);
         }
 
-        virtual void TestEqual( InterfacedChild &c2 )
+        virtual void TestEqual(InterfacedChild &c2)
         {
-            InterfacedParent::TestEqual( c2 );
-            InterfacedSecondParent::TestEqual( c2 );
-            ASSERT_EQ( mMember1, c2.mMember1 );
-            ASSERT_DOUBLE_EQ( mMember2, c2.mMember2 );
+            InterfacedParent::TestEqual(c2);
+            InterfacedSecondParent::TestEqual(c2);
+            ASSERT_EQ(mMember1, c2.mMember1);
+            ASSERT_DOUBLE_EQ(mMember2, c2.mMember2);
         }
 
     protected:
@@ -370,23 +374,23 @@ namespace TestClasses
     {
     public:
 
-        InterfacedReorderedChild( uint32_t seed )
-            : InterfacedChild( seed )
+        InterfacedReorderedChild(uint32_t seed)
+            : InterfacedChild(seed)
         {
 
         }
 
-        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        void SERIALISATION_CUSTOM_INTERFACE(Message &message)
         {
-            message.StoreParent( *( ( InterfacedSecondParent * )this ), 1 );
-            message.Store( mMember2, 1 );
-            message.StoreParent( *( ( InterfacedParent * )this ), 0 );
-            message.Store( mMember1, 0 );
+            message.StoreParent(*((InterfacedSecondParent *)this), 1);
+            message.Store(mMember2, 1);
+            message.StoreParent(*((InterfacedParent *)this), 0);
+            message.Store(mMember1, 0);
         }
     };
 
 
 
-    TestParent( TestParent, DoubleInheritance, 343422, 21331 );
-    TestInterfacedParent( TestInterfacedParent, DoubleInheritance, 343422, 21331 );
+    TestParent(TestParent, DoubleInheritance, 343422, 21331);
+    TestInterfacedParent(TestInterfacedParent, DoubleInheritance, 343422, 21331);
 }

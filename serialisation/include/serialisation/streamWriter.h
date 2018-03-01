@@ -1,5 +1,7 @@
 /**
- * Copyright (c) 2017 Zefiros Software.
+ * @cond ___LICENSE___
+ *
+ * Copyright (c) 2016-2018 Zefiros Software.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +20,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
+ * @endcond
  */
 #pragma once
 #ifndef __SERIALISATION_STREAMWRITER_H__
@@ -34,13 +38,13 @@ class StreamWriter
 {
 public:
 
-    explicit StreamWriter( const std::string &fileName );
+    explicit StreamWriter(const std::string &fileName);
 
-    explicit StreamWriter( std::ofstream &stream );
+    explicit StreamWriter(std::ofstream &stream);
 
-    explicit StreamWriter( std::fstream &stream );
+    explicit StreamWriter(std::fstream &stream);
 
-    explicit StreamWriter( std::ostream &stream );
+    explicit StreamWriter(std::ostream &stream);
 
     ~StreamWriter();
 
@@ -48,31 +52,31 @@ public:
 
     void Close();
 
-    SERIALISATION_FORCEINLINE void WriteBytes( const char *const firstByte, size_t byteCount )
+    SERIALISATION_FORCEINLINE void WriteBytes(const char *const firstByte, size_t byteCount)
     {
-        mStream->write( firstByte, byteCount );
+        mStream->write(firstByte, byteCount);
     }
 
-    void WriteBlock( const char *const firstByte, size_t byteCount );
+    void WriteBlock(const char *const firstByte, size_t byteCount);
 
-    void WriteSize( size_t size );
+    void WriteSize(size_t size);
 
     template< typename TPrimitive >
-    void WritePrimitive( const TPrimitive &value )
+    void WritePrimitive(const TPrimitive &value)
     {
-        WriteBytes( reinterpret_cast< const char *const >( &value ), sizeof( TPrimitive ) );
+        WriteBytes(reinterpret_cast< const char *const >(&value), sizeof(TPrimitive));
     }
 
     template< typename TPrimitive >
-    void WritePrimitiveBlock( const TPrimitive *first, size_t count )
+    void WritePrimitiveBlock(const TPrimitive *first, size_t count)
     {
-        const size_t maxBlockSize = std::numeric_limits< size_t >::max() / sizeof( TPrimitive );
+        const size_t maxBlockSize = std::numeric_limits< size_t >::max() / sizeof(TPrimitive);
 
-        while ( count > 0 )
+        while (count > 0)
         {
             const size_t writeBlockSize = count > maxBlockSize ? maxBlockSize : count;
 
-            WriteBlock( reinterpret_cast< const char *const >( first ), writeBlockSize * sizeof( TPrimitive ) );
+            WriteBlock(reinterpret_cast< const char *const >(first), writeBlockSize * sizeof(TPrimitive));
             count -= writeBlockSize;
             first += writeBlockSize;
         }
@@ -85,8 +89,8 @@ private:
     std::ofstream mFileStream;
     std::ostream *mStream;
 
-    StreamWriter &operator=( const StreamWriter & );
-    StreamWriter( const StreamWriter & );
+    StreamWriter &operator=(const StreamWriter &);
+    StreamWriter(const StreamWriter &);
 };
 
 #ifndef SERIALISATION_NO_HEADER_ONLY

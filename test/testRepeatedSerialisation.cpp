@@ -1,5 +1,7 @@
 /**
- * Copyright (c) 2017 Zefiros Software.
+ * @cond ___LICENSE___
+ *
+ * Copyright (c) 2016-2018 Zefiros Software.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +20,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
+ * @endcond
  */
 #include "serialisation/serialisation.h"
 #include "helper.h"
@@ -103,23 +107,23 @@ namespace TestClasses
                 mData[2] = 0.0;
             }
 
-            Vec3( float x, float y, float z )
+            Vec3(float x, float y, float z)
             {
                 mData[0] = x;
                 mData[1] = y;
                 mData[2] = z;
             }
 
-            void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+            void SERIALISATION_CUSTOM_INTERFACE(Message &message)
             {
-                message.StoreContainer( mData, 0 );
+                message.StoreContainer(mData, 0);
             }
 
-            void TestEqual( Vec3 &c2 )
+            void TestEqual(Vec3 &c2)
             {
-                for ( uint32_t i = 0; i < 3; ++i )
+                for (uint32_t i = 0; i < 3; ++i)
                 {
-                    EXPECT_FLOAT_EQ( mData[i], c2.mData[i] );
+                    EXPECT_FLOAT_EQ(mData[i], c2.mData[i]);
                 }
             }
 
@@ -130,15 +134,15 @@ namespace TestClasses
 
         struct SubMeshData
         {
-            SubMeshData() : indexOffset( 0 ), indexCount( 1 ), vertexOffset( 2 ), materialIndex( 3 ),
-                aabbMin( 0.0f, 0.1f, 0.2f ), aabbMax( 0.3f, 0.4f, 0.5f ), aabbOffset( 0.6f, 0.7f, 0.8f ),
-                name( "MAGIC_STRING_1" )
+            SubMeshData() : indexOffset(0), indexCount(1), vertexOffset(2), materialIndex(3),
+                aabbMin(0.0f, 0.1f, 0.2f), aabbMax(0.3f, 0.4f, 0.5f), aabbOffset(0.6f, 0.7f, 0.8f),
+                name("MAGIC_STRING_1")
             {
 
             }
 
-            SubMeshData( Vec3 &v1, Vec3 &v2, Vec3 &v3 ) : indexOffset( 0 ), indexCount( 1 ), vertexOffset( 2 ), materialIndex( 3 ),
-                aabbMin( v1 ), aabbMax( v2 ), aabbOffset( v3 ), name( "MAGIC_STRING_2" )
+            SubMeshData(Vec3 &v1, Vec3 &v2, Vec3 &v3) : indexOffset(0), indexCount(1), vertexOffset(2), materialIndex(3),
+                aabbMin(v1), aabbMax(v2), aabbOffset(v3), name("MAGIC_STRING_2")
             {
 
             }
@@ -154,70 +158,70 @@ namespace TestClasses
 
             std::string name;
 
-            void OnStore( Message &message )
+            void OnStore(Message &message)
             {
-                message.Store( indexOffset, 0 );
-                message.Store( indexCount, 1 );
-                message.Store( vertexOffset, 2 );
-                message.Store( materialIndex, 3 );
+                message.Store(indexOffset, 0);
+                message.Store(indexCount, 1);
+                message.Store(vertexOffset, 2);
+                message.Store(materialIndex, 3);
 
-                message.Store( aabbMin, 4 );
-                message.Store( aabbMax, 5 );
-                message.Store( aabbOffset, 6 );
+                message.Store(aabbMin, 4);
+                message.Store(aabbMax, 5);
+                message.Store(aabbOffset, 6);
 
-                message.Store( name, 7 );
+                message.Store(name, 7);
             }
 
-            void TestEqual( SubMeshData &c2 )
+            void TestEqual(SubMeshData &c2)
             {
-                EXPECT_EQ( indexOffset, c2.indexOffset );
-                EXPECT_EQ( indexCount, c2.indexCount );
-                EXPECT_EQ( vertexOffset, c2.vertexOffset );
-                EXPECT_EQ( materialIndex, c2.materialIndex );
-                EXPECT_EQ( name, c2.name );
+                EXPECT_EQ(indexOffset, c2.indexOffset);
+                EXPECT_EQ(indexCount, c2.indexCount);
+                EXPECT_EQ(vertexOffset, c2.vertexOffset);
+                EXPECT_EQ(materialIndex, c2.materialIndex);
+                EXPECT_EQ(name, c2.name);
 
-                aabbMin.TestEqual( c2.aabbMin );
-                aabbMax.TestEqual( c2.aabbMax );
-                aabbOffset.TestEqual( c2.aabbOffset );
+                aabbMin.TestEqual(c2.aabbMin);
+                aabbMax.TestEqual(c2.aabbMax);
+                aabbOffset.TestEqual(c2.aabbOffset);
             }
         };
 
-        ZefirosEngineMeshData( )
+        ZefirosEngineMeshData()
         {
-            mSubMeshes.resize( its1 );
-            mPositionVertices.resize( its2 );
-            mInterlacedVertices.resize( its3 );
-            mIndices.resize( its4 );
+            mSubMeshes.resize(its1);
+            mPositionVertices.resize(its2);
+            mInterlacedVertices.resize(its3);
+            mIndices.resize(its4);
         }
 
-        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        void SERIALISATION_CUSTOM_INTERFACE(Message &message)
         {
-            message.StoreContainer( mSubMeshes, 0 );
-            message.StoreContainer( mPositionVertices, 1 );
-            message.StoreContainer( mInterlacedVertices, 2 );
-            message.StoreContainer( mIndices, 3 );
+            message.StoreContainer(mSubMeshes, 0);
+            message.StoreContainer(mPositionVertices, 1);
+            message.StoreContainer(mInterlacedVertices, 2);
+            message.StoreContainer(mIndices, 3);
         }
 
-        void TestEqual( ZefirosEngineMeshData &c2 )
+        void TestEqual(ZefirosEngineMeshData &c2)
         {
-            for ( uint32_t i = 0; i < its1; ++i )
+            for (uint32_t i = 0; i < its1; ++i)
             {
-                mSubMeshes[i].TestEqual( c2.mSubMeshes[i] );
+                mSubMeshes[i].TestEqual(c2.mSubMeshes[i]);
             }
 
-            for ( uint32_t i = 0; i < its2; ++i )
+            for (uint32_t i = 0; i < its2; ++i)
             {
-                mPositionVertices[i].TestEqual( c2.mPositionVertices[i] );
+                mPositionVertices[i].TestEqual(c2.mPositionVertices[i]);
             }
 
-            for ( uint32_t i = 0; i < its3; ++i )
+            for (uint32_t i = 0; i < its3; ++i)
             {
-                EXPECT_EQ( mInterlacedVertices[i], c2.mInterlacedVertices[i] );
+                EXPECT_EQ(mInterlacedVertices[i], c2.mInterlacedVertices[i]);
             }
 
-            for ( uint32_t i = 0; i < its4; ++i )
+            for (uint32_t i = 0; i < its4; ++i)
             {
-                EXPECT_EQ( mIndices[i], c2.mIndices[i] );
+                EXPECT_EQ(mIndices[i], c2.mIndices[i]);
             }
         }
 
@@ -233,24 +237,24 @@ namespace TestClasses
     {
     public:
 
-        TestClass3( uint32_t seed = 233232 )
+        TestClass3(uint32_t seed = 233232)
         {
             g_seed = seed;
 
-            for ( uint32_t i = 0; i < its; ++i )
+            for (uint32_t i = 0; i < its; ++i)
             {
-                mMemberT.push_back( GetRandom<uint8_t>() );
-                mMemberS.push_back( GetRandom<uint16_t >() );
-                mMemberR.push_back( GetRandom<uint32_t>() );
-                mMemberG.push_back( GetRandom<uint64_t >() );
+                mMemberT.push_back(GetRandom<uint8_t>());
+                mMemberS.push_back(GetRandom<uint16_t >());
+                mMemberR.push_back(GetRandom<uint32_t>());
+                mMemberG.push_back(GetRandom<uint64_t >());
 
-                mMemberTs.push_back( GetRandom<int8_t>() );
-                mMemberSs.push_back( GetRandom<int16_t >() );
-                mMemberRs.push_back( GetRandom<int32_t>() );
-                mMemberGs.push_back( GetRandom<int64_t >() );
+                mMemberTs.push_back(GetRandom<int8_t>());
+                mMemberSs.push_back(GetRandom<int16_t >());
+                mMemberRs.push_back(GetRandom<int32_t>());
+                mMemberGs.push_back(GetRandom<int64_t >());
 
-                mMemberF.push_back( GetRandom< float > () );
-                mMemberD.push_back( GetRandom< double > () );
+                mMemberF.push_back(GetRandom< float > ());
+                mMemberD.push_back(GetRandom< double > ());
 
             }
 
@@ -258,43 +262,43 @@ namespace TestClasses
             name2 = "CouldBeUsedToStoreNames";
         }
 
-        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        void SERIALISATION_CUSTOM_INTERFACE(Message &message)
         {
-            message.StoreContainer( mMemberT, 1 );
-            message.StoreContainer( mMemberTs, 0 );
-            message.StoreContainer( mMemberS, 2 );
-            message.StoreContainer( mMemberSs, 3 );
-            message.StoreContainer( mMemberR, 4 );
-            message.StoreContainer( mMemberRs, 5 );
-            message.StoreContainer( mMemberG, 6 );
-            message.StoreContainer( mMemberGs, 7 );
+            message.StoreContainer(mMemberT, 1);
+            message.StoreContainer(mMemberTs, 0);
+            message.StoreContainer(mMemberS, 2);
+            message.StoreContainer(mMemberSs, 3);
+            message.StoreContainer(mMemberR, 4);
+            message.StoreContainer(mMemberRs, 5);
+            message.StoreContainer(mMemberG, 6);
+            message.StoreContainer(mMemberGs, 7);
 
 
-            message.Store( name1, 8 );
-            message.Store( name2, 9 );
+            message.Store(name1, 8);
+            message.Store(name2, 9);
 
-            message.StoreContainer( mMemberF, 10 );
-            message.StoreContainer( mMemberD, 11 );
+            message.StoreContainer(mMemberF, 10);
+            message.StoreContainer(mMemberD, 11);
         }
 
-        void TestEqual( TestClass3 &c2 )
+        void TestEqual(TestClass3 &c2)
         {
-            for ( uint32_t i = 0; i < its; i++ )
+            for (uint32_t i = 0; i < its; i++)
             {
-                EXPECT_EQ( mMemberT[i], c2.mMemberT[i] );
-                EXPECT_EQ( mMemberTs[i], c2.mMemberTs[i] );
-                EXPECT_EQ( mMemberR[i], c2.mMemberR[i] );
-                EXPECT_EQ( mMemberRs[i], c2.mMemberRs[i] );
-                EXPECT_EQ( mMemberG[i], c2.mMemberG[i] );
-                EXPECT_EQ( mMemberGs[i], c2.mMemberGs[i] );
-                EXPECT_EQ( mMemberS[i], c2.mMemberS[i] );
-                EXPECT_EQ( mMemberSs[i], c2.mMemberSs[i] );
-                EXPECT_FLOAT_EQ( mMemberF[i], c2.mMemberF[i] );
-                EXPECT_DOUBLE_EQ( mMemberD[i], c2.mMemberD[i] );
+                EXPECT_EQ(mMemberT[i], c2.mMemberT[i]);
+                EXPECT_EQ(mMemberTs[i], c2.mMemberTs[i]);
+                EXPECT_EQ(mMemberR[i], c2.mMemberR[i]);
+                EXPECT_EQ(mMemberRs[i], c2.mMemberRs[i]);
+                EXPECT_EQ(mMemberG[i], c2.mMemberG[i]);
+                EXPECT_EQ(mMemberGs[i], c2.mMemberGs[i]);
+                EXPECT_EQ(mMemberS[i], c2.mMemberS[i]);
+                EXPECT_EQ(mMemberSs[i], c2.mMemberSs[i]);
+                EXPECT_FLOAT_EQ(mMemberF[i], c2.mMemberF[i]);
+                EXPECT_DOUBLE_EQ(mMemberD[i], c2.mMemberD[i]);
             }
 
-            EXPECT_EQ( name1.compare( c2.name1 ), 0 );
-            EXPECT_EQ( name2.compare( c2.name2 ), 0 );
+            EXPECT_EQ(name1.compare(c2.name1), 0);
+            EXPECT_EQ(name2.compare(c2.name2), 0);
         }
 
         std::vector< uint8_t > mMemberT;
@@ -322,26 +326,26 @@ namespace TestClasses
     {
     public:
 
-        TestClass4( uint32_t seed = 233232 )
+        TestClass4(uint32_t seed = 233232)
         {
             g_seed = seed;
 
-            for ( uint32_t i = 0; i < its; ++i )
+            for (uint32_t i = 0; i < its; ++i)
             {
-                mMemberTestClasses.push_back( TestClass( GetRandom< T >() ) );
+                mMemberTestClasses.push_back(TestClass(GetRandom< T >()));
             }
         }
 
-        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        void SERIALISATION_CUSTOM_INTERFACE(Message &message)
         {
-            message.StoreContainer( mMemberTestClasses, 0 );
+            message.StoreContainer(mMemberTestClasses, 0);
         }
 
-        void TestEqual( TestClass4 &c2 )
+        void TestEqual(TestClass4 &c2)
         {
-            for ( uint32_t i = 0; i < its; ++i )
+            for (uint32_t i = 0; i < its; ++i)
             {
-                mMemberTestClasses[ i ].TestEqual( c2.mMemberTestClasses[ i ] );
+                mMemberTestClasses[ i ].TestEqual(c2.mMemberTestClasses[ i ]);
             }
         }
 
@@ -356,24 +360,24 @@ namespace TestClasses
     public:
 
         Primitive()
-            : mMember( T() )
+            : mMember(T())
         {
 
         }
 
-        Primitive( const T &value )
-            : mMember( value )
+        Primitive(const T &value)
+            : mMember(value)
         {
         }
 
-        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        void SERIALISATION_CUSTOM_INTERFACE(Message &message)
         {
-            message.Store( mMember, 1 );
+            message.Store(mMember, 1);
         }
 
-        void TestEqual( Primitive &c2 )
+        void TestEqual(Primitive &c2)
         {
-            EXPECT_EQ( mMember, c2.mMember );
+            EXPECT_EQ(mMember, c2.mMember);
         }
 
         T mMember;
@@ -386,24 +390,24 @@ namespace TestClasses
     public:
 
         Primitive()
-            : mMember( float() )
+            : mMember(float())
         {
 
         }
 
-        Primitive( const float &value )
-            : mMember( value )
+        Primitive(const float &value)
+            : mMember(value)
         {
         }
 
-        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        void SERIALISATION_CUSTOM_INTERFACE(Message &message)
         {
-            message.Store( mMember, 1 );
+            message.Store(mMember, 1);
         }
 
-        void TestEqual( Primitive &c2 )
+        void TestEqual(Primitive &c2)
         {
-            EXPECT_FLOAT_EQ( mMember, c2.mMember );
+            EXPECT_FLOAT_EQ(mMember, c2.mMember);
         }
 
         float mMember;
@@ -417,45 +421,45 @@ namespace TestClasses
     public:
 
         Primitive()
-            : mMember( double() )
+            : mMember(double())
         {
 
         }
 
-        Primitive( const double &value )
-            : mMember( value )
+        Primitive(const double &value)
+            : mMember(value)
         {
         }
 
-        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        void SERIALISATION_CUSTOM_INTERFACE(Message &message)
         {
-            message.Store( mMember, 1 );
+            message.Store(mMember, 1);
         }
 
-        void TestEqual( Primitive &c2 )
+        void TestEqual(Primitive &c2)
         {
-            EXPECT_DOUBLE_EQ( mMember, c2.mMember );
+            EXPECT_DOUBLE_EQ(mMember, c2.mMember);
         }
 
         double mMember;
 
     };
 
-    TestEasyRepeatedClass( EasyRepeated, randomVals5, 343422, 21331, 5 );
-    TestEasyRepeatedClass( EasyRepeated, randomVals1280, 343422, 21331, 1280 );
+    TestEasyRepeatedClass(EasyRepeated, randomVals5, 343422, 21331, 5);
+    TestEasyRepeatedClass(EasyRepeated, randomVals1280, 343422, 21331, 1280);
 
-    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, uint8_t );
-    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, uint16_t );
-    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, uint32_t );
-    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, uint64_t );
+    TestRepeatedPrimitiveMessageClass(RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, uint8_t);
+    TestRepeatedPrimitiveMessageClass(RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, uint16_t);
+    TestRepeatedPrimitiveMessageClass(RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, uint32_t);
+    TestRepeatedPrimitiveMessageClass(RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, uint64_t);
 
-    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, int8_t );
-    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, int16_t );
-    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, int32_t );
-    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, int64_t );
+    TestRepeatedPrimitiveMessageClass(RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, int8_t);
+    TestRepeatedPrimitiveMessageClass(RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, int16_t);
+    TestRepeatedPrimitiveMessageClass(RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, int32_t);
+    TestRepeatedPrimitiveMessageClass(RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, int64_t);
 
-    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, float );
-    TestRepeatedPrimitiveMessageClass( RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, double );
+    TestRepeatedPrimitiveMessageClass(RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, float);
+    TestRepeatedPrimitiveMessageClass(RepeatedPrimitiveMessage, randomVals, 343422, 21331, 100, double);
 
-    TestMeshDataClass( ZefirosMeshData, randomVals, 382, 533055, 29851080, 1573602 );
+    TestMeshDataClass(ZefirosMeshData, randomVals, 382, 533055, 29851080, 1573602);
 }

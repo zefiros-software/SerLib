@@ -1,5 +1,7 @@
 /**
- * Copyright (c) 2017 Zefiros Software.
+ * @cond ___LICENSE___
+ *
+ * Copyright (c) 2016-2018 Zefiros Software.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +20,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
+ * @endcond
  */
 #include "serialisation/serialisation.h"
 #include "helper.h"
@@ -37,229 +41,229 @@ public:
     {
     }
 
-    StringClass( const std::string &ss )
-        : str( ss )
+    StringClass(const std::string &ss)
+        : str(ss)
     {
     }
 
-    void OnStore( Message &message )
+    void OnStore(Message &message)
     {
-        message.Store( str, 0 );
+        message.Store(str, 0);
     }
 
     std::string str;
 };
 
-TEST( P( BasicTest ), EmptyString )
+TEST(P(BasicTest), EmptyString)
 {
-    StringClass ss1( "" );
-    StringClass ss2( GenerateRandomString() );
+    StringClass ss1("");
+    StringClass ss2(GenerateRandomString());
 
-    SimpleSerialiseDeserialiseStream( ss1, ss2 );
+    SimpleSerialiseDeserialiseStream(ss1, ss2);
 
-    EXPECT_EQ( ss1.str, ss2.str );
+    EXPECT_EQ(ss1.str, ss2.str);
 }
 
-TEST( P( BasicTest ), FullString )
+TEST(P(BasicTest), FullString)
 {
-    StringClass ss1( GenerateRandomString() );
-    StringClass ss2( "" );
+    StringClass ss1(GenerateRandomString());
+    StringClass ss2("");
 
-    SimpleSerialiseDeserialiseStream( ss1, ss2 );
+    SimpleSerialiseDeserialiseStream(ss1, ss2);
 
-    EXPECT_EQ( ss1.str, ss2.str );
+    EXPECT_EQ(ss1.str, ss2.str);
 }
 
 class VectorClass
 {
 public:
 
-    VectorClass( std::vector< uint8_t > &v ) : vec( v )
+    VectorClass(std::vector< uint8_t > &v) : vec(v)
     {
     }
 
-    void OnStore( Message &message )
+    void OnStore(Message &message)
     {
-        message.StoreContainer( vec, 0 );
+        message.StoreContainer(vec, 0);
     }
 
     std::vector< uint8_t > &vec;
 
 private:
 
-    VectorClass &operator=( const VectorClass & );
+    VectorClass &operator=(const VectorClass &);
 };
 
-TEST( P( BasicTest ), EmptyContainer )
+TEST(P(BasicTest), EmptyContainer)
 {
     std::vector< uint8_t > v1;
     std::vector< uint8_t > v2;
-    v2.resize( GetRandom< uint8_t >() );
+    v2.resize(GetRandom< uint8_t >());
 
-    VectorClass vc1( v1 );
-    VectorClass vc2( v2 );
+    VectorClass vc1(v1);
+    VectorClass vc2(v2);
 
-    SimpleSerialiseDeserialiseStream( vc1, vc2 );
+    SimpleSerialiseDeserialiseStream(vc1, vc2);
 
-    EXPECT_EQ( v1, v2 );
+    EXPECT_EQ(v1, v2);
 }
 
-TEST( P( BasicTest ), FullContrainer )
+TEST(P(BasicTest), FullContrainer)
 {
     std::vector< uint8_t > v1;
     std::vector< uint8_t > v2;
-    v1.resize( GetRandom< uint8_t >() );
+    v1.resize(GetRandom< uint8_t >());
 
-    VectorClass vc1( v1 );
-    VectorClass vc2( v2 );
+    VectorClass vc1(v1);
+    VectorClass vc2(v2);
 
-    SimpleSerialiseDeserialiseStream( vc1, vc2 );
+    SimpleSerialiseDeserialiseStream(vc1, vc2);
 
-    EXPECT_EQ( v1, v2 );
+    EXPECT_EQ(v1, v2);
 }
 
 class ArrayClass
 {
 public:
 
-    ArrayClass( std::vector< uint8_t > &v ) : vec( v )
+    ArrayClass(std::vector< uint8_t > &v) : vec(v)
     {
     }
 
-    void OnStore( Message &message )
+    void OnStore(Message &message)
     {
-        message.StoreContainer( vec, 0 );
+        message.StoreContainer(vec, 0);
     }
 
     std::vector< uint8_t > &vec;
 
 private:
 
-    ArrayClass &operator=( const ArrayClass & );
+    ArrayClass &operator=(const ArrayClass &);
 };
 
 class ArrayFubarClass
 {
 public:
 
-    ArrayFubarClass( std::vector< uint8_t > &v ) : vec( v )
+    ArrayFubarClass(std::vector< uint8_t > &v) : vec(v)
     {
     }
 
-    void OnStore( Message &message )
+    void OnStore(Message &message)
     {
-        message.StoreContainer( vec, 0 );
+        message.StoreContainer(vec, 0);
     }
 
     std::vector< uint8_t > &vec;
 
 private:
 
-    ArrayFubarClass &operator=( const ArrayFubarClass & );
+    ArrayFubarClass &operator=(const ArrayFubarClass &);
 };
 
 class ArrayFubar2Class
 {
 public:
 
-    ArrayFubar2Class( std::vector< uint8_t > &v ) : vec( v )
+    ArrayFubar2Class(std::vector< uint8_t > &v) : vec(v)
     {
     }
 
-    void OnStore( Message &message )
+    void OnStore(Message &message)
     {
-        message.StoreContainer( vec, 0 );
+        message.StoreContainer(vec, 0);
     }
 
     std::vector< uint8_t > &vec;
 
 private:
 
-    ArrayFubar2Class &operator=( const ArrayFubar2Class & );
+    ArrayFubar2Class &operator=(const ArrayFubar2Class &);
 };
 
-TEST( P( BasicTest ), EmptyArray )
+TEST(P(BasicTest), EmptyArray)
 {
     std::vector< uint8_t > v1;
     std::vector< uint8_t > v2;
-    v2.resize( GetRandom< uint8_t >() );
+    v2.resize(GetRandom< uint8_t >());
 
-    ArrayClass ac1( v1 );
-    ArrayClass ac2( v2 );
+    ArrayClass ac1(v1);
+    ArrayClass ac2(v2);
 
-    SimpleSerialiseDeserialiseStream( ac1, ac2 );
+    SimpleSerialiseDeserialiseStream(ac1, ac2);
 
-    EXPECT_EQ( v1, v2 );
+    EXPECT_EQ(v1, v2);
 }
 
-TEST( P( BasicTest ), FullArray )
+TEST(P(BasicTest), FullArray)
 {
     std::vector< uint8_t > v1;
     std::vector< uint8_t > v2;
-    v1.resize( GetRandom< uint8_t >() );
+    v1.resize(GetRandom< uint8_t >());
 
-    ArrayClass ac1( v1 );
-    ArrayClass ac2( v2 );
+    ArrayClass ac1(v1);
+    ArrayClass ac2(v2);
 
-    SimpleSerialiseDeserialiseStream( ac1, ac2 );
+    SimpleSerialiseDeserialiseStream(ac1, ac2);
 
-    EXPECT_EQ( v1, v2 );
+    EXPECT_EQ(v1, v2);
 }
 
-TEST( P( BasicTest ), EmptyArrayFubar1 )
+TEST(P(BasicTest), EmptyArrayFubar1)
 {
     std::vector< uint8_t > v1;
     std::vector< uint8_t > v2;
-    v2.resize( GetRandom< uint8_t >() );
+    v2.resize(GetRandom< uint8_t >());
 
-    ArrayFubarClass ac1( v1 );
-    ArrayFubarClass ac2( v2 );
+    ArrayFubarClass ac1(v1);
+    ArrayFubarClass ac2(v2);
 
-    SimpleSerialiseDeserialiseStream( ac1, ac2 );
+    SimpleSerialiseDeserialiseStream(ac1, ac2);
 
-    EXPECT_EQ( v1, v2 );
+    EXPECT_EQ(v1, v2);
 }
 
-TEST( P( BasicTest ), FullArrayFubar1 )
+TEST(P(BasicTest), FullArrayFubar1)
 {
     std::vector< uint8_t > v1;
     std::vector< uint8_t > v2;
-    v1.resize( GetRandom< uint8_t >() );
+    v1.resize(GetRandom< uint8_t >());
 
-    ArrayFubarClass ac1( v1 );
-    ArrayFubarClass ac2( v2 );
+    ArrayFubarClass ac1(v1);
+    ArrayFubarClass ac2(v2);
 
-    SimpleSerialiseDeserialiseStream( ac1, ac2 );
+    SimpleSerialiseDeserialiseStream(ac1, ac2);
 
-    EXPECT_EQ( v1, v2 );
+    EXPECT_EQ(v1, v2);
 }
 
-TEST( P( BasicTest ), EmptyArrayFubar2 )
+TEST(P(BasicTest), EmptyArrayFubar2)
 {
     std::vector< uint8_t > v1;
     std::vector< uint8_t > v2;
-    v2.resize( GetRandom< uint8_t >() );
+    v2.resize(GetRandom< uint8_t >());
 
-    ArrayFubar2Class ac1( v1 );
-    ArrayFubar2Class ac2( v2 );
+    ArrayFubar2Class ac1(v1);
+    ArrayFubar2Class ac2(v2);
 
-    SimpleSerialiseDeserialiseStream( ac1, ac2 );
+    SimpleSerialiseDeserialiseStream(ac1, ac2);
 
-    EXPECT_EQ( v1, v2 );
+    EXPECT_EQ(v1, v2);
 }
 
-TEST( P( BasicTest ), FullArrayFubar2 )
+TEST(P(BasicTest), FullArrayFubar2)
 {
     std::vector< uint8_t > v1;
     std::vector< uint8_t > v2;
-    v1.resize( GetRandom< uint8_t >() );
+    v1.resize(GetRandom< uint8_t >());
 
-    ArrayFubar2Class ac1( v1 );
-    ArrayFubar2Class ac2( v2 );
+    ArrayFubar2Class ac1(v1);
+    ArrayFubar2Class ac2(v2);
 
-    SimpleSerialiseDeserialiseStream( ac1, ac2 );
+    SimpleSerialiseDeserialiseStream(ac1, ac2);
 
-    EXPECT_EQ( v1, v2 );
+    EXPECT_EQ(v1, v2);
 }
 
 class IStringClass2
@@ -267,14 +271,14 @@ class IStringClass2
 {
 public:
 
-    IStringClass2( const std::string &ss )
-        : str( ss )
+    IStringClass2(const std::string &ss)
+        : str(ss)
     {
     }
 
-    void OnStore( Message &message )
+    void OnStore(Message &message)
     {
-        message.Store( str, 0 );
+        message.Store(str, 0);
     }
 
     std::string str;
@@ -285,75 +289,75 @@ class IStringClass
 {
 public:
 
-    IStringClass( const std::string &ss )
-        : str( ss )
+    IStringClass(const std::string &ss)
+        : str(ss)
     {
     }
 
-    void OnStore( Message &message )
+    void OnStore(Message &message)
     {
-        message.Store( str, 0 );
+        message.Store(str, 0);
     }
 
     IStringClass2 str;
 };
 
-TEST( P( BasicTest ), ISerialisable )
+TEST(P(BasicTest), ISerialisable)
 {
-    IStringClass ss1( "" );
-    IStringClass ss2( GenerateRandomString() );
+    IStringClass ss1("");
+    IStringClass ss2(GenerateRandomString());
 
-    SimpleSerialiseDeserialiseStream( ss1, ss2 );
+    SimpleSerialiseDeserialiseStream(ss1, ss2);
 
-    EXPECT_EQ( ss1.str.str, ss2.str.str );
+    EXPECT_EQ(ss1.str.str, ss2.str.str);
 }
 
 class TestArrayClass
 {
 public:
 
-    void OnStore( Message &message )
+    void OnStore(Message &message)
     {
-        message.StoreContainer( arr, 0 );
+        message.StoreContainer(arr, 0);
     }
 
     uint8_t arr[2];
 };
 
-TEST( P( BasicTest ), ArrayClass )
+TEST(P(BasicTest), ArrayClass)
 {
     TestArrayClass ss1;
     ss1.arr[1] = 4;
     TestArrayClass ss2;
 
-    SimpleSerialiseDeserialiseStream( ss1, ss2 );
+    SimpleSerialiseDeserialiseStream(ss1, ss2);
 
-    EXPECT_EQ( ss1.arr[1], ss2.arr[1] );
-    EXPECT_EQ( ss1.arr[0], ss2.arr[0] );
+    EXPECT_EQ(ss1.arr[1], ss2.arr[1]);
+    EXPECT_EQ(ss1.arr[0], ss2.arr[0]);
 }
 
 class TestArrayClass2
 {
 public:
 
-    void OnStore( Message &message )
+    void OnStore(Message &message)
     {
-        message.StoreContainer( arr, 0 );
+        message.StoreContainer(arr, 0);
     }
 
     std::array< StringClass, 2 > arr;
 };
 
-TEST( P( BasicTest ), ArrayClass2 )
+TEST(P(BasicTest), ArrayClass2)
 {
     TestArrayClass2 ss1;
     ss1.arr[1].str = GenerateRandomString();
     TestArrayClass2 ss2;
 
-    SimpleSerialiseDeserialiseStream( ss1, ss2 );
+    SimpleSerialiseDeserialiseStream(ss1, ss2);
 
-    EXPECT_EQ( ss1.arr[1].str, ss2.arr[1].str );
-    EXPECT_EQ( ss1.arr[0].str, ss2.arr[0].str );
+    EXPECT_EQ(ss1.arr[1].str, ss2.arr[1].str);
+    EXPECT_EQ(ss1.arr[0].str, ss2.arr[0].str);
 }
 /*
 class TestArrayClass3

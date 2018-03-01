@@ -1,5 +1,7 @@
 /**
- * Copyright (c) 2017 Zefiros Software.
+ * @cond ___LICENSE___
+ *
+ * Copyright (c) 2016-2018 Zefiros Software.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +20,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
+ * @endcond
  */
 #include "helper.h"
 #include "serialisation/util.h"
@@ -26,143 +30,143 @@
 
 #include <climits>
 
-float ConvertDeconvertFloat( const float fl )
+float ConvertDeconvertFloat(const float fl)
 {
-    return Util::UInt32ToFloat( Util::FloatToUInt32( fl ) );
+    return Util::UInt32ToFloat(Util::FloatToUInt32(fl));
 }
 
-double ConvertDeconvertDouble( const double dl )
+double ConvertDeconvertDouble(const double dl)
 {
-    return Util::UInt64ToDouble( Util::DoubleToUInt64( dl ) );
+    return Util::UInt64ToDouble(Util::DoubleToUInt64(dl));
 }
 
-uint32_t HeaderIndexConvert( uint8_t index, Internal::Type::Type t )
+uint32_t HeaderIndexConvert(uint8_t index, Internal::Type::Type t)
 {
-    return Util::GetHeaderIndex( Util::CreateHeader( index, t ) );
+    return Util::GetHeaderIndex(Util::CreateHeader(index, t));
 }
 
-Internal::Type::Type HeaderTypeConvert( uint8_t index, Internal::Type::Type t )
+Internal::Type::Type HeaderTypeConvert(uint8_t index, Internal::Type::Type t)
 {
-    return Util::GetHeaderType( Util::CreateHeader( index, t ) );
+    return Util::GetHeaderType(Util::CreateHeader(index, t));
 }
 
 
-TEST( P( UtilTest ), FloatUInt32Max )
+TEST(P(UtilTest), FloatUInt32Max)
 {
     const float fl = std::numeric_limits<float>::max();
-    EXPECT_FLOAT_EQ( fl, ConvertDeconvertFloat( fl ) );
+    EXPECT_FLOAT_EQ(fl, ConvertDeconvertFloat(fl));
 }
 
-TEST( P( UtilTest ), FloatUInt32Min )
+TEST(P(UtilTest), FloatUInt32Min)
 {
     const float fl = std::numeric_limits<float>::min();
-    EXPECT_FLOAT_EQ( fl, ConvertDeconvertFloat( fl ) );
+    EXPECT_FLOAT_EQ(fl, ConvertDeconvertFloat(fl));
 }
 
-TEST( P( UtilTest ), FloatUInt32Zebra )
+TEST(P(UtilTest), FloatUInt32Zebra)
 {
-    const float fl = ( float )GenerateZebraValue< uint32_t >();
-    EXPECT_FLOAT_EQ( fl, ConvertDeconvertFloat( fl ) );
+    const float fl = (float)GenerateZebraValue< uint32_t >();
+    EXPECT_FLOAT_EQ(fl, ConvertDeconvertFloat(fl));
 }
 
-TEST( P( UtilTest ), FloatUInt32ZebraInv )
+TEST(P(UtilTest), FloatUInt32ZebraInv)
 {
-    const float fl = ( float )GenerateInvZebraValue< uint32_t >();
-    EXPECT_FLOAT_EQ( fl, ConvertDeconvertFloat( fl ) );
+    const float fl = (float)GenerateInvZebraValue< uint32_t >();
+    EXPECT_FLOAT_EQ(fl, ConvertDeconvertFloat(fl));
 }
 
-TEST( P( UtilTest ), DoubleInt64Max )
+TEST(P(UtilTest), DoubleInt64Max)
 {
     const double dl = std::numeric_limits<double>::max();
-    ASSERT_DOUBLE_EQ( dl, ConvertDeconvertDouble( dl ) );
+    ASSERT_DOUBLE_EQ(dl, ConvertDeconvertDouble(dl));
 }
 
-TEST( P( UtilTest ), DoubleUInt64Min )
+TEST(P(UtilTest), DoubleUInt64Min)
 {
     const double dl = std::numeric_limits<double>::min();
-    ASSERT_DOUBLE_EQ( dl, ConvertDeconvertDouble( dl ) );
+    ASSERT_DOUBLE_EQ(dl, ConvertDeconvertDouble(dl));
 }
 
-TEST( P( UtilTest ), DoubleUInt64Zebra )
+TEST(P(UtilTest), DoubleUInt64Zebra)
 {
-    const double dl = ( double )GenerateZebraValue< uint64_t >();
-    ASSERT_DOUBLE_EQ( dl, ConvertDeconvertDouble( dl ) );
+    const double dl = (double)GenerateZebraValue< uint64_t >();
+    ASSERT_DOUBLE_EQ(dl, ConvertDeconvertDouble(dl));
 }
 
-TEST( P( UtilTest ), DoubleUInt64ZebraInv )
+TEST(P(UtilTest), DoubleUInt64ZebraInv)
 {
-    const double dl = ( double )GenerateInvZebraValue< uint64_t >();
-    ASSERT_DOUBLE_EQ( dl, ConvertDeconvertDouble( dl ) );
+    const double dl = (double)GenerateInvZebraValue< uint64_t >();
+    ASSERT_DOUBLE_EQ(dl, ConvertDeconvertDouble(dl));
 }
 
-TEST( P( UtilTest ), ZebraHeaderIndexMessage )
-{
-    const uint8_t ul = GenerateZebraValue< uint8_t >() & 0x1F;
-    ASSERT_EQ( ul, HeaderIndexConvert( ul, Internal::Type::String ) );
-}
-
-TEST( P( UtilTest ), MinHeaderIndexMessage )
-{
-    const uint8_t ul = std::numeric_limits<uint8_t>::min();
-    ASSERT_EQ( ul, HeaderIndexConvert( ul, Internal::Type::String ) );
-}
-
-TEST( P( UtilTest ), MaxHeaderIndexMessage )
-{
-    const uint8_t ul = 0x1F;
-    ASSERT_EQ( ul, HeaderIndexConvert( ul, Internal::Type::String ) );
-}
-
-TEST( P( UtilTest ), ZebraHeaderIndexRepeated )
+TEST(P(UtilTest), ZebraHeaderIndexMessage)
 {
     const uint8_t ul = GenerateZebraValue< uint8_t >() & 0x1F;
-    ASSERT_EQ( ul, HeaderIndexConvert( ul, Internal::Type::Array ) );
+    ASSERT_EQ(ul, HeaderIndexConvert(ul, Internal::Type::String));
 }
 
-TEST( P( UtilTest ), MinHeaderIndexRepeated )
+TEST(P(UtilTest), MinHeaderIndexMessage)
 {
     const uint8_t ul = std::numeric_limits<uint8_t>::min();
-    ASSERT_EQ( ul, HeaderIndexConvert( ul, Internal::Type::Array ) );
+    ASSERT_EQ(ul, HeaderIndexConvert(ul, Internal::Type::String));
 }
 
-TEST( P( UtilTest ), MaxHeaderIndexRepeated )
+TEST(P(UtilTest), MaxHeaderIndexMessage)
 {
     const uint8_t ul = 0x1F;
-    ASSERT_EQ( ul, HeaderIndexConvert( ul, Internal::Type::Array ) );
+    ASSERT_EQ(ul, HeaderIndexConvert(ul, Internal::Type::String));
 }
 
-TEST( P( UtilTest ), MessageHeaderTypeZebraIndex )
+TEST(P(UtilTest), ZebraHeaderIndexRepeated)
+{
+    const uint8_t ul = GenerateZebraValue< uint8_t >() & 0x1F;
+    ASSERT_EQ(ul, HeaderIndexConvert(ul, Internal::Type::Array));
+}
+
+TEST(P(UtilTest), MinHeaderIndexRepeated)
+{
+    const uint8_t ul = std::numeric_limits<uint8_t>::min();
+    ASSERT_EQ(ul, HeaderIndexConvert(ul, Internal::Type::Array));
+}
+
+TEST(P(UtilTest), MaxHeaderIndexRepeated)
+{
+    const uint8_t ul = 0x1F;
+    ASSERT_EQ(ul, HeaderIndexConvert(ul, Internal::Type::Array));
+}
+
+TEST(P(UtilTest), MessageHeaderTypeZebraIndex)
 {
     const uint8_t ul = GenerateZebraValue<uint8_t>() & 0x1F;
-    ASSERT_EQ( Internal::Type::Object, HeaderTypeConvert( ul, Internal::Type::Object ) );
+    ASSERT_EQ(Internal::Type::Object, HeaderTypeConvert(ul, Internal::Type::Object));
 }
 
-TEST( P( UtilTest ), MessageHeaderTypeMaxIndex )
+TEST(P(UtilTest), MessageHeaderTypeMaxIndex)
 {
     const uint8_t ul = 0x1F;
-    ASSERT_EQ( Internal::Type::Object, HeaderTypeConvert( ul, Internal::Type::Object ) );
+    ASSERT_EQ(Internal::Type::Object, HeaderTypeConvert(ul, Internal::Type::Object));
 }
 
-TEST( P( UtilTest ), MessageHeaderTypeMinIndex )
+TEST(P(UtilTest), MessageHeaderTypeMinIndex)
 {
     const uint8_t ul = std::numeric_limits<uint8_t>::min();
-    ASSERT_EQ( Internal::Type::Object, HeaderTypeConvert( ul, Internal::Type::Object ) );
+    ASSERT_EQ(Internal::Type::Object, HeaderTypeConvert(ul, Internal::Type::Object));
 }
 
-TEST( P( UtilTest ), RepeatedHeaderTypeZebraIndex )
+TEST(P(UtilTest), RepeatedHeaderTypeZebraIndex)
 {
     const uint8_t ul = GenerateZebraValue<uint8_t>() & 0x1F;
-    ASSERT_EQ( Internal::Type::Array, HeaderTypeConvert( ul, Internal::Type::Array ) );
+    ASSERT_EQ(Internal::Type::Array, HeaderTypeConvert(ul, Internal::Type::Array));
 }
 
-TEST( P( UtilTest ), RepeatedHeaderTypeMaxIndex )
+TEST(P(UtilTest), RepeatedHeaderTypeMaxIndex)
 {
     const uint8_t ul = 0x1F;
-    ASSERT_EQ( Internal::Type::Array, HeaderTypeConvert( ul, Internal::Type::Array ) );
+    ASSERT_EQ(Internal::Type::Array, HeaderTypeConvert(ul, Internal::Type::Array));
 }
 
-TEST( P( UtilTest ), RepeatedHeaderTypeMinIndex )
+TEST(P(UtilTest), RepeatedHeaderTypeMinIndex)
 {
     const uint8_t ul = std::numeric_limits<uint8_t>::min();
-    ASSERT_EQ( Internal::Type::Array, HeaderTypeConvert( ul, Internal::Type::Array ) );
+    ASSERT_EQ(Internal::Type::Array, HeaderTypeConvert(ul, Internal::Type::Array));
 }

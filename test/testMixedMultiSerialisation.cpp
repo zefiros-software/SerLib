@@ -1,5 +1,7 @@
 /**
- * Copyright (c) 2017 Zefiros Software.
+ * @cond ___LICENSE___
+ *
+ * Copyright (c) 2016-2018 Zefiros Software.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +20,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
+ * @endcond
  */
 #include "serialisation/serialisation.h"
 #include "helper.h"
@@ -162,29 +166,29 @@ namespace
     {
     public:
 
-        TestClass1( uint32_t seed = 233232 )
+        TestClass1(uint32_t seed = 233232)
         {
             g_seed = seed;
 
-            for ( uint32_t i = 0; i < its; ++i )
+            for (uint32_t i = 0; i < its; ++i)
             {
                 mMember[i] = GetRandom< T >();
             }
         }
 
-        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        void SERIALISATION_CUSTOM_INTERFACE(Message &message)
         {
-            for ( uint8_t i = 0; i < its; ++i )
+            for (uint8_t i = 0; i < its; ++i)
             {
-                message.Store( mMember[i], i );
+                message.Store(mMember[i], i);
             }
         }
 
-        virtual void TestEqual( TestClass1 &c2 )
+        virtual void TestEqual(TestClass1 &c2)
         {
-            for ( uint32_t i = 0; i < its; ++i )
+            for (uint32_t i = 0; i < its; ++i)
             {
-                EXPECT_EQ( mMember[i], c2.mMember[i] );
+                EXPECT_EQ(mMember[i], c2.mMember[i]);
             }
         }
 
@@ -197,16 +201,16 @@ namespace
     {
     public:
 
-        TestClass1F( uint32_t seed = 233232 )
-            : TestClass1< float, its >( seed )
+        TestClass1F(uint32_t seed = 233232)
+            : TestClass1< float, its >(seed)
         {
         }
 
-        virtual void TestEqual( TestClass1< float, its > &c2 )
+        virtual void TestEqual(TestClass1< float, its > &c2)
         {
-            for ( uint32_t i = 0; i < its; ++i )
+            for (uint32_t i = 0; i < its; ++i)
             {
-                EXPECT_FLOAT_EQ( this->mMember[i], c2.mMember[i] );
+                EXPECT_FLOAT_EQ(this->mMember[i], c2.mMember[i]);
             }
         }
     };
@@ -217,16 +221,16 @@ namespace
     {
     public:
 
-        TestClass1D( uint32_t seed = 233232 )
-            : TestClass1< double, its >( seed )
+        TestClass1D(uint32_t seed = 233232)
+            : TestClass1< double, its >(seed)
         {
         }
 
-        virtual void TestEqual( TestClass1< double, its > &c2 )
+        virtual void TestEqual(TestClass1< double, its > &c2)
         {
-            for ( uint32_t i = 0; i < its; ++i )
+            for (uint32_t i = 0; i < its; ++i)
             {
-                EXPECT_DOUBLE_EQ( this->mMember[i], c2.mMember[i] );
+                EXPECT_DOUBLE_EQ(this->mMember[i], c2.mMember[i]);
             }
         }
     };
@@ -238,11 +242,11 @@ namespace
     {
     public:
 
-        TestClass2( uint32_t seed = 233232 )
+        TestClass2(uint32_t seed = 233232)
         {
             g_seed = seed;
 
-            for ( uint32_t i = 0; i < its; ++i )
+            for (uint32_t i = 0; i < its; ++i)
             {
                 mMemberT[i] = GetRandom< T >();
                 mMemberS[i] = GetRandom< S >();
@@ -250,24 +254,24 @@ namespace
             }
         }
 
-        void SERIALISATION_CUSTOM_INTERFACE( Message &message )
+        void SERIALISATION_CUSTOM_INTERFACE(Message &message)
         {
-            for ( uint8_t i = 0; i < its; ++i )
+            for (uint8_t i = 0; i < its; ++i)
             {
                 uint8_t j = 3 * i;
-                message.Store( mMemberT[i], j );
-                message.Store( mMemberS[i], j + 1 );
-                message.Store( mMemberR[i], j + 2 );
+                message.Store(mMemberT[i], j);
+                message.Store(mMemberS[i], j + 1);
+                message.Store(mMemberR[i], j + 2);
             }
         }
 
-        virtual void TestEqual( TestClass2 &c2 )
+        virtual void TestEqual(TestClass2 &c2)
         {
-            for ( uint32_t i = 0; i < its; ++i )
+            for (uint32_t i = 0; i < its; ++i)
             {
-                EXPECT_EQ( mMemberT[i], c2.mMemberT[i] );
-                EXPECT_EQ( mMemberS[i], c2.mMemberS[i] );
-                EXPECT_EQ( mMemberR[i], c2.mMemberR[i] );
+                EXPECT_EQ(mMemberT[i], c2.mMemberT[i]);
+                EXPECT_EQ(mMemberS[i], c2.mMemberS[i]);
+                EXPECT_EQ(mMemberR[i], c2.mMemberR[i]);
             }
         }
 
@@ -282,18 +286,18 @@ namespace
     {
     public:
 
-        TestClass2F1( uint32_t seed = 233232 )
-            : TestClass2< T, float, double, its >( seed )
+        TestClass2F1(uint32_t seed = 233232)
+            : TestClass2< T, float, double, its >(seed)
         {
         }
 
-        virtual void TestEqual( TestClass2< T, float, double, its > &c2 )
+        virtual void TestEqual(TestClass2< T, float, double, its > &c2)
         {
-            for ( uint32_t i = 0; i < its; ++i )
+            for (uint32_t i = 0; i < its; ++i)
             {
-                EXPECT_EQ( this->mMemberT[i], c2.mMemberT[i] );
-                EXPECT_FLOAT_EQ( this->mMemberS[i], c2.mMemberS[i] );
-                EXPECT_DOUBLE_EQ( this->mMemberR[i], c2.mMemberR[i] );
+                EXPECT_EQ(this->mMemberT[i], c2.mMemberT[i]);
+                EXPECT_FLOAT_EQ(this->mMemberS[i], c2.mMemberS[i]);
+                EXPECT_DOUBLE_EQ(this->mMemberR[i], c2.mMemberR[i]);
             }
         }
     };
@@ -304,18 +308,18 @@ namespace
     {
     public:
 
-        TestClass2F2( uint32_t seed = 233232 )
-            : TestClass2< float, T, double, its >( seed )
+        TestClass2F2(uint32_t seed = 233232)
+            : TestClass2< float, T, double, its >(seed)
         {
         }
 
-        virtual void TestEqual( TestClass2< float, T, double, its > &c2 )
+        virtual void TestEqual(TestClass2< float, T, double, its > &c2)
         {
-            for ( uint32_t i = 0; i < its; ++i )
+            for (uint32_t i = 0; i < its; ++i)
             {
-                EXPECT_FLOAT_EQ( this->mMemberT[i], c2.mMemberT[i] );
-                EXPECT_EQ( this->mMemberS[i], c2.mMemberS[i] );
-                EXPECT_DOUBLE_EQ( this->mMemberR[i], c2.mMemberR[i] );
+                EXPECT_FLOAT_EQ(this->mMemberT[i], c2.mMemberT[i]);
+                EXPECT_EQ(this->mMemberS[i], c2.mMemberS[i]);
+                EXPECT_DOUBLE_EQ(this->mMemberR[i], c2.mMemberR[i]);
             }
         }
     };
@@ -326,54 +330,54 @@ namespace
     {
     public:
 
-        TestClass2F3( uint32_t seed = 233232 )
-            : TestClass2< T, double, R, its >( seed )
+        TestClass2F3(uint32_t seed = 233232)
+            : TestClass2< T, double, R, its >(seed)
         {
         }
 
-        virtual void TestEqual( TestClass2< T, double, R, its > &c2 )
+        virtual void TestEqual(TestClass2< T, double, R, its > &c2)
         {
-            for ( uint32_t i = 0; i < its; ++i )
+            for (uint32_t i = 0; i < its; ++i)
             {
-                EXPECT_DOUBLE_EQ( this->mMemberS[i], c2.mMemberS[i] );
+                EXPECT_DOUBLE_EQ(this->mMemberS[i], c2.mMemberS[i]);
             }
         }
     };
 
 
 
-    TestSerialClass( MultiSerialisation, randomVals, uint8_t, 343422, 21331, 28 );
-    TestSerialClass( MultiSerialisation, randomVals, uint16_t, 343422, 21331, 28 );
-    TestSerialClass( MultiSerialisation, randomVals, uint32_t, 343422, 21331, 28 );
-    TestSerialClass( MultiSerialisation, randomVals, uint64_t, 343422, 21331, 28 );
+    TestSerialClass(MultiSerialisation, randomVals, uint8_t, 343422, 21331, 28);
+    TestSerialClass(MultiSerialisation, randomVals, uint16_t, 343422, 21331, 28);
+    TestSerialClass(MultiSerialisation, randomVals, uint32_t, 343422, 21331, 28);
+    TestSerialClass(MultiSerialisation, randomVals, uint64_t, 343422, 21331, 28);
 
-    TestSerialClass( MultiSerialisation, randomVals, int8_t, 343422, 21331, 28 );
-    TestSerialClass( MultiSerialisation, randomVals, int16_t, 343422, 21331, 28 );
-    TestSerialClass( MultiSerialisation, randomVals, int32_t, 343422, 21331, 28 );
-    TestSerialClass( MultiSerialisation, randomVals, int64_t, 343422, 21331, 28 );
+    TestSerialClass(MultiSerialisation, randomVals, int8_t, 343422, 21331, 28);
+    TestSerialClass(MultiSerialisation, randomVals, int16_t, 343422, 21331, 28);
+    TestSerialClass(MultiSerialisation, randomVals, int32_t, 343422, 21331, 28);
+    TestSerialClass(MultiSerialisation, randomVals, int64_t, 343422, 21331, 28);
 
-    TestFSerialClass( MultiSerialisation, randomVals, 343422, 21331, 28 );
-    TestDSerialClass( MultiSerialisation, randomVals, 343422, 21331, 28 );
+    TestFSerialClass(MultiSerialisation, randomVals, 343422, 21331, 28);
+    TestDSerialClass(MultiSerialisation, randomVals, 343422, 21331, 28);
 
 
-    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, uint8_t, 343422, 21331, 9 );
-    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, uint16_t, 343422, 21331, 9 );
-    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, uint32_t, 343422, 21331, 9 );
-    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, uint64_t, 343422, 21331, 9 );
+    TestIFDMixedSerialClass(MixedIFDSerialisation, randomVals, uint8_t, 343422, 21331, 9);
+    TestIFDMixedSerialClass(MixedIFDSerialisation, randomVals, uint16_t, 343422, 21331, 9);
+    TestIFDMixedSerialClass(MixedIFDSerialisation, randomVals, uint32_t, 343422, 21331, 9);
+    TestIFDMixedSerialClass(MixedIFDSerialisation, randomVals, uint64_t, 343422, 21331, 9);
 
-    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, int8_t, 343422, 21331, 9 );
-    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, int16_t, 343422, 21331, 9 );
-    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, int32_t, 343422, 21331, 9 );
-    TestIFDMixedSerialClass( MixedIFDSerialisation, randomVals, int64_t, 343422, 21331, 9 );
+    TestIFDMixedSerialClass(MixedIFDSerialisation, randomVals, int8_t, 343422, 21331, 9);
+    TestIFDMixedSerialClass(MixedIFDSerialisation, randomVals, int16_t, 343422, 21331, 9);
+    TestIFDMixedSerialClass(MixedIFDSerialisation, randomVals, int32_t, 343422, 21331, 9);
+    TestIFDMixedSerialClass(MixedIFDSerialisation, randomVals, int64_t, 343422, 21331, 9);
 
-    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, uint8_t, 343422, 21331, 9 );
-    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, uint16_t, 343422, 21331, 9 );
-    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, uint32_t, 343422, 21331, 9 );
-    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, uint64_t, 343422, 21331, 9 );
+    TestFIDMixedSerialClass(MixedFIDSerialisation, randomVals, uint8_t, 343422, 21331, 9);
+    TestFIDMixedSerialClass(MixedFIDSerialisation, randomVals, uint16_t, 343422, 21331, 9);
+    TestFIDMixedSerialClass(MixedFIDSerialisation, randomVals, uint32_t, 343422, 21331, 9);
+    TestFIDMixedSerialClass(MixedFIDSerialisation, randomVals, uint64_t, 343422, 21331, 9);
 
-    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, int8_t, 343422, 21331, 9 );
-    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, int16_t, 343422, 21331, 9 );
-    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, int32_t, 343422, 21331, 9 );
-    TestFIDMixedSerialClass( MixedFIDSerialisation, randomVals, int64_t, 343422, 21331, 9 );
+    TestFIDMixedSerialClass(MixedFIDSerialisation, randomVals, int8_t, 343422, 21331, 9);
+    TestFIDMixedSerialClass(MixedFIDSerialisation, randomVals, int16_t, 343422, 21331, 9);
+    TestFIDMixedSerialClass(MixedFIDSerialisation, randomVals, int32_t, 343422, 21331, 9);
+    TestFIDMixedSerialClass(MixedFIDSerialisation, randomVals, int64_t, 343422, 21331, 9);
 
 }

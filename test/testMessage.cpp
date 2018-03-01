@@ -1,5 +1,7 @@
 /**
- * Copyright (c) 2017 Zefiros Software.
+ * @cond ___LICENSE___
+ *
+ * Copyright (c) 2016-2018 Zefiros Software.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +20,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
+ * @endcond
  */
 #include "serialisation/serialisation.h"
 #include "helper.h"
@@ -35,25 +39,25 @@ namespace
     {
     public:
 
-        void OnStore( Message &message )
+        void OnStore(Message &message)
         {
-            message.Store( integer, 0 );
+            message.Store(integer, 0);
         }
 
         uint32_t integer;
     };
 
-    TEST( P( Message ), FlushOnStoreExit )
+    TEST(P(Message), FlushOnStoreExit)
     {
         std::stringstream ss1;
 
         SimpleSer data;
-        Message message1( ss1, Format::Binary, Mode::Serialise );
-        MessageHelper::Store( message1, data );
+        Message message1(ss1, Format::Binary, Mode::Serialise);
+        MessageHelper::Store(message1, data);
 
         SimpleSer data2;
 
-        Message message2( ss1, Format::Binary, Mode::Deserialise );
-        MessageHelper::Store( message2, data2 );
+        Message message2(ss1, Format::Binary, Mode::Deserialise);
+        MessageHelper::Store(message2, data2);
     }
 }

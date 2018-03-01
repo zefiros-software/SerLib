@@ -1,5 +1,7 @@
 /**
- * Copyright (c) 2017 Zefiros Software.
+ * @cond ___LICENSE___
+ *
+ * Copyright (c) 2016-2018 Zefiros Software.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +20,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
+ * @endcond
  */
 #include "helper.h"
 
@@ -30,16 +34,16 @@
 #include <sstream>
 
 template< typename T >
-T VarIntConvert( T value )
+T VarIntConvert(T value)
 {
     std::stringstream ss;
 
-    StreamWriter wb( ss );
-    wb.WriteSize( value );
+    StreamWriter wb(ss);
+    wb.WriteSize(value);
     wb.ClearBuffer();
 
-    StreamReader rb( ss );
-    return static_cast< T >( rb.ReadSize() );
+    StreamReader rb(ss);
+    return static_cast< T >(rb.ReadSize());
 }
 
 #define TestVarInt( type )                                      \
@@ -70,7 +74,7 @@ T VarIntConvert( T value )
         }                                                                   \
     }
 
-TestVarInt( uint8_t );
-TestVarInt( uint16_t );
-TestVarInt( uint32_t );
-TestVarInt( size_t );
+TestVarInt(uint8_t);
+TestVarInt(uint16_t);
+TestVarInt(uint32_t);
+TestVarInt(size_t);
