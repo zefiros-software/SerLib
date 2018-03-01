@@ -19,9 +19,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#pragma once
+#ifndef __SERIALISATION_MESSAGE_HELPER_CPP__
+#define __SERIALISATION_MESSAGE_HELPER_CPP__
+
 #include "serialisation/messageHelper.h"
 
-SERIALISATION_INLINE void MessageHelper::Store( Message &message, ISerialisable &serialisable )
+SERIALISATION_INLINE void MessageHelper::Store(Message &message, ISerialisable &serialisable)
 {
-    Store< ISerialisable >( message, serialisable );
+    Store< ISerialisable >(message, serialisable);
 }
+
+#endif

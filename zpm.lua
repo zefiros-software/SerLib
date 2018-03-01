@@ -22,29 +22,13 @@
 -- @endcond
 --]]
 
-local zefiros = require( "Zefiros-Software/Zefiros-Defaults", "@head" )
-
 workspace "SerLib"
 
 	zefiros.setDefaults( "serialisation", {
-        configurations = { "HeaderOnlyDebug", "HeaderOnlyRelease" },
-		headerOnly = true
+		mayLink = false
     } )
-
-    filter "not HeaderOnly*"
-        defines "SERIALISATION_NO_HEADER_ONLY"
 
     project "serialisation-test"
 
         filter "Coverage"
             defines "TEST_FILES_DIR=\"test/test-files/\""
-            
-        filter "not HeaderOnly*"
-            links "serialisation"
-            
-    project "serialisation"
-            
-        filter "not HeaderOnly*"                
-            files { 
-                "serialisation/src/**.cpp",
-                }

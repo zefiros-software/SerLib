@@ -22,8 +22,6 @@
 -- @endcond
 --]]
 
-local zefiros = require( "Zefiros-Software/Zefiros-Defaults", "@head" )
-
 workspace "SerLib-ZPM"
 
 	zefiros.setTestZPMDefaults( "serialisation", {
@@ -31,7 +29,4 @@ workspace "SerLib-ZPM"
     } )
     
 	project "serialisation-zpm-test"
-
-		zpm.uses {
-            "Zefiros-Software/SerLib"
-        }
+		zpm.uses "Zefiros-Software/SerLib"

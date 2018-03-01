@@ -19,11 +19,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#pragma once
+#ifndef __SERIALISATION_TEMPOBJECT_CPP__
+#define __SERIALISATION_TEMPOBJECT_CPP__
+
 #include "serialisation/tempObject.h"
 #include "serialisation/defines.h"
 
 SERIALISATION_INLINE TempObject::TempObject()
-    : mTerminatorRead( false )
+    : mTerminatorRead(false)
 {
 }
 
@@ -32,21 +37,21 @@ SERIALISATION_INLINE Internal::Type::Type TempObject::GetType() const
     return Internal::Type::Object;
 }
 
-SERIALISATION_INLINE void TempObject::AddData( uint8_t index, ITempData *data )
+SERIALISATION_INLINE void TempObject::AddData(uint8_t index, ITempData *data)
 {
-    mTempData.push_back( std::pair< uint8_t, ITempData * >( index, data ) );
+    mTempData.push_back(std::pair< uint8_t, ITempData * >(index, data));
 }
 
-SERIALISATION_INLINE ITempData *TempObject::TryRemoveData( uint8_t index )
+SERIALISATION_INLINE ITempData *TempObject::TryRemoveData(uint8_t index)
 {
-    typedef std::vector< std::pair< uint8_t, ITempData * > >::iterator iterator;
+    typedef std::vector< std::pair< uint8_t, ITempData * >>::iterator iterator;
 
-    for ( iterator it = mTempData.begin(), end = mTempData.end(); it != end; ++it )
+    for (iterator it = mTempData.begin(), end = mTempData.end(); it != end; ++it)
     {
-        if ( it->first == index )
+        if (it->first == index)
         {
             ITempData *data = it->second;
-            mTempData.erase( it );
+            mTempData.erase(it);
             return data;
         }
     }
@@ -80,3 +85,5 @@ SERIALISATION_INLINE bool TempObject::IsNonEmpty() const
 {
     return !mTempData.empty();
 }
+
+#endif
