@@ -26,6 +26,8 @@
 
 workspace "SerLib"
 
+    cppdialect "C++11"
+    
     zefiros.setDefaults( "serialisation", {
         mayLink = false
     } )

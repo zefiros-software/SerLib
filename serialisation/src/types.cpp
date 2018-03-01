@@ -33,12 +33,12 @@
 
 SERIALISATION_INLINE bool Internal::Type::IsInteger(Type type)
 {
-    return (type >= Type::UInt8) && (type <= SInt64);
+    return (type >= UInt8) && (type <= SInt64);
 }
 
 SERIALISATION_INLINE bool Internal::Type::IsSignedInt(Type type)
 {
-    return (type >= Type::SInt8) && (type <= Type::SInt64);
+    return (type >= SInt8) && (type <= SInt64);
 }
 
 SERIALISATION_INLINE bool Internal::Type::AreCompatible(const Type type, const Type type2)
@@ -48,8 +48,7 @@ SERIALISATION_INLINE bool Internal::Type::AreCompatible(const Type type, const T
         return true;
     }
 
-    if ((IsSignedInt(type) && type - SInt8 == type2 - UInt8) || (IsSignedInt(type2) &&
-                                                                 type2 - SInt8 == type - UInt8))
+    if ((IsSignedInt(type) && type - SInt8 == type2 - UInt8) || (IsSignedInt(type2) && type2 - SInt8 == type - UInt8))
     {
         return true;
     }

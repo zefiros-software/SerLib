@@ -110,6 +110,7 @@ public:
 
             if (!mTerminatorRead)
             {
+                (void)(type);
                 assert(type == Internal::Type::Object);
                 InitObject();
             }
@@ -548,6 +549,7 @@ private:
 
         if (!mTerminatorRead)
         {
+            (void)(type);
             assert(Internal::Type::AreCompatible(type, Internal::Type::GetEnum< TPrimitive >()) &&
                    "Whoops, seems like you tried to Deserialise with the wrong type");
 
@@ -675,6 +677,7 @@ inline size_t BinaryDeserMessage< TStreamReader >::CreateArray(Type::Type type, 
 
         if (!mTerminatorRead)
         {
+            (void)(readType);
             assert(readType == Internal::Type::Array);
             Internal::Type::Type rType;
             ReadHeader(flags, rType);

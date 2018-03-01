@@ -93,73 +93,73 @@ namespace Internal
         template< typename T >
         inline Type GetEnum()
         {
-            return Type::Object;
+            return Object;
         }
 
         template<>
         inline Type GetEnum< std::string >()
         {
-            return Type::String;
+            return String;
         }
 
         template<>
         inline Type GetEnum< uint8_t >()
         {
-            return Type::UInt8;
+            return UInt8;
         }
 
         template<>
         inline Type GetEnum< uint16_t >()
         {
-            return Type::UInt16;
+            return UInt16;
         }
 
         template<>
         inline Type GetEnum< uint32_t >()
         {
-            return Type::UInt32;
+            return UInt32;
         }
 
         template<>
         inline Type GetEnum< uint64_t >()
         {
-            return Type::UInt64;
+            return UInt64;
         }
 
         template<>
         inline Type GetEnum< int8_t >()
         {
-            return Type::SInt8;
+            return SInt8;
         }
 
         template<>
         inline Type GetEnum< int16_t >()
         {
-            return Type::SInt16;
+            return SInt16;
         }
 
         template<>
         inline Type GetEnum< int32_t >()
         {
-            return Type::SInt32;
+            return SInt32;
         }
 
         template<>
         inline Type GetEnum< int64_t >()
         {
-            return Type::SInt64;
+            return SInt64;
         }
 
         template<>
         inline Type GetEnum< float >()
         {
-            return Type::Float;
+            return Float;
         }
 
         template<>
         inline Type GetEnum< double >()
         {
-            return Type::Double;
+            return Double;
         }
     }
 }
