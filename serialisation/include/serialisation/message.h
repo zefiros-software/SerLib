@@ -149,7 +149,7 @@ public:
                 StoreArrayItem(*it);
             }
 
-            TSerialisable dummy();
+            TSerialisable dummy;
 
             for (size_t i = Size; i < size; ++i)
             {
@@ -343,6 +343,8 @@ public:
     }
 #endif
 
+    size_t CreateArray(Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00);
+
 private:
 
     InternalMessage *mInternalMessage;
@@ -480,8 +482,6 @@ private:
     void StoreArrayItem(float &value);
 
     void StoreArrayItem(double &value);
-
-    size_t CreateArray(Type::Type type, size_t size, uint8_t index, uint8_t flags = 0x00);
 
     template< typename TPrimitive >
     void StorePrimitiveVector(std::vector< TPrimitive > &container, uint8_t index, uint8_t flags)
